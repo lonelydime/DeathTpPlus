@@ -28,9 +28,12 @@ public class DTPPlayerListener extends PlayerListener{
 		Player player = event.getPlayer();
 		boolean teleportok = true;
 		
-		if ((split[0].equalsIgnoreCase("/deathtp")) && canUseCommand) {
+		if ((split[0].equalsIgnoreCase("/deathtp"))) {
 			if (DeathTpPlus.Permissions != null) {
 				canUseCommand = DeathTpPlus.Permissions.has(player, "deathtpplus.deathtp");
+			}
+			else if (DeathTpPlus.gm != null) {
+				canUseCommand = DeathTpPlus.gm.getHandler().has(player, "deathtpplus.deathtp");
 			}
 			else {
 				canUseCommand = DeathTpPlus.deathconfig.get("ALLOW_DEATHTP").equals("true");
@@ -105,6 +108,9 @@ public class DTPPlayerListener extends PlayerListener{
 		else if ((split[0].equalsIgnoreCase("/streak"))) {
 			if (DeathTpPlus.Permissions != null) {
 				canUseCommand = DeathTpPlus.Permissions.has(player, "deathtpplus.streak");
+			}
+			else if (DeathTpPlus.gm != null) {
+				canUseCommand = DeathTpPlus.gm.getHandler().has(player, "deathtpplus.streak");
 			}
 			
 			if (canUseCommand) {

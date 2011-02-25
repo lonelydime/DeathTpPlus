@@ -12,8 +12,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+//permissions
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.nijiko.permissions.PermissionHandler;
+import org.anjocaido.groupmanager.GroupManager;
+//import org.anjocaido.groupmanager.DataHolder;
+
 
 public class DeathTpPlus extends JavaPlugin{
 	private final DTPEntityListener entityListener = new DTPEntityListener(this);
@@ -25,6 +30,7 @@ public class DeathTpPlus extends JavaPlugin{
     public static HashMap<String, List<String>> deathevents = new HashMap<String, List<String>>();
     public static HashMap<String, String> deathconfig = new HashMap<String, String>();
     public static PermissionHandler Permissions = null;
+    public static GroupManager gm = null;
     
 	public void onDisable() {
 		log.info("[DeathTpPlus] Disabled");
@@ -123,18 +129,26 @@ public class DeathTpPlus extends JavaPlugin{
         }
         
         setupPermissions();
-        
+
         PluginDescriptionFile pdfFile = this.getDescription();
         log.info("[DeathTpPlus] version " + pdfFile.getVersion() + " by lonelydime is enabled!");
 	}
 	
 	public void setupPermissions() {
 		Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
-
+		Plugin p = this.getServer().getPluginManager().getPlugin("GroupManager");
+		
 		if(Permissions == null) {
 		    if(test != null) {
 		    	Permissions = ((Permissions)test).getHandler();
 		    }
 		}
+		
+		if (p != null) {
+            if (!p.isEnabled()) {
+                this.getServer().getPluginManager().enablePlugin(p);
+            }
+            gm = (GroupManager) p;
+        } 
 	}
 }
