@@ -58,8 +58,8 @@ public class DTPEntityListener extends EntityListener {
 					//text to write to file
 					fileOutput = player.getName()+":"+player.getLocation().getX()+":"+player.getLocation().getY()+":"+player.getLocation().getZ();
 					
-					File fileName = new File("plugins/DeathTpPlus/locs.txt");
-					
+					//File fileName = new File("plugins/DeathTpPlus/locs.txt");
+					File fileName = new File(plugin.getDataFolder()+"/locs.txt");
 					//read the file
 					try {
 						FileReader fr = new FileReader(fileName);
@@ -101,7 +101,7 @@ public class DTPEntityListener extends EntityListener {
 					}
 				}
 			    
-				if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true") ) {
+				if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true") || DeathTpPlus.deathconfig.get("SHOW_STREAKS").equals("true") ) {
 				    howtheydied = damagetype.split(":");
 				    
 				    int messageindex = 0;
@@ -342,9 +342,9 @@ public class DTPEntityListener extends EntityListener {
 			String line = "";
 			ArrayList<String> filetext = new ArrayList<String>();
 			
-			File streakFile = new File("plugins/DeathTpPlus/streak.txt");
-			FileReader fr = new FileReader(streakFile);
-			BufferedReader br = new BufferedReader(fr);
+			//File streakFile = new File("plugins/DeathTpPlus/streak.txt");
+			File streakFile = new File(plugin.getDataFolder()+"/streak.txt");
+			BufferedReader br = new BufferedReader(new FileReader(streakFile));
 			String[] splittext;
 			int atkCurrentStreak = 0;
 			int defCurrentStreak = 0;

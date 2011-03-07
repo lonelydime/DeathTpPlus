@@ -21,24 +21,37 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Server;
 
 //permissions
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.nijiko.permissions.PermissionHandler;
 import org.anjocaido.groupmanager.GroupManager;
-//import org.anjocaido.groupmanager.DataHolder;
+//iconomy
+import com.nijiko.coelho.iConomy.iConomy;
 
 
 public class DeathTpPlus extends JavaPlugin{
+	//damage and death listener
 	private final DTPEntityListener entityListener = new DTPEntityListener(this);
 	
+	//plugin variables
 	private final Logger log = Logger.getLogger("Minecraft");
     public static HashMap<String, List<String>> killstreak = new HashMap<String, List<String>>();
     public static HashMap<String, List<String>> deathstreak = new HashMap<String, List<String>>();
     public static HashMap<String, List<String>> deathevents = new HashMap<String, List<String>>();
     public static HashMap<String, String> deathconfig = new HashMap<String, String>();
+    
+    //permissions
     public static PermissionHandler Permissions = null;
     public static GroupManager gm = null;
+    
+    //iconomy
+    private static PluginListener PluginListener = null;
+    private static iConomy iConomy = null;
+    private static Server Server = null;
+    private boolean useiConomy = false;
+    
     
 	public void onDisable() {
 		log.info("[DeathTpPlus] Disabled");
@@ -98,6 +111,7 @@ public class DeathTpPlus extends JavaPlugin{
 		deathevents.put("DMGSLIME", getConfiguration().getStringList("slime", null));
 		deathevents.put("DMGPVP", getConfiguration().getStringList("pvp", null));
 		deathevents.put("DMGFISTS", getConfiguration().getStringList("pvp-fists", null));
+		deathevents.put("DMGSUFFOCATION", getConfiguration().getStringList("suffocation", null));
 		deathevents.put("DMGUNKNOWN", getConfiguration().getStringList("unknown", null));
 		//Configuration nodes
 		deathconfig.put("SHOW_DEATHNOTIFY", getConfiguration().getString("show-deathnotify", "false"));
@@ -105,6 +119,7 @@ public class DeathTpPlus extends JavaPlugin{
 		deathconfig.put("SHOW_STREAKS", getConfiguration().getString("show-streaks", "false"));
 		deathconfig.put("CHARGE_ITEM_ID", getConfiguration().getString("charge-item", "false"));
 		deathconfig.put("SHOW_SIGN", getConfiguration().getString("show-sign", "false"));
+		deathconfig.put("ICONOMY_COST", getConfiguration().getString("deathtp-cost", "0"));
 		//Kill Streak nodes
 		killstreak.put("KILL_STREAK", getConfiguration().getStringList("killstreak", null));
 		//Death Streak nodes
@@ -123,17 +138,24 @@ public class DeathTpPlus extends JavaPlugin{
         if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true")) {
         	pm.registerEvent(Event.Type.ENTITY_COMBUST, entityListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Normal, this);
-            //pm.registerEvent(Event.Type.ENTITY_DAMAGEDBY_BLOCK, entityListener, Priority.Normal, this);
         }
         
         if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true") || DeathTpPlus.deathconfig.get("SHOW_STREAKS").equals("true") ) {
-	        pm.registerEvent(Event.Type.ENTITY_DAMAGED, entityListener, Priority.Normal, this);
-	        //pm.registerEvent(Event.Type.ENTITY_DAMAGEDBY_PROJECTILE, entityListener, Priority.Normal, this);
-	        //pm.registerEvent(Event.Type.ENTITY_DAMAGEDBY_ENTITY, entityListener, Priority.Normal, this);
+        	pm.registerEvent(Event.Type.ENTITY_DAMAGED, entityListener, Priority.Normal, this);
         }
         
+        //permissions include
         setupPermissions();
-
+        
+        //iconomy
+        Server = getServer();
+        PluginListener = new PluginListener();
+        // Event Registration
+        
+        pm.registerEvent(Event.Type.PLUGIN_ENABLE, PluginListener, Priority.Monitor, this);
+        //end iconomy
+        
+        // print success
         PluginDescriptionFile pdfFile = this.getDescription();
         log.info("[DeathTpPlus] version " + pdfFile.getVersion() + " by lonelydime is enabled!");
 	}
@@ -164,6 +186,7 @@ public class DeathTpPlus extends JavaPlugin{
 		if (command.equals("deathtp")) {
 			if (sender instanceof Player) {
 				Player player = (Player)sender;
+				double iconomyCost = Double.valueOf(deathconfig.get("ICONOMY_COST").trim()).doubleValue();
 				
 				if (Permissions != null) {
 					canUseCommand = Permissions.has(player, "deathtpplus.deathtp");
@@ -176,6 +199,7 @@ public class DeathTpPlus extends JavaPlugin{
 				}
 				
 				if (canUseCommand) {
+					//costs item in inventory
 					if (!deathconfig.get("CHARGE_ITEM_ID").equals("0") ) {
 						if (player.getItemInHand().getType().getId() != Integer.parseInt(deathconfig.get("CHARGE_ITEM_ID"))) {
 							player.sendMessage("You must be holding a "+Material.getMaterial(Integer.parseInt(deathconfig.get("CHARGE_ITEM_ID"))).toString()+" to teleport.");
@@ -194,6 +218,22 @@ public class DeathTpPlus extends JavaPlugin{
 							}
 						}
 					}
+					
+					//costs iconomy
+					if (iconomyCost > 0) {
+						if (checkiConomy()) {
+							
+							if (com.nijiko.coelho.iConomy.iConomy.getBank().getAccount(player.getName()).hasEnough(iconomyCost)) {
+								com.nijiko.coelho.iConomy.iConomy.getBank().getAccount(player.getName()).subtract(iconomyCost);
+								com.nijiko.coelho.iConomy.iConomy.getBank().getAccount(player.getName()).save();
+							}
+							else {
+								player.sendMessage("You need "+iconomyCost+" coins to use /deathtp");
+								teleportok = false;
+							}
+						}
+					}
+					
 					if (teleportok) {
 						File fileName = new File("plugins/DeathTpPlus/locs.txt");
 						try {
@@ -248,7 +288,7 @@ public class DeathTpPlus extends JavaPlugin{
 				player.setHealth(0);
 			}
 			else {
-				System.out.println("This is only a player command.");
+				sender.sendMessage("This is only a player command.");
 				return true;
 			}
 		}
@@ -335,4 +375,27 @@ public class DeathTpPlus extends JavaPlugin{
 		
 		return false;
 	}
+	
+	//iconomy methods
+	public static Server getBukkitServer() {
+        return Server;
+    }
+
+    public static iConomy getiConomy() {
+        return iConomy;
+    }
+    
+    public static boolean setiConomy(iConomy plugin) {
+        if (iConomy == null) {
+            iConomy = plugin;
+        } else {
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean checkiConomy() {
+        this.useiConomy = (iConomy != null);
+        return this.useiConomy;
+    }
 }
