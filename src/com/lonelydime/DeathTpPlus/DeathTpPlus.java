@@ -29,7 +29,8 @@ import com.nijiko.permissions.PermissionHandler;
 import org.anjocaido.groupmanager.GroupManager;
 //iconomy
 import com.nijiko.coelho.iConomy.iConomy;
-
+//craftirc
+import com.ensifera.animosity.craftirc.CraftIRC;
 
 public class DeathTpPlus extends JavaPlugin{
 	//damage and death listener
@@ -52,15 +53,12 @@ public class DeathTpPlus extends JavaPlugin{
     private static Server Server = null;
     private boolean useiConomy = false;
     
+    //craftirc
+    public static CraftIRC craftircHandle = null;
     
 	public void onDisable() {
 		log.info("[DeathTpPlus] Disabled");
 	}
-	
-	/*public static void showinLog(String message) {
-		System.out.println("DeathTpPlus: "+message);
-		log.info(message);
-	}*/
 
 	public void onEnable() {
 		
@@ -120,6 +118,7 @@ public class DeathTpPlus extends JavaPlugin{
 		deathconfig.put("CHARGE_ITEM_ID", getConfiguration().getString("charge-item", "false"));
 		deathconfig.put("SHOW_SIGN", getConfiguration().getString("show-sign", "false"));
 		deathconfig.put("ICONOMY_COST", getConfiguration().getString("deathtp-cost", "0"));
+		deathconfig.put("CRAFT_IRC_TAG", getConfiguration().getString("deathtp-tag", null));
 		//Kill Streak nodes
 		killstreak.put("KILL_STREAK", getConfiguration().getStringList("killstreak", null));
 		//Death Streak nodes
@@ -155,6 +154,20 @@ public class DeathTpPlus extends JavaPlugin{
         pm.registerEvent(Event.Type.PLUGIN_ENABLE, PluginListener, Priority.Monitor, this);
         //end iconomy
         
+        //craftirc
+        Plugin checkplugin = this.getServer().getPluginManager().getPlugin("CraftIRC");
+        if (checkplugin != null) {
+	        try {
+	            // Get handle to CraftIRC, add&register your custom listener
+	            craftircHandle = (CraftIRC) checkplugin;
+	            log.info("[DeathTpPlus] CraftIRC Support Enabled.");
+	        } 
+	        catch (ClassCastException ex) {
+	            //ex.printStackTrace();
+	            //log.warning("MyPlugin can't cast plugin handle as CraftIRC plugin!");
+	        }
+        }
+        
         // print success
         PluginDescriptionFile pdfFile = this.getDescription();
         log.info("[DeathTpPlus] version " + pdfFile.getVersion() + " by lonelydime is enabled!");
@@ -167,12 +180,14 @@ public class DeathTpPlus extends JavaPlugin{
 		if(Permissions == null) {
 		    if(test != null) {
 		    	Permissions = ((Permissions)test).getHandler();
+		    	log.info("[DeathTpPlus] Using Permissions");
 		    }
 		}
 		
 		if (p != null) {
             if (!p.isEnabled()) {
                 this.getServer().getPluginManager().enablePlugin(p);
+                log.info("[DeathTpPlus] Using GroupManager");
             }
             gm = (GroupManager) p;
         } 
@@ -192,7 +207,7 @@ public class DeathTpPlus extends JavaPlugin{
 					canUseCommand = Permissions.has(player, "deathtpplus.deathtp");
 				}
 				else if (gm != null) {
-					canUseCommand = gm.getHandler().has(player, "deathtpplus.deathtp");
+					canUseCommand = gm.getWorldsHolder().getWorldPermissions(player).has(player,"deathtpplus.deathtp");
 				}
 				else {
 					canUseCommand = deathconfig.get("ALLOW_DEATHTP").equals("true");
@@ -301,7 +316,7 @@ public class DeathTpPlus extends JavaPlugin{
 					canUseCommand = Permissions.has((Player)sender, "deathtpplus.streak");
 				}
 				else if (DeathTpPlus.gm != null) {
-					canUseCommand = DeathTpPlus.gm.getHandler().has((Player)sender, "deathtpplus.streak");
+					canUseCommand = gm.getWorldsHolder().getWorldPermissions((Player)sender).has((Player)sender,"deathtpplus.streak");
 				}
 			}
 				

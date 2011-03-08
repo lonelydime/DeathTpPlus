@@ -205,6 +205,28 @@ public class DTPEntityListener extends EntityListener {
 				    }
 					
 					plugin.getServer().broadcastMessage(eventAnnounce);
+					
+					//CraftIRC
+					if (DeathTpPlus.craftircHandle != null) {
+						String ircAnnounce;
+						ircAnnounce = eventAnnounce.replace("¤0", "");
+						ircAnnounce = ircAnnounce.replace("¤2", "");
+						ircAnnounce = ircAnnounce.replace("¤3", "");
+						ircAnnounce = ircAnnounce.replace("¤4", "");
+						ircAnnounce = ircAnnounce.replace("¤5", "");
+						ircAnnounce = ircAnnounce.replace("¤6", "");
+						ircAnnounce = ircAnnounce.replace("¤7", "");
+						ircAnnounce = ircAnnounce.replace("¤8", "");
+						ircAnnounce = ircAnnounce.replace("¤9", "");
+						ircAnnounce = ircAnnounce.replace("¤a", "");
+						ircAnnounce = ircAnnounce.replace("¤b", "");
+						ircAnnounce = ircAnnounce.replace("¤c", "");
+						ircAnnounce = ircAnnounce.replace("¤d", "");
+						ircAnnounce = ircAnnounce.replace("¤e", "");
+						ircAnnounce = ircAnnounce.replace("¤f", "");
+						
+						DeathTpPlus.craftircHandle.sendMessageToTag(ircAnnounce, DeathTpPlus.deathconfig.get("CRAFT_IRC_TAG"));
+					}
 					if (DeathTpPlus.deathconfig.get("SHOW_SIGN").equals("true")) {
 						//place sign
 						Block signBlock = player.getWorld().getBlockAt(player.getLocation().getBlockX(),
