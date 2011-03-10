@@ -1,14 +1,17 @@
 package com.lonelydime.DeathTpPlus;
 
+//java imports
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
+//bukkit imports
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -23,7 +26,6 @@ import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Spider;
 import org.bukkit.entity.Zombie;
-//import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -50,6 +52,7 @@ public class DTPEntityListener extends EntityListener {
 				String fileOutput = "";
 				String line = "";
 				String[] howtheydied;
+				String loghowdied = "";
 				
 				if (DeathTpPlus.deathconfig.get("ALLOW_DEATHTP").equals("true") ) {
 					ArrayList<String> filetext = new ArrayList<String>();
@@ -101,11 +104,12 @@ public class DTPEntityListener extends EntityListener {
 					}
 				}
 			    
-				if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true") || DeathTpPlus.deathconfig.get("SHOW_STREAKS").equals("true") ) {
+				if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true") || DeathTpPlus.deathconfig.get("SHOW_STREAKS").equals("true") || DeathTpPlus.deathconfig.get("DEATH_LOGS").equals("true") ) {
 				    howtheydied = damagetype.split(":");
 				    
 				    int messageindex = 0;
 				    Random rand = new Random();
+				    loghowdied = howtheydied[0];
 				    
 				    if (howtheydied[0].matches("FALL")) {
 				    	if (DeathTpPlus.deathevents.get("DMGFALL").size() > 1)
@@ -193,18 +197,27 @@ public class DTPEntityListener extends EntityListener {
 					    		messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGPVP").size());
 					    	eventAnnounce = DeathTpPlus.deathevents.get("DMGPVP").get(messageindex).replace("%n", player.getName());
 				    	}
+				    	loghowdied = howtheydied[2];
 				    	eventAnnounce = eventAnnounce.replace("%i", howtheydied[1]);
 						eventAnnounce = eventAnnounce.replace("%a", howtheydied[2]);
 						if (DeathTpPlus.deathconfig.get("SHOW_STREAKS").matches("true"))
 							writeToStreak(player.getName(), howtheydied[2]);
+						
+						//write kill to deathlog
+						if (DeathTpPlus.deathconfig.get("DEATH_LOGS").matches("true")) {
+							writeToLog("kill", howtheydied[2], player.getName());
+						}
 				    }
 				    else {
 				    	if (DeathTpPlus.deathevents.get("DMGUNKNOWN").size() > 1)
 				    		messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGUNKNOWN").size());
 				    	eventAnnounce = DeathTpPlus.deathevents.get("DMGUNKNOWN").get(messageindex).replace("%n", player.getName());
 				    }
-					
-					plugin.getServer().broadcastMessage(eventAnnounce);
+				    
+				    
+				    if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true")) {
+				    	plugin.getServer().broadcastMessage(eventAnnounce);
+				    }
 					
 					//CraftIRC
 					if (DeathTpPlus.craftircHandle != null) {
@@ -227,6 +240,11 @@ public class DTPEntityListener extends EntityListener {
 						
 						DeathTpPlus.craftircHandle.sendMessageToTag(ircAnnounce, DeathTpPlus.deathconfig.get("CRAFT_IRC_TAG"));
 					}
+					
+					if (DeathTpPlus.deathconfig.get("DEATH_LOGS").matches("true")) {
+						writeToLog("death", player.getName(), loghowdied);
+					}
+					
 					if (DeathTpPlus.deathconfig.get("SHOW_SIGN").equals("true")) {
 						//place sign
 						Block signBlock = player.getWorld().getBlockAt(player.getLocation().getBlockX(),
@@ -260,6 +278,10 @@ public class DTPEntityListener extends EntityListener {
 						if (DeathTpPlus.deathconfig.get("SHOW_STREAKS").matches("true"))
 							writeToStreak(player.getName(), howtheydied[2]);
 				    }
+					
+					if (DeathTpPlus.deathconfig.get("DEATH_LOGS").matches("true")) {
+						writeToLog("death", player.getName(), loghowdied);
+					}
 				}
 				
 				
@@ -274,18 +296,18 @@ public class DTPEntityListener extends EntityListener {
 	public void onEntityDamage(EntityDamageEvent event) {
 		if(event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
+			//player.sendMessage(event.getType().toString());
 			lastDamageDone(player, event);
 		}
 	}
 	
 	public void lastDamageDone(Player player, EntityDamageEvent event) {
 		String lastdamage = event.getCause().name();
-		
+
 		//checks for mob/PVP damage
 		if (event instanceof EntityDamageByProjectileEvent) {
 			EntityDamageByProjectileEvent mobevent = (EntityDamageByProjectileEvent) event;
 			Entity attacker = mobevent.getDamager();
-			
 			if (attacker instanceof Ghast) {
 				lastdamage = "GHAST";
 			}
@@ -305,7 +327,12 @@ public class DTPEntityListener extends EntityListener {
 		else if (event instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent mobevent = (EntityDamageByEntityEvent) event;
 			Entity attacker = mobevent.getDamager();
-			if (attacker instanceof Monster) {
+			
+			if (attacker.toString().toLowerCase().matches("craftslime")) {
+				lastdamage = "SLIME";
+			}
+
+			else if (attacker instanceof Monster) {
 				Monster mob = (Monster) attacker;
 				
 				if (mob instanceof PigZombie) {
@@ -453,5 +480,66 @@ public class DTPEntityListener extends EntityListener {
 		catch(IOException e) {
 			System.out.println(e);
 		}
+	}
+	
+	public void writeToLog(String logtype, String playername, String deathtype) {
+		System.out.println("writetolog: "+playername+":"+logtype+":"+deathtype);
+		File deathlogFile = new File(plugin.getDataFolder()+"/deathlog.txt");
+		File deathlogTempFile = new File(plugin.getDataFolder()+"/deathtlog.tmp");
+		String line = "";
+		String[] splittext;
+		String writeline = "";
+		int newrecord = 0;
+		boolean foundrecord = false;
+		
+		if (!deathlogTempFile.exists()) {
+			try {
+				deathlogTempFile.createNewFile();
+			} catch (IOException e) {
+				System.out.println("cannot create file "+deathlogTempFile.getPath()+"/"+deathlogTempFile.getName());
+			}
+		}
+		
+		try {
+			//format name:type:mob/player:number
+			PrintWriter pw = new PrintWriter(new FileWriter(deathlogTempFile));
+			BufferedReader br = new BufferedReader(new FileReader(deathlogFile));
+			
+			while((line = br.readLine()) != null) {
+				splittext = line.split(":");
+				writeline = line;
+				if (splittext[0].matches(playername)) {
+					if (splittext[1].matches(logtype)) {
+						if (splittext[2].matches(deathtype)) {
+							newrecord = Integer.parseInt(splittext[3]);
+							newrecord++;
+							writeline = playername+":"+logtype+":"+deathtype+":"+newrecord;
+							foundrecord = true;
+						}
+					}
+				}
+				
+				pw.println(writeline);
+			    pw.flush();
+			}
+			
+			System.out.println("foundrecord: "+foundrecord);
+			
+			if (!foundrecord) {
+				writeline = playername+":"+logtype+":"+deathtype+":1";
+				pw.println(writeline);
+			    pw.flush();
+			}
+			
+			pw.close();
+			br.close();
+			
+			deathlogFile.delete();
+			deathlogTempFile.renameTo(deathlogFile);
+		}
+		catch(IOException e) {
+			System.out.println("Could not edit deathlog: "+e);
+		}
+		
 	}
 }

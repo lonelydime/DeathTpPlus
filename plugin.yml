@@ -1,6 +1,6 @@
 name: DeathTpPlus
 main: com.lonelydime.DeathTpPlus.DeathTpPlus
-version: 1.77
+version: 1.8
 website: https://github.com/lonelydime
 author: lonelydime
 description: >
@@ -20,4 +20,18 @@ commands:
     usage: |
            /<command> [player]
            Example: /<command> - Displays your streak.
-           Example: /<command> username - checks username's streak.
+           Example: /<command> lonelydime's - checks lonelydime's streak.
+  deaths:
+    description: Lets you view your or other's total deaths.
+    usage: |
+           /<command> (username) (cause)
+           Example: /<command> - Displays your total death count.
+           Example: /<command> lonelydime - Displays total death count.
+           Example: /<command> lonelydime creeper - checks lonelydime's deaths by creeper.
+  kills:
+    description: Lets you view your or other's total pvp kills.
+    usage: |
+           /<command> (username) (playername)
+           Example: /<command> - Displays your total kill count.
+           Example: /<command> lonelydime - Displays total kill count.
+           Example: /<command> lonelydime irsmartlikerock - prints times lonelydime killed irsmartlikerock.

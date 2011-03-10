@@ -65,6 +65,7 @@ public class DeathTpPlus extends JavaPlugin{
 		File yml = new File(getDataFolder()+"/config.yml");
         File locsName = new File(getDataFolder()+"/locs.txt");
 		File streakFile = new File(getDataFolder()+"/streak.txt");
+		File deathlogFile = new File(getDataFolder()+"/deathlog.txt");
         
         if (!yml.exists()) {
         	new File(getDataFolder().toString()).mkdir();
@@ -89,6 +90,14 @@ public class DeathTpPlus extends JavaPlugin{
 				streakFile.createNewFile();
 			} catch (IOException e) {
 				System.out.println("cannot create file "+streakFile.getPath()+"/"+streakFile.getName());
+			}
+		}
+		
+		if (!deathlogFile.exists()) {
+			try {
+				deathlogFile.createNewFile();
+			} catch (IOException e) {
+				System.out.println("cannot create file "+deathlogFile.getPath()+"/"+deathlogFile.getName());
 			}
 		}
 		
@@ -119,6 +128,7 @@ public class DeathTpPlus extends JavaPlugin{
 		deathconfig.put("SHOW_SIGN", getConfiguration().getString("show-sign", "false"));
 		deathconfig.put("ICONOMY_COST", getConfiguration().getString("deathtp-cost", "0"));
 		deathconfig.put("CRAFT_IRC_TAG", getConfiguration().getString("deathtp-tag", null));
+		deathconfig.put("DEATH_LOGS", getConfiguration().getString("allow-deathlog", "false"));
 		//Kill Streak nodes
 		killstreak.put("KILL_STREAK", getConfiguration().getStringList("killstreak", null));
 		//Death Streak nodes
@@ -126,8 +136,6 @@ public class DeathTpPlus extends JavaPlugin{
 		
 		log.info("[DeathTpPlus] "+killstreak.get("KILL_STREAK").size()+" Kill Streaks loaded.");
 		log.info("[DeathTpPlus] "+deathstreak.get("DEATH_STREAK").size()+" Death Streaks loaded.");
-		//System.out.println("[DeathTpPlus] "+killstreak.get("KILL_STREAK").size()+" Kill Streaks loaded.");
-		//System.out.println("[DeathTpPlus] "+deathstreak.get("DEATH_STREAK").size()+" Death Streaks loaded.");
 		
         //Create the pluginmanage pm.
         PluginManager pm = getServer().getPluginManager();
@@ -149,22 +157,16 @@ public class DeathTpPlus extends JavaPlugin{
         //iconomy
         Server = getServer();
         PluginListener = new PluginListener();
-        // Event Registration
-        
         pm.registerEvent(Event.Type.PLUGIN_ENABLE, PluginListener, Priority.Monitor, this);
-        //end iconomy
         
         //craftirc
         Plugin checkplugin = this.getServer().getPluginManager().getPlugin("CraftIRC");
         if (checkplugin != null) {
 	        try {
-	            // Get handle to CraftIRC, add&register your custom listener
 	            craftircHandle = (CraftIRC) checkplugin;
 	            log.info("[DeathTpPlus] CraftIRC Support Enabled.");
 	        } 
 	        catch (ClassCastException ex) {
-	            //ex.printStackTrace();
-	            //log.warning("MyPlugin can't cast plugin handle as CraftIRC plugin!");
 	        }
         }
         
@@ -177,6 +179,7 @@ public class DeathTpPlus extends JavaPlugin{
 		Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
 		Plugin p = this.getServer().getPluginManager().getPlugin("GroupManager");
 		
+		//Permissions
 		if(Permissions == null) {
 		    if(test != null) {
 		    	Permissions = ((Permissions)test).getHandler();
@@ -184,6 +187,7 @@ public class DeathTpPlus extends JavaPlugin{
 		    }
 		}
 		
+		//GroupManager
 		if (p != null) {
             if (!p.isEnabled()) {
                 this.getServer().getPluginManager().enablePlugin(p);
@@ -241,6 +245,7 @@ public class DeathTpPlus extends JavaPlugin{
 							if (com.nijiko.coelho.iConomy.iConomy.getBank().getAccount(player.getName()).hasEnough(iconomyCost)) {
 								com.nijiko.coelho.iConomy.iConomy.getBank().getAccount(player.getName()).subtract(iconomyCost);
 								com.nijiko.coelho.iConomy.iConomy.getBank().getAccount(player.getName()).save();
+								player.sendMessage("You used "+iconomyCost+" to use /deathtp");
 							}
 							else {
 								player.sendMessage("You need "+iconomyCost+" coins to use /deathtp");
@@ -306,6 +311,176 @@ public class DeathTpPlus extends JavaPlugin{
 				sender.sendMessage("This is only a player command.");
 				return true;
 			}
+		}
+		
+		else if (command.equals("deaths")) {
+			String playername = "";
+			String cause = "";
+			String line;
+			int totalnum = 0;
+			String[] splittext;
+			boolean foundrecord = false;
+			
+			if (sender instanceof Player) {
+				Player player = (Player)sender;
+
+				if (Permissions != null) {
+					canUseCommand = Permissions.has(player, "deathtpplus.deaths");
+				}
+				else if (gm != null) {
+					canUseCommand = gm.getWorldsHolder().getWorldPermissions(player).has(player,"deathtpplus.deaths");
+				}
+			}
+			
+			if (canUseCommand) {
+			
+				if (args.length == 0) {
+					if (sender instanceof Player) {
+						Player player = (Player)sender;
+						playername = player.getName();
+					}
+					else {
+						return false;
+					}
+				}
+				else if (args.length == 1) {
+					playername = args[0];
+				}
+				else if (args.length == 2) {
+					playername = args[0];
+					cause = args[1];
+				}
+				else
+					return false;
+				
+				File deathlogFile = new File(getDataFolder()+"/deathlog.txt");
+				try {
+					BufferedReader br = new BufferedReader(new FileReader(deathlogFile));
+					while((line = br.readLine()) != null) {
+						splittext = line.split(":");
+						//0 = name, 1 = type, 2 = cause, 3 = number
+						if (!cause.matches("")) {
+							if (splittext[0].matches(playername) && splittext[1].matches("death") && splittext[2].matches(cause.toUpperCase())) {
+								String times = "times";
+								if (splittext[2] == "1")
+									times = "time";
+								sender.sendMessage(playername+" has died by "+cause+" "+splittext[3]+" "+times);
+								foundrecord = true;
+							}
+						}
+						//total count
+						else {
+							if (splittext[0].matches(playername) && splittext[1].matches("death") ) {
+								totalnum = totalnum + Integer.parseInt(splittext[3]);
+							}
+						}
+					}
+					if (cause.matches("")) {
+						String times = "times";
+						if (totalnum == 1)
+							times = "time";
+						sender.sendMessage(playername+" has died "+totalnum+" "+times);
+					}
+					else {
+						if (!foundrecord)
+							sender.sendMessage(playername+" has died by "+cause+" 0 times");
+					}
+					return true;
+				}
+				catch(Exception e) {
+					log.info("[DeathTpPlus] Error reading deathlog: "+deathlogFile);
+				}
+			}
+			
+			else {
+				return true;
+			}
+			
+			return false;
+		}
+		
+		else if (command.equals("kills")) {
+			String playername = "";
+			String username = "";
+			String line;
+			int totalnum = 0;
+			String[] splittext;
+			boolean foundrecord = false;
+			
+			if (sender instanceof Player) {
+				Player player = (Player)sender;
+
+				if (Permissions != null) {
+					canUseCommand = Permissions.has(player, "deathtpplus.kills");
+				}
+				else if (gm != null) {
+					canUseCommand = gm.getWorldsHolder().getWorldPermissions(player).has(player,"deathtpplus.kills");
+				}
+			}
+			
+			if (canUseCommand) {
+				if (args.length == 0) {
+					if (sender instanceof Player) {
+						Player player = (Player)sender;
+						playername = player.getName();
+					}
+					else {
+						return false;
+					}
+				}
+				else if (args.length == 1) {
+					playername = args[0];
+				}
+				else if (args.length == 2) {
+					playername = args[0];
+					username = args[1];
+				}
+				else
+					return false;
+				
+				File deathlogFile = new File(getDataFolder()+"/deathlog.txt");
+				try {
+					BufferedReader br = new BufferedReader(new FileReader(deathlogFile));
+					while((line = br.readLine()) != null) {
+						splittext = line.split(":");
+						//0 = name, 1 = type, 2 = cause, 3 = number
+						if (!username.matches("")) {
+							if (splittext[0].matches(playername) && splittext[1].matches("kill") && splittext[2].matches(username)) {
+								String times = "times";
+								if (splittext[2] == "1")
+									times = "time";
+								sender.sendMessage(playername+" has killed "+username+" "+splittext[3]+" "+times);
+								foundrecord = true;
+							}
+						}
+						//total count
+						else {
+							if (splittext[0].matches(playername) && splittext[1].matches("kill") ) {
+								totalnum = totalnum + Integer.parseInt(splittext[3]);
+							}
+						}
+					}
+					if (username.matches("")) {
+						String times = "times";
+						if (totalnum == 1)
+							times = "time";
+						sender.sendMessage(playername+" has killed "+totalnum+" "+times);
+					}
+					else {
+						if (!foundrecord)
+							sender.sendMessage(playername+" has killed "+username+" 0 times");
+					}
+					return true;
+				}
+				catch(Exception e) {
+					log.info("[DeathTpPlus] Error reading deathlog: "+deathlogFile);
+				}
+			}
+			else {
+				return true;
+			}
+			
+			return false;
 		}
 		
 		else if (command.equals("streak")) {
