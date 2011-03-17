@@ -272,9 +272,28 @@ public class DeathTpPlus extends JavaPlugin{
 							if (teleloc != "") {
 								location = teleloc.split(":");
 								Location sendLocation = player.getLocation();
-								sendLocation.setX(Double.valueOf(location[1].trim()).doubleValue());
-								sendLocation.setY(Double.valueOf(location[2].trim()).doubleValue());
-								sendLocation.setZ(Double.valueOf(location[3].trim()).doubleValue());
+								double x, y, z;
+								x=Double.valueOf(location[1].trim()).doubleValue();
+								y=Double.valueOf(location[2].trim()).doubleValue();
+								z=Double.valueOf(location[3].trim()).doubleValue();
+								
+								sendLocation.setX(x);
+								sendLocation.setY(y);
+								sendLocation.setZ(z);
+								
+								boolean safeTele = false;
+								int test1=-1, test2=-1;
+								while (!safeTele) {
+									test1 = player.getWorld().getBlockTypeIdAt(sendLocation);
+									test2 = player.getWorld().getBlockTypeIdAt(sendLocation);
+									if (test1 == 0 && test2 == 0) {
+										safeTele = true;
+									}
+									
+									sendLocation.setY(sendLocation.getY()+1);
+								}
+								
+								
 								player.teleportTo(sendLocation);
 							}
 							else {
@@ -301,7 +320,7 @@ public class DeathTpPlus extends JavaPlugin{
 			}
 			
 		}
-		
+		/*
 		else if (command.equals("suicide")) {
 			if (sender instanceof Player) {
 				Player player = (Player)sender;
@@ -311,7 +330,7 @@ public class DeathTpPlus extends JavaPlugin{
 				sender.sendMessage("This is only a player command.");
 				return true;
 			}
-		}
+		}*/
 		
 		else if (command.equals("deaths")) {
 			String playername = "";

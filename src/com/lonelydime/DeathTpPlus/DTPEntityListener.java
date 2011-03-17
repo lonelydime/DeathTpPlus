@@ -483,7 +483,6 @@ public class DTPEntityListener extends EntityListener {
 	}
 	
 	public void writeToLog(String logtype, String playername, String deathtype) {
-		System.out.println("writetolog: "+playername+":"+logtype+":"+deathtype);
 		File deathlogFile = new File(plugin.getDataFolder()+"/deathlog.txt");
 		File deathlogTempFile = new File(plugin.getDataFolder()+"/deathtlog.tmp");
 		String line = "";
@@ -522,8 +521,6 @@ public class DTPEntityListener extends EntityListener {
 				pw.println(writeline);
 			    pw.flush();
 			}
-			
-			System.out.println("foundrecord: "+foundrecord);
 			
 			if (!foundrecord) {
 				writeline = playername+":"+logtype+":"+deathtype+":1";
