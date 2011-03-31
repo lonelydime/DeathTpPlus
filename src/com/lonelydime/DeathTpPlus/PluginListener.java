@@ -12,7 +12,6 @@ import org.bukkit.plugin.Plugin;
 public class PluginListener extends ServerListener {
     public PluginListener() { }
 
-    @Override
     public void onPluginEnabled(PluginEvent event) {
         if(DeathTpPlus.getiConomy() == null) {
             Plugin iConomy = DeathTpPlus.getBukkitServer().getPluginManager().getPlugin("iConomy");

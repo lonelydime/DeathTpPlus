@@ -119,6 +119,7 @@ public class DeathTpPlus extends JavaPlugin{
 		deathevents.put("DMGPVP", getConfiguration().getStringList("pvp", null));
 		deathevents.put("DMGFISTS", getConfiguration().getStringList("pvp-fists", null));
 		deathevents.put("DMGSUFFOCATION", getConfiguration().getStringList("suffocation", null));
+		deathevents.put("DMGVOID", getConfiguration().getStringList("void", null));
 		deathevents.put("DMGUNKNOWN", getConfiguration().getStringList("unknown", null));
 		//Configuration nodes
 		deathconfig.put("SHOW_DEATHNOTIFY", getConfiguration().getString("show-deathnotify", "false"));
@@ -148,7 +149,7 @@ public class DeathTpPlus extends JavaPlugin{
         }
         
         if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true") || DeathTpPlus.deathconfig.get("SHOW_STREAKS").equals("true") ) {
-        	pm.registerEvent(Event.Type.ENTITY_DAMAGED, entityListener, Priority.Normal, this);
+        	pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.Normal, this);
         }
         
         //permissions include
@@ -294,7 +295,7 @@ public class DeathTpPlus extends JavaPlugin{
 								}
 								
 								
-								player.teleportTo(sendLocation);
+								player.teleport(sendLocation);
 							}
 							else {
 								player.sendMessage("You do not have a last known death location.");
@@ -583,6 +584,27 @@ public class DeathTpPlus extends JavaPlugin{
 		
 		
 		return false;
+	}
+	
+	public String convertSamloean(String convert) {
+		convert = convert.replace("&0", "¤0");
+		convert = convert.replace("&1", "¤1");
+		convert = convert.replace("&2", "¤2");
+		convert = convert.replace("&3", "¤3");
+		convert = convert.replace("&4", "¤4");
+		convert = convert.replace("&5", "¤5");
+		convert = convert.replace("&6", "¤6");
+		convert = convert.replace("&7", "¤7");
+		convert = convert.replace("&8", "¤8");
+		convert = convert.replace("&9", "¤9");
+		convert = convert.replace("&a", "¤a");
+		convert = convert.replace("&b", "¤b");
+		convert = convert.replace("&c", "¤c");
+		convert = convert.replace("&d", "¤d");
+		convert = convert.replace("&e", "¤e");
+		convert = convert.replace("&f", "¤f");
+		
+		return convert;
 	}
 	
 	//iconomy methods

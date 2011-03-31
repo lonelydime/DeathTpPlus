@@ -181,6 +181,11 @@ public class DTPEntityListener extends EntityListener {
 				    		messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGSLIME").size());
 				    	eventAnnounce = DeathTpPlus.deathevents.get("DMGSLIME").get(messageindex).replace("%n", player.getName());
 				    }
+				    else if (howtheydied[0].matches("VOID")) {
+				    	if (DeathTpPlus.deathevents.get("DMGVOID").size() > 1)
+				    		messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGVOID").size());
+				    	eventAnnounce = DeathTpPlus.deathevents.get("DMGVOID").get(messageindex).replace("%n", player.getName());
+				    }
 				    else if (howtheydied[0].matches("GHAST")) {
 				    	if (DeathTpPlus.deathevents.get("DMGGHAST").size() > 1)
 				    		messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGGHAST").size());
@@ -214,6 +219,7 @@ public class DTPEntityListener extends EntityListener {
 				    	eventAnnounce = DeathTpPlus.deathevents.get("DMGUNKNOWN").get(messageindex).replace("%n", player.getName());
 				    }
 				    
+				    eventAnnounce = plugin.convertSamloean(eventAnnounce);
 				    
 				    if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true")) {
 				    	plugin.getServer().broadcastMessage(eventAnnounce);
@@ -303,7 +309,7 @@ public class DTPEntityListener extends EntityListener {
 	
 	public void lastDamageDone(Player player, EntityDamageEvent event) {
 		String lastdamage = event.getCause().name();
-
+		//player.sendMessage(lastdamage);
 		//checks for mob/PVP damage
 		if (event instanceof EntityDamageByProjectileEvent) {
 			EntityDamageByProjectileEvent mobevent = (EntityDamageByProjectileEvent) event;
@@ -438,7 +444,8 @@ public class DTPEntityListener extends EntityListener {
 				teststreak = DeathTpPlus.deathstreak.get("DEATH_STREAK").get(i);
 				testsplit = teststreak.split(":");
 				if (Integer.parseInt(testsplit[0]) == -(defCurrentStreak)) {
-					plugin.getServer().broadcastMessage(testsplit[1].replace("%n", defender));
+					String announce = plugin.convertSamloean(testsplit[1]);
+					plugin.getServer().broadcastMessage(announce.replace("%n", defender));
 				}
 			}
 			//Kills
@@ -446,7 +453,8 @@ public class DTPEntityListener extends EntityListener {
 				teststreak = DeathTpPlus.killstreak.get("KILL_STREAK").get(i);
 				testsplit = teststreak.split(":");
 				if (Integer.parseInt(testsplit[0]) == atkCurrentStreak) {
-					plugin.getServer().broadcastMessage(testsplit[1].replace("%n", attacker));
+					String announce = plugin.convertSamloean(testsplit[1]);
+					plugin.getServer().broadcastMessage(announce.replace("%n", attacker));
 				}
 			}
 		
