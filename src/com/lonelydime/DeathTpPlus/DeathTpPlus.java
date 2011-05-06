@@ -28,7 +28,9 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 import com.nijiko.permissions.PermissionHandler;
 import org.anjocaido.groupmanager.GroupManager;
 //iconomy
-import com.nijiko.coelho.iConomy.iConomy;
+import com.iConomy.iConomy;
+import com.iConomy.system.Account;
+import com.iConomy.system.Holdings;
 //craftirc
 import com.ensifera.animosity.craftirc.CraftIRC;
 
@@ -48,8 +50,7 @@ public class DeathTpPlus extends JavaPlugin{
     public static GroupManager gm = null;
     
     //iconomy
-    private static PluginListener PluginListener = null;
-    private static iConomy iConomy = null;
+    public static iConomy iConomy = null;
     private static Server Server = null;
     private boolean useiConomy = false;
     
@@ -120,6 +121,8 @@ public class DeathTpPlus extends JavaPlugin{
 		deathevents.put("DMGFISTS", getConfiguration().getStringList("pvp-fists", null));
 		deathevents.put("DMGSUFFOCATION", getConfiguration().getStringList("suffocation", null));
 		deathevents.put("DMGVOID", getConfiguration().getStringList("void", null));
+		deathevents.put("DMGWOLF", getConfiguration().getStringList("wolf", null));
+		deathevents.put("DMGLIGHTNING", getConfiguration().getStringList("lightning", null));
 		deathevents.put("DMGUNKNOWN", getConfiguration().getStringList("unknown", null));
 		//Configuration nodes
 		deathconfig.put("SHOW_DEATHNOTIFY", getConfiguration().getString("show-deathnotify", "false"));
@@ -156,9 +159,9 @@ public class DeathTpPlus extends JavaPlugin{
         setupPermissions();
         
         //iconomy
-        Server = getServer();
-        PluginListener = new PluginListener();
-        pm.registerEvent(Event.Type.PLUGIN_ENABLE, PluginListener, Priority.Monitor, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, new server(this), Priority.Monitor, this);
+        getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_DISABLE, new server(this), Priority.Monitor, this);
+
         
         //craftirc
         Plugin checkplugin = this.getServer().getPluginManager().getPlugin("CraftIRC");
@@ -243,14 +246,19 @@ public class DeathTpPlus extends JavaPlugin{
 					if (iconomyCost > 0) {
 						if (checkiConomy()) {
 							
-							if (com.nijiko.coelho.iConomy.iConomy.getBank().getAccount(player.getName()).hasEnough(iconomyCost)) {
-								com.nijiko.coelho.iConomy.iConomy.getBank().getAccount(player.getName()).subtract(iconomyCost);
-								com.nijiko.coelho.iConomy.iConomy.getBank().getAccount(player.getName()).save();
-								player.sendMessage("You used "+iconomyCost+" to use /deathtp");
-							}
-							else {
-								player.sendMessage("You need "+iconomyCost+" coins to use /deathtp");
-								teleportok = false;
+							if (checkiConomy()) {
+								Account account = com.iConomy.iConomy.getAccount(player.getName());
+								if (account != null) {
+									Holdings balance = com.iConomy.iConomy.getAccount(player.getName()).getHoldings();
+									if (balance.hasEnough(iconomyCost)) {
+										balance.subtract(iconomyCost);
+										player.sendMessage("You used "+iconomyCost+" to use /deathtp");
+									}
+									else {
+										player.sendMessage("You need "+iconomyCost+" coins to use /deathtp");
+										teleportok = false;
+									}
+								}
 							}
 						}
 					}

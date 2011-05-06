@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Spider;
+import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
@@ -191,6 +192,16 @@ public class DTPEntityListener extends EntityListener {
 				    		messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGGHAST").size());
 				    	eventAnnounce = DeathTpPlus.deathevents.get("DMGGHAST").get(messageindex).replace("%n", player.getName());
 				    }
+				    else if (howtheydied[0].matches("WOLF")) {
+				    	if (DeathTpPlus.deathevents.get("DMGWOLF").size() > 1)
+				    		messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGWOLF").size());
+				    	eventAnnounce = DeathTpPlus.deathevents.get("DMGWOLF").get(messageindex).replace("%n", player.getName());
+				    }
+				    else if (howtheydied[0].matches("LIGHTNING")) {
+				    	if (DeathTpPlus.deathevents.get("DMGLIGHTNING").size() > 1)
+				    		messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGLIGHTNING").size());
+				    	eventAnnounce = DeathTpPlus.deathevents.get("DMGLIGHTNING").get(messageindex).replace("%n", player.getName());
+				    }
 				    else if (howtheydied[0].matches("PVP")) {
 				    	if (howtheydied[2].equals("bare hands")) {
 					    	if (DeathTpPlus.deathevents.get("DMGFISTS").size() > 1)
@@ -256,7 +267,7 @@ public class DTPEntityListener extends EntityListener {
 						Block signBlock = player.getWorld().getBlockAt(player.getLocation().getBlockX(),
 				                player.getLocation().getBlockY(),
 				                player.getLocation().getBlockZ());
-	
+						
 				        signBlock.setType(Material.SIGN_POST);
 	
 				        BlockState state = signBlock.getState();
@@ -337,6 +348,12 @@ public class DTPEntityListener extends EntityListener {
 			if (attacker.toString().toLowerCase().matches("craftslime")) {
 				lastdamage = "SLIME";
 			}
+			
+			else if (attacker instanceof Wolf) {
+				//Wolf wolf = (Wolf)attacker;
+				//TODO wolf owner logic
+				lastdamage = "WOLF";
+			}
 
 			else if (attacker instanceof Monster) {
 				Monster mob = (Monster) attacker;
@@ -361,7 +378,7 @@ public class DTPEntityListener extends EntityListener {
 				}
 				else if (mob instanceof Slime) {
 					lastdamage = "SLIME";
-				}
+				}		
 			}
 			else if (attacker instanceof Player) {
 				Player pvper = (Player) attacker;
