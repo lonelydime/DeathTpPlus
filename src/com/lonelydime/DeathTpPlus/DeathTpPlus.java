@@ -1,16 +1,15 @@
 package com.lonelydime.DeathTpPlus;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.jar.JarFile;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import com.nijikokun.register.payment.Methods;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,16 +20,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.Server;
 
-//permissions
-import com.nijikokun.bukkit.Permissions.Permissions;
-import com.nijiko.permissions.PermissionHandler;
-import org.anjocaido.groupmanager.GroupManager;
-//iconomy
-import com.iConomy.iConomy;
-import com.iConomy.system.Account;
-import com.iConomy.system.Holdings;
+
+//Register
+import com.nijikokun.register.payment.Method.MethodAccount;
+import com.nijikokun.register.payment.Method;
+
+
 //craftirc
 import com.ensifera.animosity.craftirc.CraftIRC;
 
@@ -39,20 +35,26 @@ public class DeathTpPlus extends JavaPlugin{
 	private final DTPEntityListener entityListener = new DTPEntityListener(this);
 	
 	//plugin variables
-	private final Logger log = Logger.getLogger("Minecraft");
+	protected Logger log;
+    private DeathTpPlus plugin = this;
     public static HashMap<String, List<String>> killstreak = new HashMap<String, List<String>>();
     public static HashMap<String, List<String>> deathstreak = new HashMap<String, List<String>>();
     public static HashMap<String, List<String>> deathevents = new HashMap<String, List<String>>();
     public static HashMap<String, String> deathconfig = new HashMap<String, String>();
-    
-    //permissions
-    public static PermissionHandler Permissions = null;
-    public static GroupManager gm = null;
-    
-    //iconomy
-    public static iConomy iConomy = null;
-    private static Server Server = null;
-    private boolean useiConomy = false;
+    public static File configFile;
+    public static File locsName;
+    public static File streakFile;
+    public static File deathlogFile;
+    protected String logName = null;
+    protected String pluginName = null;
+    protected String pluginVersion = null;
+    protected ArrayList<String> pluginAuthor = null;
+    protected String pluginPath = null;
+
+
+    //Register
+    boolean Register = false;
+    boolean useRegister = false;
     
     //craftirc
     public static CraftIRC craftircHandle = null;
@@ -62,26 +64,46 @@ public class DeathTpPlus extends JavaPlugin{
 	}
 
 	public void onEnable() {
-		
-		File yml = new File(getDataFolder()+"/config.yml");
-        File locsName = new File(getDataFolder()+"/locs.txt");
-		File streakFile = new File(getDataFolder()+"/streak.txt");
-		File deathlogFile = new File(getDataFolder()+"/deathlog.txt");
-        
-        if (!yml.exists()) {
+		log = Bukkit.getServer().getLogger();
+        pluginName = getDescription().getName();
+        logName = "[" + pluginName + "] ";
+        pluginVersion = getDescription().getVersion();
+        pluginAuthor = getDescription().getAuthors();
+        pluginPath = getDataFolder() + System.getProperty("file.separator");
+		configFile = new File(pluginPath+"config.yml");
+        locsName = new File(pluginPath+"locs.txt");
+		streakFile = new File(pluginPath+"streak.txt");
+		deathlogFile = new File(pluginPath+"deathlog.txt");
+
+        // Todo write Helper Class for this
+
+        if (!configFile.exists()) {
         	new File(getDataFolder().toString()).mkdir();
     	    try {
-    	    	yml.createNewFile();
-    	    }
-    	    catch (IOException ex) {
-    	    	System.out.println("cannot create file "+yml.getPath());
-    	    }
+            JarFile jar = new JarFile("plugins" + System.getProperty("file.separator") +getDescription().getName() + ".jar");
+            ZipEntry config = jar.getEntry("config.yml");
+            InputStream in = new BufferedInputStream(jar.getInputStream(config));
+            OutputStream out = new BufferedOutputStream(new FileOutputStream(configFile));
+            int c;
+            while((c = in.read()) != -1){
+                out.write(c);
+            }
+            out.flush();
+            out.close();
+            in.close();
+            jar.close();
+            log.info(logName + "Default config created successfully!");
+           } catch (Exception e)  {
+             log.warning(logName + "Default config could not be created!");
+
+        }
         }	
 		
 		if (!locsName.exists()) {
 			try {
 				locsName.createNewFile();
 			} catch (IOException e) {
+                // Todo Enable Logger
 				System.out.println("cannot create file "+locsName.getPath()+"/"+locsName.getName());
 			}
 		}
@@ -90,6 +112,7 @@ public class DeathTpPlus extends JavaPlugin{
 			try {
 				streakFile.createNewFile();
 			} catch (IOException e) {
+                // Todo Enable Logger
 				System.out.println("cannot create file "+streakFile.getPath()+"/"+streakFile.getName());
 			}
 		}
@@ -98,6 +121,7 @@ public class DeathTpPlus extends JavaPlugin{
 			try {
 				deathlogFile.createNewFile();
 			} catch (IOException e) {
+                // Todo Enable Logger
 				System.out.println("cannot create file "+deathlogFile.getPath()+"/"+deathlogFile.getName());
 			}
 		}
@@ -154,52 +178,38 @@ public class DeathTpPlus extends JavaPlugin{
         if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true") || DeathTpPlus.deathconfig.get("SHOW_STREAKS").equals("true") ) {
         	pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.Normal, this);
         }
-        
-        //permissions include
-        setupPermissions();
-        
-        //iconomy
+
+
+
+        //Register
+
+
+
 		getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, new server(this), Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_DISABLE, new server(this), Priority.Monitor, this);
 
         
         //craftirc
-        Plugin checkplugin = this.getServer().getPluginManager().getPlugin("CraftIRC");
-        if (checkplugin != null) {
+        Plugin checkCraftIRC = this.getServer().getPluginManager().getPlugin("CraftIRC");
+        if (checkCraftIRC != null) {
 	        try {
-	            craftircHandle = (CraftIRC) checkplugin;
+	            craftircHandle = (CraftIRC) checkCraftIRC;
+                //Todo Enable Logger
 	            log.info("[DeathTpPlus] CraftIRC Support Enabled.");
 	        } 
 	        catch (ClassCastException ex) {
 	        }
         }
-        
+
+
+
+
         // print success
         PluginDescriptionFile pdfFile = this.getDescription();
-        log.info("[DeathTpPlus] version " + pdfFile.getVersion() + " by lonelydime is enabled!");
+        // Todo Enable Logger
+        log.info("[DeathTpPlus] version " + pdfFile.getVersion() + " is enabled!");
 	}
-	
-	public void setupPermissions() {
-		Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
-		Plugin p = this.getServer().getPluginManager().getPlugin("GroupManager");
-		
-		//Permissions
-		if(Permissions == null) {
-		    if(test != null) {
-		    	Permissions = ((Permissions)test).getHandler();
-		    	log.info("[DeathTpPlus] Using Permissions");
-		    }
-		}
-		
-		//GroupManager
-		if (p != null) {
-            if (!p.isEnabled()) {
-                this.getServer().getPluginManager().enablePlugin(p);
-                log.info("[DeathTpPlus] Using GroupManager");
-            }
-            gm = (GroupManager) p;
-        } 
-	}
+
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		String command = cmd.getName();
@@ -209,13 +219,10 @@ public class DeathTpPlus extends JavaPlugin{
 		if (command.equals("deathtp")) {
 			if (sender instanceof Player) {
 				Player player = (Player)sender;
-				double iconomyCost = Double.valueOf(deathconfig.get("ICONOMY_COST").trim()).doubleValue();
+				double registerCost = Double.valueOf(deathconfig.get("ICONOMY_COST").trim()).doubleValue();
 				
-				if (Permissions != null) {
-					canUseCommand = Permissions.has(player, "deathtpplus.deathtp");
-				}
-				else if (gm != null) {
-					canUseCommand = gm.getWorldsHolder().getWorldPermissions(player).has(player,"deathtpplus.deathtp");
+				if (player.hasPermission("deathtpplus.deathtp")) {
+					canUseCommand = true;
 				}
 				else {
 					canUseCommand = deathconfig.get("ALLOW_DEATHTP").equals("true");
@@ -241,35 +248,32 @@ public class DeathTpPlus extends JavaPlugin{
 							}
 						}
 					}
-					
+
+                    // Todo CHange => register
 					//costs iconomy
-					if (iconomyCost > 0) {
-						if (checkiConomy()) {
-							
-							if (checkiConomy()) {
-								Account account = com.iConomy.iConomy.getAccount(player.getName());
-								if (account != null) {
-									Holdings balance = com.iConomy.iConomy.getAccount(player.getName()).getHoldings();
-									if (balance.hasEnough(iconomyCost)) {
-										balance.subtract(iconomyCost);
-										player.sendMessage("You used "+iconomyCost+" to use /deathtp");
+					if (registerCost > 0) {
+						if (useRegister) {
+								MethodAccount account = getRegisterMethod().getAccount(player.getName());
+								if (account != null && account.hasEnough(registerCost)) {
+										account.subtract(registerCost);
+										player.sendMessage("You used "+registerCost+" to use /deathtp");
 									}
 									else {
-										player.sendMessage("You need "+iconomyCost+" coins to use /deathtp");
+										player.sendMessage("You need "+registerCost+" coins to use /deathtp");
 										teleportok = false;
 									}
 								}
-							}
+
 						}
-					}
+					
 					
 					if (teleportok) {
-						File fileName = new File("plugins/DeathTpPlus/locs.txt");
+
 						try {
 							String line = "";
 							String teleloc = "";
 							String[] location;
-							FileReader fr = new FileReader(fileName);
+							FileReader fr = new FileReader(locsName);
 							BufferedReader br = new BufferedReader(fr);
 							
 							while((line = br.readLine()) != null) {
@@ -329,18 +333,7 @@ public class DeathTpPlus extends JavaPlugin{
 			}
 			
 		}
-		/*
-		else if (command.equals("suicide")) {
-			if (sender instanceof Player) {
-				Player player = (Player)sender;
-				player.setHealth(0);
-			}
-			else {
-				sender.sendMessage("This is only a player command.");
-				return true;
-			}
-		}*/
-		
+
 		else if (command.equals("deaths")) {
 			String playername = "";
 			String cause = "";
@@ -352,11 +345,8 @@ public class DeathTpPlus extends JavaPlugin{
 			if (sender instanceof Player) {
 				Player player = (Player)sender;
 
-				if (Permissions != null) {
-					canUseCommand = Permissions.has(player, "deathtpplus.deaths");
-				}
-				else if (gm != null) {
-					canUseCommand = gm.getWorldsHolder().getWorldPermissions(player).has(player,"deathtpplus.deaths");
+				if (player.hasPermission("deathtpplus.deaths")) {
+					canUseCommand = true;
 				}
 			}
 			
@@ -381,7 +371,7 @@ public class DeathTpPlus extends JavaPlugin{
 				else
 					return false;
 				
-				File deathlogFile = new File(getDataFolder()+"/deathlog.txt");
+				// File deathlogFile = new File(getDataFolder()+"/deathlog.txt");
 				try {
 					BufferedReader br = new BufferedReader(new FileReader(deathlogFile));
 					while((line = br.readLine()) != null) {
@@ -416,6 +406,7 @@ public class DeathTpPlus extends JavaPlugin{
 					return true;
 				}
 				catch(Exception e) {
+                    // Todo implement logger
 					log.info("[DeathTpPlus] Error reading deathlog: "+deathlogFile);
 				}
 			}
@@ -438,13 +429,10 @@ public class DeathTpPlus extends JavaPlugin{
 			if (sender instanceof Player) {
 				Player player = (Player)sender;
 
-				if (Permissions != null) {
-					canUseCommand = Permissions.has(player, "deathtpplus.kills");
+				if (player.hasPermission("deathtpplus.kills")) {
+					canUseCommand = true;
 				}
-				else if (gm != null) {
-					canUseCommand = gm.getWorldsHolder().getWorldPermissions(player).has(player,"deathtpplus.kills");
-				}
-			}
+		    }
 			
 			if (canUseCommand) {
 				if (args.length == 0) {
@@ -466,7 +454,7 @@ public class DeathTpPlus extends JavaPlugin{
 				else
 					return false;
 				
-				File deathlogFile = new File(getDataFolder()+"/deathlog.txt");
+				//File deathlogFile = new File(getDataFolder()+"/deathlog.txt");
 				try {
 					BufferedReader br = new BufferedReader(new FileReader(deathlogFile));
 					while((line = br.readLine()) != null) {
@@ -501,6 +489,7 @@ public class DeathTpPlus extends JavaPlugin{
 					return true;
 				}
 				catch(Exception e) {
+                    // Todo implement logger
 					log.info("[DeathTpPlus] Error reading deathlog: "+deathlogFile);
 				}
 			}
@@ -512,20 +501,19 @@ public class DeathTpPlus extends JavaPlugin{
 		}
 		
 		else if (command.equals("streak")) {
+            // Todo ???
 			canUseCommand = true;
 			
 			if (sender instanceof Player) {
-				if (Permissions != null) {
-					canUseCommand = Permissions.has((Player)sender, "deathtpplus.streak");
-				}
-				else if (DeathTpPlus.gm != null) {
-					canUseCommand = gm.getWorldsHolder().getWorldPermissions((Player)sender).has((Player)sender,"deathtpplus.streak");
+                Player player = (Player)sender;
+				if (player.hasPermission("deathtpplus.streak")) {
+					canUseCommand = true;
 				}
 			}
 				
 			if (canUseCommand) {
 				if (DeathTpPlus.deathconfig.get("SHOW_STREAKS").equals("true") ) {
-					File streakFile = new File("plugins/DeathTpPlus/streak.txt");
+					// File streakFile = new File("plugins/DeathTpPlus/streak.txt");
 					String line;
 					String[] splittext;
 					Player check;
@@ -595,46 +583,60 @@ public class DeathTpPlus extends JavaPlugin{
 	}
 	
 	public String convertSamloean(String convert) {
-		convert = convert.replace("&0", "¤0");
-		convert = convert.replace("&1", "¤1");
-		convert = convert.replace("&2", "¤2");
-		convert = convert.replace("&3", "¤3");
-		convert = convert.replace("&4", "¤4");
-		convert = convert.replace("&5", "¤5");
-		convert = convert.replace("&6", "¤6");
-		convert = convert.replace("&7", "¤7");
-		convert = convert.replace("&8", "¤8");
-		convert = convert.replace("&9", "¤9");
-		convert = convert.replace("&a", "¤a");
-		convert = convert.replace("&b", "¤b");
-		convert = convert.replace("&c", "¤c");
-		convert = convert.replace("&d", "¤d");
-		convert = convert.replace("&e", "¤e");
-		convert = convert.replace("&f", "¤f");
+		convert = convert.replace("&0", "ï¿½0");
+		convert = convert.replace("&1", "ï¿½1");
+		convert = convert.replace("&2", "ï¿½2");
+		convert = convert.replace("&3", "ï¿½3");
+		convert = convert.replace("&4", "ï¿½4");
+		convert = convert.replace("&5", "ï¿½5");
+		convert = convert.replace("&6", "ï¿½6");
+		convert = convert.replace("&7", "ï¿½7");
+		convert = convert.replace("&8", "ï¿½8");
+		convert = convert.replace("&9", "ï¿½9");
+		convert = convert.replace("&a", "ï¿½a");
+		convert = convert.replace("&b", "ï¿½b");
+		convert = convert.replace("&c", "ï¿½c");
+		convert = convert.replace("&d", "ï¿½d");
+		convert = convert.replace("&e", "ï¿½e");
+		convert = convert.replace("&f", "ï¿½f");
 		
 		return convert;
 	}
-	
-	//iconomy methods
-	public static Server getBukkitServer() {
-        return Server;
-    }
 
-    public static iConomy getiConomy() {
-        return iConomy;
-    }
+
+    // Todo change => register
+	//Register methods
+	//public static Server getBukkitServer() {
+    //    return Server;
+    //}
+
+    //public static Register getRegister() {
+    //    return Register;
+    //}
     
-    public static boolean setiConomy(iConomy plugin) {
-        if (iConomy == null) {
-            iConomy = plugin;
-        } else {
-            return false;
-        }
-        return true;
-    }
+    //public static boolean setRegister(Register plugin) {
+    //    if (Register == null) {
+    //       Register = plugin;
+    //    } else {
+    //        return false;
+    //    }
+    //    return true;
+    //}
     
-    public boolean checkiConomy() {
-        this.useiConomy = (iConomy != null);
-        return this.useiConomy;
+    //public boolean checkRegister() {
+    //    this.useRegister = (Register != null);
+    //    return this.useRegister;
+    //}
+    /**
+     * Attempts to get the active Register Method.
+     * @return The Method, or null if there is no active one or Register is not loaded.
+     */
+    public Method getRegisterMethod(){
+        try{
+            return Methods.getMethod();
+        } catch(NoClassDefFoundError err){
+        } // ugly solution, I know ...
+        return null;
+
     }
 }

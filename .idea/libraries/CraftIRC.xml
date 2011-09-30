@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="CraftIRC">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Resources/CraftIRC.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
