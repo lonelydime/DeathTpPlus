@@ -196,6 +196,21 @@ public class DTPEntityListener extends EntityListener {
                             messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGLIGHTNING").size());
                         eventAnnounce = DeathTpPlus.deathevents.get("DMGLIGHTNING").get(messageindex).replace("%n", player.getName());
                     }
+                    else if (howtheydied[0].matches("STARVATION")) {
+                        if (DeathTpPlus.deathevents.get("DMGSTARVATION").size() > 1)
+                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGSTARTVATION").size());
+                        eventAnnounce = DeathTpPlus.deathevents.get("DMGSTARVATION").get(messageindex).replace("%n", player.getName());
+                    }
+                    else if (howtheydied[0].matches("CAVESPIDER")) {
+                        if (DeathTpPlus.deathevents.get("DMGCAVESPIDER").size() > 1)
+                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGCAVESPIDER").size());
+                        eventAnnounce = DeathTpPlus.deathevents.get("DMGCAVESPIDER").get(messageindex).replace("%n", player.getName());
+                    }
+                    else if (howtheydied[0].matches("ENDERMAN")) {
+                        if (DeathTpPlus.deathevents.get("DMGENDERMAN").size() > 1)
+                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGENDERMAN").size());
+                        eventAnnounce = DeathTpPlus.deathevents.get("DMGENDERMAN").get(messageindex).replace("%n", player.getName());
+                    }
                     else if (howtheydied[0].matches("PVP")) {
                         if (howtheydied[2].equals("bare hands")) {
                             if (DeathTpPlus.deathevents.get("DMGFISTS").size() > 1)

@@ -148,13 +148,16 @@ public class DeathTpPlus extends JavaPlugin{
 		deathevents.put("DMGWOLF", getConfiguration().getStringList("wolf", null));
 		deathevents.put("DMGLIGHTNING", getConfiguration().getStringList("lightning", null));
 		deathevents.put("DMGUNKNOWN", getConfiguration().getStringList("unknown", null));
+        deathevents.put("DMGSTARVATION", getConfiguration().getStringList("starvation", null));
+        deathevents.put("DMGCAVESPIDER", getConfiguration().getStringList("cavespider", null));
+        deathevents.put("DMGENDERMAN", getConfiguration().getStringList("enderman", null));
 		//Configuration nodes
 		deathconfig.put("SHOW_DEATHNOTIFY", getConfiguration().getString("show-deathnotify", "false"));
 		deathconfig.put("ALLOW_DEATHTP", getConfiguration().getString("allow-deathtp", "false"));
 		deathconfig.put("SHOW_STREAKS", getConfiguration().getString("show-streaks", "false"));
 		deathconfig.put("CHARGE_ITEM_ID", getConfiguration().getString("charge-item", "false"));
 		deathconfig.put("SHOW_SIGN", getConfiguration().getString("show-sign", "false"));
-		deathconfig.put("ICONOMY_COST", getConfiguration().getString("deathtp-cost", "0"));
+		deathconfig.put("REGISTER_COST", getConfiguration().getString("deathtp-cost", "0"));
 		deathconfig.put("CRAFT_IRC_TAG", getConfiguration().getString("deathtp-tag", null));
 		deathconfig.put("DEATH_LOGS", getConfiguration().getString("allow-deathlog", "false"));
 		//Kill Streak nodes
@@ -219,7 +222,7 @@ public class DeathTpPlus extends JavaPlugin{
 		if (command.equals("deathtp")) {
 			if (sender instanceof Player) {
 				Player player = (Player)sender;
-				double registerCost = Double.valueOf(deathconfig.get("ICONOMY_COST").trim()).doubleValue();
+				double registerCost = Double.valueOf(deathconfig.get("REGISTER_COST").trim()).doubleValue();
 				
 				if (player.hasPermission("deathtpplus.deathtp")) {
 					canUseCommand = true;
