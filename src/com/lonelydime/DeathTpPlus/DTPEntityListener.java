@@ -54,7 +54,7 @@ public class DTPEntityListener extends EntityListener {
                     boolean readCheck = false;
                     boolean newPlayerDeath = true;
                     //text to write to file
-                    fileOutput = player.getName()+":"+player.getLocation().getX()+":"+player.getLocation().getY()+":"+player.getLocation().getZ();
+                    fileOutput = player.getName()+":"+player.getLocation().getX()+":"+player.getLocation().getY()+":"+player.getLocation().getZ()+":"+player.getWorld().getName().toString();
 
                     //File fileName = new File("plugins/DeathTpPlus/locs.txt");
                     //File locsName = new File(plugin.getDataFolder()+"/locs.txt");

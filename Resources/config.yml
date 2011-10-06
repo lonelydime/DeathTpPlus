@@ -26,6 +26,9 @@ deathtp-tag: 'all'
 #Deathlogs
 allow-deathlog: 'true'
 
+#Allow World Travel = yes, no, permissions
+allow-worldtravel: 'no'
+
 # ----- Death Messages
 
 # Must contain at least 1 line. If there are more, it will appear randomly when a person dies.

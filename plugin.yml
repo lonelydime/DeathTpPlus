@@ -1,6 +1,6 @@
 name: DeathTpPlus
 main: com.lonelydime.DeathTpPlus.DeathTpPlus
-version: 1.91
+version: 1.92
 website: https://github.com/dredhorse/DeathTpPlus
 authors: [Don Redhorse, orig. by. lonelydime]
 description: Death commands including deathtp, deathnotify and deathstreaks.
@@ -44,6 +44,7 @@ permissions:
             deathtpplus.streak: true
             deathtpplus.deaths: true
             deathtpplus.kills: true
+            deathtpplus.worldtravel: true
     deathtpplus.deathtp:
         description: Gives access to the deathtp command
         default: op
@@ -55,4 +56,7 @@ permissions:
         default: op
     deathtpplus.kills:
         description: Gives access to the kills command
+        default: op
+    deathtpplus.worldtravel:
+        description: Allows teleporting to another worlds death location
         default: op
