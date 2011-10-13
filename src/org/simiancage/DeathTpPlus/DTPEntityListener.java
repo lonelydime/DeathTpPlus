@@ -1,4 +1,4 @@
-package com.lonelydime.DeathTpPlus;
+package org.simiancage.DeathTpPlus;
 
 //java imports
 import java.io.BufferedReader;
@@ -31,10 +31,26 @@ public class DTPEntityListener extends EntityListener {
     public ArrayList<String> lastDamageType = new ArrayList<String>();
     public String beforedamage = "";
     public PlayerDeathEvent playerDeathEvent = null;
+    enum DeathTypes {FALL, DROWNING, SUFFOCATION, FIRE_TICK, FIRE, LAVA, BLOCK_EXPLOSION, CREEPER, SKELETON, SPIDER, PIGZOMBIE, ZOMBIE, CONTACT, SLIME, VOID, GHAST, WOLF, LIGHTNING, STARVATION, CAVESPIDER, ENDERMAN, PVP, FISTS, UNKNOWN
+
+    }
 
     public DTPEntityListener(DeathTpPlus instance) {
         plugin = instance;
     }
+
+    public String getEvent (String deathType){
+        int messageindex = 0;
+        String eventAnnounce = "";
+        if (DeathTpPlus.deathevents.get(deathType).size() > 1)
+        {
+            Random rand = new Random();
+            messageindex = rand.nextInt(DeathTpPlus.deathevents.get(deathType).size());
+        }
+        return DeathTpPlus.deathevents.get(deathType).get(messageindex);
+    }
+
+
 
     public void onEntityDeath(EntityDeathEvent event) {
 
@@ -42,7 +58,7 @@ public class DTPEntityListener extends EntityListener {
         try {
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
-                String damagetype = lastDamageType.get(lastDamagePlayer.indexOf(player.getName()));
+                String damagetype = lastDamageType.get(lastDamagePlayer.indexOf(player.getDisplayName()));
                 String eventAnnounce = "";
                 String fileOutput = "";
                 String line = "";
@@ -101,142 +117,31 @@ public class DTPEntityListener extends EntityListener {
 
                 if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true") || DeathTpPlus.deathconfig.get("SHOW_STREAKS").equals("true") || DeathTpPlus.deathconfig.get("DEATH_LOGS").equals("true") ) {
                     howtheydied = damagetype.split(":");
-                    int messageindex = 0;
-                    Random rand = new Random();
                     loghowdied = howtheydied[0];
                     // Todo change into case statement and create methods for eventAnnounce
 
-                    if (howtheydied[0].matches("FALL")) {
-                        if (DeathTpPlus.deathevents.get("DMGFALL").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGFALL").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGFALL").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("DROWNING")) {
-                        if (DeathTpPlus.deathevents.get("DMGDROWNING").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGDROWNING").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGDROWNING").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("SUFFOCATION")) {
-                        if (DeathTpPlus.deathevents.get("DMGSUFFOCATION").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGSUFFOCATION").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGSUFFOCATION").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("FIRE_TICK")) {
-                        if (DeathTpPlus.deathevents.get("DMGFIRE_TICK").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGFIRE_TICK").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGFIRE_TICK").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("FIRE")) {
-                        if (DeathTpPlus.deathevents.get("DMGFIRE").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGFIRE").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGFIRE").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("LAVA")) {
-                        if (DeathTpPlus.deathevents.get("DMGLAVA").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGLAVA").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGLAVA").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("BLOCK_EXPLOSION")) {
-                        if (DeathTpPlus.deathevents.get("DMGBLOCK_EXPLOSION").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGBLOCK_EXPLOSION").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGBLOCK_EXPLOSION").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("CREEPER")) {
-                        if (DeathTpPlus.deathevents.get("DMGCREEPER").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGCREEPER").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGCREEPER").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("SKELETON")) {
-                        if (DeathTpPlus.deathevents.get("DMGSKELETON").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGSKELETON").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGSKELETON").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("SPIDER")) {
-                        if (DeathTpPlus.deathevents.get("DMGSPIDER").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGSPIDER").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGSPIDER").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("PIGZOMBIE")) {
-                        if (DeathTpPlus.deathevents.get("DMGPIGZOMBIE").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGPIGZOMBIE").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGPIGZOMBIE").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("ZOMBIE")) {
-                        if (DeathTpPlus.deathevents.get("DMGZOMBIE").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGZOMBIE").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGZOMBIE").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("CONTACT")) {
-                        if (DeathTpPlus.deathevents.get("DMGCONTACT").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGCONTACT").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGCONTACT").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("SLIME")) {
-                        if (DeathTpPlus.deathevents.get("DMGSLIME").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGSLIME").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGSLIME").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("VOID")) {
-                        if (DeathTpPlus.deathevents.get("DMGVOID").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGVOID").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGVOID").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("GHAST")) {
-                        if (DeathTpPlus.deathevents.get("DMGGHAST").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGGHAST").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGGHAST").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("WOLF")) {
-                        if (DeathTpPlus.deathevents.get("DMGWOLF").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGWOLF").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGWOLF").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("LIGHTNING")) {
-                        if (DeathTpPlus.deathevents.get("DMGLIGHTNING").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGLIGHTNING").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGLIGHTNING").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("STARVATION")) {
-                        if (DeathTpPlus.deathevents.get("DMGSTARVATION").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGSTARTVATION").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGSTARVATION").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("CAVESPIDER")) {
-                        if (DeathTpPlus.deathevents.get("DMGCAVESPIDER").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGCAVESPIDER").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGCAVESPIDER").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("ENDERMAN")) {
-                        if (DeathTpPlus.deathevents.get("DMGENDERMAN").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGENDERMAN").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGENDERMAN").get(messageindex).replace("%n", player.getName());
-                    }
-                    else if (howtheydied[0].matches("PVP")) {
+                    eventAnnounce = getEvent(howtheydied[0]).replace("%n", player.getDisplayName());
+
+                    if (howtheydied[0].matches("PVP")) {
                         if (howtheydied[2].equals("bare hands")) {
-                            if (DeathTpPlus.deathevents.get("DMGFISTS").size() > 1)
-                                messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGFISTS").size());
-                            eventAnnounce = DeathTpPlus.deathevents.get("DMGFISTS").get(messageindex).replace("%n", player.getName());
+                            eventAnnounce = getEvent("FISTS").replace("%n", player.getDisplayName());
                         }
-                        else {
-                            if (DeathTpPlus.deathevents.get("DMGPVP").size() > 1)
-                                messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGPVP").size());
-                            eventAnnounce = DeathTpPlus.deathevents.get("DMGPVP").get(messageindex).replace("%n", player.getName());
-                        }
+
                         loghowdied = howtheydied[2];
                         eventAnnounce = eventAnnounce.replace("%i", howtheydied[1]);
                         eventAnnounce = eventAnnounce.replace("%a", howtheydied[2]);
-                        if (DeathTpPlus.deathconfig.get("SHOW_STREAKS").matches("true"))
-                            writeToStreak(player.getName(), howtheydied[2]);
+                        if (DeathTpPlus.deathconfig.get("SHOW_STREAKS").matches("true")){
 
+                            writeToStreak(player.getDisplayName(), howtheydied[2]);
+                        }
                         //write kill to deathlog
                         if (DeathTpPlus.deathconfig.get("DEATH_LOGS").matches("true")) {
-                            writeToLog("kill", howtheydied[2], player.getName());
+                            writeToLog("kill", howtheydied[2], player.getDisplayName());
                         }
                     }
-                    else {
-                        if (DeathTpPlus.deathevents.get("DMGUNKNOWN").size() > 1)
-                            messageindex = rand.nextInt(DeathTpPlus.deathevents.get("DMGUNKNOWN").size());
-                        eventAnnounce = DeathTpPlus.deathevents.get("DMGUNKNOWN").get(messageindex).replace("%n", player.getName());
+                    if (eventAnnounce=="")
+                    {
+                        eventAnnounce = getEvent("UNKNOWN").replace("%n", player.getDisplayName());
                     }
 
                     eventAnnounce = plugin.convertSamloean(eventAnnounce);
@@ -273,7 +178,7 @@ public class DTPEntityListener extends EntityListener {
                     }
 
                     if (DeathTpPlus.deathconfig.get("DEATH_LOGS").matches("true")) {
-                        writeToLog("death", player.getName(), loghowdied);
+                        writeToLog("death", player.getDisplayName(), loghowdied);
                     }
 
                     if (DeathTpPlus.deathconfig.get("SHOW_SIGN").equals("true")) {
@@ -290,7 +195,7 @@ public class DTPEntityListener extends EntityListener {
                             String signtext;
                             Sign sign = (Sign)state;
                             sign.setLine(0, "[RIP]");
-                            sign.setLine(1, player.getName());
+                            sign.setLine(1, player.getDisplayName());
                             sign.setLine(2, "Died by");
                             signtext = howtheydied[0].toLowerCase();
                             if (howtheydied[0].equals("PVP"))
@@ -307,11 +212,11 @@ public class DTPEntityListener extends EntityListener {
                     howtheydied = damagetype.split(":");
                     if (howtheydied[0].matches("PVP")) {
                         if (DeathTpPlus.deathconfig.get("SHOW_STREAKS").matches("true"))
-                            writeToStreak(player.getName(), howtheydied[2]);
+                            writeToStreak(player.getDisplayName(), howtheydied[2]);
                     }
 
                     if (DeathTpPlus.deathconfig.get("DEATH_LOGS").matches("true")) {
-                        writeToLog("death", player.getName(), loghowdied);
+                        writeToLog("death", player.getDisplayName(), loghowdied);
                     }
                 }
 
@@ -405,12 +310,12 @@ public class DTPEntityListener extends EntityListener {
             lastdamage = "GHAST";
         }
 
-        if (!lastDamagePlayer.contains(player.getName())) {
-            lastDamagePlayer.add(player.getName());
+        if (!lastDamagePlayer.contains(player.getDisplayName())) {
+            lastDamagePlayer.add(player.getDisplayName());
             lastDamageType.add(event.getCause().name());
         }
         else {
-            lastDamageType.set(lastDamagePlayer.indexOf(player.getName()), lastdamage);
+            lastDamageType.set(lastDamagePlayer.indexOf(player.getDisplayName()), lastdamage);
         }
 
         beforedamage = lastdamage;

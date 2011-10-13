@@ -1,6 +1,6 @@
 name: DeathTpPlus
-main: com.lonelydime.DeathTpPlus.DeathTpPlus
-version: 1.92
+main: org.simiancage.DeathTpPlus.DeathTpPlus
+version: 1.93
 website: https://github.com/dredhorse/DeathTpPlus
 authors: [Don Redhorse, orig. by. lonelydime]
 description: Death commands including deathtp, deathnotify and deathstreaks.

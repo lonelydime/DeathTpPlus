@@ -1,4 +1,4 @@
-package com.lonelydime.DeathTpPlus;
+package org.simiancage.DeathTpPlus;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -29,7 +29,6 @@ import com.nijikokun.register.payment.Method;
 
 //craftirc
 import com.ensifera.animosity.craftirc.CraftIRC;
-import org.omg.PortableServer.POAPackage.WrongAdapter;
 
 public class DeathTpPlus extends JavaPlugin{
     //damage and death listener
@@ -129,30 +128,30 @@ public class DeathTpPlus extends JavaPlugin{
         }
 
         //Death Event nodes
-        deathevents.put("DMGFALL", getConfiguration().getStringList("fall", null));
-        deathevents.put("DMGDROWNING", getConfiguration().getStringList("drowning", null));
-        deathevents.put("DMGFIRE", getConfiguration().getStringList("fire", null));
-        deathevents.put("DMGFIRE_TICK", getConfiguration().getStringList("fire_tick", null));
-        deathevents.put("DMGLAVA", getConfiguration().getStringList("lava", null));
-        deathevents.put("DMGBLOCK_EXPLOSION", getConfiguration().getStringList("block_explosion", null));
-        deathevents.put("DMGCREEPER", getConfiguration().getStringList("creeper", null));
-        deathevents.put("DMGSKELETON", getConfiguration().getStringList("skeleton", null));
-        deathevents.put("DMGSPIDER", getConfiguration().getStringList("spider", null));
-        deathevents.put("DMGZOMBIE", getConfiguration().getStringList("zombie", null));
-        deathevents.put("DMGCONTACT", getConfiguration().getStringList("contact", null));
-        deathevents.put("DMGPIGZOMBIE", getConfiguration().getStringList("pigzombie", null));
-        deathevents.put("DMGGHAST", getConfiguration().getStringList("ghast", null));
-        deathevents.put("DMGSLIME", getConfiguration().getStringList("slime", null));
-        deathevents.put("DMGPVP", getConfiguration().getStringList("pvp", null));
-        deathevents.put("DMGFISTS", getConfiguration().getStringList("pvp-fists", null));
-        deathevents.put("DMGSUFFOCATION", getConfiguration().getStringList("suffocation", null));
-        deathevents.put("DMGVOID", getConfiguration().getStringList("void", null));
-        deathevents.put("DMGWOLF", getConfiguration().getStringList("wolf", null));
-        deathevents.put("DMGLIGHTNING", getConfiguration().getStringList("lightning", null));
-        deathevents.put("DMGUNKNOWN", getConfiguration().getStringList("unknown", null));
-        deathevents.put("DMGSTARVATION", getConfiguration().getStringList("starvation", null));
-        deathevents.put("DMGCAVESPIDER", getConfiguration().getStringList("cavespider", null));
-        deathevents.put("DMGENDERMAN", getConfiguration().getStringList("enderman", null));
+        deathevents.put("FALL", getConfiguration().getStringList("fall", null));
+        deathevents.put("DROWNING", getConfiguration().getStringList("drowning", null));
+        deathevents.put("FIRE", getConfiguration().getStringList("fire", null));
+        deathevents.put("FIRE_TICK", getConfiguration().getStringList("fire_tick", null));
+        deathevents.put("LAVA", getConfiguration().getStringList("lava", null));
+        deathevents.put("BLOCK_EXPLOSION", getConfiguration().getStringList("block_explosion", null));
+        deathevents.put("CREEPER", getConfiguration().getStringList("creeper", null));
+        deathevents.put("SKELETON", getConfiguration().getStringList("skeleton", null));
+        deathevents.put("SPIDER", getConfiguration().getStringList("spider", null));
+        deathevents.put("ZOMBIE", getConfiguration().getStringList("zombie", null));
+        deathevents.put("CONTACT", getConfiguration().getStringList("contact", null));
+        deathevents.put("PIGZOMBIE", getConfiguration().getStringList("pigzombie", null));
+        deathevents.put("GHAST", getConfiguration().getStringList("ghast", null));
+        deathevents.put("SLIME", getConfiguration().getStringList("slime", null));
+        deathevents.put("PVP", getConfiguration().getStringList("pvp", null));
+        deathevents.put("FISTS", getConfiguration().getStringList("pvp-fists", null));
+        deathevents.put("SUFFOCATION", getConfiguration().getStringList("suffocation", null));
+        deathevents.put("VOID", getConfiguration().getStringList("void", null));
+        deathevents.put("WOLF", getConfiguration().getStringList("wolf", null));
+        deathevents.put("LIGHTNING", getConfiguration().getStringList("lightning", null));
+        deathevents.put("UNKNOWN", getConfiguration().getStringList("unknown", null));
+        deathevents.put("STARVATION", getConfiguration().getStringList("starvation", null));
+        deathevents.put("CAVESPIDER", getConfiguration().getStringList("cavespider", null));
+        deathevents.put("ENDERMAN", getConfiguration().getStringList("enderman", null));
         //Configuration nodes
         deathconfig.put("SHOW_DEATHNOTIFY", getConfiguration().getString("show-deathnotify", "false"));
         deathconfig.put("ALLOW_DEATHTP", getConfiguration().getString("allow-deathtp", "false"));
@@ -240,7 +239,7 @@ public class DeathTpPlus extends JavaPlugin{
         if (command.equals("deathtp")) {
             if (sender instanceof Player) {
                 Player player = (Player)sender;
-                String thisWorld = player.getWorld().toString();
+                String thisWorld = player.getWorld().getName().toString();
                 if (player.hasPermission("deathtpplus.worldtravel") && deathconfig.get("WORLD_TRAVEL").equalsIgnoreCase("permissions"))
                 {
                     worldTravel = true;
@@ -333,7 +332,7 @@ public class DeathTpPlus extends JavaPlugin{
                                     sendLocation.setY(sendLocation.getY()+1);
                                 }
 
-                                if (!thisWorld.equals(deathWorld))
+                                if (!thisWorld.equals(deathWorld.getName()))
                                 {
                                     if (worldTravel)
                                     {

@@ -1,11 +1,10 @@
-package com.lonelydime.DeathTpPlus;
+package org.simiancage.DeathTpPlus;
 
 //import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.Plugin;
-import com.nijikokun.register.Register;
 import com.nijikokun.register.payment.Methods;
 
 public class server extends ServerListener {
