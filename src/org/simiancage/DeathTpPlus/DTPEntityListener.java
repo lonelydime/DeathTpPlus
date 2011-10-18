@@ -31,17 +31,21 @@ public class DTPEntityListener extends EntityListener {
     public ArrayList<String> lastDamageType = new ArrayList<String>();
     public String beforedamage = "";
     public PlayerDeathEvent playerDeathEvent = null;
-    enum DeathTypes {FALL, DROWNING, SUFFOCATION, FIRE_TICK, FIRE, LAVA, BLOCK_EXPLOSION, CREEPER, SKELETON, SPIDER, PIGZOMBIE, ZOMBIE, CONTACT, SLIME, VOID, GHAST, WOLF, LIGHTNING, STARVATION, CAVESPIDER, ENDERMAN, PVP, FISTS, UNKNOWN
+    enum DeathTypes {FALL, DROWNING, SUFFOCATION, FIRE_TICK, FIRE, LAVA, BLOCK_EXPLOSION, CREEPER, SKELETON, SPIDER, PIGZOMBIE, ZOMBIE, CONTACT, SLIME, VOID, GHAST, WOLF, LIGHTNING, STARVATION, CAVESPIDER, ENDERMAN, PVP, FISTS, UNKNOWN;
 
+        @Override public String toString() {
+            //only capitalize the first letter
+            String s = super.toString();
+            return s.substring(0, 1)+s.substring(1).toLowerCase();
+        }
     }
-
+    
     public DTPEntityListener(DeathTpPlus instance) {
         plugin = instance;
     }
 
     public String getEvent (String deathType){
         int messageindex = 0;
-        String eventAnnounce = "";
         if (DeathTpPlus.deathevents.get(deathType).size() > 1)
         {
             Random rand = new Random();
@@ -71,10 +75,6 @@ public class DTPEntityListener extends EntityListener {
                     boolean newPlayerDeath = true;
                     //text to write to file
                     fileOutput = player.getName()+":"+player.getLocation().getX()+":"+player.getLocation().getY()+":"+player.getLocation().getZ()+":"+player.getWorld().getName().toString();
-
-                    //File fileName = new File("plugins/DeathTpPlus/locs.txt");
-                    //File locsName = new File(plugin.getDataFolder()+"/locs.txt");
-                    //read the file
                     try {
                         FileReader fr = new FileReader(DeathTpPlus.locsName);
                         BufferedReader br = new BufferedReader(fr);
@@ -139,7 +139,7 @@ public class DTPEntityListener extends EntityListener {
                             writeToLog("kill", howtheydied[2], player.getDisplayName());
                         }
                     }
-                    if (eventAnnounce=="")
+                    if (eventAnnounce.equals(""))
                     {
                         eventAnnounce = getEvent("UNKNOWN").replace("%n", player.getDisplayName());
                     }
@@ -197,7 +197,7 @@ public class DTPEntityListener extends EntityListener {
                             sign.setLine(0, "[RIP]");
                             sign.setLine(1, player.getDisplayName());
                             sign.setLine(2, "Died by");
-                            signtext = howtheydied[0].toLowerCase();
+                            signtext = howtheydied[0].substring(0, 1)+howtheydied[0].substring(1).toLowerCase();
                             if (howtheydied[0].equals("PVP"))
                                 signtext = howtheydied[2];
 
@@ -251,14 +251,16 @@ public class DTPEntityListener extends EntityListener {
 
                 lastdamage = ((Arrow) attacker).getShooter().toString();
             }
-            else if (attacker instanceof Player) {
+
+            // Todo check if duplicate
+            /*else if (attacker instanceof Player) {
                 Player pvper = (Player) attacker;
                 String usingitem = pvper.getItemInHand().getType().name();
                 if (usingitem == "AIR") {
                     usingitem = "BARE_KNUCKLES";
                 }
                 lastdamage = "PVP:"+usingitem+":"+pvper.getName();
-            }
+            }*/
             else if (attacker.toString().toLowerCase().matches("craftslime")) {
                 lastdamage = "SLIME";
             }
@@ -302,7 +304,7 @@ public class DTPEntityListener extends EntityListener {
                 }
                 usingitem = usingitem.toLowerCase();
                 usingitem = usingitem.replace("_", " ");
-                lastdamage = "PVP:"+usingitem+":"+pvper.getName();
+                lastdamage = "PVP:"+usingitem+":"+pvper.getDisplayName();
             }
         }
 

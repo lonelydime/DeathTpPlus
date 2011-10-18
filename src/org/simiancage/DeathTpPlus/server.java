@@ -6,63 +6,63 @@ import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.Plugin;
 import com.nijikokun.register.payment.Methods;
+import com.nijikokun.register.payment.Method;
+import org.bukkit.plugin.PluginManager;
 
 public class server extends ServerListener {
     private DeathTpPlus plugin;
-    private Methods Methods = null;
+    public static Method economy = null;
+
 
     public server(DeathTpPlus plugin) {
         this.plugin = plugin;
 
     }
 
+    public static void setEconomy(Method economy) {
+        server.economy = economy;
+    }
+
+    public static Method getEconomy() {
+        return economy;
+    }
+
     @Override
     public void onPluginDisable(PluginDisableEvent event) {
-//        if (DeathTpPlus.Register != null) {
-//            if (event.getPlugin().getDescription().getName().equals("Register")) {
-//            	DeathTpPlus.Register = null;
-//                System.out.println("[DeathTpPlus] un-hooked from Register.");
-//            }
-//        }
-        // Check to see if the plugin thats being disabled is the one we are using
-        if (this.Methods != null && this.Methods.hasMethod()) {
-            Boolean check = this.Methods.checkDisabled(event.getPlugin());
-
-            if(check) {
-                Methods.reset();
-                // Todo implement Logger
+        PluginManager pm = plugin.getServer().getPluginManager();
+        Plugin checkRegister = pm.getPlugin("Register");
+        if ((checkRegister == null) && plugin.useRegister) {
+            Methods.setMethod(pm);
+            if (Methods.getMethod() == null)
+            {
                 plugin.useRegister = false;
-                System.out.println("[DeathTpPlus] un-hooked from Register.");
+                plugin.log.info(plugin.logName +"un-hooked from Register.");
+                plugin.log.info(plugin.logName +"as Register was unloaded / disabled.");
             }
         }
+
+
     }
 
     @Override
     public void onPluginEnable(PluginEnableEvent event) {
-//        if (DeathTpPlus.Register == null) {
-//            Plugin Register = plugin.getServer().getPluginManager().getPlugin("Register");
-//
-//            if (Register != null) {
-//                if (Register.isEnabled()) {
-//                	DeathTpPlus.Register = (Register)Register;
-//                    System.out.println("[DeathTpPlus] hooked into Register.");
-//                }
-//            }
-//        }
 
-        // Check to see if we need a payment method
-        Plugin checkRegister = plugin.getServer().getPluginManager().getPlugin("Register");
+        PluginManager pm = plugin.getServer().getPluginManager();
+        Plugin checkRegister = pm.getPlugin("Register");
         if (checkRegister != null) {
-            this.Methods = new Methods();
-            if (!this.Methods.hasMethod()) {
+            Methods.setMethod(pm);
+            if (Methods.getMethod() != null)
+            {
+                setEconomy(Methods.getMethod());
+                plugin.log.info(plugin.logName +"Economy method found: "+ getEconomy().getName()+ " v "+ getEconomy().getVersion());
+                plugin.useRegister = true;
 
-                if(this.Methods.setMethod(plugin.getServer().getPluginManager())) {
-                    if(this.Methods.hasMethod()){
-                        plugin.useRegister = true;
-                        System.out.println("[DeathTpPlus] Payment method found (" + this.Methods.getMethod().getName() + " version: " + this.Methods.getMethod().getVersion() + ")");
-                    }
-                }
+            } else {
+                plugin.log.warning(plugin.logName +"Register detected but no economy plugin found!");
+                plugin.useRegister = false;
             }
+        } else {
+            plugin.log.info(plugin.logName + "Register not detected, will attach later.");
         }
     }
 }

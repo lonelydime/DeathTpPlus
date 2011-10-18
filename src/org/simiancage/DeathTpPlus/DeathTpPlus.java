@@ -12,6 +12,7 @@ import com.nijikokun.register.payment.Methods;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -51,10 +52,11 @@ public class DeathTpPlus extends JavaPlugin{
     protected ArrayList<String> pluginAuthor = null;
     protected String pluginPath = null;
     protected boolean worldTravel = false;
+    FileConfiguration configuration;
 
 
     //Register
-    boolean Register = false;
+    static boolean Register = false;
     boolean useRegister = false;
 
     //craftirc
@@ -75,6 +77,7 @@ public class DeathTpPlus extends JavaPlugin{
         locsName = new File(pluginPath+"locs.txt");
         streakFile = new File(pluginPath+"streak.txt");
         deathlogFile = new File(pluginPath+"deathlog.txt");
+
 
         // Todo write Helper Class for this
 
@@ -99,76 +102,62 @@ public class DeathTpPlus extends JavaPlugin{
 
             }
         }
-
+        configuration  = this.getConfig();
         if (!locsName.exists()) {
-            try {
-                locsName.createNewFile();
-            } catch (IOException e) {
-                // Todo Enable Logger
-                System.out.println("cannot create file "+locsName.getPath()+"/"+locsName.getName());
-            }
+            CreateDefaultFile(locsName);
         }
 
         if (!streakFile.exists()) {
-            try {
-                streakFile.createNewFile();
-            } catch (IOException e) {
-                // Todo Enable Logger
-                System.out.println("cannot create file "+streakFile.getPath()+"/"+streakFile.getName());
-            }
+            CreateDefaultFile(streakFile);
         }
 
         if (!deathlogFile.exists()) {
-            try {
-                deathlogFile.createNewFile();
-            } catch (IOException e) {
-                // Todo Enable Logger
-                System.out.println("cannot create file "+deathlogFile.getPath()+"/"+deathlogFile.getName());
-            }
+            CreateDefaultFile(deathlogFile);
         }
 
+        DefaultConfiguration();
         //Death Event nodes
-        deathevents.put("FALL", getConfiguration().getStringList("fall", null));
-        deathevents.put("DROWNING", getConfiguration().getStringList("drowning", null));
-        deathevents.put("FIRE", getConfiguration().getStringList("fire", null));
-        deathevents.put("FIRE_TICK", getConfiguration().getStringList("fire_tick", null));
-        deathevents.put("LAVA", getConfiguration().getStringList("lava", null));
-        deathevents.put("BLOCK_EXPLOSION", getConfiguration().getStringList("block_explosion", null));
-        deathevents.put("CREEPER", getConfiguration().getStringList("creeper", null));
-        deathevents.put("SKELETON", getConfiguration().getStringList("skeleton", null));
-        deathevents.put("SPIDER", getConfiguration().getStringList("spider", null));
-        deathevents.put("ZOMBIE", getConfiguration().getStringList("zombie", null));
-        deathevents.put("CONTACT", getConfiguration().getStringList("contact", null));
-        deathevents.put("PIGZOMBIE", getConfiguration().getStringList("pigzombie", null));
-        deathevents.put("GHAST", getConfiguration().getStringList("ghast", null));
-        deathevents.put("SLIME", getConfiguration().getStringList("slime", null));
-        deathevents.put("PVP", getConfiguration().getStringList("pvp", null));
-        deathevents.put("FISTS", getConfiguration().getStringList("pvp-fists", null));
-        deathevents.put("SUFFOCATION", getConfiguration().getStringList("suffocation", null));
-        deathevents.put("VOID", getConfiguration().getStringList("void", null));
-        deathevents.put("WOLF", getConfiguration().getStringList("wolf", null));
-        deathevents.put("LIGHTNING", getConfiguration().getStringList("lightning", null));
-        deathevents.put("UNKNOWN", getConfiguration().getStringList("unknown", null));
-        deathevents.put("STARVATION", getConfiguration().getStringList("starvation", null));
-        deathevents.put("CAVESPIDER", getConfiguration().getStringList("cavespider", null));
-        deathevents.put("ENDERMAN", getConfiguration().getStringList("enderman", null));
+        deathevents.put("FALL", (List<String>) configuration.getList("fall"));
+        deathevents.put("DROWNING", (List<String>) configuration.getList("drowning"));
+        deathevents.put("FIRE", (List<String>) configuration.getList("fire"));
+        deathevents.put("FIRE_TICK", (List<String>) configuration.getList("fire_tick"));
+        deathevents.put("LAVA", (List<String>) configuration.getList("lava"));
+        deathevents.put("BLOCK_EXPLOSION", (List<String>) configuration.getList("block_explosion"));
+        deathevents.put("CREEPER", (List<String>) configuration.getList("creeper"));
+        deathevents.put("SKELETON", (List<String>) configuration.getList("skeleton"));
+        deathevents.put("SPIDER", (List<String>) configuration.getList("spider"));
+        deathevents.put("ZOMBIE", (List<String>) configuration.getList("zombie"));
+        deathevents.put("CONTACT", (List<String>) configuration.getList("contact"));
+        deathevents.put("PIGZOMBIE", (List<String>) configuration.getList("pigzombie"));
+        deathevents.put("GHAST", (List<String>) configuration.getList("ghast"));
+        deathevents.put("SLIME", (List<String>) configuration.getList("slime"));
+        deathevents.put("PVP", (List<String>) configuration.getList("pvp"));
+        deathevents.put("FISTS", (List<String>) configuration.getList("pvp-fists"));
+        deathevents.put("SUFFOCATION", (List<String>) configuration.getList("suffocation"));
+        deathevents.put("VOID", (List<String>) configuration.getList("void"));
+        deathevents.put("WOLF", (List<String>) configuration.getList("wolf"));
+        deathevents.put("LIGHTNING", (List<String>) configuration.getList("lightning"));
+        deathevents.put("UNKNOWN", (List<String>) configuration.getList("unknown"));
+        deathevents.put("STARVATION", (List<String>) configuration.getList("starvation"));
+        deathevents.put("CAVESPIDER", (List<String>) configuration.getList("cavespider"));
+        deathevents.put("ENDERMAN", (List<String>) configuration.getList("enderman"));
         //Configuration nodes
-        deathconfig.put("SHOW_DEATHNOTIFY", getConfiguration().getString("show-deathnotify", "false"));
-        deathconfig.put("ALLOW_DEATHTP", getConfiguration().getString("allow-deathtp", "false"));
-        deathconfig.put("SHOW_STREAKS", getConfiguration().getString("show-streaks", "false"));
-        deathconfig.put("CHARGE_ITEM_ID", getConfiguration().getString("charge-item", "false"));
-        deathconfig.put("SHOW_SIGN", getConfiguration().getString("show-sign", "false"));
-        deathconfig.put("REGISTER_COST", getConfiguration().getString("deathtp-cost", "0"));
-        deathconfig.put("CRAFT_IRC_TAG", getConfiguration().getString("deathtp-tag", null));
-        deathconfig.put("DEATH_LOGS", getConfiguration().getString("allow-deathlog", "false"));
-        deathconfig.put("WORLD_TRAVEL", getConfiguration().getString("allow-worldtravel", "no"));
+        deathconfig.put("SHOW_DEATHNOTIFY", configuration.getString("show-deathnotify"));
+        deathconfig.put("ALLOW_DEATHTP", configuration.getString("allow-deathtp"));
+        deathconfig.put("SHOW_STREAKS", configuration.getString("show-streaks"));
+        deathconfig.put("CHARGE_ITEM_ID", configuration.getString("charge-item"));
+        deathconfig.put("SHOW_SIGN", configuration.getString("show-sign"));
+        deathconfig.put("REGISTER_COST", configuration.getString("deathtp-cost"));
+        deathconfig.put("CRAFT_IRC_TAG", configuration.getString("deathtp-tag"));
+        deathconfig.put("DEATH_LOGS", configuration.getString("allow-deathlog"));
+        deathconfig.put("WORLD_TRAVEL", configuration.getString("allow-worldtravel"));
         //Kill Streak nodes
-        killstreak.put("KILL_STREAK", getConfiguration().getStringList("killstreak", null));
+        killstreak.put("KILL_STREAK", (List<String>) configuration.getList("killstreak"));
         //Death Streak nodes
-        deathstreak.put("DEATH_STREAK", getConfiguration().getStringList("deathstreak", null));
+        deathstreak.put("DEATH_STREAK", (List<String>) configuration.getList("deathstreak"));
+        log.info(logName+killstreak.get("KILL_STREAK").size()+" Kill Streaks loaded.");
+        log.info(logName+deathstreak.get("DEATH_STREAK").size()+" Death Streaks loaded.");
 
-        log.info("[DeathTpPlus] "+killstreak.get("KILL_STREAK").size()+" Kill Streaks loaded.");
-        log.info("[DeathTpPlus] "+deathstreak.get("DEATH_STREAK").size()+" Death Streaks loaded.");
 
         if (deathconfig.get("WORLD_TRAVEL").equalsIgnoreCase("yes"))
         {
@@ -182,6 +171,7 @@ public class DeathTpPlus extends JavaPlugin{
             log.warning("[" + pluginName + "] Wrong allow-worldtravel value of "+deathconfig.get("WORLD_TRAVEL")+". Defaulting to NO!");
             worldTravel = false;
         }
+
 
 
         //Create the pluginmanage pm.
@@ -214,7 +204,7 @@ public class DeathTpPlus extends JavaPlugin{
             try {
                 craftircHandle = (CraftIRC) checkCraftIRC;
                 //Todo Enable Logger
-                log.info("[DeathTpPlus] CraftIRC Support Enabled.");
+                log.info(logName+"CraftIRC Support Enabled.");
             }
             catch (ClassCastException ex) {
             }
@@ -229,6 +219,56 @@ public class DeathTpPlus extends JavaPlugin{
         log.info("[DeathTpPlus] version " + pdfFile.getVersion() + " is enabled!");
     }
 
+    private void CreateDefaultFile(File file) {
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            // Todo Enable Logger
+            log.warning(logName+ "Cannot create file "+file.getPath()+"/"+file.getName());
+        }
+    }
+
+
+    private void DefaultConfiguration() {
+        configuration.addDefault ("fall", "");
+        configuration.addDefault("drowning", "");
+        configuration.addDefault("fire", "");
+        configuration.addDefault("fire_tick", "");
+        configuration.addDefault("lava", "");
+        configuration.addDefault("block_explosion", "");
+        configuration.addDefault("creeper", "");
+        configuration.addDefault("skeleton", "");
+        configuration.addDefault("spider", "");
+        configuration.addDefault("zombie", "");
+        configuration.addDefault("contact", "");
+        configuration.addDefault("pigzombie", "");
+        configuration.addDefault("ghast", "");
+        configuration.addDefault("slime", "");
+        configuration.addDefault("pvp", "");
+        configuration.addDefault("pvp-fists", "");
+        configuration.addDefault("suffocation", "");
+        configuration.addDefault("void", "");
+        configuration.addDefault("wolf", "");
+        configuration.addDefault("lightning", "");
+        configuration.addDefault("unknown", "");
+        configuration.addDefault("starvation", "");
+        configuration.addDefault("cavespider", "");
+        configuration.addDefault("enderman", "");
+        //Configuration nodes
+        configuration.addDefault("show-deathnotify", "true");
+        configuration.addDefault("allow-deathtp", "true");
+        configuration.addDefault("show-streaks", "true");
+        configuration.addDefault("charge-item", "0");
+        configuration.addDefault("show-sign", "false");
+        configuration.addDefault("deathtp-cost", "0");
+        configuration.addDefault("deathtp-tag", "");
+        configuration.addDefault("allow-deathlog", "true");
+        configuration.addDefault("allow-worldtravel", "no");
+        //Kill Streak nodes
+        configuration.addDefault("killstreak", "");
+        //Death Streak nodes
+        configuration.addDefault("deathstreak", "");
+    }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         String command = cmd.getName();
@@ -411,10 +451,10 @@ public class DeathTpPlus extends JavaPlugin{
                     playername = args[0];
                     cause = args[1];
                 }
-                else
+                else {
                     return false;
+                }
 
-                // File deathlogFile = new File(getDataFolder()+"/deathlog.txt");
                 try {
                     BufferedReader br = new BufferedReader(new FileReader(deathlogFile));
                     while((line = br.readLine()) != null) {
@@ -423,8 +463,9 @@ public class DeathTpPlus extends JavaPlugin{
                         if (!cause.matches("")) {
                             if (splittext[0].matches(playername) && splittext[1].matches("death") && splittext[2].matches(cause.toUpperCase())) {
                                 String times = "times";
-                                if (splittext[2] == "1")
+                                if (splittext[2] == "1") {
                                     times = "time";
+                                }
                                 sender.sendMessage(playername+" has died by "+cause+" "+splittext[3]+" "+times);
                                 foundrecord = true;
                             }
@@ -438,13 +479,15 @@ public class DeathTpPlus extends JavaPlugin{
                     }
                     if (cause.matches("")) {
                         String times = "times";
-                        if (totalnum == 1)
+                        if (totalnum == 1) {
                             times = "time";
+                        }
                         sender.sendMessage(playername+" has died "+totalnum+" "+times);
                     }
                     else {
-                        if (!foundrecord)
+                        if (!foundrecord) {
                             sender.sendMessage(playername+" has died by "+cause+" 0 times");
+                        }
                     }
                     return true;
                 }
@@ -493,10 +536,9 @@ public class DeathTpPlus extends JavaPlugin{
                 else if (args.length == 2) {
                     playername = args[0];
                     username = args[1];
-                }
-                else
+                }                 else {
                     return false;
-
+                }
                 //File deathlogFile = new File(getDataFolder()+"/deathlog.txt");
                 try {
                     BufferedReader br = new BufferedReader(new FileReader(deathlogFile));
@@ -521,13 +563,15 @@ public class DeathTpPlus extends JavaPlugin{
                     }
                     if (username.matches("")) {
                         String times = "times";
-                        if (totalnum == 1)
+                        if (totalnum == 1) {
                             times = "time";
+                        }
                         sender.sendMessage(playername+" has killed "+totalnum+" "+times);
                     }
                     else {
-                        if (!foundrecord)
-                            sender.sendMessage(playername+" has killed "+username+" 0 times");
+                        if (!foundrecord){
+                           sender.sendMessage(playername+" has killed "+username+" 0 times");
+                        }
                     }
                     return true;
                 }
@@ -647,33 +691,6 @@ public class DeathTpPlus extends JavaPlugin{
     }
 
 
-    // Todo change => register
-    //Register methods
-    //public static Server getBukkitServer() {
-    //    return Server;
-    //}
-
-    //public static Register getRegister() {
-    //    return Register;
-    //}
-
-    //public static boolean setRegister(Register plugin) {
-    //    if (Register == null) {
-    //       Register = plugin;
-    //    } else {
-    //        return false;
-    //    }
-    //    return true;
-    //}
-
-    //public boolean checkRegister() {
-    //    this.useRegister = (Register != null);
-    //    return this.useRegister;
-    //}
-    /**
-     * Attempts to get the active Register Method.
-     * @return The Method, or null if there is no active one or Register is not loaded.
-     */
     public Method getRegisterMethod(){
         try{
             return Methods.getMethod();
