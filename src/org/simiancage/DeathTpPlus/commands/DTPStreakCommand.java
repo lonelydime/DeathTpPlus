@@ -1,7 +1,7 @@
 package org.simiancage.DeathTpPlus.commands;
 
 /**
- * PluginName: TODO insert Pluginname here
+ * PluginName: DeathTpPlus
  * Class: DTPStreakCommand
  * User: DonRedhorse
  * Date: 19.10.11

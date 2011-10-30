@@ -13,7 +13,7 @@ import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.yi.acru.bukkit.Lockette.Lockette;
 
 public class DTPServerListener extends ServerListener {
-    private DeathTpPlus plugin;
+    private static DeathTpPlus plugin;
     public static Method economy = null;
 
 
@@ -44,12 +44,12 @@ public class DTPServerListener extends ServerListener {
             }
         }
         if (event.getPlugin() == plugin.lwcPlugin) {
-            Cenotaph.log.info("[DTPTomb] LWC plugin lost.");
+            plugin.log.info("[DTPTomb] LWC plugin lost.");
             plugin.lwcPlugin = null;
         }
 
         if (event.getPlugin() == plugin.LockettePlugin) {
-            Cenotaph.log.info("[DTPTomb] Lockette plugin lost.");
+            plugin.log.info("[DTPTomb] Lockette plugin lost.");
             plugin.LockettePlugin = null;
         }
 

@@ -19,11 +19,12 @@ import org.bukkit.inventory.ItemStack;
 
 import com.MoofIT.Minecraft.Cenotaph.Cenotaph;
 import com.MoofIT.Minecraft.Cenotaph.TombBlock;
+import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 public class DTPPlayerListener extends PlayerListener {
 private Cenotaph plugin;
 
-public DTPPlayerListener(Cenotaph instance) {
+public DTPPlayerListener(DeathTpPlus instance) {
 this.plugin = instance;
 }
 

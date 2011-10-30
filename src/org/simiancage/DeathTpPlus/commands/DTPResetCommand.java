@@ -1,7 +1,7 @@
 package org.simiancage.DeathTpPlus.commands;
 
 /**
- * PluginName: TODO insert Pluginname here
+ * PluginName: DeathTpPlus
  * Class: DTPResetCommand
  * User: DonRedhorse
  * Date: 19.10.11
@@ -14,12 +14,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.MoofIT.Minecraft.Cenotaph.Cenotaph;
+import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 public class DTPResetCommand implements CommandExecutor {
 
 private Cenotaph plugin;
 
-public DTPResetCommand(Cenotaph instance) {
+public DTPResetCommand(DeathTpPlus instance) {
 this.plugin = instance;
 }
 

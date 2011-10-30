@@ -15,12 +15,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import com.MoofIT.Minecraft.Cenotaph.Cenotaph;
 import com.MoofIT.Minecraft.Cenotaph.TombBlock;
+import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 public class DTPListCommand implements CommandExecutor {
 
 private Cenotaph plugin;
 
-public DTPListCommand(Cenotaph instance) {
+public DTPListCommand(DeathTpPlus instance) {
 this.plugin = instance;
 }
 
@@ -37,7 +38,7 @@ if (pList == null) {
 plugin.sendMessage(sender, "You have no cenotaphs.");
 return true;
 }
-plugin.sendMessage(sender, "Cenotaph List:");
+plugin.sendMessage(sender, "DTPTomb List:");
 int i = 0;
 for (TombBlock tomb : pList) {
 i++;
