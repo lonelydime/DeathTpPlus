@@ -2,13 +2,13 @@ package org.simiancage.DeathTpPlus;
 
 /**
  * PluginName: DeathTpPlus
- * Class: DeathTomb
+ * Class: DTPTomb
  * User: DonRedhorse
  * Date: 18.10.11
  * Time: 22:33
  * based on:
  * an updated fork of Furt https://github.com/Furt of
- * Cenotaph - A Dead Man's Chest plugin for Bukkit
+ * Cenopath - A Dead Man's Chest plugin for Bukkit
  * By Jim Drey (Southpaw018) <moof@moofit.com>
  * Original Copyright (C) 2011 Steven "Drakia" Scott <Drakia@Gmail.com>
  */
@@ -61,7 +61,7 @@ import com.griefcraft.model.Protection;
 import com.griefcraft.model.ProtectionTypes;
 import org.yi.acru.bukkit.Lockette.Lockette;
 
-public class Cenotaph extends JavaPlugin {
+public class DTPTomb extends JavaPlugin {
 private final CBlockListener blockListener = new CBlockListener(this);
 private final CEntityListener entityListener = new CEntityListener(this);
 private final CServerListener serverListener = new CServerListener(this);
@@ -72,12 +72,12 @@ PluginManager pm;
 public LWCPlugin lwcPlugin = null;
 public Lockette LockettePlugin = null;
 
-public ConcurrentLinkedQueue<TombBlock> tombList = new ConcurrentLinkedQueue<TombBlock>();
-public HashMap<Location, TombBlock> tombBlockList = new HashMap<Location, TombBlock>();
-public HashMap<String, ArrayList<TombBlock>> playerTombList = new HashMap<String, ArrayList<TombBlock>>();
+public ConcurrentLinkedQueue<DTPTombBlock> tombList = new ConcurrentLinkedQueue<DTPTombBlock>();
+public HashMap<Location, DTPTombBlock> tombBlockList = new HashMap<Location, DTPTombBlock>();
+public HashMap<String, ArrayList<DTPTombBlock>> playerTombList = new HashMap<String, ArrayList<DTPTombBlock>>();
 public HashMap<String, EntityDamageEvent> deathCause = new HashMap<String, EntityDamageEvent>();
 private Configuration config;
-private Cenotaph plugin;
+private DTPTomb plugin;
 
 /**
 * Configuration options - Defaults
@@ -178,7 +178,7 @@ versionCheck(true);
 // Start removal timer. Run every 5 seconds (20 ticks per second)
 if (securityRemove || cenotaphRemove)
 getServer().getScheduler().scheduleSyncRepeatingTask(this,
-new TombThread(plugin), 0L, 100L);
+new DTPTombThread(plugin), 0L, 100L);
 this.addCommands();
 }
 
@@ -188,30 +188,30 @@ config.load();
 configVer = config.getInt("configVer", configVer);
 if (configVer == 0) {
 try {
-log.info("[Cenotaph] Configuration error or no config file found. Downloading default config file...");
+log.info("[DTPTomb] Configuration error or no config file found. Downloading default config file...");
 if (!new File(getDataFolder().toString()).exists()) {
 new File(getDataFolder().toString()).mkdir();
 }
 URL config = new URL(
-"https://raw.github.com/Southpaw018/Cenotaph/master/config.yml");
+"https://raw.github.com/Southpaw018/DTPTomb/master/config.yml");
 ReadableByteChannel rbc = Channels.newChannel(config
 .openStream());
 FileOutputStream fos = new FileOutputStream(this
 .getDataFolder().getPath() + "/config.yml");
 fos.getChannel().transferFrom(rbc, 0, 1 << 24);
 } catch (MalformedURLException ex) {
-log.warning("[Cenotaph] Error accessing default config file URL: "
+log.warning("[DTPTomb] Error accessing default config file URL: "
 + ex);
 } catch (FileNotFoundException ex) {
-log.warning("[Cenotaph] Error accessing default config file URL: "
+log.warning("[DTPTomb] Error accessing default config file URL: "
 + ex);
 } catch (IOException ex) {
-log.warning("[Cenotaph] Error downloading default config file: "
+log.warning("[DTPTomb] Error downloading default config file: "
 + ex);
 }
 
 } else if (configVer < configCurrent) {
-log.warning("[Cenotaph] Your config file is out of date! Delete your config and reload to see the new options. Proceeding using set options from config file and defaults for new options...");
+log.warning("[DTPTomb] Your config file is out of date! Delete your config and reload to see the new options. Proceeding using set options from config file and defaults for new options...");
 }
 
 // Core
@@ -256,7 +256,7 @@ try {
 deathMessages = (TreeMap<String, Object>) config.getNode(
 "DeathMessages").getAll();
 } catch (NullPointerException e) {
-log.warning("[Cenotaph] Configuration failure while loading deathMessages. Using defaults.");
+log.warning("[DTPTomb] Configuration failure while loading deathMessages. Using defaults.");
 }
 }
 
@@ -280,11 +280,11 @@ String owner = split[3];
 long time = Long.valueOf(split[4]);
 boolean lwc = Boolean.valueOf(split[5]);
 if (block == null || owner == null) {
-log.info("[Cenotaph] Invalid entry in database "
+log.info("[DTPTomb] Invalid entry in database "
 + fh.getName());
 continue;
 }
-TombBlock tBlock = new TombBlock(block, lBlock, sign, owner,
+DTPTombBlock tBlock = new DTPTombBlock(block, lBlock, sign, owner,
 time, lwc);
 tombList.offer(tBlock);
 // Used for quick tombStone lookup
@@ -293,16 +293,16 @@ if (lBlock != null)
 tombBlockList.put(lBlock.getLocation(), tBlock);
 if (sign != null)
 tombBlockList.put(sign.getLocation(), tBlock);
-ArrayList<TombBlock> pList = playerTombList.get(owner);
+ArrayList<DTPTombBlock> pList = playerTombList.get(owner);
 if (pList == null) {
-pList = new ArrayList<TombBlock>();
+pList = new ArrayList<DTPTombBlock>();
 playerTombList.put(owner, pList);
 }
 pList.add(tBlock);
 }
 scanner.close();
 } catch (IOException e) {
-log.info("[Cenotaph] Error loading cenotaph list: " + e);
+log.info("[DTPTomb] Error loading cenotaph list: " + e);
 }
 }
 
@@ -313,8 +313,8 @@ try {
 File fh = new File(this.getDataFolder().getPath(), "tombList-"
 + world + ".db");
 BufferedWriter bw = new BufferedWriter(new FileWriter(fh));
-for (Iterator<TombBlock> iter = tombList.iterator(); iter.hasNext();) {
-TombBlock tBlock = iter.next();
+for (Iterator<DTPTombBlock> iter = tombList.iterator(); iter.hasNext();) {
+DTPTombBlock tBlock = iter.next();
 // Skip not this world
 if (!tBlock.getBlock().getWorld().getName()
 .equalsIgnoreCase(world))
@@ -339,7 +339,7 @@ bw.newLine();
 }
 bw.close();
 } catch (IOException e) {
-log.info("[Cenotaph] Error saving cenotaph list: " + e);
+log.info("[DTPTomb] Error saving cenotaph list: " + e);
 }
 }
 
@@ -387,14 +387,14 @@ return checkPlugin(plugin);
 
 public Plugin checkPlugin(Plugin plugin) {
 if (plugin != null && plugin.isEnabled()) {
-log.info("[Cenotaph] Using " + plugin.getDescription().getName()
+log.info("[DTPTomb] Using " + plugin.getDescription().getName()
 + " (v" + plugin.getDescription().getVersion() + ")");
 return plugin;
 }
 return null;
 }
 
-public Boolean activateLWC(Player player, TombBlock tBlock) {
+public Boolean activateLWC(Player player, DTPTombBlock tBlock) {
 if (!lwcEnable)
 return false;
 if (lwcPlugin == null)
@@ -418,7 +418,7 @@ tBlock.setLwcEnabled(true);
 return true;
 }
 
-public Boolean protectWithLockette(Player player, TombBlock tBlock) {
+public Boolean protectWithLockette(Player player, DTPTombBlock tBlock) {
 if (!LocketteEnable)
 return false;
 if (LockettePlugin == null)
@@ -471,7 +471,7 @@ tBlock.setLocketteSign(sign);
 return true;
 }
 
-public void deactivateLWC(TombBlock tBlock, boolean force) {
+public void deactivateLWC(DTPTombBlock tBlock, boolean force) {
 if (!lwcEnable)
 return;
 if (lwcPlugin == null)
@@ -508,14 +508,14 @@ _block.getX(), _block.getY(), _block.getZ());
 tBlock.setLwcEnabled(false);
 }
 
-public void deactivateLockette(TombBlock tBlock) {
+public void deactivateLockette(DTPTombBlock tBlock) {
 if (tBlock.getLocketteSign() == null)
 return;
 tBlock.getLocketteSign().getBlock().setType(Material.AIR);
 tBlock.removeLocketteSign();
 }
 
-public void removeTomb(TombBlock tBlock, boolean removeList) {
+public void removeTomb(DTPTombBlock tBlock, boolean removeList) {
 if (tBlock == null)
 return;
 
@@ -526,7 +526,7 @@ if (tBlock.getSign() != null)
 tombBlockList.remove(tBlock.getSign().getLocation());
 
 // Remove just this tomb from tombList
-ArrayList<TombBlock> tList = playerTombList.get(tBlock.getOwner());
+ArrayList<DTPTombBlock> tList = playerTombList.get(tBlock.getOwner());
 if (tList != null) {
 tList.remove(tBlock);
 if (tList.size() == 0) {
@@ -552,7 +552,7 @@ if (this.console(sender)) {
 if (consoleUse)
 return true;
 
-log.info("[Cenotaph] This command cannot be used in console.");
+log.info("[DTPTomb] This command cannot be used in console.");
 return false;
 } else {
 if (sender.isOp())
@@ -572,13 +572,13 @@ return true;
 public void sendMessage(Player p, String msg) {
 if (!pMessage)
 return;
-p.sendMessage("[Cenotaph] " + msg);
+p.sendMessage("[DTPTomb] " + msg);
 }
 
 public void sendMessage(CommandSender p, String msg) {
 if (!pMessage)
 return;
-p.sendMessage("[Cenotaph] " + msg);
+p.sendMessage("[DTPTomb] " + msg);
 }
 
 private void addCommands() {
@@ -605,26 +605,26 @@ newVersion += line;
 in.close();
 if (!newVersion.equals(thisVersion)) {
 if (printToLog)
-log.warning("[Cenotaph] Cenotaph is out of date! This version: "
+log.warning("[DTPTomb] DTPTomb is out of date! This version: "
 + thisVersion
 + "; latest version: "
 + newVersion
 + ".");
-return "Cenotaph is out of date! This version: " + thisVersion
+return "DTPTomb is out of date! This version: " + thisVersion
 + "; latest version: " + newVersion + ".";
 } else {
 if (printToLog)
-log.info("[Cenotaph] Cenotaph is up to date at version "
+log.info("[DTPTomb] DTPTomb is up to date at version "
 + thisVersion + ".");
-return "Cenotaph is up to date at version " + thisVersion + ".";
+return "DTPTomb is up to date at version " + thisVersion + ".";
 }
 } catch (MalformedURLException ex) {
 if (printToLog)
-log.warning("[Cenotaph] Error accessing update URL.");
+log.warning("[DTPTomb] Error accessing update URL.");
 return "Error accessing update URL.";
 } catch (IOException ex) {
 if (printToLog)
-log.warning("[Cenotaph] Error checking for update.");
+log.warning("[DTPTomb] Error checking for update.");
 return "Error checking for update.";
 }
 }
@@ -683,7 +683,7 @@ return null;
 public void logEvent(String msg) {
 if (!logEvents)
 return;
-log.info("[Cenotaph] " + msg);
+log.info("[DTPTomb] " + msg);
 }
 
 /**
@@ -757,7 +757,7 @@ public void destroyCenotaph(Location loc) {
 destroyCenotaph(tombBlockList.get(loc));
 }
 
-public void destroyCenotaph(TombBlock tBlock) {
+public void destroyCenotaph(DTPTombBlock tBlock) {
 tBlock.getBlock().getWorld().loadChunk(tBlock.getBlock().getChunk());
 
 deactivateLWC(tBlock, true);
@@ -776,7 +776,7 @@ if (p != null)
 sendMessage(p, "Your cenotaph has been destroyed!");
 }
 
-public HashMap<String, ArrayList<TombBlock>> getCenotaphList() {
+public HashMap<String, ArrayList<DTPTombBlock>> getCenotaphList() {
 return playerTombList;
 }
 }

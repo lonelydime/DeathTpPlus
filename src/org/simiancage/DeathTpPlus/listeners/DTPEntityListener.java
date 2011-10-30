@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus;
+package org.simiancage.DeathTpPlus.listeners;
 
 //java imports
 import java.io.BufferedReader;
@@ -24,6 +24,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
+import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 public class DTPEntityListener extends EntityListener {
     public static DeathTpPlus plugin;

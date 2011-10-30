@@ -1,6 +1,7 @@
-package org.simiancage.DeathTpPlus;
+package org.simiancage.DeathTpPlus.listeners;
 
 //import org.bukkit.event.Listener;
+import com.griefcraft.lwc.LWCPlugin;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
@@ -8,19 +9,21 @@ import org.bukkit.plugin.Plugin;
 import com.nijikokun.register.payment.Methods;
 import com.nijikokun.register.payment.Method;
 import org.bukkit.plugin.PluginManager;
+import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.yi.acru.bukkit.Lockette.Lockette;
 
-public class server extends ServerListener {
+public class DTPServerListener extends ServerListener {
     private DeathTpPlus plugin;
     public static Method economy = null;
 
 
-    public server(DeathTpPlus plugin) {
+    public DTPServerListener(DeathTpPlus plugin) {
         this.plugin = plugin;
 
     }
 
     public static void setEconomy(Method economy) {
-        server.economy = economy;
+        DTPServerListener.economy = economy;
     }
 
     public static Method getEconomy() {
@@ -40,7 +43,15 @@ public class server extends ServerListener {
                 plugin.log.info(plugin.logName +"as Register was unloaded / disabled.");
             }
         }
+        if (event.getPlugin() == plugin.lwcPlugin) {
+            Cenotaph.log.info("[DTPTomb] LWC plugin lost.");
+            plugin.lwcPlugin = null;
+        }
 
+        if (event.getPlugin() == plugin.LockettePlugin) {
+            Cenotaph.log.info("[DTPTomb] Lockette plugin lost.");
+            plugin.LockettePlugin = null;
+        }
 
     }
 
@@ -63,6 +74,21 @@ public class server extends ServerListener {
             }
         } else {
             plugin.log.info(plugin.logName + "Register not detected, will attach later.");
+        }
+        if (plugin.lwcPlugin == null) {
+            if (event.getPlugin().getDescription().getName()
+                    .equalsIgnoreCase("LWC")) {
+                plugin.lwcPlugin = (LWCPlugin) plugin.checkPlugin(event
+                        .getPlugin());
+            }
+        }
+
+        if (plugin.LockettePlugin == null) {
+            if (event.getPlugin().getDescription().getName()
+                    .equalsIgnoreCase("Lockette")) {
+                plugin.LockettePlugin = (Lockette) plugin.checkPlugin(event
+                        .getPlugin());
+            }
         }
     }
 }
