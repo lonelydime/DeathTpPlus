@@ -22,7 +22,7 @@ public class DTPAdminCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
-        if (!plugin.hasPerm(sender, "admin", false)) {
+        if (!plugin.hasPerm(sender, "deathtpplus.admin", false)) {
             plugin.sendMessage(sender, "Permission Denied");
             return true;
         }
@@ -31,14 +31,14 @@ public class DTPAdminCommand implements CommandExecutor {
             plugin.sendMessage(p, "Usage: /dtpadmin list");
             plugin.sendMessage(p, "Usage: /dtpadmin list <playerCaseSensitive>");
             plugin.sendMessage(p,
-                    "Usage: /dtpnadmin find <playerCaseSensitive> <#>");
+                    "Usage: /dtpadmin find <playerCaseSensitive> <#>");
             plugin.sendMessage(p,
                     "Usage: /dtpadmin remove <playerCaseSensitive> <#>");
             plugin.sendMessage(p, "Usage: /dtpadmin version");
             return true;
         }
         if (args[0].equalsIgnoreCase("list")) {
-            if (!plugin.hasPerm(sender, "admin.list", false)) {
+            if (!plugin.hasPerm(sender, "deathtpplus.admin.list", false)) {
                 plugin.sendMessage(p, "Permission Denied");
                 return true;
             }
@@ -73,7 +73,7 @@ public class DTPAdminCommand implements CommandExecutor {
             }
             return true;
         } else if (args[0].equalsIgnoreCase("find")) {
-            if (!plugin.hasPerm(sender, "admin.find", false)) {
+            if (!plugin.hasPerm(sender, "deathtpplus.admin.find", false)) {
                 plugin.sendMessage(p, "Permission Denied");
                 return true;
             }
@@ -105,7 +105,7 @@ public class DTPAdminCommand implements CommandExecutor {
                     + DeathTpPlus.getDirection(degrees) + ".");
             return true;
         } else if (args[0].equalsIgnoreCase("time")) {
-            if (!plugin.hasPerm(p, "admin.dtptime", false)) {
+            if (!plugin.hasPerm(p, "deathtpplus.admin.time", false)) {
                 plugin.sendMessage(p, "Permission Denied");
                 return true;
             }
@@ -130,19 +130,19 @@ public class DTPAdminCommand implements CommandExecutor {
             }
             long cTime = System.currentTimeMillis() / 1000;
             DTPTombBlock tBlock = pList.get(slot);
-            long secTimeLeft = (tBlock.getTime() + plugin.securityTimeout)
+            long secTimeLeft = (tBlock.getTime() + plugin.securityTimeout())
                     - cTime;
-            long remTimeLeft = (tBlock.getTime() + plugin.removeTime) - cTime;
-            if (plugin.securityRemove && secTimeLeft > 0)
+            long remTimeLeft = (tBlock.getTime() + plugin.removeTime()) - cTime;
+            if (plugin.securityRemove() && secTimeLeft > 0)
                 plugin.sendMessage(p, "Security removal: " + secTimeLeft
                         + " seconds.");
-            if (plugin.cenotaphRemove & remTimeLeft > 0)
+            if (plugin.tombstoneRemove() & remTimeLeft > 0)
                 plugin.sendMessage(p, "Tombstone removal: " + remTimeLeft
                         + " seconds.");
-            if (plugin.keepUntilEmpty || plugin.removeWhenEmpty)
+            if (plugin.keepUntilEmpty() || plugin.removeWhenEmpty())
                 plugin.sendMessage(p, "Keep until empty:"
-                        + plugin.keepUntilEmpty + "; remove when empty: "
-                        + plugin.removeWhenEmpty);
+                        + plugin.keepUntilEmpty() + "; remove when empty: "
+                        + plugin.removeWhenEmpty());
             return true;
         } else if (args[0].equalsIgnoreCase("version")) {
             String message;
@@ -157,7 +157,7 @@ public class DTPAdminCommand implements CommandExecutor {
                 plugin.sendMessage(p, "Your config file is up to date.");
             }
         } else if (args[0].equalsIgnoreCase("remove")) {
-            if (!plugin.hasPerm(sender, "admin.remove", false)) {
+            if (!plugin.hasPerm(sender, "deathtpplus.admin.remove", false)) {
                 plugin.sendMessage(p, "Permission Denied");
                 return true;
             }

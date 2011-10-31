@@ -108,4 +108,4 @@ public class DTPKillsCommand implements CommandExecutor {
 
                     return false;
                 }
-
+}

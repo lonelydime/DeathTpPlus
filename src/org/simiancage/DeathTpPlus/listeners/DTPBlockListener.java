@@ -15,8 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 
-import com.MoofIT.Minecraft.Cenotaph.Cenotaph;
-import com.MoofIT.Minecraft.Cenotaph.TombBlock;
+
 import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 
@@ -56,7 +55,7 @@ public class DTPBlockListener extends BlockListener {
         if (tBlock == null)
             return;
 
-        if (plugin.noDestroy && !plugin.hasPerm(p, "admin", false)) {
+        if (plugin.noDestroy() && !plugin.hasPerm(p, "deathtpplus.admin", false)) {
             plugin.logEvent(p.getName() + " tried to destroy tombstone at "
                     + b.getLocation());
             plugin.sendMessage(p, "Tombstone unable to be destroyed");
@@ -64,7 +63,7 @@ public class DTPBlockListener extends BlockListener {
             return;
         }
 
-        if (plugin.lwcPlugin != null && plugin.lwcEnable
+        if (plugin.lwcPlugin != null && plugin.lwcEnable()
                 && tBlock.getLwcEnabled()) {
             if (tBlock.getOwner().equals(p.getName())
                     || plugin.hasPerm(p, "admin", false)) {

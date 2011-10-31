@@ -28,7 +28,7 @@ public class DTPTimeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
-        if (!plugin.hasPerm(sender, "deathtpplus.tombstonetime", false)) {
+        if (!plugin.hasPerm(sender, "deathtpplus.tombstone.time", false)) {
             plugin.sendMessage(sender, "Permission Denied");
             return true;
         }
@@ -54,26 +54,26 @@ public class DTPTimeCommand implements CommandExecutor {
         }
         long cTime = System.currentTimeMillis() / 1000;
         DTPTombBlock tBlock = pList.get(slot);
-        long secTimeLeft = (tBlock.getTime() + plugin.securityTimeout) - cTime;
-        long remTimeLeft = (tBlock.getTime() + plugin.removeTime) - cTime;
+        long secTimeLeft = (tBlock.getTime() + plugin.securityTimeout()) - cTime;
+        long remTimeLeft = (tBlock.getTime() + plugin.removeTime()) - cTime;
 
-        if (plugin.securityRemove && secTimeLeft > 0)
+        if (plugin.securityRemove() && secTimeLeft > 0)
             plugin.sendMessage(p,
                     "Security will be removed from your Tombstone in "
                             + secTimeLeft + " seconds.");
 
-        if (plugin.TombstoneRemove & remTimeLeft > 0)
+        if (plugin.tombstoneRemove() & remTimeLeft > 0)
             plugin.sendMessage(p, "Your Tombstone will break in " + remTimeLeft
                     + " seconds");
-        if (plugin.removeWhenEmpty && plugin.keepUntilEmpty)
+        if (plugin.removeWhenEmpty() && plugin.keepUntilEmpty())
             plugin.sendMessage(
                     p,
                     "Break override: Your Tombstone will break when it is emptied, but will not break until then.");
         else {
-            if (plugin.removeWhenEmpty)
+            if (plugin.removeWhenEmpty())
                 plugin.sendMessage(p,
                         "Break override: Your Tombstone will break when it is emptied.");
-            if (plugin.keepUntilEmpty)
+            if (plugin.keepUntilEmpty())
                 plugin.sendMessage(p,
                         "Break override: Your Tombstone will not break until it is empty.");
         }

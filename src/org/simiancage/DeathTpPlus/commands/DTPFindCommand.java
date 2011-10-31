@@ -15,8 +15,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.MoofIT.Minecraft.Cenotaph.Cenotaph;
-import com.MoofIT.Minecraft.Cenotaph.TombBlock;
+
 import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 

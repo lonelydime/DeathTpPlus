@@ -13,27 +13,27 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.MoofIT.Minecraft.Cenotaph.Cenotaph;
+
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 public class DTPResetCommand implements CommandExecutor {
 
-private Cenotaph plugin;
+    private DeathTpPlus plugin;
 
-public DTPResetCommand(DeathTpPlus instance) {
-this.plugin = instance;
-}
+    public DTPResetCommand(DeathTpPlus instance) {
+        this.plugin = instance;
+    }
 
-@Override
-public boolean onCommand(CommandSender sender, Command cmd, String label,
-String[] args) {
-if (!plugin.hasPerm(sender, "cmd.cenotaphreset", false)) {
-plugin.sendMessage(sender, "Permission Denied");
-return true;
-}
-Player p = (Player) sender;
-p.setCompassTarget(p.getWorld().getSpawnLocation());
-return true;
-}
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label,
+                             String[] args) {
+        if (!plugin.hasPerm(sender, "deathtpplus.tombstone.reset", false)) {
+            plugin.sendMessage(sender, "Permission Denied");
+            return true;
+        }
+        Player p = (Player) sender;
+        p.setCompassTarget(p.getWorld().getSpawnLocation());
+        return true;
+    }
 
 }

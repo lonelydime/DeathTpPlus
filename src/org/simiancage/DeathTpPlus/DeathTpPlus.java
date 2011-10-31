@@ -16,6 +16,8 @@ package org.simiancage.DeathTpPlus;
  */
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.jar.JarFile;
@@ -31,14 +33,12 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -46,7 +46,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 
 //Register
-import com.nijikokun.register.payment.Method.MethodAccount;
 import com.nijikokun.register.payment.Method;
 
 
@@ -61,8 +60,6 @@ import org.simiancage.DeathTpPlus.listeners.DTPPlayerListener;
 import org.simiancage.DeathTpPlus.listeners.DTPServerListener;
 import org.yi.acru.bukkit.Lockette.Lockette;
 
-import javax.xml.transform.sax.SAXTransformerFactory;
-
 public class DeathTpPlus extends JavaPlugin{
     // listeners
     private final DTPEntityListener entityListener = new DTPEntityListener(this);
@@ -73,18 +70,19 @@ public class DeathTpPlus extends JavaPlugin{
     // Configuration Version
     // ToDo Did I changed this after making changes to the config?
 
-    protected String configVersion = "2.0";
+    public double configCurrent = 2.0;
+    public double configVer;
 
     //plugin variables
     public Logger log;
     private DeathTpPlus plugin = this;
-    protected static HashMap<String, List<String>> killstreak = new HashMap<String, List<String>>();
-    protected static HashMap<String, List<String>> deathstreak = new HashMap<String, List<String>>();
-    protected static HashMap<String, List<String>> deathevents = new HashMap<String, List<String>>();
+    public static HashMap<String, List<String>> killstreak = new HashMap<String, List<String>>();
+    public static HashMap<String, List<String>> deathstreak = new HashMap<String, List<String>>();
+    public static HashMap<String, List<String>> deathevents = new HashMap<String, List<String>>();
     public static HashMap<String, String> deathconfig = new HashMap<String, String>();
     protected static File configFile;
     public static File locsName;
-    protected static File streakFile;
+    public static File streakFile;
     public static File deathlogFile;
     public static String logName;
     protected static String pluginName;
@@ -108,7 +106,7 @@ public class DeathTpPlus extends JavaPlugin{
     public boolean useRegister = false;
 
     //craftirc
-    protected static CraftIRC craftircHandle = null;
+    public static CraftIRC craftircHandle = null;
 
     public void onDisable() {
         for (World w : getServer().getWorlds())
@@ -258,8 +256,8 @@ public class DeathTpPlus extends JavaPlugin{
             log.warning("[" + pluginName + "] Wrong allow-worldtravel value of "+deathconfig.get("WORLD_TRAVEL")+". Defaulting to NO!");
             worldTravel = false;
         }
-
-        if (deathconfig.get("VERSION_CHECK").equalsIgnoreCase("true") && (!deathconfig.get("CONFIG_VER").equals(configVersion)))
+        configVer = configVer();
+        if (deathconfig.get("VERSION_CHECK").equalsIgnoreCase("true") && !(configVer== configCurrent))
                 {
             log.warning(logName + "Your config file is out of date! Rename your config and reload to see the new options. Proceeding using set options from config file and defaults for new options...");
         }
@@ -924,6 +922,132 @@ public class DeathTpPlus extends JavaPlugin{
         return playerTombList;
     }
 
+    // ToDo Refactor the whole config design after making this work as the HashTable makes it arkward to get the values needed in the right format
+
+    boolean logEvents () {
+        return deathconfig.get("ENABLE_DEBUG").equalsIgnoreCase("true");
+
+    }
+
+    boolean tombstoneSign () {
+        return deathconfig.get("TOMBSTONESIGN").equalsIgnoreCase("true");
+    }
+
+    public boolean noDestroy() {
+        return deathconfig.get("NO_DESTROY").equalsIgnoreCase("true");
+    }
+
+    boolean playerMessage () {
+        return deathconfig.get("PLAYER_MESSAGE").equalsIgnoreCase("true");
+    }
+
+    boolean saveTombstoneList () {
+        return deathconfig.get("SAVE_TOMBSTONELIST").equalsIgnoreCase("true");
+    }
+
+    boolean noInterfere () {
+        return deathconfig.get("NO_INTERFERE").equalsIgnoreCase("true");
+    }
+
+    boolean voidCheck () {
+        return deathconfig.get("VOIDCHECK").equalsIgnoreCase("true");
+    }
+
+    boolean creeperProtection () {
+        return deathconfig.get("CREEPER_PROTECTION").equalsIgnoreCase("true");
+    }
+
+    String dateFormat () {
+        return deathconfig.get("DATE_FORMAT");
+    }
+
+    String timeFormat () {
+        return deathconfig.get("TIME_FORMAT");
+    }
+
+    public boolean destroyQuickLoot() {
+        return deathconfig.get("DESTROY_QUICK_LOOT").equalsIgnoreCase("true");
+    }
+
+    public boolean tombstoneRemove() {
+        return deathconfig.get("TOMBSTONE_REMOVE").equalsIgnoreCase("true");
+    }
+
+    public int removeTime() {
+        return Integer.parseInt(deathconfig.get("REMOVE_TIME"));
+    }
+
+    public boolean removeWhenEmpty() {
+        return deathconfig.get("REMOVE_WHEN_EMPTY").equalsIgnoreCase("true");
+    }
+
+    public boolean keepUntilEmpty() {
+        return deathconfig.get("KEEP_UNTIL_EMPTY").equalsIgnoreCase("true");
+    }
+
+    boolean locketteEnable () {
+        return deathconfig.get("LOCKETTE_ENABLE").equalsIgnoreCase("true");
+    }
+
+    public boolean lwcEnable() {
+        return deathconfig.get("LWC_ENABLE").equalsIgnoreCase("true");
+    }
+
+    public boolean securityRemove() {
+        return deathconfig.get("SECURITY_REMOVE").equalsIgnoreCase("true");
+    }
+
+    public int securityTimeout() {
+        return Integer.parseInt(deathconfig.get("SECURITY_TIMEOU"));
+    }
+
+    protected boolean lwcPublic () {
+        return deathconfig.get("LWC_PUBLIC").equalsIgnoreCase("true");
+    }
+
+    public double configVer() {
+        return Double.parseDouble(deathconfig.get("CONFIG_VER"));
+    }
+
+    public String versionCheck(Boolean printToLog) {
+        String thisVersion = getDescription().getVersion();
+        URL url = null;
+        try {
+            // ToDo change to correct URL after merging branches
+            url = new URL("https://github.com/dredhorse/DeathTpPlus/tree/master/Resources/deathtpplus.ver;");
+            BufferedReader in = null;
+            in = new BufferedReader(new InputStreamReader(url.openStream()));
+            String newVersion = "";
+            String line;
+            while ((line = in.readLine()) != null) {
+                newVersion += line;
+            }
+            in.close();
+            if (!newVersion.equals(thisVersion)) {
+                if (printToLog)
+                    log.warning(logName + "DeathTpPlus is out of date! This version: "
+                            + thisVersion
+                            + "; latest version: "
+                            + newVersion
+                            + ".");
+                return "DeathTpPlus is out of date! This version: " + thisVersion
+                        + "; latest version: " + newVersion + ".";
+            } else {
+                if (printToLog)
+                    log.info(logName + "DeathTpPlus is up to date at version "
+                            + thisVersion + ".");
+                return "DeathTpPlus is up to date at version " + thisVersion + ".";
+            }
+        } catch (MalformedURLException ex) {
+            if (printToLog)
+                log.warning(logName + "Error accessing update URL.");
+            return "Error accessing update URL.";
+        } catch (IOException ex) {
+            if (printToLog)
+                log.warning(logName + "Error checking for update.");
+            return "Error checking for update.";
+        }
+    }
 
 
     // Register Mesthod

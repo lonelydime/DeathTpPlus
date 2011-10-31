@@ -47,29 +47,29 @@ logEvents: false
 enable-tombstone: 'true'
 
 #Place a sign on the TombStone if true
-TombStoneSign: true
+TombStoneSign: 'true'
 
 #Prevent non-Op players from destroying cenotaphs if true (destroyQuickLoot overrides)
-noDestroy: true
+noDestroy: 'true'
 
 #Show status messages to the player if true
-playerMessage: true
+playerMessage: 'true'
 
 #Save TombStone listing between server reloads if true
-saveTombStoneList: true
+saveTombStoneList: 'true'
 
 #Stop TombStone creation next to existing chests if true (IF set to false it could allow users to circumvent chest protection.
-noInterfere: true
+noInterfere: 'true'
 
 #we normally checks to make sure we aren't trying to create a chest in the void.
 #If you handle or modify the void with another plugin, you can disable that check here.
 #This option should be true for most servers.
-voidCheck: true
+voidCheck: 'true'
 
 #If you are not locking your chests with Lockette or LWC but still want them to be
 #protected against Creeper explosions, or you want your chests to be protected even
 #after they are unlocked, enable this.
-creeperProtection: false
+creeperProtection: 'false'
 
 #Each line may be one of any custom text OR:
 #{name} for player name
@@ -90,32 +90,32 @@ timeFormat: "hh:mm a"
 # ------- TombStone features (Removal)
 
 #Destroy TombStone on player quickloot if true
-destroyQuickLoot: true
+destroyQuickLoot: 'true'
 
 #Remove TombStone after removeTime seconds if true
-TombStoneRemove: true
-removeTime: 3600
+TombStoneRemove: 'true'
+removeTime: '3600'
 
 #Immediately remove TombStone once it is empty, overriding all other timeout options
 #WARNING: THIS IS A PROCESSOR-INTENSIVE OPTION
-removeWhenEmpty: false
+removeWhenEmpty: 'false'
 
 #Never remove a TombStone unless it is empty
 #WARNING: THIS IS A PROCESSOR-INTENSIVE OPTION
-keepUntilEmpty: false
+keepUntilEmpty: 'false'
 
 
 # ------- TombStone features (Security)
 
-LocketteEnable: true
-lwcEnable: false
+LocketteEnable: 'true'
+lwcEnable: 'false'
 
 #Remove security after securityTimeout seconds
-securityRemove: false
-securityTimeout: 3600
+securityRemove: 'false'
+securityTimeout: '3600'
 
 #Set LWC protection to Public instead of removing it after the timeout
-lwcPublic: false
+lwcPublic: 'false'
 
 
 # ----- Death Messages

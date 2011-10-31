@@ -28,7 +28,7 @@ public class DTPTombThread extends Thread {
             DTPTombBlock tBlock = iter.next();
 
 // "empty" option checks
-            if (plugin.keepUntilEmpty || plugin.removeWhenEmpty) {
+            if (plugin.keepUntilEmpty() || plugin.removeWhenEmpty()) {
                 if (tBlock.getBlock().getState() instanceof Chest) {
                     int itemCount = 0;
 
@@ -48,44 +48,44 @@ public class DTPTombThread extends Thread {
                         }
                     }
 
-                    if (plugin.keepUntilEmpty) {
+                    if (plugin.keepUntilEmpty()) {
                         if (itemCount > 0)
                             continue;
                     }
-                    if (plugin.removeWhenEmpty) {
+                    if (plugin.removeWhenEmpty()) {
                         if (itemCount == 0)
-                            plugin.destroyCenotaph(tBlock);
+                            plugin.destroyTombStone(tBlock);
                         iter.remove(); // TODO bugcheck on this addition
                     }
                 }
             }
 
 // Security removal check
-            if (plugin.securityRemove) {
+            if (plugin.securityRemove()) {
                 Player p = plugin.getServer().getPlayer(tBlock.getOwner());
 
-                if (cTime >= (tBlock.getTime() + plugin.securityTimeout)) {
+                if (cTime >= (tBlock.getTime() + plugin.securityTimeout())) {
                     if (tBlock.getLwcEnabled() && plugin.lwcPlugin != null) {
                         plugin.deactivateLWC(tBlock, false);
                         tBlock.setLwcEnabled(false);
                         if (p != null)
                             plugin.sendMessage(p,
-                                    "LWC protection disabled on your cenotaph!");
+                                    "LWC protection disabled on your tombstone!");
                     }
                     if (tBlock.getLocketteSign() != null
                             && plugin.LockettePlugin != null) {
                         plugin.deactivateLockette(tBlock);
                         if (p != null)
                             plugin.sendMessage(p,
-                                    "Lockette protection disabled on your cenotaph!");
+                                    "Lockette protection disabled on your tombstone!");
                     }
                 }
             }
 
 // Block removal check
-            if (plugin.cenotaphRemove
-                    && cTime > (tBlock.getTime() + plugin.removeTime)) {
-                plugin.destroyCenotaph(tBlock); // TODO this originally included
+            if (plugin.tombstoneRemove()
+                    && cTime > (tBlock.getTime() + plugin.removeTime())) {
+                plugin.destroyTombStone(tBlock); // TODO this originally included
 // the only instance of
 // removeTomb(tblock, false).
 // check for bugs caused by the
