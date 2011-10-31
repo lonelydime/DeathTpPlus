@@ -30,7 +30,7 @@ public class DTPFindCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
-        if (!plugin.hasPerm(sender, "deathtpplus.tombstonefind", false)) {
+        if (!plugin.hasPerm(sender, "tombstone.find", false)) {
             plugin.sendMessage(sender, "Permission Denied");
             return true;
         }

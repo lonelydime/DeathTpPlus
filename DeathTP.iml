@@ -12,6 +12,7 @@
     <orderEntry type="library" name="Register" level="project" />
     <orderEntry type="library" name="LWC" level="project" />
     <orderEntry type="library" name="Lockette" level="project" />
+    <orderEntry type="library" name="ExternalLibraries" level="project" />
   </component>
 </module>
 

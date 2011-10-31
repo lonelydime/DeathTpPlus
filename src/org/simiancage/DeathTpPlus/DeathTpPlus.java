@@ -7,7 +7,7 @@ package org.simiancage.DeathTpPlus;
  * Date: 18.10.11
  * Time: 22:33
  * based on:
- * DeathTpPlus from Todo get original author
+ * DeathTpPlus from lonelydime
  * and material from
  * an updated fork of Furt https://github.com/Furt of
  * Cenopath - A Dead Man's Chest plugin for Bukkit
@@ -15,20 +15,19 @@ package org.simiancage.DeathTpPlus;
  * Original Copyright (C) 2011 Steven "Drakia" Scott <Drakia@Gmail.com>
  */
 
+import java.awt.*;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
-import com.griefcraft.lwc.LWC;
-import com.griefcraft.lwc.LWCPlugin;
-import com.griefcraft.model.Protection;
-import com.griefcraft.model.ProtectionTypes;
-import com.nijikokun.register.payment.Methods;
+
+
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -47,18 +46,28 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 //Register
 import com.nijikokun.register.payment.Method;
+import com.nijikokun.register.payment.Methods;
 
 
 //craftirc
 import com.ensifera.animosity.craftirc.CraftIRC;
 
-
+// importing commands and listeners
 import org.simiancage.DeathTpPlus.commands.*;
 import org.simiancage.DeathTpPlus.listeners.DTPBlockListener;
 import org.simiancage.DeathTpPlus.listeners.DTPEntityListener;
 import org.simiancage.DeathTpPlus.listeners.DTPPlayerListener;
 import org.simiancage.DeathTpPlus.listeners.DTPServerListener;
+
+//importing Lockette
 import org.yi.acru.bukkit.Lockette.Lockette;
+
+// importing LWC
+
+import com.griefcraft.lwc.LWC;
+import com.griefcraft.lwc.LWCPlugin;
+import com.griefcraft.model.Protection;
+import com.griefcraft.model.ProtectionTypes;
 
 public class DeathTpPlus extends JavaPlugin{
     // listeners
@@ -67,11 +76,14 @@ public class DeathTpPlus extends JavaPlugin{
     private final DTPServerListener serverListener = new DTPServerListener(this);
     private final DTPPlayerListener playerListener = new DTPPlayerListener(this);
 
-    // Configuration Version
+    // Configuration Version and PluginVersion
     // ToDo Did I changed this after making changes to the config?
+    // ToDo Did I also change /resources/deathtpplus.ver after making these changes?
 
-    public double configCurrent = 2.0;
-    public double configVer;
+    public String configCurrent = "2.00";
+    public String configVer;
+
+
 
     //plugin variables
     public Logger log;
@@ -85,6 +97,7 @@ public class DeathTpPlus extends JavaPlugin{
     public static File streakFile;
     public static File deathlogFile;
     public static String logName;
+    public static String warnLogName;
     protected static String pluginName;
     protected static String pluginVersion;
     protected static ArrayList<String> pluginAuthor;
@@ -94,11 +107,11 @@ public class DeathTpPlus extends JavaPlugin{
     protected FileConfiguration configuration;
     public LWCPlugin lwcPlugin = null;
     public Lockette LockettePlugin = null;
-    protected ConcurrentLinkedQueue<DTPTombBlock> tombList = new ConcurrentLinkedQueue<DTPTombBlock>();
+    public ConcurrentLinkedQueue<DTPTombBlock> tombList = new ConcurrentLinkedQueue<DTPTombBlock>();
     public HashMap<Location, DTPTombBlock> tombBlockList = new HashMap<Location, DTPTombBlock>();
     public HashMap<String, ArrayList<DTPTombBlock>> playerTombList = new HashMap<String, ArrayList<DTPTombBlock>>();
     protected HashMap<String, EntityDamageEvent> deathCause = new HashMap<String, EntityDamageEvent>();
-    protected String signMessage[] = new String[] { "{name}", "RIP", "{date}","{time}" };
+    public String[] signMessage = new String[] { "{name}", "RIP", "{date}","{time}" };
     // private DTPTomb plugin;
 
 
@@ -119,7 +132,8 @@ public class DeathTpPlus extends JavaPlugin{
     public void onEnable() {
         log = Bukkit.getServer().getLogger();
         pluginName = getDescription().getName();
-        logName = "[" + pluginName + "] ";
+        warnLogName = "[" + pluginName + "] ";
+        logName = "   " + warnLogName;
         pluginVersion = getDescription().getVersion();
         pluginAuthor = getDescription().getAuthors();
         pluginPath = getDataFolder() + System.getProperty("file.separator");
@@ -149,7 +163,7 @@ public class DeathTpPlus extends JavaPlugin{
                 jar.close();
                 log.info(logName + "Default config created successfully!");
             } catch (Exception e)  {
-                log.warning(logName + "Default config could not be created!");
+                log.warning(warnLogName + "Default config could not be created!");
 
             }
         }
@@ -214,7 +228,7 @@ public class DeathTpPlus extends JavaPlugin{
         deathconfig.put("NO_INTERFERE", configuration.getString("noInterfere"));
         deathconfig.put("VOIDCHECK", configuration.getString("voidCheck"));
         deathconfig.put("CREEPER_PROTECTION", configuration.getString("creeperProtection"));
-
+        signMessage = loadSign();
         deathconfig.put("DATE_FORMAT", configuration.getString("dateFormat"));
         deathconfig.put("TIME_FORMAT", configuration.getString("timeFormat"));
         deathconfig.put("DESTROY_QUICK_LOOT", configuration.getString("destroyQuickLoot"));
@@ -236,12 +250,12 @@ public class DeathTpPlus extends JavaPlugin{
 
         if (deathconfig.get("REMOVE_WHEN_EMPTY").equalsIgnoreCase("true"))
         {
-            log.warning(logName +"RemoveWhenEmpty is enabled. This is processor intensive!");
+            log.warning(warnLogName +"RemoveWhenEmpty is enabled. This is processor intensive!");
         }
 
         if (deathconfig.get("KEEP_UNTIL_EMPTY").equalsIgnoreCase("true"))
         {
-            log.warning(logName +"KeepUntilEmpty is enabled. This is processor intensive!");
+            log.warning(warnLogName +"KeepUntilEmpty is enabled. This is processor intensive!");
         }
 
         if (deathconfig.get("WORLD_TRAVEL").equalsIgnoreCase("yes"))
@@ -251,35 +265,42 @@ public class DeathTpPlus extends JavaPlugin{
 
         if (deathconfig.get("WORLD_TRAVEL").equalsIgnoreCase("yes")||deathconfig.get("WORLD_TRAVEL").equalsIgnoreCase("no")||deathconfig.get("WORLD_TRAVEL").equalsIgnoreCase("permissions"))
         {
-            log.info("[" + pluginName + "] allow-wordtravel is: "+deathconfig.get("WORLD_TRAVEL"));
+            log.info(logName + "allow-wordtravel is: "+deathconfig.get("WORLD_TRAVEL"));
         } else {
-            log.warning("[" + pluginName + "] Wrong allow-worldtravel value of "+deathconfig.get("WORLD_TRAVEL")+". Defaulting to NO!");
+            log.warning(warnLogName + "Wrong allow-worldtravel value of "+deathconfig.get("WORLD_TRAVEL")+". Defaulting to NO!");
             worldTravel = false;
         }
         configVer = configVer();
-        if (deathconfig.get("VERSION_CHECK").equalsIgnoreCase("true") && !(configVer== configCurrent))
-                {
-            log.warning(logName + "Your config file is out of date! Rename your config and reload to see the new options. Proceeding using set options from config file and defaults for new options...");
+        if (deathconfig.get("VERSION_CHECK").equalsIgnoreCase("true"))
+        {
+            if (!(configVer.equalsIgnoreCase(configCurrent)))
+            {
+                log.warning(warnLogName + "Your config file is out of date! Rename your config and reload to see the new options.");
+                log.warning(warnLogName + "Proceeding using set options from config file and defaults for new options...");
+            }
+
+            versionCheck(true);
         }
 
 
-        //Create the pluginmanage pm.
+
+        //Create the pluginmanager pm.
         PluginManager pm = getServer().getPluginManager();
 
         // register entityListener
         pm.registerEvent(Event.Type.ENTITY_DEATH, entityListener, Priority.Normal, this);
 
         // register entityListener for Deathnotify
-        if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true")) {
+        if (deathconfig.get("SHOW_DEATHNOTIFY").equalsIgnoreCase("true")) {
             pm.registerEvent(Event.Type.ENTITY_COMBUST, entityListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Normal, this);
         }
         // register entityListener for Deathnotify and Show Streaks
-        if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true") || DeathTpPlus.deathconfig.get("SHOW_STREAKS").equals("true") ) {
+        if (deathconfig.get("SHOW_DEATHNOTIFY").equalsIgnoreCase("true") || deathconfig.get("SHOW_STREAKS").equalsIgnoreCase("true") ) {
             pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.Normal, this);
         }
         // register entityListener for Enable Tombstone
-        if (DeathTpPlus.deathconfig.get("ENABLE_TOMBSTONE").equals("true"))
+        if (deathconfig.get("ENABLE_TOMBSTONE").equalsIgnoreCase("true"))
         {
             pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Highest, this);
@@ -308,7 +329,7 @@ public class DeathTpPlus extends JavaPlugin{
 
         for (World w : getServer().getWorlds())
         {
-                    loadTombList(w.getName());
+            loadTombList(w.getName());
         }
 
         // starting Removal Thread
@@ -326,7 +347,7 @@ public class DeathTpPlus extends JavaPlugin{
         // print success
         PluginDescriptionFile pdfFile = this.getDescription();
         // Todo Enable Logger
-        log.info("[DeathTpPlus] version " + pdfFile.getVersion() + " is enabled!");
+        log.info(logName + "version " + pdfFile.getVersion() + " is enabled!");
     }
 
     private void CreateDefaultFile(File file) {
@@ -334,16 +355,16 @@ public class DeathTpPlus extends JavaPlugin{
             file.createNewFile();
         } catch (IOException e) {
             // Todo Enable Logger
-            log.warning(logName+ "Cannot create file "+file.getPath()+"/"+file.getName());
+            log.warning(warnLogName+ "Cannot create file "+file.getPath()+"/"+file.getName());
         }
     }
 
     private String[] loadSign() {
         String[] msg = signMessage;
-        msg[0] = configuration.getString("Core.Sign.Line1", signMessage[0]);
-        msg[1] = configuration.getString("Core.Sign.Line2", signMessage[1]);
-        msg[2] = configuration.getString("Core.Sign.Line3", signMessage[2]);
-        msg[3] = configuration.getString("Core.Sign.Line4", signMessage[3]);
+        msg[0] = configuration.getString("Sign.Line1", signMessage[0]);
+        msg[1] = configuration.getString("Sign.Line2", signMessage[1]);
+        msg[2] = configuration.getString("Sign.Line3", signMessage[2]);
+        msg[3] = configuration.getString("Sign.Line4", signMessage[3]);
         return msg;
     }
 
@@ -358,8 +379,16 @@ public class DeathTpPlus extends JavaPlugin{
 
     public Plugin checkPlugin(Plugin plugin) {
         if (plugin != null && plugin.isEnabled()) {
-            log.info(logName +"Using " + plugin.getDescription().getName()
+            log.info(logName +"Found " + plugin.getDescription().getName()
                     + " (v" + plugin.getDescription().getVersion() + ")");
+            if (locketteEnable())
+            {
+                log.info(logName + "configured to use Lockette");
+            }
+            if (lwcEnable())
+            {
+                log.info(logName + "configured to use LWC");
+            }
             return plugin;
         }
         return null;
@@ -410,7 +439,7 @@ public class DeathTpPlus extends JavaPlugin{
             }
             scanner.close();
         } catch (IOException e) {
-            log.info(logName + "Error loading cenotaph list: " + e);
+            log.info(logName + "Error loading tombstone list: " + e);
         }
     }
 
@@ -454,6 +483,7 @@ public class DeathTpPlus extends JavaPlugin{
         configuration.addDefault("cavespider", "");
         configuration.addDefault("enderman", "");
         //Configuration nodes
+        configuration.addDefault("configVer", "0.00");
         configuration.addDefault("versionCheck", "true");
         configuration.addDefault("show-deathnotify", "true");
         configuration.addDefault("allow-deathtp", "true");
@@ -465,6 +495,8 @@ public class DeathTpPlus extends JavaPlugin{
         configuration.addDefault("allow-deathlog", "true");
         configuration.addDefault("allow-worldtravel", "no");
         configuration.addDefault("logevents","false");
+        configuration.addDefault("enable-tombstone", "true");
+        configuration.addDefault("enable-debug", "true");
         //Kill Streak nodes
         configuration.addDefault("killstreak", "");
         //Death Streak nodes
@@ -482,7 +514,7 @@ public class DeathTpPlus extends JavaPlugin{
         configuration.addDefault("destroyQuickloot","true");
         configuration.addDefault("TombStoneRemove","false");
         configuration.addDefault("removeTime","18000");
-        configuration.addDefault("removeWhenEmpty","true");
+        configuration.addDefault("removeWhenEmpty","false");
         configuration.addDefault("keepUntilEmpty","false");
         configuration.addDefault("LocketteEnable","true");
         configuration.addDefault("lwcEnable","false");
@@ -529,7 +561,7 @@ public class DeathTpPlus extends JavaPlugin{
         getCommand("deathtp").setExecutor(new DTPDeathtpCommand(this));
         getCommand("deaths").setExecutor(new DTPDeathsCommand(this));
         getCommand("kills").setExecutor(new DTPKillsCommand(this));
-        getCommand("streaks").setExecutor(new DTPStreakCommand(this));
+        getCommand("streak").setExecutor(new DTPStreakCommand(this));
     }
 
 
@@ -544,7 +576,7 @@ public class DeathTpPlus extends JavaPlugin{
             BufferedWriter bw = new BufferedWriter(new FileWriter(fh));
             for (Iterator<DTPTombBlock> iter = tombList.iterator(); iter.hasNext();) {
                 DTPTombBlock tBlock = iter.next();
-            // Skip not this world
+                // Skip not this world
                 if (!tBlock.getBlock().getWorld().getName()
                         .equalsIgnoreCase(world))
                     continue;
@@ -652,10 +684,10 @@ public class DeathTpPlus extends JavaPlugin{
         // Todo Check if replacing plugin with this is really the solution!!!
         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable()
         {
-                    public void run() {
-                        sign.update();
-                    }
-                });
+            public void run() {
+                sign.update();
+            }
+        });
         tBlock.setLocketteSign(sign);
         return true;
     }
@@ -735,7 +767,7 @@ public class DeathTpPlus extends JavaPlugin{
     */
     public boolean hasPerm(CommandSender sender, String label,
                            boolean consoleUse) {
-        boolean perm = sender.hasPermission("deathtp." + label);
+        boolean perm = sender.hasPermission("deathtpplus." + label);
 
         if (this.console(sender)) {
             if (consoleUse)
@@ -761,13 +793,13 @@ public class DeathTpPlus extends JavaPlugin{
     public void sendMessage(Player p, String msg) {
         if (!deathconfig.get("PLAYER_MESSAGE").equalsIgnoreCase("true"))
             return;
-        p.sendMessage(logName + msg);
+        p.sendMessage(warnLogName + msg);
     }
 
     public void sendMessage(CommandSender p, String msg) {
         if (!deathconfig.get("PLAYER_MESSAGE").equalsIgnoreCase("true"))
             return;
-        p.sendMessage(logName + msg);
+        p.sendMessage(warnLogName + msg);
     }
 
 
@@ -929,7 +961,7 @@ public class DeathTpPlus extends JavaPlugin{
 
     }
 
-    boolean tombstoneSign () {
+    public boolean tombstoneSign() {
         return deathconfig.get("TOMBSTONESIGN").equalsIgnoreCase("true");
     }
 
@@ -941,27 +973,27 @@ public class DeathTpPlus extends JavaPlugin{
         return deathconfig.get("PLAYER_MESSAGE").equalsIgnoreCase("true");
     }
 
-    boolean saveTombstoneList () {
+    public boolean saveTombstoneList () {
         return deathconfig.get("SAVE_TOMBSTONELIST").equalsIgnoreCase("true");
     }
 
-    boolean noInterfere () {
+    public boolean noInterfere() {
         return deathconfig.get("NO_INTERFERE").equalsIgnoreCase("true");
     }
 
-    boolean voidCheck () {
+    public boolean voidCheck() {
         return deathconfig.get("VOIDCHECK").equalsIgnoreCase("true");
     }
 
-    boolean creeperProtection () {
+    public boolean creeperProtection() {
         return deathconfig.get("CREEPER_PROTECTION").equalsIgnoreCase("true");
     }
 
-    String dateFormat () {
+    public String dateFormat() {
         return deathconfig.get("DATE_FORMAT");
     }
 
-    String timeFormat () {
+    public String timeFormat() {
         return deathconfig.get("TIME_FORMAT");
     }
 
@@ -998,15 +1030,15 @@ public class DeathTpPlus extends JavaPlugin{
     }
 
     public int securityTimeout() {
-        return Integer.parseInt(deathconfig.get("SECURITY_TIMEOU"));
+        return Integer.parseInt(deathconfig.get("SECURITY_TIMEOUT"));
     }
 
     protected boolean lwcPublic () {
         return deathconfig.get("LWC_PUBLIC").equalsIgnoreCase("true");
     }
 
-    public double configVer() {
-        return Double.parseDouble(deathconfig.get("CONFIG_VER"));
+    public String configVer() {
+        return deathconfig.get("CONFIG_VER");
     }
 
     public String versionCheck(Boolean printToLog) {
@@ -1014,7 +1046,7 @@ public class DeathTpPlus extends JavaPlugin{
         URL url = null;
         try {
             // ToDo change to correct URL after merging branches
-            url = new URL("https://github.com/dredhorse/DeathTpPlus/tree/master/Resources/deathtpplus.ver;");
+            url = new URL("https://raw.github.com/dredhorse/DeathTpPlus/cenopath/Resources/deathtpplus.ver");
             BufferedReader in = null;
             in = new BufferedReader(new InputStreamReader(url.openStream()));
             String newVersion = "";
@@ -1025,11 +1057,8 @@ public class DeathTpPlus extends JavaPlugin{
             in.close();
             if (!newVersion.equals(thisVersion)) {
                 if (printToLog)
-                    log.warning(logName + "DeathTpPlus is out of date! This version: "
-                            + thisVersion
-                            + "; latest version: "
-                            + newVersion
-                            + ".");
+                    log.warning(warnLogName + "DeathTpPlus is out of date!");
+                    log.warning("This version: " + thisVersion + "; latest version: " + newVersion + ".");
                 return "DeathTpPlus is out of date! This version: " + thisVersion
                         + "; latest version: " + newVersion + ".";
             } else {
@@ -1040,11 +1069,11 @@ public class DeathTpPlus extends JavaPlugin{
             }
         } catch (MalformedURLException ex) {
             if (printToLog)
-                log.warning(logName + "Error accessing update URL.");
+                log.warning(warnLogName + "Error accessing update URL.");
             return "Error accessing update URL.";
         } catch (IOException ex) {
             if (printToLog)
-                log.warning(logName + "Error checking for update.");
+                log.warning(warnLogName + "Error checking for update.");
             return "Error checking for update.";
         }
     }

@@ -22,7 +22,7 @@ public class DTPAdminCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
-        if (!plugin.hasPerm(sender, "deathtpplus.admin", false)) {
+        if (!plugin.hasPerm(sender, "admin", false)) {
             plugin.sendMessage(sender, "Permission Denied");
             return true;
         }
@@ -34,11 +34,13 @@ public class DTPAdminCommand implements CommandExecutor {
                     "Usage: /dtpadmin find <playerCaseSensitive> <#>");
             plugin.sendMessage(p,
                     "Usage: /dtpadmin remove <playerCaseSensitive> <#>");
+            plugin.sendMessage(p,
+                    "Usage: /dtpadmin time <playerCaseSensitive> <#>");
             plugin.sendMessage(p, "Usage: /dtpadmin version");
             return true;
         }
         if (args[0].equalsIgnoreCase("list")) {
-            if (!plugin.hasPerm(sender, "deathtpplus.admin.list", false)) {
+            if (!plugin.hasPerm(sender, "admin.list", false)) {
                 plugin.sendMessage(p, "Permission Denied");
                 return true;
             }
@@ -73,7 +75,7 @@ public class DTPAdminCommand implements CommandExecutor {
             }
             return true;
         } else if (args[0].equalsIgnoreCase("find")) {
-            if (!plugin.hasPerm(sender, "deathtpplus.admin.find", false)) {
+            if (!plugin.hasPerm(sender, "admin.find", false)) {
                 plugin.sendMessage(p, "Permission Denied");
                 return true;
             }
@@ -102,10 +104,10 @@ public class DTPAdminCommand implements CommandExecutor {
             int Z = tBlock.getBlock().getZ();
             plugin.sendMessage(p, args[1] + "'s tombstone #" + args[2]
                     + " is at " + X + "," + Y + "," + Z + ", to the "
-                    + DeathTpPlus.getDirection(degrees) + ".");
+                    + plugin.getDirection(degrees) + ".");
             return true;
         } else if (args[0].equalsIgnoreCase("time")) {
-            if (!plugin.hasPerm(p, "deathtpplus.admin.time", false)) {
+            if (!plugin.hasPerm(p, "admin.time", false)) {
                 plugin.sendMessage(p, "Permission Denied");
                 return true;
             }
@@ -149,15 +151,15 @@ public class DTPAdminCommand implements CommandExecutor {
             message = plugin.versionCheck(false);
             plugin.sendMessage(p, message);
 
-            if (plugin.configVer == 0) {
+            if (plugin.configVer == null) {
                 plugin.sendMessage(p, "Using default config.");
-            } else if (plugin.configVer < plugin.configCurrent) {
+            } else if (!(plugin.configVer.equalsIgnoreCase(plugin.configCurrent))) {
                 plugin.sendMessage(p, "Your config file is out of date.");
-            } else if (plugin.configVer == plugin.configCurrent) {
+            } else if (plugin.configVer.equalsIgnoreCase(plugin.configCurrent)) {
                 plugin.sendMessage(p, "Your config file is up to date.");
             }
         } else if (args[0].equalsIgnoreCase("remove")) {
-            if (!plugin.hasPerm(sender, "deathtpplus.admin.remove", false)) {
+            if (!plugin.hasPerm(sender, "admin.remove", false)) {
                 plugin.sendMessage(p, "Permission Denied");
                 return true;
             }
@@ -188,6 +190,8 @@ public class DTPAdminCommand implements CommandExecutor {
                     "Usage: /dtpadmin find <playerCaseSensitive> <#>");
             plugin.sendMessage(p,
                     "Usage: /dtpadmin remove <playerCaseSensitive> <#>");
+            plugin.sendMessage(p,
+                    "Usage: /dtpadmin time <playerCaseSensitive> <#>");
             plugin.sendMessage(p, "Usage: /dtpadmin version");
             return true;
         }

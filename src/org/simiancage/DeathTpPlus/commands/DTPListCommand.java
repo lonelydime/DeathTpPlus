@@ -28,7 +28,7 @@ public class DTPListCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
-        if (!plugin.hasPerm(sender, "deathtpplus.tombstone.list", false)) {
+        if (!plugin.hasPerm(sender, "tombstone.list", false)) {
             plugin.sendMessage(sender, "Permission Denied");
             return true;
         }

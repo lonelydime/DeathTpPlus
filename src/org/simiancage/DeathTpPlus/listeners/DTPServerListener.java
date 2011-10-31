@@ -44,12 +44,12 @@ public class DTPServerListener extends ServerListener {
             }
         }
         if (event.getPlugin() == plugin.lwcPlugin) {
-            plugin.log.info("[DTPTomb] LWC plugin lost.");
+            plugin.log.info(plugin.logName +"LWC plugin lost.");
             plugin.lwcPlugin = null;
         }
 
         if (event.getPlugin() == plugin.LockettePlugin) {
-            plugin.log.info("[DTPTomb] Lockette plugin lost.");
+            plugin.log.info(plugin.logName + "Lockette plugin lost.");
             plugin.LockettePlugin = null;
         }
 
@@ -69,7 +69,7 @@ public class DTPServerListener extends ServerListener {
                 plugin.useRegister = true;
 
             } else {
-                plugin.log.warning(plugin.logName +"Register detected but no economy plugin found!");
+                plugin.log.warning(plugin.warnLogName +"Register detected but no economy plugin found!");
                 plugin.useRegister = false;
             }
         } else {

@@ -28,6 +28,7 @@ public class DTPStreakCommand implements CommandExecutor {
         this.plugin = instance;
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         boolean canUseCommand = false;
             if (sender instanceof Player) {

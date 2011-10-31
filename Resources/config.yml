@@ -1,12 +1,16 @@
 ### DeathTpPlus
 #
+# Note: All values need to be in '', eg. true must be 'true', a cost of 10 must be '10'
+
+
+
 # Config Version
-configVer: 2.0
+configVer: '2.00'
 
 # ----- Standard plugin features
 
 #Check for new versions on startup
-versionCheck: true
+versionCheck: 'true'
 
 # Show the death messages on the server
 show-deathnotify: 'true'
@@ -21,13 +25,13 @@ allow-deathlog: 'true'
 show-streaks: 'true'
 
 # Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports.
-charge-item: 0
+charge-item: '0'
 
 # Show sign tombstones upon death
 show-sign: 'false'
 
 # Register
-deathtp-cost: 10
+deathtp-cost: '10'
 
 # CraftIRC
 deathtp-tag: 'all'
@@ -39,7 +43,7 @@ allow-deathlog: 'true'
 allow-worldtravel: 'no'
 
 #Print messages to terminal if true (debug)
-logEvents: false
+logEvents: 'false'
 
 # ------- TombStone features (General)
 

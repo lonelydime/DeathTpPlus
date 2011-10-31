@@ -28,7 +28,7 @@ public class DTPTimeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
-        if (!plugin.hasPerm(sender, "deathtpplus.tombstone.time", false)) {
+        if (!plugin.hasPerm(sender, "tombstone.time", false)) {
             plugin.sendMessage(sender, "Permission Denied");
             return true;
         }

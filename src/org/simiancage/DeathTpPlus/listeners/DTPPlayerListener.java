@@ -8,6 +8,7 @@ package org.simiancage.DeathTpPlus.listeners;
  * Time: 22:01
  */
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -104,7 +105,12 @@ public class DTPPlayerListener extends PlayerListener {
 // Manually update inventory for the time being.
         event.getPlayer().updateInventory();
         plugin.sendMessage(event.getPlayer(), "Tombstone quicklooted!");
-        plugin.logEvent(event.getPlayer() + " quicklooted tombstone at "
-                + tBlock.getBlock().getLocation());
+        Location location = tBlock.getBlock().getLocation();
+        String loc = location.getWorld().getName();
+        loc = loc +", x=" + location.getBlock().getX();
+        loc = loc +", y=" + location.getBlock().getY();
+        loc = loc +", z=" + location.getBlock().getZ();
+        plugin.logEvent(event.getPlayer().getName() + " quicklooted tombstone at "
+                + loc);
     }
 }

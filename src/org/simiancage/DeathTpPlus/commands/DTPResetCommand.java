@@ -27,7 +27,7 @@ public class DTPResetCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
-        if (!plugin.hasPerm(sender, "deathtpplus.tombstone.reset", false)) {
+        if (!plugin.hasPerm(sender, "tombstone.reset", false)) {
             plugin.sendMessage(sender, "Permission Denied");
             return true;
         }

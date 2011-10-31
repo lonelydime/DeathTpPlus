@@ -8,30 +8,34 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.Random;
 
 //bukkit imports
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 
 
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityListener;
+import org.bukkit.inventory.ItemStack;
+import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 public class DTPEntityListener extends EntityListener {
-    public static DeathTpPlus plugin;
+    public DeathTpPlus plugin;
     public ArrayList<String> lastDamagePlayer = new ArrayList<String>();
     public ArrayList<String> lastDamageType = new ArrayList<String>();
     public String beforedamage = "";
     public PlayerDeathEvent playerDeathEvent = null;
+    public String loghowdied;
     enum DeathTypes {FALL, DROWNING, SUFFOCATION, FIRE_TICK, FIRE, LAVA, BLOCK_EXPLOSION, CREEPER, SKELETON, SPIDER, PIGZOMBIE, ZOMBIE, CONTACT, SLIME, VOID, GHAST, WOLF, LIGHTNING, STARVATION, CAVESPIDER, ENDERMAN, PVP, FISTS, UNKNOWN;
 
         @Override public String toString() {
@@ -40,19 +44,19 @@ public class DTPEntityListener extends EntityListener {
             return s.substring(0, 1)+s.substring(1).toLowerCase();
         }
     }
-    
+
     public DTPEntityListener(DeathTpPlus instance) {
         plugin = instance;
     }
 
     public String getEvent (String deathType){
         int messageindex = 0;
-        if (DeathTpPlus.deathevents.get(deathType).size() > 1)
+        if (plugin.deathevents.get(deathType).size() > 1)
         {
             Random rand = new Random();
-            messageindex = rand.nextInt(DeathTpPlus.deathevents.get(deathType).size());
+            messageindex = rand.nextInt(plugin.deathevents.get(deathType).size());
         }
-        return DeathTpPlus.deathevents.get(deathType).get(messageindex);
+        return plugin.deathevents.get(deathType).get(messageindex);
     }
 
 
@@ -60,7 +64,7 @@ public class DTPEntityListener extends EntityListener {
     public void onEntityDeath(EntityDeathEvent event) {
 
         beforedamage = "";
-        try {
+
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 String damagetype = lastDamageType.get(lastDamagePlayer.indexOf(player.getDisplayName()));
@@ -68,16 +72,14 @@ public class DTPEntityListener extends EntityListener {
                 String fileOutput = "";
                 String line = "";
                 String[] howtheydied;
-                String loghowdied = "";
-
-                if (DeathTpPlus.deathconfig.get("ALLOW_DEATHTP").equals("true") ) {
+                if (plugin.deathconfig.get("ALLOW_DEATHTP").equals("true") ) {
                     ArrayList<String> filetext = new ArrayList<String>();
                     boolean readCheck = false;
                     boolean newPlayerDeath = true;
                     //text to write to file
                     fileOutput = player.getName()+":"+player.getLocation().getX()+":"+player.getLocation().getY()+":"+player.getLocation().getZ()+":"+player.getWorld().getName().toString();
                     try {
-                        FileReader fr = new FileReader(DeathTpPlus.locsName);
+                        FileReader fr = new FileReader(plugin.locsName);
                         BufferedReader br = new BufferedReader(fr);
 
                         while((line = br.readLine()) != null) {
@@ -91,7 +93,7 @@ public class DTPEntityListener extends EntityListener {
 
                         br.close();
 
-                        BufferedWriter out = new BufferedWriter(new FileWriter(DeathTpPlus.locsName));
+                        BufferedWriter out = new BufferedWriter(new FileWriter(plugin.locsName));
 
                         for (int i = 0; i < filetext.size(); i++) {
                             out.write(filetext.get(i));
@@ -111,12 +113,12 @@ public class DTPEntityListener extends EntityListener {
                         out.close();
                     }
                     catch (IOException e) {
-                        System.out.println("cannot read file "+DeathTpPlus.locsName);
+                        System.out.println("cannot read file "+ plugin.locsName);
                         System.out.println(e);
                     }
                 }
 
-                if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true") || DeathTpPlus.deathconfig.get("SHOW_STREAKS").equals("true") || DeathTpPlus.deathconfig.get("DEATH_LOGS").equals("true") ) {
+                if (plugin.deathconfig.get("SHOW_DEATHNOTIFY").equalsIgnoreCase("true") || plugin.deathconfig.get("SHOW_STREAKS").equalsIgnoreCase("true") || plugin.deathconfig.get("DEATH_LOGS").equalsIgnoreCase("true") || plugin.deathconfig.get("ENABLE_TOMBSTONE").equalsIgnoreCase("true") ) {
                     howtheydied = damagetype.split(":");
                     loghowdied = howtheydied[0];
                     // Todo change into case statement and create methods for eventAnnounce
@@ -131,12 +133,12 @@ public class DTPEntityListener extends EntityListener {
                         loghowdied = howtheydied[2];
                         eventAnnounce = eventAnnounce.replace("%i", howtheydied[1]);
                         eventAnnounce = eventAnnounce.replace("%a", howtheydied[2]);
-                        if (DeathTpPlus.deathconfig.get("SHOW_STREAKS").matches("true")){
+                        if (plugin.deathconfig.get("SHOW_STREAKS").matches("true")){
 
                             writeToStreak(player.getDisplayName(), howtheydied[2]);
                         }
                         //write kill to deathlog
-                        if (DeathTpPlus.deathconfig.get("DEATH_LOGS").matches("true")) {
+                        if (plugin.deathconfig.get("DEATH_LOGS").matches("true")) {
                             writeToLog("kill", howtheydied[2], player.getDisplayName());
                         }
                     }
@@ -147,7 +149,7 @@ public class DTPEntityListener extends EntityListener {
 
                     eventAnnounce = plugin.convertSamloean(eventAnnounce);
 
-                    if (DeathTpPlus.deathconfig.get("SHOW_DEATHNOTIFY").equals("true")) {
+                    if (plugin.deathconfig.get("SHOW_DEATHNOTIFY").equals("true")) {
                         //plugin.getServer().broadcastMessage(eventAnnounce);
                         if (event instanceof PlayerDeathEvent) {
                             playerDeathEvent = (PlayerDeathEvent) event;
@@ -157,7 +159,7 @@ public class DTPEntityListener extends EntityListener {
                     }
 
                     //CraftIRC
-                    if (DeathTpPlus.craftircHandle != null) {
+                    if (plugin.craftircHandle != null) {
                         String ircAnnounce;
                         ircAnnounce = eventAnnounce.replace("�0", "");
                         ircAnnounce = ircAnnounce.replace("�2", "");
@@ -175,14 +177,14 @@ public class DTPEntityListener extends EntityListener {
                         ircAnnounce = ircAnnounce.replace("�e", "");
                         ircAnnounce = ircAnnounce.replace("�f", "");
 
-                        DeathTpPlus.craftircHandle.sendMessageToTag(ircAnnounce, DeathTpPlus.deathconfig.get("CRAFT_IRC_TAG"));
+                        plugin.craftircHandle.sendMessageToTag(ircAnnounce, plugin.deathconfig.get("CRAFT_IRC_TAG"));
                     }
 
-                    if (DeathTpPlus.deathconfig.get("DEATH_LOGS").matches("true")) {
+                    if (plugin.deathconfig.get("DEATH_LOGS").equalsIgnoreCase("true")) {
                         writeToLog("death", player.getDisplayName(), loghowdied);
                     }
 
-                    if (DeathTpPlus.deathconfig.get("SHOW_SIGN").equals("true")) {
+                    if (plugin.deathconfig.get("SHOW_SIGN").equalsIgnoreCase("true")) {
                         //place sign
                         Block signBlock = player.getWorld().getBlockAt(player.getLocation().getBlockX(),
                                 player.getLocation().getBlockY(),
@@ -207,16 +209,287 @@ public class DTPEntityListener extends EntityListener {
                     }
 
                 }
+                // Tombstone part
+                if (plugin.deathconfig.get("ENABLE_TOMBSTONE").equalsIgnoreCase("true")){
+
+                    if (!plugin.hasPerm(player, "tombstone.use", false))
+                        return;
+
+                    plugin.logEvent(player.getName() + " died.");
+
+                    if (event.getDrops().size() == 0) {
+                        plugin.sendMessage(player, "Inventory Empty.");
+                        plugin.logEvent(player.getName() + " inventory empty.");
+                        return;
+                    }
+
+// Get the current player location.
+                    Location loc = player.getLocation();
+                    Block block = player.getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(),
+                            loc.getBlockZ());
+
+// If we run into something we don't want to destroy, go one up.
+                    if (block.getType() == Material.STEP
+                            || block.getType() == Material.TORCH
+                            || block.getType() == Material.REDSTONE_WIRE
+                            || block.getType() == Material.RAILS
+                            || block.getType() == Material.STONE_PLATE
+                            || block.getType() == Material.WOOD_PLATE
+                            || block.getType() == Material.REDSTONE_TORCH_ON
+                            || block.getType() == Material.REDSTONE_TORCH_OFF
+                            || block.getType() == Material.CAKE_BLOCK) {
+                        block = player.getWorld().getBlockAt(loc.getBlockX(),
+                                loc.getBlockY() + 1, loc.getBlockZ());
+                    }
+
+// Don't create the chest if it or its sign would be in the void
+                    if (plugin.voidCheck()
+                            && ((plugin.tombstoneSign() && block.getY() > 126)
+                            || (!plugin.tombstoneSign() && block.getY() > 127) || player
+                            .getLocation().getY() < 1)) {
+                        plugin.sendMessage(player,
+                                "Your tombstone would be in the Void. Inventory dropped");
+                        plugin.logEvent(player.getName() + " died in the Void.");
+                        return;
+                    }
+
+// Check if the player has a chest.
+                    int pChestCount = 0;
+                    int pSignCount = 0;
+                    for (ItemStack item : event.getDrops()) {
+                        if (item == null)
+                            continue;
+                        if (item.getType() == Material.CHEST)
+                            pChestCount += item.getAmount();
+                        if (item.getType() == Material.SIGN)
+                            pSignCount += item.getAmount();
+                    }
+
+                    if (pChestCount == 0
+                            && !(plugin.hasPerm(player, "tombstone.freechest", false))) {
+                        plugin.sendMessage(player,
+                                "No chest found in inventory. Inventory dropped");
+                        plugin.logEvent(player.getName() + " No chest in inventory.");
+                        return;
+                    }
+
+// Check if we can replace the block.
+                    block = plugin.findPlace(block, false);
+                    if (block == null) {
+                        plugin.sendMessage(player,
+                                "Could not find room for chest. Inventory dropped");
+                        plugin.logEvent(player.getName() + " Could not find room for chest.");
+                        return;
+                    }
+
+// Check if there is a nearby chest
+                    if (plugin.noInterfere() && checkChest(block)) {
+                        plugin.sendMessage(player,
+                                "There is a chest interfering with your tombstone. Inventory dropped");
+                        plugin.logEvent(player.getName()
+                                + " Chest interfered with tombstone creation.");
+                        return;
+                    }
+
+                    int removeChestCount = 1;
+                    int removeSign = 0;
+
+// Do the check for a large chest block here so we can check for
+// interference
+                    Block lBlock = findLarge(block);
+
+// Set the current block to a chest, init some variables for later use.
+                    block.setType(Material.CHEST);
+// We're running into issues with 1.3 where we can't cast to a Chest :(
+                    BlockState state = block.getState();
+                    if (!(state instanceof Chest)) {
+                        plugin.sendMessage(player, "Could not access chest. Inventory dropped.");
+                        plugin.logEvent(player.getName() + " Could not access chest.");
+                        return;
+                    }
+                    Chest sChest = (Chest) state;
+                    Chest lChest = null;
+                    int slot = 0;
+                    int maxSlot = sChest.getInventory().getSize();
+
+// Check if they need a large chest.
+                    if (event.getDrops().size() > maxSlot) {
+// If they are allowed spawn a large chest to catch their entire
+// inventory.
+                        if (lBlock != null && plugin.hasPerm(player, "tombstone.large", false)) {
+                            removeChestCount = 2;
+// Check if the player has enough chests
+                            if (pChestCount >= removeChestCount
+                                    || plugin.hasPerm(player, "tombstone.freechest", false)) {
+                                lBlock.setType(Material.CHEST);
+                                lChest = (Chest) lBlock.getState();
+                                maxSlot = maxSlot * 2;
+                            } else {
+                                removeChestCount = 1;
+                            }
+                        }
+                    }
+
+// Don't remove any chests if they get a free one.
+                    if (plugin.hasPerm(player, "tombstone.freechest", false))
+                        removeChestCount = 0;
+
+// Check if we have signs enabled, if the player can use signs, and if
+// the player has a sign or gets a free sign
+                    Block sBlock = null;
+                    if (plugin.tombstoneSign() && plugin.hasPerm(player, "tombstone.sign", false)
+                            && (pSignCount > 0 || plugin.hasPerm(player, "tombstone.freesign", false))) {
+// Find a place to put the sign, then place the sign.
+                        sBlock = sChest.getWorld().getBlockAt(sChest.getX(),
+                                sChest.getY() + 1, sChest.getZ());
+                        if (plugin.canReplace(sBlock.getType())) {
+                            createSign(sBlock, player);
+                            removeSign = 1;
+                        } else if (lChest != null) {
+                            sBlock = lChest.getWorld().getBlockAt(lChest.getX(),
+                                    lChest.getY() + 1, lChest.getZ());
+                            if (plugin.canReplace(sBlock.getType())) {
+                                createSign(sBlock, player);
+                                removeSign = 1;
+                            }
+                        }
+                    }
+// Don't remove a sign if they get a free one
+                    if (plugin.hasPerm(player, "tombstone.freesign", false))
+                        removeSign = 0;
+
+// Create a TombBlock for this tombstone
+                    DTPTombBlock tBlock = new DTPTombBlock(sChest.getBlock(),
+                            (lChest != null) ? lChest.getBlock() : null, sBlock,
+                            player.getName(), (System.currentTimeMillis() / 1000));
+
+// Protect the chest/sign if LWC is installed.
+                    Boolean prot = false;
+                    Boolean protLWC = false;
+                    if (plugin.hasPerm(player, "tombstone.lwc", false))
+                        prot = plugin.activateLWC(player, tBlock);
+                    tBlock.setLwcEnabled(prot);
+                    if (prot)
+                        protLWC = true;
+
+// Protect the chest with Lockette if installed, enabled, and
+// unprotected.
+                    if (plugin.hasPerm(player, "tombstone.lockette", false))
+                        prot = plugin.protectWithLockette(player, tBlock);
+
+// Add tombstone to list
+                    plugin.tombList.offer(tBlock);
+
+// Add tombstone blocks to tombBlockList
+                    plugin.tombBlockList.put(tBlock.getBlock().getLocation(), tBlock);
+                    if (tBlock.getLBlock() != null)
+                        plugin.tombBlockList.put(tBlock.getLBlock().getLocation(), tBlock);
+                    if (tBlock.getSign() != null)
+                        plugin.tombBlockList.put(tBlock.getSign().getLocation(), tBlock);
+
+// Add tombstone to player lookup list
+                    ArrayList<DTPTombBlock> pList = plugin.playerTombList.get(player.getName());
+                    if (pList == null) {
+                        pList = new ArrayList<DTPTombBlock>();
+                        plugin.playerTombList.put(player.getName(), pList);
+                    }
+                    pList.add(tBlock);
+
+                    plugin.saveTombStoneList(player.getWorld().getName());
+
+// Next get the players inventory using the getDrops() method.
+                    for (Iterator<ItemStack> iter = event.getDrops().listIterator(); iter
+                            .hasNext();) {
+                        ItemStack item = iter.next();
+                        if (item == null)
+                            continue;
+// Take the chest(s)
+                        if (removeChestCount > 0 && item.getType() == Material.CHEST) {
+                            if (item.getAmount() >= removeChestCount) {
+                                item.setAmount(item.getAmount() - removeChestCount);
+                                removeChestCount = 0;
+                            } else {
+                                removeChestCount -= item.getAmount();
+                                item.setAmount(0);
+                            }
+                            if (item.getAmount() == 0) {
+                                iter.remove();
+                                continue;
+                            }
+                        }
+
+// Take a sign
+                        if (removeSign > 0 && item.getType() == Material.SIGN) {
+                            item.setAmount(item.getAmount() - 1);
+                            removeSign = 0;
+                            if (item.getAmount() == 0) {
+                                iter.remove();
+                                continue;
+                            }
+                        }
+
+// Add items to chest if not full.
+                        if (slot < maxSlot) {
+                            if (slot >= sChest.getInventory().getSize()) {
+                                if (lChest == null)
+                                    continue;
+                                lChest.getInventory().setItem(
+                                        slot % sChest.getInventory().getSize(), item);
+                            } else {
+                                sChest.getInventory().setItem(slot, item);
+                            }
+                            iter.remove();
+                            slot++;
+                        } else if (removeChestCount == 0)
+                            break;
+                    }
+
+// Tell the player how many items went into chest.
+                    String msg = "Inventory stored in chest. ";
+                    if (event.getDrops().size() > 0)
+                        msg += event.getDrops().size() + " items wouldn't fit in chest.";
+                    plugin.sendMessage(player, msg);
+                    plugin.logEvent(player.getName() + " " + msg);
+                    if (prot && protLWC) {
+                        plugin.sendMessage(player, "Chest protected with LWC. "
+                                + plugin.securityTimeout() + "s before chest is unprotected.");
+                        plugin.logEvent(player.getName() + " Chest protected with LWC. "
+                                + plugin.securityTimeout() + "s before chest is unprotected.");
+                    }
+                    if (prot && !protLWC) {
+                        plugin.sendMessage(player, "Chest protected with Lockette. "
+                                + plugin.securityTimeout() + "s before chest is unprotected.");
+                        plugin.logEvent(player.getName() + " Chest protected with Lockette.");
+                    }
+                    if (plugin.tombstoneRemove()) {
+                        plugin.sendMessage(player, "Chest will break in " + plugin.removeTime()
+                                + "s unless an override is specified.");
+                        plugin.logEvent(player.getName() + " Chest will break in "
+                                + plugin.removeTime() + "s");
+                    }
+                    if (plugin.removeWhenEmpty() && plugin.keepUntilEmpty())
+                        plugin.sendMessage(
+                                player,
+                                "Break override: Your tombstone will break when it is emptied, but will not break until then.");
+                    else {
+                        if (plugin.removeWhenEmpty())
+                            plugin.sendMessage(player,
+                                    "Break override: Your tombstone will break when it is emptied.");
+                        if (plugin.keepUntilEmpty())
+                            plugin.sendMessage(player,
+                                    "Break override: Your tombstone will not break until it is empty.");
+                    }
+                }
 
                 //added compatibility for streaks if notify is off
                 else {
                     howtheydied = damagetype.split(":");
                     if (howtheydied[0].matches("PVP")) {
-                        if (DeathTpPlus.deathconfig.get("SHOW_STREAKS").matches("true"))
+                        if (plugin.deathconfig.get("SHOW_STREAKS").matches("true"))
                             writeToStreak(player.getDisplayName(), howtheydied[2]);
                     }
 
-                    if (DeathTpPlus.deathconfig.get("DEATH_LOGS").matches("true")) {
+                    if (plugin.deathconfig.get("DEATH_LOGS").matches("true")) {
                         writeToLog("death", player.getDisplayName(), loghowdied);
                     }
                 }
@@ -225,12 +498,13 @@ public class DTPEntityListener extends EntityListener {
 
             }
         }
-        catch (Exception e) {
-            System.out.println(e);
-        }
-    }
+
+    
 
     public void onEntityDamage(EntityDamageEvent event) {
+        if (event.isCancelled()){
+            return;
+        }
         if(event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             //player.sendMessage(event.getType().toString());
@@ -324,6 +598,99 @@ public class DTPEntityListener extends EntityListener {
         beforedamage = lastdamage;
     }
 
+    public void onEntityExplode(EntityExplodeEvent event) {
+        if (event.isCancelled())
+            return;
+        if (!plugin.creeperProtection())
+            return;
+        for (Block block : event.blockList()) {
+            DTPTombBlock tBlock = plugin.tombBlockList.get(block.getLocation());
+            if (tBlock != null) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    private void createSign(Block signBlock, Player p) {
+        String date = new SimpleDateFormat(plugin.dateFormat())
+                .format(new Date());
+        String time = new SimpleDateFormat(plugin.timeFormat())
+                .format(new Date());
+        String name = p.getName();
+        String reason = "by "+ loghowdied.substring(0, 1)+loghowdied.substring(1).toLowerCase();
+
+        signBlock.setType(Material.SIGN_POST);
+        final Sign sign = (Sign) signBlock.getState();
+
+        for (int x = 0; x < 4; x++) {
+            String line = plugin.signMessage[x];
+            line = line.replace("{name}", name);
+            line = line.replace("{date}", date);
+            line = line.replace("{time}", time);
+            line = line.replace("{reason}", reason);
+
+            if (line.length() > 15)
+                line = line.substring(0, 15);
+            sign.setLine(x, line);
+        }
+
+        plugin.getServer().getScheduler()
+                .scheduleSyncDelayedTask(plugin, new Runnable() {
+                    public void run() {
+                        sign.update();
+                    }
+                });
+    }
+
+    Block findLarge(Block base) {
+// Check all 4 sides for air.
+        Block exp;
+        exp = base.getWorld().getBlockAt(base.getX() - 1, base.getY(),
+                base.getZ());
+        if (plugin.canReplace(exp.getType())
+                && (!plugin.noInterfere() || !checkChest(exp)))
+            return exp;
+        exp = base.getWorld().getBlockAt(base.getX(), base.getY(),
+                base.getZ() - 1);
+        if (plugin.canReplace(exp.getType())
+                && (!plugin.noInterfere() || !checkChest(exp)))
+            return exp;
+        exp = base.getWorld().getBlockAt(base.getX() + 1, base.getY(),
+                base.getZ());
+        if (plugin.canReplace(exp.getType())
+                && (!plugin.noInterfere() || !checkChest(exp)))
+            return exp;
+        exp = base.getWorld().getBlockAt(base.getX(), base.getY(),
+                base.getZ() + 1);
+        if (plugin.canReplace(exp.getType())
+                && (!plugin.noInterfere() || !checkChest(exp)))
+            return exp;
+        return null;
+    }
+
+    boolean checkChest(Block base) {
+// Check all 4 sides for a chest.
+        Block exp;
+        exp = base.getWorld().getBlockAt(base.getX() - 1, base.getY(),
+                base.getZ());
+        if (exp.getType() == Material.CHEST)
+            return true;
+        exp = base.getWorld().getBlockAt(base.getX(), base.getY(),
+                base.getZ() - 1);
+        if (exp.getType() == Material.CHEST)
+            return true;
+        exp = base.getWorld().getBlockAt(base.getX() + 1, base.getY(),
+                base.getZ());
+        if (exp.getType() == Material.CHEST)
+            return true;
+        exp = base.getWorld().getBlockAt(base.getX(), base.getY(),
+                base.getZ() + 1);
+        if (exp.getType() == Material.CHEST)
+            return true;
+        return false;
+    }
+
+
     public void writeToStreak(String defender, String attacker) {
 
         //read the file
@@ -333,7 +700,7 @@ public class DTPEntityListener extends EntityListener {
 
             //File streakFile = new File("plugins/DeathTpPlus/streak.txt");
             //File streakFile = new File(plugin.getDataFolder()+"/streak.txt");
-            BufferedReader br = new BufferedReader(new FileReader(DeathTpPlus.streakFile));
+            BufferedReader br = new BufferedReader(new FileReader(plugin.streakFile));
             String[] splittext;
             int atkCurrentStreak = 0;
             int defCurrentStreak = 0;
@@ -374,8 +741,8 @@ public class DTPEntityListener extends EntityListener {
 
             //Check to see if we should announce a streak
             //Deaths
-            for (int i=0;i < DeathTpPlus.deathstreak.get("DEATH_STREAK").size();i++) {
-                teststreak = DeathTpPlus.deathstreak.get("DEATH_STREAK").get(i);
+            for (int i=0;i < plugin.deathstreak.get("DEATH_STREAK").size();i++) {
+                teststreak = plugin.deathstreak.get("DEATH_STREAK").get(i);
                 testsplit = teststreak.split(":");
                 if (Integer.parseInt(testsplit[0]) == -(defCurrentStreak)) {
                     String announce = plugin.convertSamloean(testsplit[1]);
@@ -383,8 +750,8 @@ public class DTPEntityListener extends EntityListener {
                 }
             }
             //Kills
-            for (int i=0;i < DeathTpPlus.killstreak.get("KILL_STREAK").size();i++) {
-                teststreak = DeathTpPlus.killstreak.get("KILL_STREAK").get(i);
+            for (int i=0;i < plugin.killstreak.get("KILL_STREAK").size();i++) {
+                teststreak = plugin.killstreak.get("KILL_STREAK").get(i);
                 testsplit = teststreak.split(":");
                 if (Integer.parseInt(testsplit[0]) == atkCurrentStreak) {
                     String announce = plugin.convertSamloean(testsplit[1]);
@@ -393,7 +760,7 @@ public class DTPEntityListener extends EntityListener {
             }
 
             // Write streaks to file
-            BufferedWriter out = new BufferedWriter(new FileWriter(DeathTpPlus.streakFile));
+            BufferedWriter out = new BufferedWriter(new FileWriter(plugin.streakFile));
 
             for (int i = 0; i < filetext.size(); i++) {
                 out.write(filetext.get(i));
@@ -444,7 +811,7 @@ public class DTPEntityListener extends EntityListener {
         try {
             //format name:type:mob/player:number
             PrintWriter pw = new PrintWriter(new FileWriter(deathlogTempFile));
-            BufferedReader br = new BufferedReader(new FileReader(DeathTpPlus.deathlogFile));
+            BufferedReader br = new BufferedReader(new FileReader(plugin.deathlogFile));
 
             while((line = br.readLine()) != null) {
                 splittext = line.split(":");
@@ -473,8 +840,8 @@ public class DTPEntityListener extends EntityListener {
             pw.close();
             br.close();
 
-            DeathTpPlus.deathlogFile.delete();
-            deathlogTempFile.renameTo(DeathTpPlus.deathlogFile);
+            plugin.deathlogFile.delete();
+            deathlogTempFile.renameTo(plugin.deathlogFile);
         }
         catch(IOException e) {
             System.out.println("Could not edit deathlog: "+e);

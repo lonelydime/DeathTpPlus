@@ -8,6 +8,7 @@ package org.simiancage.DeathTpPlus.listeners;
  * Time: 21:59
  */
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -52,12 +53,18 @@ public class DTPBlockListener extends BlockListener {
             return;
 
         DTPTombBlock tBlock = plugin.tombBlockList.get(b.getLocation());
+
         if (tBlock == null)
             return;
+        Location location = b.getLocation();
+        String loc = location.getWorld().getName();
+        loc = loc +", x=" + location.getBlock().getX();
+        loc = loc +", y=" + location.getBlock().getY();
+        loc = loc +", z=" + location.getBlock().getZ();
+        if (plugin.noDestroy() && !plugin.hasPerm(p, "admin", false)) {
 
-        if (plugin.noDestroy() && !plugin.hasPerm(p, "deathtpplus.admin", false)) {
             plugin.logEvent(p.getName() + " tried to destroy tombstone at "
-                    + b.getLocation());
+                    + loc);
             plugin.sendMessage(p, "Tombstone unable to be destroyed");
             event.setCancelled(true);
             return;
@@ -74,7 +81,7 @@ public class DTPBlockListener extends BlockListener {
             }
         }
         plugin.logEvent(p.getName() + " destroyed tombstone at "
-                + b.getLocation());
+                + loc);
         plugin.removeTomb(tBlock, true);
     }
 }
