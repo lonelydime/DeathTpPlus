@@ -46,7 +46,7 @@ public class DTPDeathtpCommand implements CommandExecutor {
             {
                 worldTravel = true;
             }
-            double registerCost = Double.valueOf(plugin.deathconfig.get("REGISTER_COST").trim()).doubleValue();
+            double economyCost = Double.valueOf(plugin.deathconfig.get("ECONOMY_COST").trim()).doubleValue();
 
             if (player.hasPermission("deathtpplus.deathtp")) {
                 canUseCommand = true;
@@ -76,20 +76,30 @@ public class DTPDeathtpCommand implements CommandExecutor {
                     }
                 }
 
-                // Todo CHange => register
-                //costs iconomy
-                if (registerCost > 0) {
+
+                //costs Economy
+                if (economyCost > 0) {
                     if (plugin.useRegister) {
                         Method.MethodAccount account = plugin.getRegisterMethod().getAccount(player.getName());
-                        if (account != null && account.hasEnough(registerCost)) {
-                            account.subtract(registerCost);
-                            player.sendMessage("You used "+registerCost+" to use /deathtp");
+                        if (account != null && account.hasEnough(economyCost)) {
+                            account.subtract(economyCost);
+                            player.sendMessage("You used "+economyCost+" to use /deathtp");
                         }
                         else {
-                            player.sendMessage("You need "+registerCost+" coins to use /deathtp");
+                            player.sendMessage("You need "+economyCost+" coins to use /deathtp");
                             teleportok = false;
                         }
                     }
+                    if (plugin.useVault){
+                        if (plugin.economy.getBalance(player.getName())> economyCost) {
+                            plugin.economy.withdrawPlayer(player.getName(), economyCost);
+                            player.sendMessage("You used "+economyCost+" to use /deathtp");
+                        } else {
+                            player.sendMessage("You need "+economyCost+" coins to use /deathtp");
+                            teleportok = false;
+                        }
+                    }
+
 
                 }
 
@@ -155,8 +165,13 @@ public class DTPDeathtpCommand implements CommandExecutor {
                         }
                         if (plugin.useRegister && !teleported) {
                             Method.MethodAccount account = plugin.getRegisterMethod().getAccount(player.getName());
-                            account.add(registerCost);
-                            player.sendMessage("Giving you back "+registerCost);
+                            account.add(economyCost);
+                            player.sendMessage("Giving you back "+economyCost);
+                        }
+
+                        if (plugin.useVault && !teleported) {
+                            plugin.economy.depositPlayer(player.getName(), economyCost);
+                            player.sendMessage("Giving you back "+economyCost);
                         }
                     }
                     catch (IOException e) {

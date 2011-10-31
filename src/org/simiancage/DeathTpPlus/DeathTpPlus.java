@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
 
-
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -114,9 +114,14 @@ public class DeathTpPlus extends JavaPlugin{
     public String[] signMessage = new String[] { "{name}", "RIP", "{date}","{time}" };
     // private DTPTomb plugin;
 
+    // Vault
+    public boolean useVault = false;
+    public Economy economy = null;
 
     //Register
     public boolean useRegister = false;
+
+
 
     //craftirc
     public static CraftIRC craftircHandle = null;
@@ -216,7 +221,7 @@ public class DeathTpPlus extends JavaPlugin{
         deathconfig.put("SHOW_STREAKS", configuration.getString("show-streaks"));
         deathconfig.put("CHARGE_ITEM_ID", configuration.getString("charge-item"));
         deathconfig.put("SHOW_SIGN", configuration.getString("show-sign"));
-        deathconfig.put("REGISTER_COST", configuration.getString("deathtp-cost"));
+        deathconfig.put("ECONOMY_COST", configuration.getString("deathtp-cost"));
         deathconfig.put("CRAFT_IRC_TAG", configuration.getString("deathtp-tag"));
         deathconfig.put("DEATH_LOGS", configuration.getString("allow-deathlog"));
         deathconfig.put("WORLD_TRAVEL", configuration.getString("allow-worldtravel"));

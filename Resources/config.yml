@@ -30,7 +30,7 @@ charge-item: '0'
 # Show sign tombstones upon death
 show-sign: 'false'
 
-# Register
+# Economy
 deathtp-cost: '10'
 
 # CraftIRC
