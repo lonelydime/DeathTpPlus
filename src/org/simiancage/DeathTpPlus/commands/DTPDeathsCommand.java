@@ -101,8 +101,7 @@ public class DTPDeathsCommand implements CommandExecutor {
                 return true;
             }
             catch(Exception e) {
-                // Todo implement logger
-                plugin.log.info("[DeathTpPlus] Error reading deathlog: "+plugin.deathlogFile);
+                plugin.log.info(plugin.logName + "Error reading deathlog: "+plugin.deathlogFile);
             }
         }
 

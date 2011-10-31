@@ -1054,8 +1054,7 @@ public class DeathTpPlus extends JavaPlugin{
         String thisVersion = getDescription().getVersion();
         URL url = null;
         try {
-            // ToDo change to correct URL after merging branches
-            url = new URL("https://raw.github.com/dredhorse/DeathTpPlus/cenopath/Resources/deathtpplus.ver");
+            url = new URL("https://raw.github.com/dredhorse/DeathTpPlus/master/Resources/deathtpplus.ver");
             BufferedReader in = null;
             in = new BufferedReader(new InputStreamReader(url.openStream()));
             String newVersion = "";
