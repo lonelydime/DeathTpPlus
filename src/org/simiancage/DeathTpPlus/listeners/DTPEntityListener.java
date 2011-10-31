@@ -36,7 +36,7 @@ public class DTPEntityListener extends EntityListener {
     public String beforedamage = "";
     public PlayerDeathEvent playerDeathEvent = null;
     public String loghowdied;
-    enum DeathTypes {FALL, DROWNING, SUFFOCATION, FIRE_TICK, FIRE, LAVA, BLOCK_EXPLOSION, CREEPER, SKELETON, SPIDER, PIGZOMBIE, ZOMBIE, CONTACT, SLIME, VOID, GHAST, WOLF, LIGHTNING, STARVATION, CAVESPIDER, ENDERMAN, PVP, FISTS, UNKNOWN;
+    enum DeathTypes {FALL, DROWNING, SUFFOCATION, FIRE_TICK, FIRE, LAVA, BLOCK_EXPLOSION, CREEPER, SKELETON, SPIDER, PIGZOMBIE, ZOMBIE, CONTACT, SLIME, VOID, GHAST, WOLF, LIGHTNING, STARVATION, CAVESPIDER, ENDERMAN, SILVERFISH, PVP, FISTS, UNKNOWN, SUICIDE;
 
         @Override public String toString() {
             //only capitalize the first letter
@@ -67,6 +67,8 @@ public class DTPEntityListener extends EntityListener {
 
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
+                EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
+                damageEvent.getType();
                 String damagetype = lastDamageType.get(lastDamagePlayer.indexOf(player.getDisplayName()));
                 String eventAnnounce = "";
                 String fileOutput = "";
@@ -123,6 +125,10 @@ public class DTPEntityListener extends EntityListener {
                     loghowdied = howtheydied[0];
                     // Todo change into case statement and create methods for eventAnnounce
 
+                    if (getEvent(howtheydied[0])==null){
+                        howtheydied[0] = "UNKNOWN";
+                    }
+
                     eventAnnounce = getEvent(howtheydied[0]).replace("%n", player.getDisplayName());
 
                     if (howtheydied[0].matches("PVP")) {
@@ -161,21 +167,21 @@ public class DTPEntityListener extends EntityListener {
                     //CraftIRC
                     if (plugin.craftircHandle != null) {
                         String ircAnnounce;
-                        ircAnnounce = eventAnnounce.replace("�0", "");
-                        ircAnnounce = ircAnnounce.replace("�2", "");
-                        ircAnnounce = ircAnnounce.replace("�3", "");
-                        ircAnnounce = ircAnnounce.replace("�4", "");
-                        ircAnnounce = ircAnnounce.replace("�5", "");
-                        ircAnnounce = ircAnnounce.replace("�6", "");
-                        ircAnnounce = ircAnnounce.replace("�7", "");
-                        ircAnnounce = ircAnnounce.replace("�8", "");
-                        ircAnnounce = ircAnnounce.replace("�9", "");
-                        ircAnnounce = ircAnnounce.replace("�a", "");
-                        ircAnnounce = ircAnnounce.replace("�b", "");
-                        ircAnnounce = ircAnnounce.replace("�c", "");
-                        ircAnnounce = ircAnnounce.replace("�d", "");
-                        ircAnnounce = ircAnnounce.replace("�e", "");
-                        ircAnnounce = ircAnnounce.replace("�f", "");
+                        ircAnnounce = eventAnnounce.replace("§0", "");
+                        ircAnnounce = ircAnnounce.replace("§2", "");
+                        ircAnnounce = ircAnnounce.replace("§3", "");
+                        ircAnnounce = ircAnnounce.replace("§4", "");
+                        ircAnnounce = ircAnnounce.replace("§5", "");
+                        ircAnnounce = ircAnnounce.replace("§6", "");
+                        ircAnnounce = ircAnnounce.replace("§7", "");
+                        ircAnnounce = ircAnnounce.replace("§8", "");
+                        ircAnnounce = ircAnnounce.replace("§9", "");
+                        ircAnnounce = ircAnnounce.replace("§a", "");
+                        ircAnnounce = ircAnnounce.replace("§b", "");
+                        ircAnnounce = ircAnnounce.replace("§c", "");
+                        ircAnnounce = ircAnnounce.replace("§d", "");
+                        ircAnnounce = ircAnnounce.replace("§e", "");
+                        ircAnnounce = ircAnnounce.replace("§f", "");
 
                         plugin.craftircHandle.sendMessageToTag(ircAnnounce, plugin.deathconfig.get("CRAFT_IRC_TAG"));
                     }
@@ -558,6 +564,9 @@ public class DTPEntityListener extends EntityListener {
                 else if (mob instanceof Creeper) {
                     lastdamage = "CREEPER";
                 }
+                else if (mob instanceof CaveSpider) {
+                    lastdamage = "CAVESPIDER";
+                }
                 else if (mob instanceof Spider) {
                     lastdamage = "SPIDER";
                 }
@@ -569,6 +578,12 @@ public class DTPEntityListener extends EntityListener {
                 }
                 else if (mob instanceof Slime) {
                     lastdamage = "SLIME";
+                }
+                else if (mob instanceof Enderman) {
+                    lastdamage = "ENDERMAN";
+                }
+                else if (mob instanceof Silverfish) {
+                    lastdamage = "SILVERFISH";
                 }
             }
             else if (attacker instanceof Player) {

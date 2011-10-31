@@ -202,10 +202,12 @@ public class DeathTpPlus extends JavaPlugin{
         deathevents.put("VOID", (List<String>) configuration.getList("void"));
         deathevents.put("WOLF", (List<String>) configuration.getList("wolf"));
         deathevents.put("LIGHTNING", (List<String>) configuration.getList("lightning"));
+        deathevents.put("SUICIDE", (List<String>) configuration.getList("suicide"));
         deathevents.put("UNKNOWN", (List<String>) configuration.getList("unknown"));
         deathevents.put("STARVATION", (List<String>) configuration.getList("starvation"));
         deathevents.put("CAVESPIDER", (List<String>) configuration.getList("cavespider"));
         deathevents.put("ENDERMAN", (List<String>) configuration.getList("enderman"));
+        deathevents.put("SILVERFISH", (List<String>) configuration.getList("silverfish"));
         //Configuration nodes DeathTpPlus
         deathconfig.put("VERSION_CHECK", configuration.getString("versionCheck"));
         deathconfig.put("CONFIG_VER", configuration.getString("configVer"));
@@ -458,7 +460,7 @@ public class DeathTpPlus extends JavaPlugin{
     // Default Configuration
 
     private void DefaultConfiguration() {
-        configuration.addDefault ("fall", "");
+        configuration.addDefault("fall", "");
         configuration.addDefault("drowning", "");
         configuration.addDefault("fire", "");
         configuration.addDefault("fire_tick", "");
@@ -478,10 +480,12 @@ public class DeathTpPlus extends JavaPlugin{
         configuration.addDefault("void", "");
         configuration.addDefault("wolf", "");
         configuration.addDefault("lightning", "");
+        configuration.addDefault("suicide", "");
         configuration.addDefault("unknown", "");
         configuration.addDefault("starvation", "");
         configuration.addDefault("cavespider", "");
         configuration.addDefault("enderman", "");
+        configuration.addDefault("silverfish", "");
         //Configuration nodes
         configuration.addDefault("configVer", "0.00");
         configuration.addDefault("versionCheck", "true");
@@ -529,22 +533,22 @@ public class DeathTpPlus extends JavaPlugin{
 
 
     public String convertSamloean(String convert) {
-        convert = convert.replace("&0", "�0");
-        convert = convert.replace("&1", "�1");
-        convert = convert.replace("&2", "�2");
-        convert = convert.replace("&3", "�3");
-        convert = convert.replace("&4", "�4");
-        convert = convert.replace("&5", "�5");
-        convert = convert.replace("&6", "�6");
-        convert = convert.replace("&7", "�7");
-        convert = convert.replace("&8", "�8");
-        convert = convert.replace("&9", "�9");
-        convert = convert.replace("&a", "�a");
-        convert = convert.replace("&b", "�b");
-        convert = convert.replace("&c", "�c");
-        convert = convert.replace("&d", "�d");
-        convert = convert.replace("&e", "�e");
-        convert = convert.replace("&f", "�f");
+        convert = convert.replace("&0", "§0");
+        convert = convert.replace("&1", "§1");
+        convert = convert.replace("&2", "§2");
+        convert = convert.replace("&3", "§3");
+        convert = convert.replace("&4", "§4");
+        convert = convert.replace("&5", "§5");
+        convert = convert.replace("&6", "§6");
+        convert = convert.replace("&7", "§7");
+        convert = convert.replace("&8", "§8");
+        convert = convert.replace("&9", "§9");
+        convert = convert.replace("&a", "§a");
+        convert = convert.replace("&b", "§b");
+        convert = convert.replace("&c", "§c");
+        convert = convert.replace("&d", "§d");
+        convert = convert.replace("&e", "§e");
+        convert = convert.replace("&f", "§f");
 
         return convert;
     }

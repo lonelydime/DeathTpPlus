@@ -9,19 +9,16 @@ softdepend: [Register,CraftIRC]
 commands:
     deathtp:
         description: Teleports you back to your last death location
-        permission: deathtpplus.deathtp
         usage: |
             /<command>
     streak:
         description: Lets you view your or other's kill/death streak.
-        permission: deathtpplus.streak
         usage: |
             /<command> [player]
             Example: /<command> - Displays your streak.
             Example: /<command> lonelydime's - checks lonelydime's streak.
     deaths:
         description: Lets you view your or other's total deaths.
-        permission: deathtpplus.deaths
         usage: |
             /<command> (username) (cause)
             Example: /<command> - Displays your total death count.
@@ -29,7 +26,6 @@ commands:
             Example: /<command> lonelydime creeper - checks lonelydime's deaths by creeper.
     kills:
         description: Lets you view your or other's total pvp kills.
-        permission: deathtpplus.kills
         usage: |
             /<command> (username) (playername)
             Example: /<command> - Displays your total kill count.
@@ -37,30 +33,25 @@ commands:
             Example: /<command> lonelydime dredhorse - prints times lonelydime killed dredhorse.
     dtpadmin:
         description: Lets you use the admin commands for tombstones.
-        permission: deathtpplus.admin
         usage: |
             /<command> [subcommand]
             Example: /<command> list
     dtpfind:
         description: Allows you to find your tombstone via directions and your compass
-        permission: deathtpplus.tombstone.find
         usage: |
             /<command> <index>
             Example: /dtpfind 2
     dtplist:
         description: Allows you to list all your tombstones inkl. index
-        permission: deathtpplus.tombstone.list
         usage: |
             /<command>
     dtptime:
         description: Tells you how much time is left before the specified tombstone has its protection remove or it breaks
-        permission: deathtpplus.tombstone.time
         usage: |
             /<command> <index>
             Example: /dtptime 2
     dtpreset:
         description: Reset compass to your spawnpoint
-        permission: deathtpplus.tombstone.reset
         usage: |
             /<command>
             
