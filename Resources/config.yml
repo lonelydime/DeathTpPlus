@@ -1,4 +1,17 @@
+### DeathTpPlus
+#
+# Note: All values need to be in '', eg. true must be 'true', a cost of 10 must be '10'
+
+
+
+# Config Version
+configVer: '2.00'
+
 # ----- Standard plugin features
+
+#Check for new versions on startup
+versionCheck: 'true'
+
 # Show the death messages on the server
 show-deathnotify: 'true'
 
@@ -12,22 +25,102 @@ allow-deathlog: 'true'
 show-streaks: 'true'
 
 # Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports.
-charge-item: 0
+charge-item: '0'
 
 # Show sign tombstones upon death
 show-sign: 'false'
 
-# Register
-deathtp-cost: 10
+# Economy
+deathtp-cost: '10'
 
 # CraftIRC
 deathtp-tag: 'all'
 
-#Deathlogs
+# Deathlogs
 allow-deathlog: 'true'
 
-#Allow World Travel = yes, no, permissions
+# Allow World Travel = yes, no, permissions
 allow-worldtravel: 'no'
+
+#Print messages to terminal if true (debug)
+logEvents: 'false'
+
+# ------- TombStone features (General)
+
+# Enable TombStone feature
+enable-tombstone: 'true'
+
+#Place a sign on the TombStone if true
+TombStoneSign: 'true'
+
+#Prevent non-Op players from destroying cenotaphs if true (destroyQuickLoot overrides)
+noDestroy: 'true'
+
+#Show status messages to the player if true
+playerMessage: 'true'
+
+#Save TombStone listing between server reloads if true
+saveTombStoneList: 'true'
+
+#Stop TombStone creation next to existing chests if true (IF set to false it could allow users to circumvent chest protection.
+noInterfere: 'true'
+
+#we normally checks to make sure we aren't trying to create a chest in the void.
+#If you handle or modify the void with another plugin, you can disable that check here.
+#This option should be true for most servers.
+voidCheck: 'true'
+
+#If you are not locking your chests with Lockette or LWC but still want them to be
+#protected against Creeper explosions, or you want your chests to be protected even
+#after they are unlocked, enable this.
+creeperProtection: 'false'
+
+#Each line may be one of any custom text OR:
+#{name} for player name
+#{date} for day of death
+#{time} for time of death (server time)
+#{reason} for cause of death
+#REMEMBER: LINES ARE LIMITED TO 15 CHARACTERS, AND DON'T FORGET THE QUOTES!
+Sign:
+    Line1: "{name}"
+    Line2: "RIP"
+    Line3: "{date}"
+    Line4: "{time}"
+
+#For formatting, see http://download.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html
+dateFormat: "MM/dd/yyyy"
+timeFormat: "hh:mm a"
+
+# ------- TombStone features (Removal)
+
+#Destroy TombStone on player quickloot if true
+destroyQuickLoot: 'true'
+
+#Remove TombStone after removeTime seconds if true
+TombStoneRemove: 'true'
+removeTime: '3600'
+
+#Immediately remove TombStone once it is empty, overriding all other timeout options
+#WARNING: THIS IS A PROCESSOR-INTENSIVE OPTION
+removeWhenEmpty: 'false'
+
+#Never remove a TombStone unless it is empty
+#WARNING: THIS IS A PROCESSOR-INTENSIVE OPTION
+keepUntilEmpty: 'false'
+
+
+# ------- TombStone features (Security)
+
+LocketteEnable: 'true'
+lwcEnable: 'false'
+
+#Remove security after securityTimeout seconds
+securityRemove: 'false'
+securityTimeout: '3600'
+
+#Set LWC protection to Public instead of removing it after the timeout
+lwcPublic: 'false'
+
 
 # ----- Death Messages
 
@@ -38,195 +131,195 @@ allow-worldtravel: 'no'
 #
 # Colors
 #
-# §0 Black
-# §1 Navy
-# §2 Green
-# §3 Blue
-# §4 Red
-# §5 Purple
-# §6 Gold
-# §7 LightGray
-# §8 Gray
-# §9 DarkPurple
-# §a LightGreen
-# §b LightBlue
-# §c Rose
-# §d LightPurple
-# §e Yellow
-# §f White
+# &0 Black
+# &1 Navy
+# &2 Green
+# &3 Blue
+# &4 Red
+# &5 Purple
+# &6 Gold
+# &7 LightGray
+# &8 Gray
+# &9 DarkPurple
+# &a LightGreen
+# &b LightBlue
+# &c Rose
+# &d LightPurple
+# &e Yellow
+# &f White
 
 fall:
-- '§4%n tripped and fell...down a cliff.'
-- '§4%n leapt before looking.'
-- '§4%n forgot to bring a parachute!'
-- '§4%n learned to fly...briefly...'
-- '§4%n felt the full effect of gravity.'
-- '§4%n just experienced physics in action.'
-- '§4%n fell to his death.'
-- '§4%n forgot to look out below!'
-- '§4%n got a little too close to the edge!'
-- '§4%n, gravity is calling your name!'
-- '§4%n faceplanted into the ground!'
-- '§4%n yells, "Geronimo!"....*thud*'
-- '§4What goes up must come down, right %n?'
+- '&4%n tripped and fell...down a cliff.'
+- '&4%n leapt before looking.'
+- '&4%n forgot to bring a parachute!'
+- '&4%n learned to fly...briefly...'
+- '&4%n felt the full effect of gravity.'
+- '&4%n just experienced physics in action.'
+- '&4%n fell to his death.'
+- '&4%n forgot to look out below!'
+- '&4%n got a little too close to the edge!'
+- '&4%n, gravity is calling your name!'
+- '&4%n faceplanted into the ground!'
+- '&4%n yells, "Geronimo!"....*thud*'
+- '&4What goes up must come down, right %n?'
 
 drowning:
-- '§4%n has drowned.'
-- '§4%n has become one with the ocean!'
-- '§4%n sunk to the bottom of the ocean.'
-- '§4%n went diving but forgot the diving gear!'
-- '§4%n needs swimming lessons.'
-- '§4%n''s lungs have been replaced with H20.'
-- '§4%n forgot to come up for air!'
-- '§4%n is swimming with the fishes!'
-- '§4%n had a surfing accident!'
-- '§4%n tried to walk on water.'
-- '§4%n set a record for holding breath underwater.'
+- '&4%n has drowned.'
+- '&4%n has become one with the ocean!'
+- '&4%n sunk to the bottom of the ocean.'
+- '&4%n went diving but forgot the diving gear!'
+- '&4%n needs swimming lessons.'
+- '&4%n''s lungs have been replaced with H20.'
+- '&4%n forgot to come up for air!'
+- '&4%n is swimming with the fishes!'
+- '&4%n had a surfing accident!'
+- '&4%n tried to walk on water.'
+- '&4%n set a record for holding breath underwater.'
 
 fire:
-- '§4%n burned to death.'
-- '§4%n has been set on fire!'
-- '§4%n is toast! Literally...'
-- '§4%n just got barbequed!'
-- '§4%n forgot to stop, drop, and roll!'
-- '§4%n is extra-crispy!'
-- '§4%n spontaneously combusted!'
-- '§4%n put his hands in the toaster!'
-- '§4%n just got burned!'
+- '&4%n burned to death.'
+- '&4%n has been set on fire!'
+- '&4%n is toast! Literally...'
+- '&4%n just got barbequed!'
+- '&4%n forgot to stop, drop, and roll!'
+- '&4%n is extra-crispy!'
+- '&4%n spontaneously combusted!'
+- '&4%n put his hands in the toaster!'
+- '&4%n just got burned!'
 
 fire_tick:
-- '§4%n burned to death.'
-- '§4%n has been set on fire!'
-- '§4%n is toast! Literally...'
-- '§4%n just got barbequed!'
-- '§4%n forgot to stop, drop, and roll!'
-- '§4%n likes it extra-crispy!'
-- '§4%n spontaneously combusted!'
-- '§4%n put his hands in the toaster!'
-- '§4%n just got burned!'
+- '&4%n burned to death.'
+- '&4%n has been set on fire!'
+- '&4%n is toast! Literally...'
+- '&4%n just got barbequed!'
+- '&4%n forgot to stop, drop, and roll!'
+- '&4%n likes it extra-crispy!'
+- '&4%n spontaneously combusted!'
+- '&4%n put his hands in the toaster!'
+- '&4%n just got burned!'
 
 lava:
-- '§4%n became obsidian.'
-- '§4%n was caught in an active volanic eruption!'
-- '§4%n tried to swim in a pool of lava.'
-- '§4%n was killed by a lava eruption!'
-- '§4%n was forged into obsidian by molten lava.'
-- '§4%n took a dip in the wrong kind of pool!'
-- '§4%n found out how to encase himself in carbonite.'
-- '§4%n, the floor is lava! The floor is lava!'
+- '&4%n became obsidian.'
+- '&4%n was caught in an active volanic eruption!'
+- '&4%n tried to swim in a pool of lava.'
+- '&4%n was killed by a lava eruption!'
+- '&4%n was forged into obsidian by molten lava.'
+- '&4%n took a dip in the wrong kind of pool!'
+- '&4%n found out how to encase himself in carbonite.'
+- '&4%n, the floor is lava! The floor is lava!'
 
 creeper:
-- '§4%n was creeper bombed!'
-- '§4A creeper exploded on %n!'
-- '§4A creeper snuck up on %n!'
-- '§4A creeper tried to make love with %n...mmm.'
-- '§4%n just got the KiSSssss of death!'
-- '§4%n tried to hug a creeper!'
-- '§4%n is frowning like a creeper now!'
+- '&4%n was creeper bombed!'
+- '&4A creeper exploded on %n!'
+- '&4A creeper snuck up on %n!'
+- '&4A creeper tried to make love with %n...mmm.'
+- '&4%n just got the KiSSssss of death!'
+- '&4%n tried to hug a creeper!'
+- '&4%n is frowning like a creeper now!'
 
 skeleton:
-- '§4A skeleton shot %n to death!'
-- '§4A%n was on the wrong end of the bow. '
-- '§4A%n has a skeleton in the closet...'
-- '§4%n, strafe the arrows! Strafe the arrows!'
-- '§4A skeleton just got a headshot on %n!'
+- '&4A skeleton shot %n to death!'
+- '&4A%n was on the wrong end of the bow. '
+- '&4A%n has a skeleton in the closet...'
+- '&4%n, strafe the arrows! Strafe the arrows!'
+- '&4A skeleton just got a headshot on %n!'
 
 spider:
-- '§4%n is all webbed up.'
-- '§4%n got trampled by arachnids!'
-- '§4%n got jumped by a spidah!'
-- '§4Spiders just climbed all over %n!'
-- '§4%n forgot spiders could climb!'
+- '&4%n is all webbed up.'
+- '&4%n got trampled by arachnids!'
+- '&4%n got jumped by a spidah!'
+- '&4Spiders just climbed all over %n!'
+- '&4%n forgot spiders could climb!'
 
 zombie:
-- '§4%n was punched to death by zombies!'
-- '§4%n was bitten by a zombie!'
-- '§4%n fell to the hunger of the horde!'
-- '§4%n Hasn''t played enough L4D2!'
-- '§4%n couldn''t run faster than the zombie!'
+- '&4%n was punched to death by zombies!'
+- '&4%n was bitten by a zombie!'
+- '&4%n fell to the hunger of the horde!'
+- '&4%n Hasn''t played enough L4D2!'
+- '&4%n couldn''t run faster than the zombie!'
 
 pvp:
-- '§4%a killed %n using a(n) %i!'
-- '§4%a slays %n with a %i!'
-- '§4%a hunts %n down with a %i!'
-- '§4%n was killed by a %i wielding %a!'
-- '§4%a leaves %n a bloody mess!'
-- '§4%a uses a %i to end %n''s life!'
-- '§4%n collapses due to %i attacks from %a!'
-- '§4%n is now a bloody mess thanks to %a''s %i!'
-- '§4%a beats %n with a %i!'
-- '§4%n was killed by %a''s %i attack!'
-- '§4%a defeats %n with a %i attack!'
-- '§4%a raises a %i and puts and end to %n''s life!'
-- '§4%a took out %n with a %i!'
-- '§4%n was victimised by %a''s %i!'
-- '§4%n was eliminated by %a''s %i!'
-- '§4%a executes %n with a %i!'
-- '§4%a finishes %n with a %i!'
-- '§4%a''s %i has claimed %n as another victim!'
-- '§4%n lost a savage duel to %a!'
-- '§4%a has beaten %n to a pulp!'
-- '§4%a pwns %n in a vicious duel!'
-- '§4Score %a 1 - %n 0!'
-- '§4%a has defeated %n in battle!'
-- '§4%n has been slain by %a!'
-- '§4%a emerges victorious in a duel with %n!'
-- '§4%n has been pwned by %a!'
-- '§4%n was killed by %a!'
-- '§4%n was dominated by %a!'
-- '§4%n was fragged by %a!'
-- '§4%n needs more practice and was killed by %a!'
-- '§4%n was beheaded by %a!'
+- '&4%a killed %n using a(n) %i!'
+- '&4%a slays %n with a %i!'
+- '&4%a hunts %n down with a %i!'
+- '&4%n was killed by a %i wielding %a!'
+- '&4%a leaves %n a bloody mess!'
+- '&4%a uses a %i to end %n''s life!'
+- '&4%n collapses due to %i attacks from %a!'
+- '&4%n is now a bloody mess thanks to %a''s %i!'
+- '&4%a beats %n with a %i!'
+- '&4%n was killed by %a''s %i attack!'
+- '&4%a defeats %n with a %i attack!'
+- '&4%a raises a %i and puts and end to %n''s life!'
+- '&4%a took out %n with a %i!'
+- '&4%n was victimised by %a''s %i!'
+- '&4%n was eliminated by %a''s %i!'
+- '&4%a executes %n with a %i!'
+- '&4%a finishes %n with a %i!'
+- '&4%a''s %i has claimed %n as another victim!'
+- '&4%n lost a savage duel to %a!'
+- '&4%a has beaten %n to a pulp!'
+- '&4%a pwns %n in a vicious duel!'
+- '&4Score %a 1 - %n 0!'
+- '&4%a has defeated %n in battle!'
+- '&4%n has been slain by %a!'
+- '&4%a emerges victorious in a duel with %n!'
+- '&4%n has been pwned by %a!'
+- '&4%n was killed by %a!'
+- '&4%n was dominated by %a!'
+- '&4%n was fragged by %a!'
+- '&4%n needs more practice and was killed by %a!'
+- '&4%n was beheaded by %a!'
 
 pvp-fists:
-- '§4%a pummeled %n to death'
-- '§4%a crusted %n with their bare hands'
+- '&4%a pummeled %n to death'
+- '&4%a crusted %n with their bare hands'
 
 block_explosion:
-- '§4Careful %n, TNT goes boom!'
-- '§4%n was last seen playing with dynamite.'
-- '§4%n exploded into a million pieces!'
-- '§4%n cut the wrong wire!'
-- '§4%n has left his (bloody) mark on the world.'
-- '§4%n was attempting to exterminate gophers with dynamite!'
-- '§4%n was playing landmine hopscotch!'
-- '§4%n stuck his head in a microwave!'
+- '&4Careful %n, TNT goes boom!'
+- '&4%n was last seen playing with dynamite.'
+- '&4%n exploded into a million pieces!'
+- '&4%n cut the wrong wire!'
+- '&4%n has left his (bloody) mark on the world.'
+- '&4%n was attempting to exterminate gophers with dynamite!'
+- '&4%n was playing landmine hopscotch!'
+- '&4%n stuck his head in a microwave!'
 
 contact:
-- '§4%n got a little too close to a cactus!'
-- '§4%n tried to hug a cactus!'
-- '§4%n needs to be more careful around cactuses!'
-- '§4%n feels the wrath of cactusjack!'
-- '§4%n learns the results of rubbing a cactus!'
-- '§4%n died from cactus injuries!'
-- '§4%n poked himself with a cactus...and died.'
-- '§4%n ran into some pointy green stuff that wasn''t grass.'
-- '§4%n was distracted by a tumbleweed and died by cactus.'
+- '&4%n got a little too close to a cactus!'
+- '&4%n tried to hug a cactus!'
+- '&4%n needs to be more careful around cactuses!'
+- '&4%n feels the wrath of cactusjack!'
+- '&4%n learns the results of rubbing a cactus!'
+- '&4%n died from cactus injuries!'
+- '&4%n poked himself with a cactus...and died.'
+- '&4%n ran into some pointy green stuff that wasn''t grass.'
+- '&4%n was distracted by a tumbleweed and died by cactus.'
 
 ghast:
-- '§4%n was blown to bits by a ghast.'
-- '§4 Those aren''t babies you hear, %n!'
-- '§4%n was killed by a ghostly hadouken!'
-- '§4%n just got exploded by a fireball!'
-- '§4%n got too comfy in the Nether!'
+- '&4%n was blown to bits by a ghast.'
+- '&4 Those aren''t babies you hear, %n!'
+- '&4%n was killed by a ghostly hadouken!'
+- '&4%n just got exploded by a fireball!'
+- '&4%n got too comfy in the Nether!'
 
 slime:
-- '§4A slime found %n. The slime won.'
-- '§4%n just was playing with slime. The slime ain''t happy.'
+- '&4A slime found %n. The slime won.'
+- '&4%n just was playing with slime. The slime ain''t happy.'
 
 suffocation:
-- '§4%n suffocated.'
-- '§4%n was looking up while digging!'
-- '§4%n choked to death on earth!'
-- '§4%n choked on a ham sandwich'
+- '&4%n suffocated.'
+- '&4%n was looking up while digging!'
+- '&4%n choked to death on earth!'
+- '&4%n choked on a ham sandwich'
 
 pigzombie:
-- '§4%n lost a fight against a zombie pig.'
-- '§4%n, touching a zombie pig is never a good idea.'
-- '§4%n, looked at a pigzombie the wrong way.'
+- '&4%n lost a fight against a zombie pig.'
+- '&4%n, touching a zombie pig is never a good idea.'
+- '&4%n, looked at a pigzombie the wrong way.'
 
 void:
-- '§4%n died in The Void.'
+- '&4%n died in The Void.'
 
 wolf:
 - '&4%n became a wolf''s lunch.'
@@ -234,37 +327,44 @@ wolf:
 lightning:
 - '&4%n was struck down by Zeus'' bolt.'
 
+suicide:
+- '&4%n took matters into his own hands.'
+
 unknown:
-- '§4%n died from unknown causes.'
-- '§4%n has imploded into nothingness'
-- '§4%n has been vaporized'
-- '§4%n died from explosive diarrhea'
-- '§4%n was killed by Chuck Norris'
-- '§4%n was running with scissors...now he runs no more'
-- '§4%n was hit by a falling piano'
-- '§4%n was assasinated by a shuriken headshot from the shadow'
-- '§4%n was barrel rolling...and died'
-- '§4%n was killed by Cthulhu'
-- '§4%n forgot to wear his spacesuit'
-- '§4%n choked on a ham sandwich'
-- '§4%n died at the hands of ninja assassins'
+- '&4%n died from unknown causes.'
+- '&4%n has imploded into nothingness'
+- '&4%n has been vaporized'
+- '&4%n died from explosive diarrhea'
+- '&4%n was killed by Chuck Norris'
+- '&4%n was running with scissors...now he runs no more'
+- '&4%n was hit by a falling piano'
+- '&4%n was assasinated by a shuriken headshot from the shadow'
+- '&4%n was barrel rolling...and died'
+- '&4%n was killed by Cthulhu'
+- '&4%n forgot to wear his spacesuit'
+- '&4%n choked on a ham sandwich'
+- '&4%n died at the hands of ninja assassins'
 
 starvation:
-- '§4%n did forget to eat his lunch.'
-- '§4%n didn''t find the next Burger.'
-- '§4%n became a skeleton.'
+- '&4%n did forget to eat his lunch.'
+- '&4%n didn''t find the next Burger.'
+- '&4%n became a skeleton.'
 
 enderman:
-- '§4%n, looked at a enderman the wrong way.'
-- '§4An enderman pulled %n leg..... off!'
+- '&4%n, looked at a enderman the wrong way.'
+- '&4An enderman pulled %n leg..... off!'
 
 cavespider:
-- '§4%n will never say itsybitsyspider again.'
-- '§4%n is all webbed up.'
-- '§4%n got trampled by arachnids!'
-- '§4%n got jumped by a spidah!'
-- '§4Spiders just climbed all over %n!'
-- '§4%n forgot spiders could climb!'
+- '&4%n will never say itsybitsyspider again.'
+- '&4%n is all webbed up.'
+- '&4%n got trampled by arachnids!'
+- '&4%n got jumped by a spidah!'
+- '&4Spiders just climbed all over %n!'
+- '&4%n forgot spiders could climb!'
+
+silverfish:
+- '&4%n was killed by a silverfish!'
+- '&4%n found something hidden below a rock'
 
 
 # ----- Streaks
@@ -272,17 +372,17 @@ cavespider:
 # format <#of kills> <text to display> %n = player getting the message (in this case, the one on a killstreak).
 
 killstreak:
-- '5:§2[%n] 5 enemies killed! You''re thinning the numbers!'
-- '10:§2[%n] 10 killed! Rampage!'
-- '15:§2[%n] 15 kills! Dominating all kinds of mobs!'
-- '20:§2[%n] 20 kills! Here is your gift card for a killing spree!'
-- '25:§2[%n] So many kills in a row! God Like!'
+- '5:&2[%n] 5 enemies killed! You''re thinning the numbers!'
+- '10:&2[%n] 10 killed! Rampage!'
+- '15:&2[%n] 15 kills! Dominating all kinds of mobs!'
+- '20:&2[%n] 20 kills! Here is your gift card for a killing spree!'
+- '25:&2[%n] So many kills in a row! God Like!'
 
 # format <#of kills> <text to display> %n = player getting the message (in this case, the one on a deathstreak).
 
 deathstreak:
-- '5:§b%n has died, like 5 times.'
-- '10:§b%n, craft a sword or something.'
-- '15:§b%n is dead more than alive.'
-- '20:§b%n is just pathetic.'
-- '30:§b%n is clearly playing Minecraft to see what it says when he dies.'
+- '5:&b%n has died, like 5 times.'
+- '10:&b%n, craft a sword or something.'
+- '15:&b%n is dead more than alive.'
+- '20:&b%n is just pathetic.'
+- '30:&b%n is clearly playing Minecraft to see what it says when he dies.'
