@@ -33,7 +33,7 @@ public class DTPDeathtpCommand implements CommandExecutor {
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         String command = cmd.getName();
-        boolean canUseCommand = true;
+        boolean canUseCommand = false;
         boolean teleportok = true;
         boolean teleported = false;
 
@@ -48,12 +48,7 @@ public class DTPDeathtpCommand implements CommandExecutor {
             }
             double economyCost = Double.valueOf(plugin.deathconfig.get("ECONOMY_COST").trim()).doubleValue();
 
-            if (player.hasPermission("deathtpplus.deathtp")) {
-                canUseCommand = true;
-            }
-            else {
-                canUseCommand = plugin.deathconfig.get("ALLOW_DEATHTP").equals("true");
-            }
+            canUseCommand = (player.hasPermission("deathtpplus.deathtp") && plugin.deathconfig.get("ALLOW_DEATHTP").equalsIgnoreCase("true"));
 
             if (canUseCommand) {
                 //costs item in inventory

@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Register">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Resources/Register.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../External Resourcers/Register.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

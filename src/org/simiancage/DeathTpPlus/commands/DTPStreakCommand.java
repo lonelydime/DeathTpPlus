@@ -33,9 +33,8 @@ public class DTPStreakCommand implements CommandExecutor {
         boolean canUseCommand = false;
             if (sender instanceof Player) {
                 Player player = (Player)sender;
-                if (player.hasPermission("deathtpplus.streak")) {
-                    canUseCommand = true;
-                }
+                canUseCommand =  player.hasPermission("deathtpplus.streak");
+                
             }
 
             if (canUseCommand) {

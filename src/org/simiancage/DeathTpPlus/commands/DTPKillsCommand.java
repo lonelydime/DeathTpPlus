@@ -37,9 +37,7 @@ public class DTPKillsCommand implements CommandExecutor {
                     if (sender instanceof Player) {
                         Player player = (Player)sender;
 
-                        if (player.hasPermission("deathtpplus.kills")) {
-                            canUseCommand = true;
-                        }
+                        canUseCommand =  player.hasPermission("deathtpplus.kills");
                     }
 
                     if (canUseCommand) {

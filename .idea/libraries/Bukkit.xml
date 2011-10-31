@@ -5,6 +5,7 @@
     </CLASSES>
     <JAVADOC>
       <root url="http://jd.bukkit.org/apidocs/" />
+      <root url="https://jd.bukkit.org/doxygen/" />
     </JAVADOC>
     <SOURCES />
   </library>
