@@ -16,6 +16,7 @@ package org.simiancage.DeathTpPlus;
  */
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -80,7 +81,7 @@ public class DeathTpPlus extends JavaPlugin{
     // ToDo Did I changed this after making changes to the config?
     // ToDo Did I also change /resources/deathtpplus.ver after making these changes?
 
-    public String configCurrent = "2.00";
+    public String configCurrent = "2.01";
     public String configVer;
 
 
@@ -112,7 +113,7 @@ public class DeathTpPlus extends JavaPlugin{
     public HashMap<String, ArrayList<DTPTombBlock>> playerTombList = new HashMap<String, ArrayList<DTPTombBlock>>();
     protected HashMap<String, EntityDamageEvent> deathCause = new HashMap<String, EntityDamageEvent>();
     public String[] signMessage = new String[] { "{name}", "RIP", "{date}","{time}" };
-    // private DTPTomb plugin;
+    public boolean economyActive = false;
 
     // Vault
     public boolean useVault = false;
@@ -216,6 +217,7 @@ public class DeathTpPlus extends JavaPlugin{
         //Configuration nodes DeathTpPlus
         deathconfig.put("VERSION_CHECK", configuration.getString("versionCheck"));
         deathconfig.put("CONFIG_VER", configuration.getString("configVer"));
+        deathconfig.put("ECONOMY_PROVIDER", configuration.getString("economy-provider"));
         deathconfig.put("SHOW_DEATHNOTIFY", configuration.getString("show-deathnotify"));
         deathconfig.put("ALLOW_DEATHTP", configuration.getString("allow-deathtp"));
         deathconfig.put("SHOW_STREAKS", configuration.getString("show-streaks"));
@@ -506,6 +508,7 @@ public class DeathTpPlus extends JavaPlugin{
         configuration.addDefault("logevents","false");
         configuration.addDefault("enable-tombstone", "true");
         configuration.addDefault("enable-debug", "true");
+        configuration.addDefault("economy-provider", "vault");
         //Kill Streak nodes
         configuration.addDefault("killstreak", "");
         //Death Streak nodes
@@ -700,6 +703,8 @@ public class DeathTpPlus extends JavaPlugin{
         tBlock.setLocketteSign(sign);
         return true;
     }
+
+
 
     public void deactivateLWC(DTPTombBlock tBlock, boolean force) {
         if (!deathconfig.get("LWC_ENABLE").equalsIgnoreCase("true"))
@@ -1050,6 +1055,19 @@ public class DeathTpPlus extends JavaPlugin{
         return deathconfig.get("CONFIG_VER");
     }
 
+    public String economyProvider () {
+        return deathconfig.get("ECONOMY_PROVIDER").toLowerCase();
+    }
+
+    public double chestCost () {
+        return Double.parseDouble(deathconfig.get("CHEST_COST"));
+    }
+
+    public double signCost () {
+        return Double.parseDouble(deathconfig.get("SIGN_COST"));
+    }
+
+
     public String versionCheck(Boolean printToLog) {
         String thisVersion = getDescription().getVersion();
         URL url = null;
@@ -1066,7 +1084,7 @@ public class DeathTpPlus extends JavaPlugin{
             if (!newVersion.equals(thisVersion)) {
                 if (printToLog)
                     log.warning(warnLogName + "DeathTpPlus is out of date!");
-                    log.warning("This version: " + thisVersion + "; latest version: " + newVersion + ".");
+                log.warning("This version: " + thisVersion + "; latest version: " + newVersion + ".");
                 return "DeathTpPlus is out of date! This version: " + thisVersion
                         + "; latest version: " + newVersion + ".";
             } else {

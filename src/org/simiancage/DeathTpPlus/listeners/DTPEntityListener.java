@@ -380,9 +380,9 @@ public class DTPEntityListener extends EntityListener {
 
 // Protect the chest with Lockette if installed, enabled, and
 // unprotected.
-                    if (plugin.hasPerm(player, "tombstone.lockette", false))
+                    if (plugin.hasPerm(player, "tombstone.lockette", false)){
                         prot = plugin.protectWithLockette(player, tBlock);
-
+                    }
 // Add tombstone to list
                     plugin.tombList.offer(tBlock);
 
@@ -632,7 +632,7 @@ public class DTPEntityListener extends EntityListener {
         String time = new SimpleDateFormat(plugin.timeFormat())
                 .format(new Date());
         String name = p.getName();
-        String reason = "by "+ loghowdied.substring(0, 1)+loghowdied.substring(1).toLowerCase();
+        String reason = loghowdied.substring(0, 1)+loghowdied.substring(1).toLowerCase();
 
         signBlock.setType(Material.SIGN_POST);
         final Sign sign = (Sign) signBlock.getState();

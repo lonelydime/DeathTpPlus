@@ -5,17 +5,30 @@
 
 
 # Config Version
-configVer: '2.00'
+configVer: '2.01'
 
 # ----- Standard plugin features
 
 #Check for new versions on startup
 versionCheck: 'true'
 
+#Print messages to terminal if true (debug)
+logEvents: 'false'
+
+# Economy Provider Vault / Register (Case insensitive)
+economy-provider: 'vault'
+
+# CraftIRC
+deathtp-tag: 'all'
+
+
+
+# ----- DeathTpPlus features
+
 # Show the death messages on the server
 show-deathnotify: 'true'
 
-# Allow players to access the deathtp command
+# Allow players to access the deathtp command (Overrides permissions)
 allow-deathtp: 'true'
 
 # Death Logs
@@ -24,7 +37,7 @@ allow-deathlog: 'true'
 # Show kill or death streaks read in from killstreak.txt and deathstreak.txt
 show-streaks: 'true'
 
-# Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports.
+# Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports or economy.
 charge-item: '0'
 
 # Show sign tombstones upon death
@@ -33,17 +46,9 @@ show-sign: 'false'
 # Economy
 deathtp-cost: '10'
 
-# CraftIRC
-deathtp-tag: 'all'
-
-# Deathlogs
-allow-deathlog: 'true'
-
 # Allow World Travel = yes, no, permissions
 allow-worldtravel: 'no'
 
-#Print messages to terminal if true (debug)
-logEvents: 'false'
 
 # ------- TombStone features (General)
 
