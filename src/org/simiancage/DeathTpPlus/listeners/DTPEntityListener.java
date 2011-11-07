@@ -1,20 +1,6 @@
 package org.simiancage.DeathTpPlus.listeners;
 
 //java imports
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Random;
-
-//bukkit imports
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -23,11 +9,18 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
-
-
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
+
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Random;
+
+//bukkit imports
 
 public class DTPEntityListener extends EntityListener {
     public DeathTpPlus plugin;
@@ -67,8 +60,8 @@ public class DTPEntityListener extends EntityListener {
 
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
-                EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
-                damageEvent.getType();
+                /*EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
+                damageEvent.getType();*/
                 String damagetype = lastDamageType.get(lastDamagePlayer.indexOf(player.getDisplayName()));
                 String eventAnnounce = "";
                 String fileOutput = "";

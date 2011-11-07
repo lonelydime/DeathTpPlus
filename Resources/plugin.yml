@@ -1,6 +1,6 @@
 name: DeathTpPlus
 main: org.simiancage.DeathTpPlus.DeathTpPlus
-version: 2.01
+version: 2.02
 website: https://github.com/dredhorse/DeathTpPlus
 authors: [Don Redhorse, orig. by. lonelydime]
 description: Death commands including deathtp, deathnotify and deathstreaks.
@@ -20,14 +20,14 @@ commands:
     deaths:
         description: Lets you view your or other's total deaths.
         usage: |
-            /<command> (username) (cause)
+            /<command> [username] [cause]
             Example: /<command> - Displays your total death count.
             Example: /<command> lonelydime - Displays total death count.
             Example: /<command> lonelydime creeper - checks lonelydime's deaths by creeper.
     kills:
         description: Lets you view your or other's total pvp kills.
         usage: |
-            /<command> (username) (playername)
+            /<command> [username] [playername]
             Example: /<command> - Displays your total kill count.
             Example: /<command> dredhorse - Displays total kill count.
             Example: /<command> lonelydime dredhorse - prints times lonelydime killed dredhorse.
