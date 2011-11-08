@@ -76,7 +76,7 @@ public class DTPServerListener extends ServerListener {
         PluginManager pm = plugin.getServer().getPluginManager();
         Plugin checkRegister = pm.getPlugin("Register");
         Plugin checkVault = pm.getPlugin("Vault");
-        if ((checkRegister != null) && plugin.economyProvider().equalsIgnoreCase("register")) {
+        if ((checkRegister != null) && plugin.economyProvider().equalsIgnoreCase("register") && !plugin.useRegister) {
             Methods.setMethod(pm);
             if (Methods.getMethod() != null)
             {
@@ -94,7 +94,7 @@ public class DTPServerListener extends ServerListener {
             }
         }
         
-        if ((checkVault != null) && plugin.economyProvider().equalsIgnoreCase("vault")) {
+        if ((checkVault != null) && plugin.economyProvider().equalsIgnoreCase("vault") && !plugin.useVault) {
             plugin.log.info(plugin.logName + "Vault detected");
             plugin.log.info(plugin.logName + "configured to use "+ plugin.economyProvider());
             RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
@@ -102,17 +102,15 @@ public class DTPServerListener extends ServerListener {
                 plugin.economy = economyProvider.getProvider();
                 plugin.useVault = true;
                 plugin.economyActive = true;
-                plugin.log.info(plugin.logName + "Economy provider found: "+plugin.economy.toString());
+                plugin.log.info(plugin.logName + "Economy provider found: "+plugin.economy.getName());
 
             } else {
                 plugin.useVault = false;
                 plugin.economyActive = false;
                 plugin.log.warning(plugin.warnLogName + "No economy provider found.");
             }
-        } else {
-            plugin.log.info(plugin.logName + "Vault not detected, will attach later.");
-
         }
+
         if (plugin.lwcPlugin == null) {
             if (event.getPlugin().getDescription().getName()
                     .equalsIgnoreCase("LWC")) {
