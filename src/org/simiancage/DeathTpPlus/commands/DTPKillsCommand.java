@@ -5,6 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.simiancage.DeathTpPlus.workers.DTPConfig;
+import org.simiancage.DeathTpPlus.workers.DTPLogger;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -20,9 +22,13 @@ import java.io.FileReader;
 public class DTPKillsCommand implements CommandExecutor {
 
     private DeathTpPlus plugin;
+    DTPLogger log;
+    DTPConfig config;
 
     public DTPKillsCommand(DeathTpPlus instance) {
         this.plugin = instance;
+        log = DTPLogger.getLogger();
+        config = DTPConfig.getInstance();
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
@@ -96,7 +102,7 @@ public class DTPKillsCommand implements CommandExecutor {
                             return true;
                         }
                         catch(Exception e) {
-                            plugin.log.info( plugin.logName + "Error reading deathlog: "+plugin.deathlogFile);
+                            log.warning("Error reading deathlog: "+plugin.deathlogFile, e);
                         }
                     }
                     else {

@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus;
+package org.simiancage.DeathTpPlus.workers;
 
 /**
  * PluginName: TODO insert Pluginname here
@@ -13,6 +13,8 @@ import java.util.Iterator;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.simiancage.DeathTpPlus.DTPTombBlock;
+import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 public class DTPTombThread extends Thread {
     private DeathTpPlus plugin;

@@ -15,21 +15,17 @@ package org.simiancage.DeathTpPlus;
  * Original Copyright (C) 2011 Steven "Drakia" Scott <Drakia@Gmail.com>
  */
 
-import java.awt.*;
-import java.awt.geom.Point2D;
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.jar.JarFile;
-import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-
-
+import com.ensifera.animosity.craftirc.CraftIRC;
+import com.griefcraft.lwc.LWC;
+import com.griefcraft.lwc.LWCPlugin;
+import com.griefcraft.model.Protection;
+import com.griefcraft.model.ProtectionTypes;
+import com.nijikokun.register.payment.Method;
+import com.nijikokun.register.payment.Methods;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -43,39 +39,50 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-
-//Register
-import com.nijikokun.register.payment.Method;
-import com.nijikokun.register.payment.Methods;
-
-
-//craftirc
-import com.ensifera.animosity.craftirc.CraftIRC;
-
-// importing commands and listeners
 import org.simiancage.DeathTpPlus.commands.*;
 import org.simiancage.DeathTpPlus.listeners.DTPBlockListener;
 import org.simiancage.DeathTpPlus.listeners.DTPEntityListener;
 import org.simiancage.DeathTpPlus.listeners.DTPPlayerListener;
 import org.simiancage.DeathTpPlus.listeners.DTPServerListener;
-
-//importing Lockette
+import org.simiancage.DeathTpPlus.workers.DTPConfig;
+import org.simiancage.DeathTpPlus.workers.DTPLogger;
+import org.simiancage.DeathTpPlus.workers.DTPTombThread;
 import org.yi.acru.bukkit.Lockette.Lockette;
 
-// importing LWC
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
-import com.griefcraft.lwc.LWC;
-import com.griefcraft.lwc.LWCPlugin;
-import com.griefcraft.model.Protection;
-import com.griefcraft.model.ProtectionTypes;
+//Register
+//craftirc
+// importing commands and listeners
+//importing Lockette
+// importing LWC
 
 public class DeathTpPlus extends JavaPlugin{
     // listeners
-    private final DTPEntityListener entityListener = new DTPEntityListener(this);
-    private final DTPBlockListener blockListener = new DTPBlockListener(this);
-    private final DTPServerListener serverListener = new DTPServerListener(this);
-    private final DTPPlayerListener playerListener = new DTPPlayerListener(this);
+    private DTPEntityListener entityListener;
+    private DTPBlockListener blockListener;
+    private DTPServerListener serverListener;
+    private DTPPlayerListener playerListener;
+
+    // Enum
+
+    public enum DeathTypes {FALL, DROWNING, SUFFOCATION, FIRE_TICK, FIRE, LAVA, BLOCK_EXPLOSION, CREEPER, SKELETON, SPIDER, PIGZOMBIE, ZOMBIE, CONTACT, SLIME, VOID, GHAST, WOLF, LIGHTNING, STARVATION, CAVESPIDER, ENDERMAN, SILVERFISH, PVP, FISTS, UNKNOWN, SUICIDE;
+
+        @Override public String toString() {
+            //only capitalize the first letter
+            String s = super.toString();
+            return s.substring(0, 1)+s.substring(1).toLowerCase();
+        }
+    }
+
+    DTPConfig config;
+    DTPLogger log;
 
     // Configuration Version and PluginVersion
     // ToDo Did I changed this after making changes to the config?
@@ -87,7 +94,7 @@ public class DeathTpPlus extends JavaPlugin{
 
 
     //plugin variables
-    public Logger log;
+
     private DeathTpPlus plugin = this;
     public static HashMap<String, List<String>> killstreak = new HashMap<String, List<String>>();
     public static HashMap<String, List<String>> deathstreak = new HashMap<String, List<String>>();
@@ -136,7 +143,13 @@ public class DeathTpPlus extends JavaPlugin{
     }
 
     public void onEnable() {
-        log = Bukkit.getServer().getLogger();
+        log = DTPLogger.getInstance(this);
+        config = DTPConfig.getInstance();
+        config.setupConfig(configuration, plugin);
+        entityListener = new DTPEntityListener(this);
+        blockListener = new DTPBlockListener(this);
+        serverListener = new DTPServerListener(this);
+        playerListener = new DTPPlayerListener(this);
         pluginName = getDescription().getName();
         warnLogName = "[" + pluginName + "] ";
         logName = "   " + warnLogName;

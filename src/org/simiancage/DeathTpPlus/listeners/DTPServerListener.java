@@ -12,15 +12,21 @@ import com.nijikokun.register.payment.Method;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.simiancage.DeathTpPlus.workers.DTPConfig;
+import org.simiancage.DeathTpPlus.workers.DTPLogger;
 import org.yi.acru.bukkit.Lockette.Lockette;
 
 public class DTPServerListener extends ServerListener {
     private static DeathTpPlus plugin;
     public static Method economy = null;
+    DTPLogger log;
+    DTPConfig config;
 
 
     public DTPServerListener(DeathTpPlus plugin) {
         this.plugin = plugin;
+        log = DTPLogger.getLogger();
+        config = DTPConfig.getInstance();
 
     }
 
@@ -43,8 +49,8 @@ public class DTPServerListener extends ServerListener {
             {
                 plugin.useRegister = false;
                 plugin.economyActive = false;
-                plugin.log.info(plugin.logName +"un-hooked from Register.");
-                plugin.log.info(plugin.logName +"as Register was unloaded / disabled.");
+                log.info("un-hooked from Register.");
+                log.info("as Register was unloaded / disabled.");
             }
         }
         if ((checkVault == null) && plugin.useVault) {
@@ -53,18 +59,18 @@ public class DTPServerListener extends ServerListener {
             {
                 plugin.useVault = false;
                 plugin.economyActive = false;
-                plugin.log.info(plugin.logName +"un-hooked from Vault.");
-                plugin.log.info(plugin.logName +"as Vault was unloaded / disabled.");
+                log.info("un-hooked from Vault.");
+                log.info("as Vault was unloaded / disabled.");
             }
         }
 
         if (event.getPlugin() == plugin.lwcPlugin) {
-            plugin.log.info(plugin.logName +"LWC plugin lost.");
+            log.info("LWC plugin lost.");
             plugin.lwcPlugin = null;
         }
 
         if (event.getPlugin() == plugin.LockettePlugin) {
-            plugin.log.info(plugin.logName + "Lockette plugin lost.");
+            log.info( "Lockette plugin lost.");
             plugin.LockettePlugin = null;
         }
 
@@ -81,33 +87,33 @@ public class DTPServerListener extends ServerListener {
             if (Methods.getMethod() != null)
             {
                 setEconomy(Methods.getMethod());
-                plugin.log.info(plugin.logName +"Economy method found: "+ getEconomy().getName()+ " v "+ getEconomy().getVersion());
-                plugin.log.info(plugin.logName + "configured to use "+ plugin.economyProvider());
+                log.info("Economy method found: "+ getEconomy().getName()+ " v "+ getEconomy().getVersion());
+                log.info( "configured to use "+ plugin.economyProvider());
                 plugin.useRegister = true;
                 plugin.economyActive = true;
 
             } else {
-                plugin.log.warning(plugin.warnLogName +"Register detected but no economy plugin found!");
-                plugin.log.info(plugin.logName + "configured to use "+ plugin.economyProvider());
+                log.warning(plugin.warnLogName +"Register detected but no economy plugin found!");
+                log.info( "configured to use "+ plugin.economyProvider());
                 plugin.useRegister = false;
                 plugin.economyActive = false;
             }
         }
         
         if ((checkVault != null) && plugin.economyProvider().equalsIgnoreCase("vault") && !plugin.useVault) {
-            plugin.log.info(plugin.logName + "Vault detected");
-            plugin.log.info(plugin.logName + "configured to use "+ plugin.economyProvider());
+            log.info( "Vault detected");
+            log.info( "configured to use "+ plugin.economyProvider());
             RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
             if (economyProvider != null) {
                 plugin.economy = economyProvider.getProvider();
                 plugin.useVault = true;
                 plugin.economyActive = true;
-                plugin.log.info(plugin.logName + "Economy provider found: "+plugin.economy.getName());
+                log.info( "Economy provider found: "+plugin.economy.getName());
 
             } else {
                 plugin.useVault = false;
                 plugin.economyActive = false;
-                plugin.log.warning(plugin.warnLogName + "No economy provider found.");
+                log.warning(plugin.warnLogName + "No economy provider found.");
             }
         }
 
