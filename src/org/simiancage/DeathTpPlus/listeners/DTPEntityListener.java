@@ -55,14 +55,13 @@ public class DTPEntityListener extends EntityListener {
 
 
     public void onEntityDeath(EntityDeathEvent event) {
-
         beforedamage = "";
 
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 /*EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
                 damageEvent.getType();*/
-                String damagetype = lastDamageType.get(lastDamagePlayer.indexOf(player.getDisplayName()));
+                String damagetype = lastDamageType.get(lastDamagePlayer.indexOf(player.getName()));
                 String eventAnnounce = "";
                 String fileOutput = "";
                 String line = "";
@@ -133,12 +132,11 @@ public class DTPEntityListener extends EntityListener {
                         eventAnnounce = eventAnnounce.replace("%i", howtheydied[1]);
                         eventAnnounce = eventAnnounce.replace("%a", howtheydied[2]);
                         if (plugin.deathconfig.get("SHOW_STREAKS").matches("true")){
-
-                            writeToStreak(player.getDisplayName(), howtheydied[2]);
+                            writeToStreak(player.getName(), howtheydied[2]);
                         }
                         //write kill to deathlog
                         if (plugin.deathconfig.get("DEATH_LOGS").matches("true")) {
-                            writeToLog("kill", howtheydied[2], player.getDisplayName());
+                            writeToLog("kill", howtheydied[2], player.getName());
                         }
                     }
                     if (eventAnnounce.equals(""))
@@ -180,7 +178,7 @@ public class DTPEntityListener extends EntityListener {
                     }
 
                     if (plugin.deathconfig.get("DEATH_LOGS").equalsIgnoreCase("true")) {
-                        writeToLog("death", player.getDisplayName(), loghowdied);
+                        writeToLog("death", player.getName(), loghowdied);
                     }
 
                     if (plugin.deathconfig.get("SHOW_SIGN").equalsIgnoreCase("true")) {
@@ -485,11 +483,11 @@ public class DTPEntityListener extends EntityListener {
                     howtheydied = damagetype.split(":");
                     if (howtheydied[0].matches("PVP")) {
                         if (plugin.deathconfig.get("SHOW_STREAKS").matches("true"))
-                            writeToStreak(player.getDisplayName(), howtheydied[2]);
+                            writeToStreak(player.getName(), howtheydied[2]);
                     }
 
                     if (plugin.deathconfig.get("DEATH_LOGS").matches("true")) {
-                        writeToLog("death", player.getDisplayName(), loghowdied);
+                        writeToLog("death", player.getName(), loghowdied);
                     }
                 }
 
@@ -587,7 +585,7 @@ public class DTPEntityListener extends EntityListener {
                 }
                 usingitem = usingitem.toLowerCase();
                 usingitem = usingitem.replace("_", " ");
-                lastdamage = "PVP:"+usingitem+":"+pvper.getDisplayName();
+                lastdamage = "PVP:"+usingitem+":"+pvper.getName();
             }
         }
 
@@ -595,12 +593,13 @@ public class DTPEntityListener extends EntityListener {
             lastdamage = "GHAST";
         }
 
-        if (!lastDamagePlayer.contains(player.getDisplayName())) {
-            lastDamagePlayer.add(player.getDisplayName());
+
+        if (!lastDamagePlayer.contains(player.getName())) {
+            lastDamagePlayer.add(player.getName());
             lastDamageType.add(event.getCause().name());
         }
         else {
-            lastDamageType.set(lastDamagePlayer.indexOf(player.getDisplayName()), lastdamage);
+            lastDamageType.set(lastDamagePlayer.indexOf(player.getName()), lastdamage);
         }
 
         beforedamage = lastdamage;
