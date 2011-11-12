@@ -12,6 +12,8 @@ import org.bukkit.event.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.simiancage.DeathTpPlus.workers.DTPConfig;
+import org.simiancage.DeathTpPlus.workers.DTPLogger;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -23,12 +25,12 @@ import java.util.Random;
 //bukkit imports
 
 public class DTPEntityListener extends EntityListener {
-    public DeathTpPlus plugin;
-    public ArrayList<String> lastDamagePlayer = new ArrayList<String>();
-    public ArrayList<String> lastDamageType = new ArrayList<String>();
-    public String beforedamage = "";
-    public PlayerDeathEvent playerDeathEvent = null;
-    public String loghowdied;
+    private DeathTpPlus plugin;
+    private ArrayList<String> lastDamagePlayer = new ArrayList<String>();
+    private ArrayList<String> lastDamageType = new ArrayList<String>();
+    private String beforedamage = "";
+    private PlayerDeathEvent playerDeathEvent = null;
+    private String loghowdied;
     enum DeathTypes {FALL, DROWNING, SUFFOCATION, FIRE_TICK, FIRE, LAVA, BLOCK_EXPLOSION, CREEPER, SKELETON, SPIDER, PIGZOMBIE, ZOMBIE, CONTACT, SLIME, VOID, GHAST, WOLF, LIGHTNING, STARVATION, CAVESPIDER, ENDERMAN, SILVERFISH, PVP, FISTS, UNKNOWN, SUICIDE;
 
         @Override public String toString() {
@@ -37,19 +39,23 @@ public class DTPEntityListener extends EntityListener {
             return s.substring(0, 1)+s.substring(1).toLowerCase();
         }
     }
+    private DTPConfig config;
+    private DTPLogger log;
 
     public DTPEntityListener(DeathTpPlus instance) {
         plugin = instance;
+        log = DTPLogger.getLogger();
+        config = DTPConfig.getInstance();
     }
 
-    public String getEvent (String deathType){
+    String getEvent(String deathType){
         int messageindex = 0;
-        if (plugin.deathevents.get(deathType).size() > 1)
+        if (config.getDeathevents().get(deathType).size() > 1)
         {
             Random rand = new Random();
-            messageindex = rand.nextInt(plugin.deathevents.get(deathType).size());
+            messageindex = rand.nextInt(config.getDeathevents().get(deathType).size());
         }
-        return plugin.deathevents.get(deathType).get(messageindex);
+        return config.getDeathevents().get(deathType).get(messageindex);
     }
 
 
@@ -66,7 +72,7 @@ public class DTPEntityListener extends EntityListener {
                 String fileOutput = "";
                 String line = "";
                 String[] howtheydied;
-                if (plugin.deathconfig.get("ALLOW_DEATHTP").equals("true") ) {
+                if (config.isAllowDeathtp()) {
                     ArrayList<String> filetext = new ArrayList<String>();
                     boolean readCheck = false;
                     boolean newPlayerDeath = true;
@@ -105,14 +111,14 @@ public class DTPEntityListener extends EntityListener {
                         }
                         //Close the output stream
                         out.close();
+                        log.debug("Succesfully wrote DeathTp location to file: " + plugin.locsName);
                     }
                     catch (IOException e) {
-                        System.out.println("cannot read file "+ plugin.locsName);
-                        System.out.println(e);
-                    }
+                        log.warning("cannot write file "+ plugin.locsName , e);
+                        }
                 }
 
-                if (plugin.deathconfig.get("SHOW_DEATHNOTIFY").equalsIgnoreCase("true") || plugin.deathconfig.get("SHOW_STREAKS").equalsIgnoreCase("true") || plugin.deathconfig.get("DEATH_LOGS").equalsIgnoreCase("true") || plugin.deathconfig.get("ENABLE_TOMBSTONE").equalsIgnoreCase("true") ) {
+                if (config.isShowDeathNotify() || config.isShowStreaks() || config.isAllowDeathLog() || config.isEnableTombStone() ) {
                     howtheydied = damagetype.split(":");
                     loghowdied = howtheydied[0];
                     // Todo change into case statement and create methods for eventAnnounce
@@ -131,11 +137,11 @@ public class DTPEntityListener extends EntityListener {
                         loghowdied = howtheydied[2];
                         eventAnnounce = eventAnnounce.replace("%i", howtheydied[1]);
                         eventAnnounce = eventAnnounce.replace("%a", howtheydied[2]);
-                        if (plugin.deathconfig.get("SHOW_STREAKS").matches("true")){
+                        if (config.isShowStreaks()){
                             writeToStreak(player.getName(), howtheydied[2]);
                         }
                         //write kill to deathlog
-                        if (plugin.deathconfig.get("DEATH_LOGS").matches("true")) {
+                        if (config.isAllowDeathLog()) {
                             writeToLog("kill", howtheydied[2], player.getName());
                         }
                     }
@@ -146,7 +152,7 @@ public class DTPEntityListener extends EntityListener {
 
                     eventAnnounce = plugin.convertSamloean(eventAnnounce);
 
-                    if (plugin.deathconfig.get("SHOW_DEATHNOTIFY").equals("true")) {
+                    if (config.isShowDeathNotify()) {
                         //plugin.getServer().broadcastMessage(eventAnnounce);
                         if (event instanceof PlayerDeathEvent) {
                             playerDeathEvent = (PlayerDeathEvent) event;
@@ -174,14 +180,14 @@ public class DTPEntityListener extends EntityListener {
                         ircAnnounce = ircAnnounce.replace("§e", "");
                         ircAnnounce = ircAnnounce.replace("§f", "");
 
-                        plugin.craftircHandle.sendMessageToTag(ircAnnounce, plugin.deathconfig.get("CRAFT_IRC_TAG"));
+                        plugin.craftircHandle.sendMessageToTag(ircAnnounce, config.getIrcDeathTpTag());
                     }
 
-                    if (plugin.deathconfig.get("DEATH_LOGS").equalsIgnoreCase("true")) {
+                    if (config.isAllowDeathLog()) {
                         writeToLog("death", player.getName(), loghowdied);
                     }
 
-                    if (plugin.deathconfig.get("SHOW_SIGN").equalsIgnoreCase("true")) {
+                    if (config.isShowDeathSign()) {
                         //place sign
                         Block signBlock = player.getWorld().getBlockAt(player.getLocation().getBlockX(),
                                 player.getLocation().getBlockY(),
@@ -207,16 +213,16 @@ public class DTPEntityListener extends EntityListener {
 
                 }
                 // Tombstone part
-                if (plugin.deathconfig.get("ENABLE_TOMBSTONE").equalsIgnoreCase("true")){
+                if (config.isEnableTombStone()){
 
                     if (!plugin.hasPerm(player, "tombstone.use", false))
                         return;
 
-                    plugin.logEvent(player.getName() + " died.");
+                    log.debug(player.getName() + " died.");
 
                     if (event.getDrops().size() == 0) {
                         plugin.sendMessage(player, "Inventory Empty.");
-                        plugin.logEvent(player.getName() + " inventory empty.");
+                        log.debug(player.getName() + " inventory empty.");
                         return;
                     }
 
@@ -240,13 +246,13 @@ public class DTPEntityListener extends EntityListener {
                     }
 
 // Don't create the chest if it or its sign would be in the void
-                    if (plugin.voidCheck()
-                            && ((plugin.tombstoneSign() && block.getY() > 126)
-                            || (!plugin.tombstoneSign() && block.getY() > 127) || player
+                    if (config.isVoidCheck()
+                            && ((config.isShowTombStoneSign() && block.getY() > 126)
+                            || (!config.isShowTombStoneSign() && block.getY() > 127) || player
                             .getLocation().getY() < 1)) {
                         plugin.sendMessage(player,
                                 "Your tombstone would be in the Void. Inventory dropped");
-                        plugin.logEvent(player.getName() + " died in the Void.");
+                        log.debug(player.getName() + " died in the Void.");
                         return;
                     }
 
@@ -266,7 +272,7 @@ public class DTPEntityListener extends EntityListener {
                             && !(plugin.hasPerm(player, "tombstone.freechest", false))) {
                         plugin.sendMessage(player,
                                 "No chest found in inventory. Inventory dropped");
-                        plugin.logEvent(player.getName() + " No chest in inventory.");
+                        log.debug(player.getName() + " No chest in inventory.");
                         return;
                     }
 
@@ -275,15 +281,15 @@ public class DTPEntityListener extends EntityListener {
                     if (block == null) {
                         plugin.sendMessage(player,
                                 "Could not find room for chest. Inventory dropped");
-                        plugin.logEvent(player.getName() + " Could not find room for chest.");
+                        log.debug(player.getName() + " Could not find room for chest.");
                         return;
                     }
 
 // Check if there is a nearby chest
-                    if (plugin.noInterfere() && checkChest(block)) {
+                    if (!config.isAllowInterfere() && checkChest(block)) {
                         plugin.sendMessage(player,
                                 "There is a chest interfering with your tombstone. Inventory dropped");
-                        plugin.logEvent(player.getName()
+                        log.debug(player.getName()
                                 + " Chest interfered with tombstone creation.");
                         return;
                     }
@@ -301,7 +307,7 @@ public class DTPEntityListener extends EntityListener {
                     BlockState state = block.getState();
                     if (!(state instanceof Chest)) {
                         plugin.sendMessage(player, "Could not access chest. Inventory dropped.");
-                        plugin.logEvent(player.getName() + " Could not access chest.");
+                        log.debug(player.getName() + " Could not access chest.");
                         return;
                     }
                     Chest sChest = (Chest) state;
@@ -334,7 +340,7 @@ public class DTPEntityListener extends EntityListener {
 // Check if we have signs enabled, if the player can use signs, and if
 // the player has a sign or gets a free sign
                     Block sBlock = null;
-                    if (plugin.tombstoneSign() && plugin.hasPerm(player, "tombstone.sign", false)
+                    if (config.isShowTombStoneSign() && plugin.hasPerm(player, "tombstone.sign", false)
                             && (pSignCount > 0 || plugin.hasPerm(player, "tombstone.freesign", false))) {
 // Find a place to put the sign, then place the sign.
                         sBlock = sChest.getWorld().getBlockAt(sChest.getX(),
@@ -446,23 +452,23 @@ public class DTPEntityListener extends EntityListener {
                     if (event.getDrops().size() > 0)
                         msg += event.getDrops().size() + " items wouldn't fit in chest.";
                     plugin.sendMessage(player, msg);
-                    plugin.logEvent(player.getName() + " " + msg);
+                    log.debug(player.getName() + " " + msg);
                     if (prot && protLWC) {
                         plugin.sendMessage(player, "Chest protected with LWC. "
-                                + plugin.securityTimeout() + "s before chest is unprotected.");
-                        plugin.logEvent(player.getName() + " Chest protected with LWC. "
-                                + plugin.securityTimeout() + "s before chest is unprotected.");
+                                + config.getRemoveTombStoneSecurityTimeOut() + "s before chest is unprotected.");
+                        log.debug(player.getName() + " Chest protected with LWC. "
+                                + config.getRemoveTombStoneSecurityTimeOut() + "s before chest is unprotected.");
                     }
                     if (prot && !protLWC) {
                         plugin.sendMessage(player, "Chest protected with Lockette. "
-                                + plugin.securityTimeout() + "s before chest is unprotected.");
-                        plugin.logEvent(player.getName() + " Chest protected with Lockette.");
+                                + config.getRemoveTombStoneSecurityTimeOut() + "s before chest is unprotected.");
+                        log.debug(player.getName() + " Chest protected with Lockette.");
                     }
-                    if (plugin.tombstoneRemove()) {
-                        plugin.sendMessage(player, "Chest will break in " + plugin.removeTime()
+                    if (config.isRemoveTombStone()) {
+                        plugin.sendMessage(player, "Chest will break in " + config.getRemoveTombStoneTime()
                                 + "s unless an override is specified.");
-                        plugin.logEvent(player.getName() + " Chest will break in "
-                                + plugin.removeTime() + "s");
+                        log.debug(player.getName() + " Chest will break in "
+                                + config.getRemoveTombStoneTime() + "s");
                     }
                     if (plugin.removeWhenEmpty() && plugin.keepUntilEmpty())
                         plugin.sendMessage(
@@ -509,7 +515,7 @@ public class DTPEntityListener extends EntityListener {
         }
     }
 
-    public void lastDamageDone(Player player, EntityDamageEvent event) {
+    void lastDamageDone(Player player, EntityDamageEvent event) {
         String lastdamage = event.getCause().name();
         //player.sendMessage(lastdamage);
         //checks for mob/PVP damage
@@ -698,7 +704,7 @@ public class DTPEntityListener extends EntityListener {
     }
 
 
-    public void writeToStreak(String defender, String attacker) {
+    void writeToStreak(String defender, String attacker) {
 
         //read the file
         try {
@@ -798,7 +804,7 @@ public class DTPEntityListener extends EntityListener {
         }
     }
 
-    public void writeToLog(String logtype, String playername, String deathtype) {
+    void writeToLog(String logtype, String playername, String deathtype) {
         // File deathlogFile = new File(plugin.getDataFolder()+"/deathlog.txt");
         File deathlogTempFile = new File(plugin.getDataFolder()+System.getProperty("file.separator")+"deathtlog.tmp");
         String line = "";

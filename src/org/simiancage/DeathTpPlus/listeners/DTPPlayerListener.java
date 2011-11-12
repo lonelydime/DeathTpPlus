@@ -21,12 +21,18 @@ import org.bukkit.inventory.ItemStack;
 
 import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.simiancage.DeathTpPlus.workers.DTPConfig;
+import org.simiancage.DeathTpPlus.workers.DTPLogger;
 
 public class DTPPlayerListener extends PlayerListener {
     private DeathTpPlus plugin;
+    private DTPConfig config;
+    private DTPLogger log;
 
     public DTPPlayerListener(DeathTpPlus instance) {
         this.plugin = instance;
+        log = DTPLogger.getLogger();
+        config = DTPConfig.getInstance();
     }
 
     @Override
@@ -39,7 +45,7 @@ public class DTPPlayerListener extends PlayerListener {
 // We'll do quickloot on rightclick of chest if we're going to destroy
 // it anyways
         if (b.getType() == Material.CHEST
-                && (!plugin.destroyQuickLoot() || !plugin.noDestroy()))
+                && (!config.isDestroyOnQuickLoot() || config.isAllowTombStoneDestroy()))
             return;
         if (!plugin.hasPerm(event.getPlayer(), "quickloot", false))
             return;
@@ -97,7 +103,7 @@ public class DTPPlayerListener extends PlayerListener {
 // it'll still pop up
             event.setCancelled(true);
 
-            if (plugin.destroyQuickLoot()) {
+            if (config.isDestroyOnQuickLoot()) {
                 plugin.destroyTombStone(tBlock);
             }
         }
@@ -110,7 +116,7 @@ public class DTPPlayerListener extends PlayerListener {
         loc = loc +", x=" + location.getBlock().getX();
         loc = loc +", y=" + location.getBlock().getY();
         loc = loc +", z=" + location.getBlock().getZ();
-        plugin.logEvent(event.getPlayer().getName() + " quicklooted tombstone at "
+        log.debug(event.getPlayer().getName() + " quicklooted tombstone at "
                 + loc);
     }
 }

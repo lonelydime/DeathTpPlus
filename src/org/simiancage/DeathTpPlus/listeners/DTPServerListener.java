@@ -18,9 +18,9 @@ import org.yi.acru.bukkit.Lockette.Lockette;
 
 public class DTPServerListener extends ServerListener {
     private static DeathTpPlus plugin;
-    public static Method economy = null;
-    DTPLogger log;
-    DTPConfig config;
+    private static Method economy = null;
+    private DTPLogger log;
+    private DTPConfig config;
 
 
     public DTPServerListener(DeathTpPlus plugin) {
@@ -80,29 +80,10 @@ public class DTPServerListener extends ServerListener {
     public void onPluginEnable(PluginEnableEvent event) {
 
         PluginManager pm = plugin.getServer().getPluginManager();
-        Plugin checkRegister = pm.getPlugin("Register");
         Plugin checkVault = pm.getPlugin("Vault");
-        if ((checkRegister != null) && plugin.economyProvider().equalsIgnoreCase("register") && !plugin.useRegister) {
-            Methods.setMethod(pm);
-            if (Methods.getMethod() != null)
-            {
-                setEconomy(Methods.getMethod());
-                log.info("Economy method found: "+ getEconomy().getName()+ " v "+ getEconomy().getVersion());
-                log.info( "configured to use "+ plugin.economyProvider());
-                plugin.useRegister = true;
-                plugin.economyActive = true;
 
-            } else {
-                log.warning(plugin.warnLogName +"Register detected but no economy plugin found!");
-                log.info( "configured to use "+ plugin.economyProvider());
-                plugin.useRegister = false;
-                plugin.economyActive = false;
-            }
-        }
-        
-        if ((checkVault != null) && plugin.economyProvider().equalsIgnoreCase("vault") && !plugin.useVault) {
+        if ((checkVault != null) && !plugin.useVault) {
             log.info( "Vault detected");
-            log.info( "configured to use "+ plugin.economyProvider());
             RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
             if (economyProvider != null) {
                 plugin.economy = economyProvider.getProvider();

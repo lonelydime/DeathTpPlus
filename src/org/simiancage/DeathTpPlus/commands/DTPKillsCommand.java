@@ -22,8 +22,8 @@ import java.io.FileReader;
 public class DTPKillsCommand implements CommandExecutor {
 
     private DeathTpPlus plugin;
-    DTPLogger log;
-    DTPConfig config;
+    private DTPLogger log;
+    private DTPConfig config;
 
     public DTPKillsCommand(DeathTpPlus instance) {
         this.plugin = instance;

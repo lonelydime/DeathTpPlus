@@ -19,13 +19,19 @@ import org.bukkit.event.block.BlockListener;
 
 import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.simiancage.DeathTpPlus.workers.DTPConfig;
+import org.simiancage.DeathTpPlus.workers.DTPLogger;
 
 public class DTPBlockListener extends BlockListener {
 
     private DeathTpPlus plugin;
+    private DTPLogger log;
+    private DTPConfig config;
 
     public DTPBlockListener(DeathTpPlus instance) {
         this.plugin = instance;
+        log = DTPLogger.getLogger();
+        config = DTPConfig.getInstance()
     }
 
     @Override
@@ -61,16 +67,16 @@ public class DTPBlockListener extends BlockListener {
         loc = loc +", x=" + location.getBlock().getX();
         loc = loc +", y=" + location.getBlock().getY();
         loc = loc +", z=" + location.getBlock().getZ();
-        if (plugin.noDestroy() && !plugin.hasPerm(p, "admin", false)) {
+        if (!config.isAllowTombStoneDestroy() && !plugin.hasPerm(p, "admin", false)) {
 
-            plugin.logEvent(p.getName() + " tried to destroy tombstone at "
+            log.debug(p.getName() + " tried to destroy tombstone at "
                     + loc);
             plugin.sendMessage(p, "Tombstone unable to be destroyed");
             event.setCancelled(true);
             return;
         }
 
-        if (plugin.lwcPlugin != null && plugin.lwcEnable()
+        if (plugin.lwcPlugin != null && config.isEnableLWC()
                 && tBlock.getLwcEnabled()) {
             if (tBlock.getOwner().equals(p.getName())
                     || plugin.hasPerm(p, "admin", false)) {
@@ -80,7 +86,7 @@ public class DTPBlockListener extends BlockListener {
                 return;
             }
         }
-        plugin.logEvent(p.getName() + " destroyed tombstone at "
+        log.debug(p.getName() + " destroyed tombstone at "
                 + loc);
         plugin.removeTomb(tBlock, true);
     }
