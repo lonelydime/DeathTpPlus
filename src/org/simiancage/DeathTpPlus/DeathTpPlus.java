@@ -112,7 +112,7 @@ public class DeathTpPlus extends JavaPlugin{
     protected static String pluginPath;
     protected static PluginManager pm;
     protected boolean worldTravel = false;
-    protected FileConfiguration configuration;
+    private FileConfiguration configuration;
     public LWCPlugin lwcPlugin = null;
     public Lockette LockettePlugin = null;
     public ConcurrentLinkedQueue<DTPTombBlock> tombList = new ConcurrentLinkedQueue<DTPTombBlock>();

@@ -16,10 +16,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -65,7 +62,7 @@ public class DTPConfig {
     /**
      * Enable more logging.. could be messy!
      */
-    private boolean debugLogEnabled = false;
+    private boolean debugLogEnabled = true;
     /**
      * Check if there is a new version of the plugin out.
      */
@@ -708,7 +705,6 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("allowInterfere", allowInterfere);
         config.addDefault("voidCheck", voidCheck);
         config.addDefault("creeperProtection", creeperProtection);
-        config.addDefault("tombStoneSign", tombStoneSign);
 // TombStone Features (Removal)
         config.addDefault("destroyOnQuickLoot", destroyOnQuickLoot);
         config.addDefault("removeTombStone", removeTombStone);
@@ -770,10 +766,10 @@ afterwards parsable again from the configuration class of bukkit
         allowInterfere = config.getBoolean("allowInterfere");
         voidCheck = config.getBoolean("voidCheck");
         creeperProtection = config.getBoolean("creeperProtection");
-        tombStoneSign[0] = config.getString("tombStoneSign.Line1");
-        tombStoneSign[1] = config.getString("tombStoneSign.Line2");
-        tombStoneSign[2] = config.getString("tombStoneSign.Line3");
-        tombStoneSign[3] = config.getString("tombStoneSign.Line4");
+        tombStoneSign[0] = config.getString("tombStoneSign.Line1","{name}");
+        tombStoneSign[1] = config.getString("tombStoneSign.Line2","RIP");
+        tombStoneSign[2] = config.getString("tombStoneSign.Line3","{date}");
+        tombStoneSign[3] = config.getString("tombStoneSign.Line4","{time}");
 // Tombstone Features (Removal)
         destroyOnQuickLoot = config.getBoolean("destroyOnQuickLoot");
         removeTombStone = config.getBoolean("removeTombStone");
@@ -831,7 +827,7 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("enableLockette",enableLockette );
         log.debug("enableLWC",enableLWC );
         log.debug("locale",locale );
-        log.debug("allowWordTravel",allowWorldTravel );
+        log.debug("allowWordTravel", allowWorldTravel );
         log.debug("enableDeathtp",enableDeathtp );
         log.debug("showDeathNotify",showDeathNotify );
         log.debug("allowDeathtp",allowDeathtp);
@@ -885,13 +881,13 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("#--------- Default Config Variables start here!");
         stream.println();
         stream.println("# Flag for CraftIrc ");
-        stream.println("ircDeathTpTag: " + ircDeathTpTag);
+        stream.println("ircDeathTpTag: '" + ircDeathTpTag+ "'");
         stream.println();
         stream.println("# Date Format (For formatting, see http://download.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html) ");
-        stream.println("dateFormat: " + dateFormat);
+        stream.println("dateFormat: '" + dateFormat + "'");
         stream.println();
         stream.println("# Time Format (For formatting, see http://download.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html) ");
-        stream.println("timeFormat: " + timeFormat);
+        stream.println("timeFormat: '" + timeFormat + "'");
         stream.println();
         stream.println("# Enable Lockette Support");
         stream.println("enableLockette: " + enableLockette);
@@ -903,10 +899,10 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("lwcPublic: " + lwcPublic);
         stream.println();
         stream.println("# Locale Version for translation features");
-        stream.println("locale: " + locale);
+        stream.println("locale: '" + locale + "'");
         stream.println();
         stream.println("# Allow World Travel: yes, no, permissions");
-        stream.println("allowWorldTravel: " + allowWorldTravel);
+        stream.println("allowWorldTravel: '" + allowWorldTravel + "'");
         stream.println();
         stream.println("#--------- DeathTp Features");
         stream.println();
@@ -926,13 +922,13 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("showStreaks: " + showStreaks);
         stream.println();
         stream.println("# Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports ");
-        stream.println("chargeItem: " + chargeItem);
+        stream.println("chargeItem: '" + chargeItem + "'");
         stream.println();
         stream.println("# Show Deathsign (aka Tombstone Signs) upon death");
         stream.println("showDeathSign: " + showDeathSign);
         stream.println();
         stream.println("# Economy costs for deathtp command, leave 0 if you don't want to charge");
-        stream.println("deathtpCost: " + deathtpCost);
+        stream.println("deathtpCost: '" + deathtpCost + "'");
         stream.println();
         stream.println("#--------- TombStone Features (General)");
         stream.println();
@@ -971,10 +967,10 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# {reason} for cause of death");
         stream.println("# REMEMBER: LINES ARE LIMITED TO 15 CHARACTERS, AND DON'T FORGET THE QUOTES!");
         stream.println("tombStoneSign:");
-        stream.println("   Line1: " + tombStoneSign[0]);
-        stream.println("   Line2: " + tombStoneSign[1]);
-        stream.println("   Line3: " + tombStoneSign[2]);
-        stream.println("   Line4: " + tombStoneSign[3]);
+        stream.println("   Line1: '" + tombStoneSign[0] + "'");
+        stream.println("   Line2: '" + tombStoneSign[1] + "'");
+        stream.println("   Line3: '" + tombStoneSign[2] + "'");
+        stream.println("   Line4: '" + tombStoneSign[3] + "'");
         stream.println();
         stream.println("#--------- TombStone features (Removal");
         stream.println();
@@ -985,7 +981,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("removeTombStone: " + removeTombStone);
         stream.println();
         stream.println("# Remove the Tombstone after x Seconds if removeTombStone is true");
-        stream.println("removeTombStoneTime: " + removeTombStoneTime);
+        stream.println("removeTombStoneTime: '" + removeTombStoneTime + "'");
         stream.println();
         stream.println("# Immediately remove TombStone once it is empty, overriding all other timeout options");
         stream.println("# WARNING: THIS IS A PROCESSOR-INTENSIVE OPTION");
@@ -1001,7 +997,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("removeTombStoneSecurity: " + removeTombStoneSecurity);
         stream.println();
         stream.println("# Timeout for Security Removal in seconds");
-        stream.println("removeTombStoneSecurityTimeOut: " +removeTombStoneSecurityTimeOut);
+        stream.println("removeTombStoneSecurityTimeOut: '" +removeTombStoneSecurityTimeOut +"'");
         stream.println();
         stream.println("#--------- Tomb Features");
         stream.println();
@@ -1009,7 +1005,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("enableTomb: " + enableTomb);
         stream.println();
         stream.println("# Price for createing a Tomb");
-        stream.println("tombCost: " + tombCost);
+        stream.println("tombCost: '" + tombCost + "'");
         stream.println();
         stream.println("# Amount of Tombs a player can have");
         stream.println("maxTomb: " + maxTomb);
@@ -1018,7 +1014,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("useTombAsRespawnPoint: " + useTombAsRespawnPoint);
         stream.println();
         stream.println("# Keyword used to detect a Tobmb");
-        stream.println("tombKeyWord: " + tombKeyWord);
+        stream.println("tombKeyWord: '" + tombKeyWord + "'");
         stream.println();
         stream.println("# Number of death before destruction of every tomb of the player");
         stream.println("# without resetting the counter. If set to 2, every 2 deaths, the tombs are destroyed. (Sign is dropped) 0: = Disabled");
@@ -1323,6 +1319,7 @@ afterwards parsable again from the configuration class of bukkit
 
 // than the getters
 
+
     /**
      * Method to return the PluginName
      *
@@ -1438,6 +1435,8 @@ afterwards parsable again from the configuration class of bukkit
             log.info("Creating default configuration file");
             defaultConfig();
         }
+// Loading the Defaults all the time do to issues with bukkit configuration class defaults
+        setupCustomDefaultVariables();
 // Loading the config from file
         loadConfig();
 
