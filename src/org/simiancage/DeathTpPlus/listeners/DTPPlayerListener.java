@@ -33,10 +33,12 @@ public class DTPPlayerListener extends PlayerListener {
         this.plugin = instance;
         log = DTPLogger.getLogger();
         config = DTPConfig.getInstance();
+        log.debug("PlayerListener active");
     }
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
+        log.debug("onPlayerInteract executing");
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
         Block b = event.getClickedBlock();

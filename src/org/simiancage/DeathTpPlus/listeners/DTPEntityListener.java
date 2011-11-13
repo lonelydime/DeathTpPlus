@@ -17,10 +17,7 @@ import org.simiancage.DeathTpPlus.workers.DTPLogger;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Random;
+import java.util.*;
 
 //bukkit imports
 
@@ -46,6 +43,7 @@ public class DTPEntityListener extends EntityListener {
         plugin = instance;
         log = DTPLogger.getLogger();
         config = DTPConfig.getInstance();
+        log.debug("EntityListener active");
     }
 
     String getEvent(String deathType){
@@ -61,6 +59,7 @@ public class DTPEntityListener extends EntityListener {
 
 
     public void onEntityDeath(EntityDeathEvent event) {
+        log.debug("onEntityDeath executing");
         beforedamage = "";
 
             if (event.getEntity() instanceof Player) {
@@ -470,15 +469,15 @@ public class DTPEntityListener extends EntityListener {
                         log.debug(player.getName() + " Chest will break in "
                                 + config.getRemoveTombStoneTime() + "s");
                     }
-                    if (plugin.removeWhenEmpty() && plugin.keepUntilEmpty())
+                    if (config.isRemoveTombStoneWhenEmpty() && config.isKeepTombStoneUntilEmpty())
                         plugin.sendMessage(
                                 player,
                                 "Break override: Your tombstone will break when it is emptied, but will not break until then.");
                     else {
-                        if (plugin.removeWhenEmpty())
+                        if (config.isRemoveTombStoneWhenEmpty())
                             plugin.sendMessage(player,
                                     "Break override: Your tombstone will break when it is emptied.");
-                        if (plugin.keepUntilEmpty())
+                        if (config.isKeepTombStoneUntilEmpty())
                             plugin.sendMessage(player,
                                     "Break override: Your tombstone will not break until it is empty.");
                     }
@@ -488,11 +487,11 @@ public class DTPEntityListener extends EntityListener {
                 else {
                     howtheydied = damagetype.split(":");
                     if (howtheydied[0].matches("PVP")) {
-                        if (plugin.deathconfig.get("SHOW_STREAKS").matches("true"))
+                        if (config.isShowStreaks())
                             writeToStreak(player.getName(), howtheydied[2]);
                     }
 
-                    if (plugin.deathconfig.get("DEATH_LOGS").matches("true")) {
+                    if (config.isAllowDeathLog()) {
                         writeToLog("death", player.getName(), loghowdied);
                     }
                 }
@@ -505,6 +504,7 @@ public class DTPEntityListener extends EntityListener {
     
 
     public void onEntityDamage(EntityDamageEvent event) {
+        log.debug("onEntityDamage executing");
         if (event.isCancelled()){
             return;
         }
@@ -612,9 +612,10 @@ public class DTPEntityListener extends EntityListener {
     }
 
     public void onEntityExplode(EntityExplodeEvent event) {
+        log.debug("onEntityExplode executing");
         if (event.isCancelled())
             return;
-        if (!plugin.creeperProtection())
+        if (!config.isCreeperProtection())
             return;
         for (Block block : event.blockList()) {
             DTPTombBlock tBlock = plugin.tombBlockList.get(block.getLocation());
@@ -625,18 +626,18 @@ public class DTPEntityListener extends EntityListener {
     }
 
     private void createSign(Block signBlock, Player p) {
-        String date = new SimpleDateFormat(plugin.dateFormat())
+        String date = new SimpleDateFormat(config.getDateFormat())
                 .format(new Date());
-        String time = new SimpleDateFormat(plugin.timeFormat())
+        String time = new SimpleDateFormat(config.getTimeFormat())
                 .format(new Date());
         String name = p.getName();
         String reason = loghowdied.substring(0, 1)+loghowdied.substring(1).toLowerCase();
 
         signBlock.setType(Material.SIGN_POST);
         final Sign sign = (Sign) signBlock.getState();
-
+        String[] signMessage = config.getTombStoneSign();
         for (int x = 0; x < 4; x++) {
-            String line = plugin.signMessage[x];
+            String line = signMessage[x];
             line = line.replace("{name}", name);
             line = line.replace("{date}", date);
             line = line.replace("{time}", time);
@@ -661,22 +662,22 @@ public class DTPEntityListener extends EntityListener {
         exp = base.getWorld().getBlockAt(base.getX() - 1, base.getY(),
                 base.getZ());
         if (plugin.canReplace(exp.getType())
-                && (!plugin.noInterfere() || !checkChest(exp)))
+                && (config.isAllowInterfere() || !checkChest(exp)))
             return exp;
         exp = base.getWorld().getBlockAt(base.getX(), base.getY(),
                 base.getZ() - 1);
         if (plugin.canReplace(exp.getType())
-                && (!plugin.noInterfere() || !checkChest(exp)))
+                && (config.isAllowInterfere() || !checkChest(exp)))
             return exp;
         exp = base.getWorld().getBlockAt(base.getX() + 1, base.getY(),
                 base.getZ());
         if (plugin.canReplace(exp.getType())
-                && (!plugin.noInterfere() || !checkChest(exp)))
+                && (config.isAllowInterfere() || !checkChest(exp)))
             return exp;
         exp = base.getWorld().getBlockAt(base.getX(), base.getY(),
                 base.getZ() + 1);
         if (plugin.canReplace(exp.getType())
-                && (!plugin.noInterfere() || !checkChest(exp)))
+                && (config.isAllowInterfere() || !checkChest(exp)))
             return exp;
         return null;
     }
@@ -754,8 +755,9 @@ public class DTPEntityListener extends EntityListener {
 
             //Check to see if we should announce a streak
             //Deaths
-            for (int i=0;i < plugin.deathstreak.get("DEATH_STREAK").size();i++) {
-                teststreak = plugin.deathstreak.get("DEATH_STREAK").get(i);
+            HashMap<String, List<String>> deathstreak = config.getDeathstreak();
+            for (int i=0;i < deathstreak.get("DEATH_STREAK").size();i++) {
+                teststreak = deathstreak.get("DEATH_STREAK").get(i);
                 testsplit = teststreak.split(":");
                 if (Integer.parseInt(testsplit[0]) == -(defCurrentStreak)) {
                     String announce = plugin.convertSamloean(testsplit[1]);
@@ -763,8 +765,9 @@ public class DTPEntityListener extends EntityListener {
                 }
             }
             //Kills
-            for (int i=0;i < plugin.killstreak.get("KILL_STREAK").size();i++) {
-                teststreak = plugin.killstreak.get("KILL_STREAK").get(i);
+            HashMap<String, List<String>> killstreak = config.getKillstreak();
+            for (int i=0;i < killstreak.get("KILL_STREAK").size();i++) {
+                teststreak = killstreak.get("KILL_STREAK").get(i);
                 testsplit = teststreak.split(":");
                 if (Integer.parseInt(testsplit[0]) == atkCurrentStreak) {
                     String announce = plugin.convertSamloean(testsplit[1]);
@@ -800,7 +803,7 @@ public class DTPEntityListener extends EntityListener {
             out.close();
         }
         catch(IOException e) {
-            System.out.println(e);
+            log.warning("Could not write to Death Streak File", e);
         }
     }
 
@@ -817,7 +820,7 @@ public class DTPEntityListener extends EntityListener {
             try {
                 deathlogTempFile.createNewFile();
             } catch (IOException e) {
-                System.out.println("cannot create file "+deathlogTempFile);
+                log.warning("cannot create file "+deathlogTempFile);
             }
         }
 
@@ -857,7 +860,7 @@ public class DTPEntityListener extends EntityListener {
             deathlogTempFile.renameTo(plugin.deathlogFile);
         }
         catch(IOException e) {
-            System.out.println("Could not edit deathlog: "+e);
+            log.warning("Could not edit deathlog", e);
         }
 
     }

@@ -4,7 +4,7 @@ version: 3.0
 website: https://github.com/dredhorse/DeathTpPlus
 author: Don Redhorse
 description: Death teleport, tombstone and tombs
-softdepend: [Register,Vault,CraftIRC]
+softdepend: [Vault,CraftIRC]
 
 commands:
     deathtp:

@@ -1,6 +1,5 @@
 package org.simiancage.DeathTpPlus.commands;
 
-import com.nijikokun.register.payment.Method;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -10,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.simiancage.DeathTpPlus.workers.DTPConfig;
+import org.simiancage.DeathTpPlus.workers.DTPLogger;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -26,35 +27,40 @@ import java.io.IOException;
 public class DTPDeathtpCommand implements CommandExecutor {
 
     private DeathTpPlus plugin;
+    private DTPLogger log;
+    private DTPConfig config;
 
     public DTPDeathtpCommand(DeathTpPlus instance) {
         this.plugin = instance;
+        log = DTPLogger.getLogger();
+        config = DTPConfig.getInstance();
+        log.info("deathtp command registered");
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        String command = cmd.getName();
         boolean canUseCommand = false;
         boolean teleportok = true;
         boolean teleported = false;
+        log.debug("deathtp command executing");
 
 
         if (sender instanceof Player) {
             Player player = (Player)sender;
             String thisWorld = player.getWorld().getName().toString();
-            boolean worldTravel = false;
-            if (player.hasPermission("deathtpplus.worldtravel") && plugin.deathconfig.get("WORLD_TRAVEL").equalsIgnoreCase("permissions"))
+            if (player.hasPermission("deathtpplus.worldtravel") && config.getAllowWorldTravel().equalsIgnoreCase("permissions"))
             {
-                worldTravel = true;
+                plugin.setWorldTravel(true);
             }
-            double economyCost = Double.valueOf(plugin.deathconfig.get("ECONOMY_COST").trim()).doubleValue();
+            double economyCost = Double.valueOf(config.getDeathtpCost().trim()).doubleValue();
 
-            canUseCommand = (player.hasPermission("deathtpplus.deathtp") && plugin.deathconfig.get("ALLOW_DEATHTP").equalsIgnoreCase("true"));
+            canUseCommand = (player.hasPermission("deathtpplus.deathtp") || config.isAllowDeathtp());
 
             if (canUseCommand) {
+                log.debug("canUseCommand",canUseCommand );
                 //costs item in inventory
-                if (!plugin.deathconfig.get("CHARGE_ITEM_ID").equals("0") ) {
-                    if (player.getItemInHand().getType().getId() != Integer.parseInt(plugin.deathconfig.get("CHARGE_ITEM_ID"))) {
-                        player.sendMessage("You must be holding a "+ Material.getMaterial(Integer.parseInt(plugin.deathconfig.get("CHARGE_ITEM_ID"))).toString()+" to teleport.");
+                if (!config.getChargeItem().equals("0") ) {
+                    if (player.getItemInHand().getType().getId() != Integer.parseInt(config.getChargeItem())) {
+                        player.sendMessage("You must be holding a "+ Material.getMaterial(Integer.parseInt(config.getChargeItem())).toString()+" to teleport.");
                         teleportok = false;
                     }
                     else {
@@ -74,28 +80,15 @@ public class DTPDeathtpCommand implements CommandExecutor {
 
                 //costs Economy
                 if (economyCost > 0) {
-                    if (plugin.useRegister) {
-                        Method.MethodAccount account = plugin.getRegisterMethod().getAccount(player.getName());
-                        if (account != null && account.hasEnough(economyCost)) {
-                            account.subtract(economyCost);
-                            player.sendMessage("You used "+economyCost+" to use /deathtp");
-                        }
-                        else {
-                            player.sendMessage("You need "+economyCost+" coins to use /deathtp");
-                            teleportok = false;
-                        }
-                    }
-                    if (plugin.useVault){
-                        if (plugin.economy.getBalance(player.getName())> economyCost) {
-                            plugin.economy.withdrawPlayer(player.getName(), economyCost);
+                    if (plugin.isEconomyActive()){
+                        if (plugin.getEconomy().getBalance(player.getName())> economyCost) {
+                            plugin.getEconomy().withdrawPlayer(player.getName(), economyCost);
                             player.sendMessage("You used "+economyCost+" to use /deathtp");
                         } else {
                             player.sendMessage("You need "+economyCost+" coins to use /deathtp");
                             teleportok = false;
                         }
                     }
-
-
                 }
 
 
@@ -105,7 +98,7 @@ public class DTPDeathtpCommand implements CommandExecutor {
                         String line = "";
                         String teleloc = "";
                         String[] location;
-                        FileReader fr = new FileReader(plugin.locsName);
+                        FileReader fr = new FileReader(plugin.getLocsName());
                         BufferedReader br = new BufferedReader(fr);
 
                         while((line = br.readLine()) != null) {
@@ -141,7 +134,7 @@ public class DTPDeathtpCommand implements CommandExecutor {
 
                             if (!thisWorld.equals(deathWorld.getName()))
                             {
-                                if (worldTravel)
+                                if (plugin.isWorldTravel())
                                 {
                                     sendLocation.setWorld(deathWorld);
                                     player.teleport(sendLocation);
@@ -158,19 +151,14 @@ public class DTPDeathtpCommand implements CommandExecutor {
                         else {
                             player.sendMessage("You do not have a last known death location.");
                         }
-                        if (plugin.useRegister && !teleported) {
-                            Method.MethodAccount account = plugin.getRegisterMethod().getAccount(player.getName());
-                            account.add(economyCost);
-                            player.sendMessage("Giving you back "+economyCost);
-                        }
 
-                        if (plugin.useVault && !teleported) {
-                            plugin.economy.depositPlayer(player.getName(), economyCost);
+                        if (plugin.isEconomyActive() && !teleported) {
+                            plugin.getEconomy().depositPlayer(player.getName(), economyCost);
                             player.sendMessage("Giving you back "+economyCost);
                         }
                     }
                     catch (IOException e) {
-
+                      log.warning("Problems with reading the deathlocations", e);
                     }
                 }
                 else {
@@ -183,7 +171,7 @@ public class DTPDeathtpCommand implements CommandExecutor {
         }
 
         else {
-            System.out.println("This is only a player command.");
+            log.warning("This is only a player command.");
             return true;
         }
 

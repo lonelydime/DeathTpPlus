@@ -31,11 +31,13 @@ public class DTPBlockListener extends BlockListener {
     public DTPBlockListener(DeathTpPlus instance) {
         this.plugin = instance;
         log = DTPLogger.getLogger();
-        config = DTPConfig.getInstance()
+        config = DTPConfig.getInstance();
+        log.debug("BlockListener active");
     }
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
+        log.debug("onBlockBreak executing");
         Block b = event.getBlock();
         Player p = event.getPlayer();
 

@@ -8,19 +8,23 @@ package org.simiancage.DeathTpPlus.workers;
  * Time: 22:23
  */
 
-import java.util.Iterator;
-
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 
+import java.util.Iterator;
+
 public class DTPTombThread extends Thread {
     private DeathTpPlus plugin;
+    private DTPLogger log;
+    private DTPConfig config;
 
     public DTPTombThread(DeathTpPlus instance) {
         this.plugin = instance;
+        log = DTPLogger.getLogger();
+        config = DTPConfig.getInstance();
     }
 
     public void run() {
@@ -30,7 +34,7 @@ public class DTPTombThread extends Thread {
             DTPTombBlock tBlock = iter.next();
 
 // "empty" option checks
-            if (plugin.keepUntilEmpty() || plugin.removeWhenEmpty()) {
+            if (config.isKeepTombStoneUntilEmpty() || config.isRemoveTombStoneWhenEmpty()) {
                 if (tBlock.getBlock().getState() instanceof Chest) {
                     int itemCount = 0;
 
@@ -50,11 +54,11 @@ public class DTPTombThread extends Thread {
                         }
                     }
 
-                    if (plugin.keepUntilEmpty()) {
+                    if (config.isKeepTombStoneUntilEmpty()) {
                         if (itemCount > 0)
                             continue;
                     }
-                    if (plugin.removeWhenEmpty()) {
+                    if (config.isRemoveTombStoneWhenEmpty()) {
                         if (itemCount == 0)
                             plugin.destroyTombStone(tBlock);
                         iter.remove(); // TODO bugcheck on this addition
@@ -63,10 +67,10 @@ public class DTPTombThread extends Thread {
             }
 
 // Security removal check
-            if (plugin.securityRemove()) {
+            if (config.isRemoveTombStoneSecurity()) {
                 Player p = plugin.getServer().getPlayer(tBlock.getOwner());
 
-                if (cTime >= (tBlock.getTime() + plugin.securityTimeout())) {
+                if (cTime >= (tBlock.getTime() + Long.parseLong(config.getRemoveTombStoneSecurityTimeOut()))) {
                     if (tBlock.getLwcEnabled() && plugin.lwcPlugin != null) {
                         plugin.deactivateLWC(tBlock, false);
                         tBlock.setLwcEnabled(false);
@@ -85,8 +89,8 @@ public class DTPTombThread extends Thread {
             }
 
 // Block removal check
-            if (plugin.tombstoneRemove()
-                    && cTime > (tBlock.getTime() + plugin.removeTime())) {
+            if (config.isRemoveTombStone()
+                    && cTime > (tBlock.getTime() + Long.parseLong(config.getRemoveTombStoneTime()))) {
                 plugin.destroyTombStone(tBlock); // TODO this originally included
 // the only instance of
 // removeTomb(tblock, false).

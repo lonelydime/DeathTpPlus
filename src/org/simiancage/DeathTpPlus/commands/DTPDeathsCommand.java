@@ -29,9 +29,11 @@ public class DTPDeathsCommand implements CommandExecutor {
         this.plugin = instance;
         log = DTPLogger.getLogger();
         config = DTPConfig.getInstance();
+        log.info("deaths command registered");
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        log.debug("deaths command executing");
         boolean canUseCommand = false;
         String playername = "";
         String cause = "";

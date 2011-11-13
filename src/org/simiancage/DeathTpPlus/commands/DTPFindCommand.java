@@ -8,28 +8,34 @@ package org.simiancage.DeathTpPlus.commands;
  * Time: 22:04
  */
 
-import java.util.ArrayList;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-
 import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.simiancage.DeathTpPlus.workers.DTPConfig;
+import org.simiancage.DeathTpPlus.workers.DTPLogger;
+
+import java.util.ArrayList;
 
 public class DTPFindCommand implements CommandExecutor {
 
     private DeathTpPlus plugin;
+    private DTPLogger log;
+    private DTPConfig config;
 
     public DTPFindCommand(DeathTpPlus instance) {
         this.plugin = instance;
+        log = DTPLogger.getLogger();
+        config = DTPConfig.getInstance();
+        log.info("dtpfind command registered");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
+        log.debug("dtpfind command executing");
         if (!plugin.hasPerm(sender, "tombstone.find", false)) {
             plugin.sendMessage(sender, "Permission Denied");
             return true;

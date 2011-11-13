@@ -6,6 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.simiancage.DeathTpPlus.workers.DTPConfig;
+import org.simiancage.DeathTpPlus.workers.DTPLogger;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -23,13 +25,19 @@ import java.util.List;
 public class DTPStreakCommand implements CommandExecutor {
 
     private DeathTpPlus plugin;
+    private DTPLogger log;
+    private DTPConfig config;
 
     public DTPStreakCommand(DeathTpPlus instance) {
         this.plugin = instance;
+        log = DTPLogger.getLogger();
+        config = DTPConfig.getInstance();
+        log.info("streak command registered");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        log.debug("streak command executing");
         boolean canUseCommand = false;
             if (sender instanceof Player) {
                 Player player = (Player)sender;
@@ -38,7 +46,7 @@ public class DTPStreakCommand implements CommandExecutor {
             }
 
             if (canUseCommand) {
-                if (DeathTpPlus.deathconfig.get("SHOW_STREAKS").equals("true") ) {
+                if (config.isShowStreaks() ) {
                     // File streakFile = new File("plugins/DeathTpPlus/streak.txt");
                     String line;
                     String[] splittext;
@@ -94,7 +102,7 @@ public class DTPStreakCommand implements CommandExecutor {
                             return true;
                         }
                         catch (IOException e) {
-                            System.out.println(e);
+                            log.warning("Problems reading the Streak File",e);
                         }
                     }
 

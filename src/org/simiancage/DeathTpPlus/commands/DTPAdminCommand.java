@@ -1,27 +1,34 @@
 package org.simiancage.DeathTpPlus.commands;
 
-import java.util.ArrayList;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.DTPTombBlock;
+import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.simiancage.DeathTpPlus.workers.DTPConfig;
+import org.simiancage.DeathTpPlus.workers.DTPLogger;
+
+import java.util.ArrayList;
 
 
 public class DTPAdminCommand implements CommandExecutor {
 
     private DeathTpPlus plugin;
+    private DTPLogger log;
+    private DTPConfig config;
 
     public DTPAdminCommand(DeathTpPlus instance) {
         this.plugin = instance;
+        log = DTPLogger.getLogger();
+        config = DTPConfig.getInstance();
+        log.info("dtpadmin command registered");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
+        log.debug("dtpadmin command executing");
         if (!plugin.hasPerm(sender, "admin", false)) {
             plugin.sendMessage(sender, "Permission Denied");
             return true;
@@ -132,30 +139,32 @@ public class DTPAdminCommand implements CommandExecutor {
             }
             long cTime = System.currentTimeMillis() / 1000;
             DTPTombBlock tBlock = pList.get(slot);
-            long secTimeLeft = (tBlock.getTime() + plugin.securityTimeout())
+            long secTimeLeft = (tBlock.getTime() + Long.parseLong(config.getRemoveTombStoneSecurityTimeOut()))
                     - cTime;
-            long remTimeLeft = (tBlock.getTime() + plugin.removeTime()) - cTime;
-            if (plugin.securityRemove() && secTimeLeft > 0)
+            long remTimeLeft = (tBlock.getTime() + Long.parseLong(config.getRemoveTombStoneTime())) - cTime;
+            if (config.isRemoveTombStoneSecurity() && secTimeLeft > 0)
                 plugin.sendMessage(p, "Security removal: " + secTimeLeft
                         + " seconds.");
-            if (plugin.tombstoneRemove() & remTimeLeft > 0)
+            if (config.isRemoveTombStone() & remTimeLeft > 0)
                 plugin.sendMessage(p, "Tombstone removal: " + remTimeLeft
                         + " seconds.");
-            if (plugin.keepUntilEmpty() || plugin.removeWhenEmpty())
+            if (config.isKeepTombStoneUntilEmpty() || config.isRemoveTombStoneWhenEmpty())
                 plugin.sendMessage(p, "Keep until empty:"
-                        + plugin.keepUntilEmpty() + "; remove when empty: "
-                        + plugin.removeWhenEmpty());
+                        + config.isKeepTombStoneUntilEmpty() + "; remove when empty: "
+                        + config.isRemoveTombStoneWhenEmpty());
             return true;
         } else if (args[0].equalsIgnoreCase("version")) {
             String message;
-            message = plugin.versionCheck(false);
+            if (config.isDifferentPluginAvailable()){
+                message = "There is a different plugin version available, please check the logs.";
+            } else {
+                message = "Your plugin version is fine";
+            }
             plugin.sendMessage(p, message);
 
-            if (plugin.configVer == null) {
-                plugin.sendMessage(p, "Using default config.");
-            } else if (!(plugin.configVer.equalsIgnoreCase(plugin.configCurrent))) {
+            if (!(config.getConfigVer().equalsIgnoreCase(config.getConfigCurrent()))) {
                 plugin.sendMessage(p, "Your config file is out of date.");
-            } else if (plugin.configVer.equalsIgnoreCase(plugin.configCurrent)) {
+            } else if (config.getConfigVer().equalsIgnoreCase(config.getConfigCurrent())) {
                 plugin.sendMessage(p, "Your config file is up to date.");
             }
         } else if (args[0].equalsIgnoreCase("remove")) {

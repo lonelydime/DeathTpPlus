@@ -274,6 +274,62 @@ public class DeathTpPlus extends JavaPlugin{
         return null;
     }
 
+    public Economy getEconomy() {
+        return economy;
+    }
+
+    public void setWorldTravel(boolean worldTravel) {
+        this.worldTravel = worldTravel;
+    }
+
+    public void setEconomyActive(boolean economyActive) {
+        this.economyActive = economyActive;
+    }
+
+    public void setUseVault(boolean useVault) {
+        this.useVault = useVault;
+    }
+
+    public void setEconomy(Economy economy) {
+        this.economy = economy;
+    }
+
+    public static File getLocsName() {
+        return locsName;
+    }
+
+    public static File getStreakFile() {
+        return streakFile;
+    }
+
+    public static File getDeathlogFile() {
+        return deathlogFile;
+    }
+
+    public boolean isWorldTravel() {
+        return worldTravel;
+    }
+
+    public ConcurrentLinkedQueue<DTPTombBlock> getTombList() {
+        return tombList;
+    }
+
+    public HashMap<Location, DTPTombBlock> getTombBlockList() {
+        return tombBlockList;
+    }
+
+    public HashMap<String, ArrayList<DTPTombBlock>> getPlayerTombList() {
+        return playerTombList;
+    }
+
+    public HashMap<String, EntityDamageEvent> getDeathCause() {
+        return deathCause;
+    }
+
+    public boolean isEconomyActive() {
+        return economyActive;
+    }
+
     // Load Tomblist
     void loadTombList(String world) {
         if (!config.isSaveTombStoneList())

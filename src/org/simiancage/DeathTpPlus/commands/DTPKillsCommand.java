@@ -29,9 +29,11 @@ public class DTPKillsCommand implements CommandExecutor {
         this.plugin = instance;
         log = DTPLogger.getLogger();
         config = DTPConfig.getInstance();
+        log.info("dtpfind command registered");
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        log.debug("dtpfind command executing");
         boolean canUseCommand = false;
         String playername = "";
                     String username = "";

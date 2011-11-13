@@ -88,6 +88,10 @@ public class DTPConfig {
      */
     private boolean configRequiresUpdate = false;
 
+    /**
+     * Is there a different plugin version available?
+     */
+    private boolean differentPluginAvailable = false;
 // <<<<=== here..
 
 
@@ -1344,7 +1348,7 @@ afterwards parsable again from the configuration class of bukkit
      *
      * @return configVer  Config File Version
      */
-    public String configVer() {
+    public String getConfigVer() {
         return configVer;
     }
 
@@ -1403,7 +1407,15 @@ afterwards parsable again from the configuration class of bukkit
         return configRequiresUpdate;
     }
 
-// And the rest
+    public String getConfigCurrent() {
+        return configCurrent;
+    }
+
+    public boolean isDifferentPluginAvailable() {
+        return differentPluginAvailable;
+    }
+
+    // And the rest
 
 // Setting up the config
 
@@ -1627,6 +1639,7 @@ afterwards parsable again from the configuration class of bukkit
      * Method to check if there is a newer version of the plugin available.
      */
     private void versionCheck() {
+        differentPluginAvailable = false;
         String thisVersion = plugin.getDescription().getVersion();
         URL url;
         try {
@@ -1646,6 +1659,7 @@ afterwards parsable again from the configuration class of bukkit
             } else {
                 log.warning("is out of date!");
                 log.warning("This version: " + thisVersion + "; latest version: " + newVersion + ".");
+                differentPluginAvailable = true;
             }
         } catch (MalformedURLException ex) {
             log.warning("Error accessing update URL.", ex);
