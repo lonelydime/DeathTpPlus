@@ -1,6 +1,8 @@
 package org.simiancage.DeathTpPlus.listeners;
 
 //java imports
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,8 +14,11 @@ import org.bukkit.event.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.simiancage.DeathTpPlus.DTPTomb;
 import org.simiancage.DeathTpPlus.workers.DTPConfig;
 import org.simiancage.DeathTpPlus.workers.DTPLogger;
+import org.simiancage.DeathTpPlus.workers.DTPLocaleWorker;
+import org.simiancage.DeathTpPlus.workers.DTPTombWorker;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -28,6 +33,7 @@ public class DTPEntityListener extends EntityListener {
     private String beforedamage = "";
     private PlayerDeathEvent playerDeathEvent = null;
     private String loghowdied;
+    protected DTPTombWorker worker = DTPTombWorker.getInstance();
     enum DeathTypes {FALL, DROWNING, SUFFOCATION, FIRE_TICK, FIRE, LAVA, BLOCK_EXPLOSION, CREEPER, SKELETON, SPIDER, PIGZOMBIE, ZOMBIE, CONTACT, SLIME, VOID, GHAST, WOLF, LIGHTNING, STARVATION, CAVESPIDER, ENDERMAN, SILVERFISH, PVP, FISTS, UNKNOWN, SUICIDE;
 
         @Override public String toString() {
@@ -44,6 +50,7 @@ public class DTPEntityListener extends EntityListener {
         log = DTPLogger.getLogger();
         config = DTPConfig.getInstance();
         log.debug("EntityListener active");
+
     }
 
     String getEvent(String deathType){
@@ -62,446 +69,475 @@ public class DTPEntityListener extends EntityListener {
         log.debug("onEntityDeath executing");
         beforedamage = "";
 
-            if (event.getEntity() instanceof Player) {
-                Player player = (Player) event.getEntity();
-                /*EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
-                damageEvent.getType();*/
-                String damagetype = lastDamageType.get(lastDamagePlayer.indexOf(player.getName()));
-                String eventAnnounce = "";
-                String fileOutput = "";
-                String line = "";
-                String[] howtheydied;
-                if (config.isAllowDeathtp()) {
-                    ArrayList<String> filetext = new ArrayList<String>();
-                    boolean readCheck = false;
-                    boolean newPlayerDeath = true;
-                    //text to write to file
-                    fileOutput = player.getName()+":"+player.getLocation().getX()+":"+player.getLocation().getY()+":"+player.getLocation().getZ()+":"+player.getWorld().getName().toString();
-                    try {
-                        FileReader fr = new FileReader(plugin.locsName);
-                        BufferedReader br = new BufferedReader(fr);
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            /*EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
+            damageEvent.getType();*/
+            String damagetype = lastDamageType.get(lastDamagePlayer.indexOf(player.getName()));
+            String eventAnnounce = "";
+            String fileOutput = "";
+            String line = "";
+            String[] howtheydied;
+            if (config.isAllowDeathtp()) {
+                ArrayList<String> filetext = new ArrayList<String>();
+                boolean readCheck = false;
+                boolean newPlayerDeath = true;
+                //text to write to file
+                fileOutput = player.getName()+":"+player.getLocation().getX()+":"+player.getLocation().getY()+":"+player.getLocation().getZ()+":"+player.getWorld().getName().toString();
+                try {
+                    FileReader fr = new FileReader(plugin.locsName);
+                    BufferedReader br = new BufferedReader(fr);
 
-                        while((line = br.readLine()) != null) {
-                            if (line.contains(player.getName()+":")) {
-                                line = fileOutput;
-                                newPlayerDeath = false;
-                            }
-                            filetext.add(line);
-                            readCheck = true;
+                    while((line = br.readLine()) != null) {
+                        if (line.contains(player.getName()+":")) {
+                            line = fileOutput;
+                            newPlayerDeath = false;
                         }
-
-                        br.close();
-
-                        BufferedWriter out = new BufferedWriter(new FileWriter(plugin.locsName));
-
-                        for (int i = 0; i < filetext.size(); i++) {
-                            out.write(filetext.get(i));
-                            out.newLine();
-                        }
-
-                        if (!readCheck) {
-                            out.write(fileOutput);
-                            out.newLine();
-                        }
-
-                        if (newPlayerDeath && readCheck) {
-                            out.write(fileOutput);
-                            out.newLine();
-                        }
-                        //Close the output stream
-                        out.close();
-                        log.debug("Succesfully wrote DeathTp location to file: " + plugin.locsName);
+                        filetext.add(line);
+                        readCheck = true;
                     }
-                    catch (IOException e) {
-                        log.warning("cannot write file "+ plugin.locsName , e);
-                        }
+
+                    br.close();
+
+                    BufferedWriter out = new BufferedWriter(new FileWriter(plugin.locsName));
+
+                    for (int i = 0; i < filetext.size(); i++) {
+                        out.write(filetext.get(i));
+                        out.newLine();
+                    }
+
+                    if (!readCheck) {
+                        out.write(fileOutput);
+                        out.newLine();
+                    }
+
+                    if (newPlayerDeath && readCheck) {
+                        out.write(fileOutput);
+                        out.newLine();
+                    }
+                    //Close the output stream
+                    out.close();
+                    log.debug("Succesfully wrote DeathTp location to file: " + plugin.locsName);
+                }
+                catch (IOException e) {
+                    log.warning("cannot write file "+ plugin.locsName , e);
+                }
+            }
+
+            if (config.isShowDeathNotify() || config.isShowStreaks() || config.isAllowDeathLog() || config.isEnableTombStone()|| config.isEnableTomb() ) {
+                howtheydied = damagetype.split(":");
+                loghowdied = howtheydied[0];
+                // Todo change into case statement and create methods for eventAnnounce
+
+                if (getEvent(howtheydied[0])==null){
+                    howtheydied[0] = "UNKNOWN";
                 }
 
-                if (config.isShowDeathNotify() || config.isShowStreaks() || config.isAllowDeathLog() || config.isEnableTombStone() ) {
-                    howtheydied = damagetype.split(":");
-                    loghowdied = howtheydied[0];
-                    // Todo change into case statement and create methods for eventAnnounce
+                eventAnnounce = getEvent(howtheydied[0]).replace("%n", player.getDisplayName());
 
-                    if (getEvent(howtheydied[0])==null){
-                        howtheydied[0] = "UNKNOWN";
+                if (howtheydied[0].matches("PVP")) {
+                    if (howtheydied[2].equals("bare hands")) {
+                        eventAnnounce = getEvent("FISTS").replace("%n", player.getDisplayName());
                     }
 
-                    eventAnnounce = getEvent(howtheydied[0]).replace("%n", player.getDisplayName());
-
-                    if (howtheydied[0].matches("PVP")) {
-                        if (howtheydied[2].equals("bare hands")) {
-                            eventAnnounce = getEvent("FISTS").replace("%n", player.getDisplayName());
-                        }
-
-                        loghowdied = howtheydied[2];
-                        eventAnnounce = eventAnnounce.replace("%i", howtheydied[1]);
-                        eventAnnounce = eventAnnounce.replace("%a", howtheydied[2]);
-                        if (config.isShowStreaks()){
-                            writeToStreak(player.getName(), howtheydied[2]);
-                        }
-                        //write kill to deathlog
-                        if (config.isAllowDeathLog()) {
-                            writeToLog("kill", howtheydied[2], player.getName());
-                        }
+                    loghowdied = howtheydied[2];
+                    eventAnnounce = eventAnnounce.replace("%i", howtheydied[1]);
+                    eventAnnounce = eventAnnounce.replace("%a", howtheydied[2]);
+                    if (config.isShowStreaks()){
+                        writeToStreak(player.getName(), howtheydied[2]);
                     }
-                    if (eventAnnounce.equals(""))
-                    {
-                        eventAnnounce = getEvent("UNKNOWN").replace("%n", player.getDisplayName());
-                    }
-
-                    eventAnnounce = plugin.convertSamloean(eventAnnounce);
-
-                    if (config.isShowDeathNotify()) {
-                        //plugin.getServer().broadcastMessage(eventAnnounce);
-                        if (event instanceof PlayerDeathEvent) {
-                            playerDeathEvent = (PlayerDeathEvent) event;
-                            playerDeathEvent.setDeathMessage(eventAnnounce);
-                        }
-
-                    }
-
-                    //CraftIRC
-                    if (plugin.craftircHandle != null) {
-                        String ircAnnounce;
-                        ircAnnounce = eventAnnounce.replace("§0", "");
-                        ircAnnounce = ircAnnounce.replace("§2", "");
-                        ircAnnounce = ircAnnounce.replace("§3", "");
-                        ircAnnounce = ircAnnounce.replace("§4", "");
-                        ircAnnounce = ircAnnounce.replace("§5", "");
-                        ircAnnounce = ircAnnounce.replace("§6", "");
-                        ircAnnounce = ircAnnounce.replace("§7", "");
-                        ircAnnounce = ircAnnounce.replace("§8", "");
-                        ircAnnounce = ircAnnounce.replace("§9", "");
-                        ircAnnounce = ircAnnounce.replace("§a", "");
-                        ircAnnounce = ircAnnounce.replace("§b", "");
-                        ircAnnounce = ircAnnounce.replace("§c", "");
-                        ircAnnounce = ircAnnounce.replace("§d", "");
-                        ircAnnounce = ircAnnounce.replace("§e", "");
-                        ircAnnounce = ircAnnounce.replace("§f", "");
-
-                        plugin.craftircHandle.sendMessageToTag(ircAnnounce, config.getIrcDeathTpTag());
-                    }
-
+                    //write kill to deathlog
                     if (config.isAllowDeathLog()) {
-                        writeToLog("death", player.getName(), loghowdied);
+                        writeToLog("kill", howtheydied[2], player.getName());
                     }
+                }
+                if (eventAnnounce.equals(""))
+                {
+                    eventAnnounce = getEvent("UNKNOWN").replace("%n", player.getDisplayName());
+                }
 
-                    if (config.isShowDeathSign()) {
-                        //place sign
-                        Block signBlock = player.getWorld().getBlockAt(player.getLocation().getBlockX(),
-                                player.getLocation().getBlockY(),
-                                player.getLocation().getBlockZ());
+                eventAnnounce = plugin.convertSamloean(eventAnnounce);
 
-                        signBlock.setType(Material.SIGN_POST);
-
-                        BlockState state = signBlock.getState();
-
-                        if (state instanceof Sign) {
-                            String signtext;
-                            Sign sign = (Sign)state;
-                            sign.setLine(0, "[RIP]");
-                            sign.setLine(1, player.getDisplayName());
-                            sign.setLine(2, "Died by");
-                            signtext = howtheydied[0].substring(0, 1)+howtheydied[0].substring(1).toLowerCase();
-                            if (howtheydied[0].equals("PVP"))
-                                signtext = howtheydied[2];
-
-                            sign.setLine(3, signtext);
-                        }
+                if (config.isShowDeathNotify()) {
+                    //plugin.getServer().broadcastMessage(eventAnnounce);
+                    if (event instanceof PlayerDeathEvent) {
+                        playerDeathEvent = (PlayerDeathEvent) event;
+                        playerDeathEvent.setDeathMessage(eventAnnounce);
                     }
 
                 }
-                // Tombstone part
-                if (config.isEnableTombStone()){
 
-                    if (!plugin.hasPerm(player, "tombstone.use", false))
-                        return;
+                //CraftIRC
+                if (plugin.craftircHandle != null) {
+                    String ircAnnounce;
+                    ircAnnounce = eventAnnounce.replace("§0", "");
+                    ircAnnounce = ircAnnounce.replace("§2", "");
+                    ircAnnounce = ircAnnounce.replace("§3", "");
+                    ircAnnounce = ircAnnounce.replace("§4", "");
+                    ircAnnounce = ircAnnounce.replace("§5", "");
+                    ircAnnounce = ircAnnounce.replace("§6", "");
+                    ircAnnounce = ircAnnounce.replace("§7", "");
+                    ircAnnounce = ircAnnounce.replace("§8", "");
+                    ircAnnounce = ircAnnounce.replace("§9", "");
+                    ircAnnounce = ircAnnounce.replace("§a", "");
+                    ircAnnounce = ircAnnounce.replace("§b", "");
+                    ircAnnounce = ircAnnounce.replace("§c", "");
+                    ircAnnounce = ircAnnounce.replace("§d", "");
+                    ircAnnounce = ircAnnounce.replace("§e", "");
+                    ircAnnounce = ircAnnounce.replace("§f", "");
 
-                    log.debug(player.getName() + " died.");
-
-                    if (event.getDrops().size() == 0) {
-                        plugin.sendMessage(player, "Inventory Empty.");
-                        log.debug(player.getName() + " inventory empty.");
-                        return;
-                    }
-
-// Get the current player location.
-                    Location loc = player.getLocation();
-                    Block block = player.getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(),
-                            loc.getBlockZ());
-
-// If we run into something we don't want to destroy, go one up.
-                    if (block.getType() == Material.STEP
-                            || block.getType() == Material.TORCH
-                            || block.getType() == Material.REDSTONE_WIRE
-                            || block.getType() == Material.RAILS
-                            || block.getType() == Material.STONE_PLATE
-                            || block.getType() == Material.WOOD_PLATE
-                            || block.getType() == Material.REDSTONE_TORCH_ON
-                            || block.getType() == Material.REDSTONE_TORCH_OFF
-                            || block.getType() == Material.CAKE_BLOCK) {
-                        block = player.getWorld().getBlockAt(loc.getBlockX(),
-                                loc.getBlockY() + 1, loc.getBlockZ());
-                    }
-
-// Don't create the chest if it or its sign would be in the void
-                    if (config.isVoidCheck()
-                            && ((config.isShowTombStoneSign() && block.getY() > 126)
-                            || (!config.isShowTombStoneSign() && block.getY() > 127) || player
-                            .getLocation().getY() < 1)) {
-                        plugin.sendMessage(player,
-                                "Your tombstone would be in the Void. Inventory dropped");
-                        log.debug(player.getName() + " died in the Void.");
-                        return;
-                    }
-
-// Check if the player has a chest.
-                    int pChestCount = 0;
-                    int pSignCount = 0;
-                    for (ItemStack item : event.getDrops()) {
-                        if (item == null)
-                            continue;
-                        if (item.getType() == Material.CHEST)
-                            pChestCount += item.getAmount();
-                        if (item.getType() == Material.SIGN)
-                            pSignCount += item.getAmount();
-                    }
-
-                    if (pChestCount == 0
-                            && !(plugin.hasPerm(player, "tombstone.freechest", false))) {
-                        plugin.sendMessage(player,
-                                "No chest found in inventory. Inventory dropped");
-                        log.debug(player.getName() + " No chest in inventory.");
-                        return;
-                    }
-
-// Check if we can replace the block.
-                    block = plugin.findPlace(block, false);
-                    if (block == null) {
-                        plugin.sendMessage(player,
-                                "Could not find room for chest. Inventory dropped");
-                        log.debug(player.getName() + " Could not find room for chest.");
-                        return;
-                    }
-
-// Check if there is a nearby chest
-                    if (!config.isAllowInterfere() && checkChest(block)) {
-                        plugin.sendMessage(player,
-                                "There is a chest interfering with your tombstone. Inventory dropped");
-                        log.debug(player.getName()
-                                + " Chest interfered with tombstone creation.");
-                        return;
-                    }
-
-                    int removeChestCount = 1;
-                    int removeSign = 0;
-
-// Do the check for a large chest block here so we can check for
-// interference
-                    Block lBlock = findLarge(block);
-
-// Set the current block to a chest, init some variables for later use.
-                    block.setType(Material.CHEST);
-// We're running into issues with 1.3 where we can't cast to a Chest :(
-                    BlockState state = block.getState();
-                    if (!(state instanceof Chest)) {
-                        plugin.sendMessage(player, "Could not access chest. Inventory dropped.");
-                        log.debug(player.getName() + " Could not access chest.");
-                        return;
-                    }
-                    Chest sChest = (Chest) state;
-                    Chest lChest = null;
-                    int slot = 0;
-                    int maxSlot = sChest.getInventory().getSize();
-
-// Check if they need a large chest.
-                    if (event.getDrops().size() > maxSlot) {
-// If they are allowed spawn a large chest to catch their entire
-// inventory.
-                        if (lBlock != null && plugin.hasPerm(player, "tombstone.large", false)) {
-                            removeChestCount = 2;
-// Check if the player has enough chests
-                            if (pChestCount >= removeChestCount
-                                    || plugin.hasPerm(player, "tombstone.freechest", false)) {
-                                lBlock.setType(Material.CHEST);
-                                lChest = (Chest) lBlock.getState();
-                                maxSlot = maxSlot * 2;
-                            } else {
-                                removeChestCount = 1;
-                            }
-                        }
-                    }
-
-// Don't remove any chests if they get a free one.
-                    if (plugin.hasPerm(player, "tombstone.freechest", false))
-                        removeChestCount = 0;
-
-// Check if we have signs enabled, if the player can use signs, and if
-// the player has a sign or gets a free sign
-                    Block sBlock = null;
-                    if (config.isShowTombStoneSign() && plugin.hasPerm(player, "tombstone.sign", false)
-                            && (pSignCount > 0 || plugin.hasPerm(player, "tombstone.freesign", false))) {
-// Find a place to put the sign, then place the sign.
-                        sBlock = sChest.getWorld().getBlockAt(sChest.getX(),
-                                sChest.getY() + 1, sChest.getZ());
-                        if (plugin.canReplace(sBlock.getType())) {
-                            createSign(sBlock, player);
-                            removeSign = 1;
-                        } else if (lChest != null) {
-                            sBlock = lChest.getWorld().getBlockAt(lChest.getX(),
-                                    lChest.getY() + 1, lChest.getZ());
-                            if (plugin.canReplace(sBlock.getType())) {
-                                createSign(sBlock, player);
-                                removeSign = 1;
-                            }
-                        }
-                    }
-// Don't remove a sign if they get a free one
-                    if (plugin.hasPerm(player, "tombstone.freesign", false))
-                        removeSign = 0;
-
-// Create a TombBlock for this tombstone
-                    DTPTombBlock tBlock = new DTPTombBlock(sChest.getBlock(),
-                            (lChest != null) ? lChest.getBlock() : null, sBlock,
-                            player.getName(), (System.currentTimeMillis() / 1000));
-
-// Protect the chest/sign if LWC is installed.
-                    Boolean prot = false;
-                    Boolean protLWC = false;
-                    if (plugin.hasPerm(player, "tombstone.lwc", false))
-                        prot = plugin.activateLWC(player, tBlock);
-                    tBlock.setLwcEnabled(prot);
-                    if (prot)
-                        protLWC = true;
-
-// Protect the chest with Lockette if installed, enabled, and
-// unprotected.
-                    if (plugin.hasPerm(player, "tombstone.lockette", false)){
-                        prot = plugin.protectWithLockette(player, tBlock);
-                    }
-// Add tombstone to list
-                    plugin.tombList.offer(tBlock);
-
-// Add tombstone blocks to tombBlockList
-                    plugin.tombBlockList.put(tBlock.getBlock().getLocation(), tBlock);
-                    if (tBlock.getLBlock() != null)
-                        plugin.tombBlockList.put(tBlock.getLBlock().getLocation(), tBlock);
-                    if (tBlock.getSign() != null)
-                        plugin.tombBlockList.put(tBlock.getSign().getLocation(), tBlock);
-
-// Add tombstone to player lookup list
-                    ArrayList<DTPTombBlock> pList = plugin.playerTombList.get(player.getName());
-                    if (pList == null) {
-                        pList = new ArrayList<DTPTombBlock>();
-                        plugin.playerTombList.put(player.getName(), pList);
-                    }
-                    pList.add(tBlock);
-
-                    plugin.saveTombStoneList(player.getWorld().getName());
-
-// Next get the players inventory using the getDrops() method.
-                    for (Iterator<ItemStack> iter = event.getDrops().listIterator(); iter
-                            .hasNext();) {
-                        ItemStack item = iter.next();
-                        if (item == null)
-                            continue;
-// Take the chest(s)
-                        if (removeChestCount > 0 && item.getType() == Material.CHEST) {
-                            if (item.getAmount() >= removeChestCount) {
-                                item.setAmount(item.getAmount() - removeChestCount);
-                                removeChestCount = 0;
-                            } else {
-                                removeChestCount -= item.getAmount();
-                                item.setAmount(0);
-                            }
-                            if (item.getAmount() == 0) {
-                                iter.remove();
-                                continue;
-                            }
-                        }
-
-// Take a sign
-                        if (removeSign > 0 && item.getType() == Material.SIGN) {
-                            item.setAmount(item.getAmount() - 1);
-                            removeSign = 0;
-                            if (item.getAmount() == 0) {
-                                iter.remove();
-                                continue;
-                            }
-                        }
-
-// Add items to chest if not full.
-                        if (slot < maxSlot) {
-                            if (slot >= sChest.getInventory().getSize()) {
-                                if (lChest == null)
-                                    continue;
-                                lChest.getInventory().setItem(
-                                        slot % sChest.getInventory().getSize(), item);
-                            } else {
-                                sChest.getInventory().setItem(slot, item);
-                            }
-                            iter.remove();
-                            slot++;
-                        } else if (removeChestCount == 0)
-                            break;
-                    }
-
-// Tell the player how many items went into chest.
-                    String msg = "Inventory stored in chest. ";
-                    if (event.getDrops().size() > 0)
-                        msg += event.getDrops().size() + " items wouldn't fit in chest.";
-                    plugin.sendMessage(player, msg);
-                    log.debug(player.getName() + " " + msg);
-                    if (prot && protLWC) {
-                        plugin.sendMessage(player, "Chest protected with LWC. "
-                                + config.getRemoveTombStoneSecurityTimeOut() + "s before chest is unprotected.");
-                        log.debug(player.getName() + " Chest protected with LWC. "
-                                + config.getRemoveTombStoneSecurityTimeOut() + "s before chest is unprotected.");
-                    }
-                    if (prot && !protLWC) {
-                        plugin.sendMessage(player, "Chest protected with Lockette. "
-                                + config.getRemoveTombStoneSecurityTimeOut() + "s before chest is unprotected.");
-                        log.debug(player.getName() + " Chest protected with Lockette.");
-                    }
-                    if (config.isRemoveTombStone()) {
-                        plugin.sendMessage(player, "Chest will break in " + config.getRemoveTombStoneTime()
-                                + "s unless an override is specified.");
-                        log.debug(player.getName() + " Chest will break in "
-                                + config.getRemoveTombStoneTime() + "s");
-                    }
-                    if (config.isRemoveTombStoneWhenEmpty() && config.isKeepTombStoneUntilEmpty())
-                        plugin.sendMessage(
-                                player,
-                                "Break override: Your tombstone will break when it is emptied, but will not break until then.");
-                    else {
-                        if (config.isRemoveTombStoneWhenEmpty())
-                            plugin.sendMessage(player,
-                                    "Break override: Your tombstone will break when it is emptied.");
-                        if (config.isKeepTombStoneUntilEmpty())
-                            plugin.sendMessage(player,
-                                    "Break override: Your tombstone will not break until it is empty.");
-                    }
+                    plugin.craftircHandle.sendMessageToTag(ircAnnounce, config.getIrcDeathTpTag());
                 }
 
-                //added compatibility for streaks if notify is off
-                else {
-                    howtheydied = damagetype.split(":");
-                    if (howtheydied[0].matches("PVP")) {
-                        if (config.isShowStreaks())
-                            writeToStreak(player.getName(), howtheydied[2]);
-                    }
-
-                    if (config.isAllowDeathLog()) {
-                        writeToLog("death", player.getName(), loghowdied);
-                    }
+                if (config.isAllowDeathLog()) {
+                    writeToLog("death", player.getName(), loghowdied);
                 }
 
+                if (config.isShowDeathSign()) {
+                    //place sign
+                    Block signBlock = player.getWorld().getBlockAt(player.getLocation().getBlockX(),
+                            player.getLocation().getBlockY(),
+                            player.getLocation().getBlockZ());
+
+                    signBlock.setType(Material.SIGN_POST);
+
+                    BlockState state = signBlock.getState();
+
+                    if (state instanceof Sign) {
+                        String signtext;
+                        Sign sign = (Sign)state;
+                        sign.setLine(0, "[RIP]");
+                        sign.setLine(1, player.getDisplayName());
+                        sign.setLine(2, "Died by");
+                        signtext = howtheydied[0].substring(0, 1)+howtheydied[0].substring(1).toLowerCase();
+                        if (howtheydied[0].equals("PVP"))
+                            signtext = howtheydied[2];
+
+                        sign.setLine(3, signtext);
+                    }
+                }
+                // ToDo DTPTomb Integration
+                if (config.isEnableTomb())
+                {
+                    if (worker.hasTomb(player.getName())) {
+                        DTPTomb DTPTomb = worker.getTomb(player.getName());
+                        String signtext;
+
+                        if (howtheydied[0].equals("PVP"))
+                            signtext = DTPLocaleWorker.getInstance().getPvpLocale(howtheydied[2]);
+                        else
+                            signtext = DTPLocaleWorker.getInstance().getLocale(
+                                    howtheydied[0].toLowerCase());
+                        int deathLimit = worker.getConfig().getInt("maxDeaths", 0);
+                        DTPTomb.addDeath();
+                        if (deathLimit != 0 && (DTPTomb.getDeaths() % deathLimit) == 0) {
+                            DTPTomb.resetTombBlocks();
+                            player.sendMessage(worker.graveDigger
+                                    + "You've reached the number of deaths before DTPTomb reset.("
+                                    + ChatColor.DARK_RED + deathLimit + ChatColor.WHITE
+                                    + ") All your tombs are now destroyed.");
+                        } else {
+                            DTPTomb.setReason(signtext);
+                            DTPTomb.setDeathLoc(player.getLocation());
+                            DTPTomb.updateDeath();
+                        }
+                    }
+                }
 
 
             }
-        }
+            // Tombstone part
+            if (config.isEnableTombStone()){
 
-    
+                if (!plugin.hasPerm(player, "tombstone.use", false))
+                    return;
+
+                log.debug(player.getName() + " died.");
+
+                if (event.getDrops().size() == 0) {
+                    plugin.sendMessage(player, "Inventory Empty.");
+                    log.debug(player.getName() + " inventory empty.");
+                    return;
+                }
+
+// Get the current player location.
+                Location loc = player.getLocation();
+                Block block = player.getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(),
+                        loc.getBlockZ());
+
+// If we run into something we don't want to destroy, go one up.
+                if (block.getType() == Material.STEP
+                        || block.getType() == Material.TORCH
+                        || block.getType() == Material.REDSTONE_WIRE
+                        || block.getType() == Material.RAILS
+                        || block.getType() == Material.STONE_PLATE
+                        || block.getType() == Material.WOOD_PLATE
+                        || block.getType() == Material.REDSTONE_TORCH_ON
+                        || block.getType() == Material.REDSTONE_TORCH_OFF
+                        || block.getType() == Material.CAKE_BLOCK) {
+                    block = player.getWorld().getBlockAt(loc.getBlockX(),
+                            loc.getBlockY() + 1, loc.getBlockZ());
+                }
+
+// Don't create the chest if it or its sign would be in the void
+                if (config.isVoidCheck()
+                        && ((config.isShowTombStoneSign() && block.getY() > 126)
+                        || (!config.isShowTombStoneSign() && block.getY() > 127) || player
+                        .getLocation().getY() < 1)) {
+                    plugin.sendMessage(player,
+                            "Your tombstone would be in the Void. Inventory dropped");
+                    log.debug(player.getName() + " died in the Void.");
+                    return;
+                }
+
+// Check if the player has a chest.
+                int pChestCount = 0;
+                int pSignCount = 0;
+                for (ItemStack item : event.getDrops()) {
+                    if (item == null)
+                        continue;
+                    if (item.getType() == Material.CHEST)
+                        pChestCount += item.getAmount();
+                    if (item.getType() == Material.SIGN)
+                        pSignCount += item.getAmount();
+                }
+
+                if (pChestCount == 0
+                        && !(plugin.hasPerm(player, "tombstone.freechest", false))) {
+                    plugin.sendMessage(player,
+                            "No chest found in inventory. Inventory dropped");
+                    log.debug(player.getName() + " No chest in inventory.");
+                    return;
+                }
+
+// Check if we can replace the block.
+                block = plugin.findPlace(block, false);
+                if (block == null) {
+                    plugin.sendMessage(player,
+                            "Could not find room for chest. Inventory dropped");
+                    log.debug(player.getName() + " Could not find room for chest.");
+                    return;
+                }
+
+// Check if there is a nearby chest
+                if (!config.isAllowInterfere() && checkChest(block)) {
+                    plugin.sendMessage(player,
+                            "There is a chest interfering with your tombstone. Inventory dropped");
+                    log.debug(player.getName()
+                            + " Chest interfered with tombstone creation.");
+                    return;
+                }
+
+                int removeChestCount = 1;
+                int removeSign = 0;
+
+// Do the check for a large chest block here so we can check for
+// interference
+                Block lBlock = findLarge(block);
+
+// Set the current block to a chest, init some variables for later use.
+                block.setType(Material.CHEST);
+// We're running into issues with 1.3 where we can't cast to a Chest :(
+                BlockState state = block.getState();
+                if (!(state instanceof Chest)) {
+                    plugin.sendMessage(player, "Could not access chest. Inventory dropped.");
+                    log.debug(player.getName() + " Could not access chest.");
+                    return;
+                }
+                Chest sChest = (Chest) state;
+                Chest lChest = null;
+                int slot = 0;
+                int maxSlot = sChest.getInventory().getSize();
+
+// Check if they need a large chest.
+                if (event.getDrops().size() > maxSlot) {
+// If they are allowed spawn a large chest to catch their entire
+// inventory.
+                    if (lBlock != null && plugin.hasPerm(player, "tombstone.large", false)) {
+                        removeChestCount = 2;
+// Check if the player has enough chests
+                        if (pChestCount >= removeChestCount
+                                || plugin.hasPerm(player, "tombstone.freechest", false)) {
+                            lBlock.setType(Material.CHEST);
+                            lChest = (Chest) lBlock.getState();
+                            maxSlot = maxSlot * 2;
+                        } else {
+                            removeChestCount = 1;
+                        }
+                    }
+                }
+
+// Don't remove any chests if they get a free one.
+                if (plugin.hasPerm(player, "tombstone.freechest", false))
+                    removeChestCount = 0;
+
+// Check if we have signs enabled, if the player can use signs, and if
+// the player has a sign or gets a free sign
+                Block sBlock = null;
+                if (config.isShowTombStoneSign() && plugin.hasPerm(player, "tombstone.sign", false)
+                        && (pSignCount > 0 || plugin.hasPerm(player, "tombstone.freesign", false))) {
+// Find a place to put the sign, then place the sign.
+                    sBlock = sChest.getWorld().getBlockAt(sChest.getX(),
+                            sChest.getY() + 1, sChest.getZ());
+                    if (plugin.canReplace(sBlock.getType())) {
+                        createSign(sBlock, player);
+                        removeSign = 1;
+                    } else if (lChest != null) {
+                        sBlock = lChest.getWorld().getBlockAt(lChest.getX(),
+                                lChest.getY() + 1, lChest.getZ());
+                        if (plugin.canReplace(sBlock.getType())) {
+                            createSign(sBlock, player);
+                            removeSign = 1;
+                        }
+                    }
+                }
+// Don't remove a sign if they get a free one
+                if (plugin.hasPerm(player, "tombstone.freesign", false))
+                    removeSign = 0;
+
+// Create a TombBlock for this tombstone
+                DTPTombBlock tBlock = new DTPTombBlock(sChest.getBlock(),
+                        (lChest != null) ? lChest.getBlock() : null, sBlock,
+                        player.getName(), (System.currentTimeMillis() / 1000));
+
+// Protect the chest/sign if LWC is installed.
+                Boolean prot = false;
+                Boolean protLWC = false;
+                if (plugin.hasPerm(player, "tombstone.lwc", false))
+                    prot = plugin.activateLWC(player, tBlock);
+                tBlock.setLwcEnabled(prot);
+                if (prot)
+                    protLWC = true;
+
+// Protect the chest with Lockette if installed, enabled, and
+// unprotected.
+                if (plugin.hasPerm(player, "tombstone.lockette", false)){
+                    prot = plugin.protectWithLockette(player, tBlock);
+                }
+// Add tombstone to list
+                plugin.tombList.offer(tBlock);
+
+// Add tombstone blocks to tombBlockList
+                plugin.tombBlockList.put(tBlock.getBlock().getLocation(), tBlock);
+                if (tBlock.getLBlock() != null)
+                    plugin.tombBlockList.put(tBlock.getLBlock().getLocation(), tBlock);
+                if (tBlock.getSign() != null)
+                    plugin.tombBlockList.put(tBlock.getSign().getLocation(), tBlock);
+
+// Add tombstone to player lookup list
+                ArrayList<DTPTombBlock> pList = plugin.playerTombList.get(player.getName());
+                if (pList == null) {
+                    pList = new ArrayList<DTPTombBlock>();
+                    plugin.playerTombList.put(player.getName(), pList);
+                }
+                pList.add(tBlock);
+
+                plugin.saveTombStoneList(player.getWorld().getName());
+
+// Next get the players inventory using the getDrops() method.
+                for (Iterator<ItemStack> iter = event.getDrops().listIterator(); iter
+                        .hasNext();) {
+                    ItemStack item = iter.next();
+                    if (item == null)
+                        continue;
+// Take the chest(s)
+                    if (removeChestCount > 0 && item.getType() == Material.CHEST) {
+                        if (item.getAmount() >= removeChestCount) {
+                            item.setAmount(item.getAmount() - removeChestCount);
+                            removeChestCount = 0;
+                        } else {
+                            removeChestCount -= item.getAmount();
+                            item.setAmount(0);
+                        }
+                        if (item.getAmount() == 0) {
+                            iter.remove();
+                            continue;
+                        }
+                    }
+
+// Take a sign
+                    if (removeSign > 0 && item.getType() == Material.SIGN) {
+                        item.setAmount(item.getAmount() - 1);
+                        removeSign = 0;
+                        if (item.getAmount() == 0) {
+                            iter.remove();
+                            continue;
+                        }
+                    }
+
+// Add items to chest if not full.
+                    if (slot < maxSlot) {
+                        if (slot >= sChest.getInventory().getSize()) {
+                            if (lChest == null)
+                                continue;
+                            lChest.getInventory().setItem(
+                                    slot % sChest.getInventory().getSize(), item);
+                        } else {
+                            sChest.getInventory().setItem(slot, item);
+                        }
+                        iter.remove();
+                        slot++;
+                    } else if (removeChestCount == 0)
+                        break;
+                }
+
+// Tell the player how many items went into chest.
+                String msg = "Inventory stored in chest. ";
+                if (event.getDrops().size() > 0)
+                    msg += event.getDrops().size() + " items wouldn't fit in chest.";
+                plugin.sendMessage(player, msg);
+                log.debug(player.getName() + " " + msg);
+                if (prot && protLWC) {
+                    plugin.sendMessage(player, "Chest protected with LWC. "
+                            + config.getRemoveTombStoneSecurityTimeOut() + "s before chest is unprotected.");
+                    log.debug(player.getName() + " Chest protected with LWC. "
+                            + config.getRemoveTombStoneSecurityTimeOut() + "s before chest is unprotected.");
+                }
+                if (prot && !protLWC) {
+                    plugin.sendMessage(player, "Chest protected with Lockette. "
+                            + config.getRemoveTombStoneSecurityTimeOut() + "s before chest is unprotected.");
+                    log.debug(player.getName() + " Chest protected with Lockette.");
+                }
+                if (config.isRemoveTombStone()) {
+                    plugin.sendMessage(player, "Chest will break in " + config.getRemoveTombStoneTime()
+                            + "s unless an override is specified.");
+                    log.debug(player.getName() + " Chest will break in "
+                            + config.getRemoveTombStoneTime() + "s");
+                }
+                if (config.isRemoveTombStoneWhenEmpty() && config.isKeepTombStoneUntilEmpty())
+                    plugin.sendMessage(
+                            player,
+                            "Break override: Your tombstone will break when it is emptied, but will not break until then.");
+                else {
+                    if (config.isRemoveTombStoneWhenEmpty())
+                        plugin.sendMessage(player,
+                                "Break override: Your tombstone will break when it is emptied.");
+                    if (config.isKeepTombStoneUntilEmpty())
+                        plugin.sendMessage(player,
+                                "Break override: Your tombstone will not break until it is empty.");
+                }
+
+
+
+            //added compatibility for streaks if notify is off
+            else {
+                howtheydied = damagetype.split(":");
+                if (howtheydied[0].matches("PVP")) {
+                    if (config.isShowStreaks())
+                        writeToStreak(player.getName(), howtheydied[2]);
+                }
+
+                if (config.isAllowDeathLog()) {
+                    writeToLog("death", player.getName(), loghowdied);
+                }
+            }
+
+
+
+        }
+    }
+
+
 
     public void onEntityDamage(EntityDamageEvent event) {
         log.debug("onEntityDamage executing");

@@ -292,24 +292,24 @@ public class DTPConfig {
     /** Timeout for Security Removal in seconds*/
     private String removeTombStoneSecurityTimeOut = "3600";
 
-// Tomb Features
+// DTPTomb Features
 
-    /** Enable the Tomb feature*/
+    /** Enable the DTPTomb feature*/
     private boolean enableTomb = true;
-    /** Price for createing a Tomb*/
+    /** Price for createing a DTPTomb*/
     private String tombCost = "10";
     /** Amount of Tombs a player can have*/
     private int maxTomb = 1;
-    /** Use the Tomb as a respawn point*/
+    /** Use the DTPTomb as a respawn point*/
     private boolean useTombAsRespawnPoint = false;
     /** Keyword used to detect a Tobmb*/
-    private String tombKeyWord= "[Tomb]";
+    private String tombKeyWord= "[DTPTomb]";
     /**
      *  Number of death before destruction of every tomb of the player
      *  without resetting the counter. If set to 2, every 2 deaths, the tombs are destroyed. (Sign is dropped) 0 = Disabled
      */
     private int maxDeaths = 0;
-    /** When a Tomb is destroyed, the respawn point is reset.*/
+    /** When a DTPTomb is destroyed, the respawn point is reset.*/
     private boolean resetTombRespawn = false;
 
 // Messages  for DeathTpPlus
@@ -718,7 +718,7 @@ afterwards parsable again from the configuration class of bukkit
 // TombStone Features (Security)
         config.addDefault("removeTombStoneSecurity", removeTombStoneSecurity);
         config.addDefault("removeTombStoneSecurityTimeOut", removeTombStoneSecurityTimeOut);
-// Tomb Features
+// DTPTomb Features
         config.addDefault("enableTomb", enableTomb);
         config.addDefault("tombCost",tombCost);
         config.addDefault("maxTomb", maxTomb);
@@ -783,7 +783,7 @@ afterwards parsable again from the configuration class of bukkit
 // Tombstone Features (Security)
         removeTombStoneSecurity = config.getBoolean("removeTombStoneSecurity");
         removeTombStoneSecurityTimeOut = config.getString("removeTombStoneSecurityTimeOut");
-// Tomb Features
+// DTPTomb Features
         enableTomb = config.getBoolean("enableTomb");
         tombCost = config.getString("tombCost");
         maxTomb = config.getInt("maxTomb");
@@ -1003,18 +1003,18 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# Timeout for Security Removal in seconds");
         stream.println("removeTombStoneSecurityTimeOut: '" +removeTombStoneSecurityTimeOut +"'");
         stream.println();
-        stream.println("#--------- Tomb Features");
+        stream.println("#--------- DTPTomb Features");
         stream.println();
-        stream.println("# Enable the Tomb feature");
+        stream.println("# Enable the DTPTomb feature");
         stream.println("enableTomb: " + enableTomb);
         stream.println();
-        stream.println("# Price for createing a Tomb");
+        stream.println("# Price for createing a DTPTomb");
         stream.println("tombCost: '" + tombCost + "'");
         stream.println();
         stream.println("# Amount of Tombs a player can have");
         stream.println("maxTomb: " + maxTomb);
         stream.println();
-        stream.println("# Use the Tomb as a respawn point");
+        stream.println("# Use the DTPTomb as a respawn point");
         stream.println("useTombAsRespawnPoint: " + useTombAsRespawnPoint);
         stream.println();
         stream.println("# Keyword used to detect a Tobmb");
@@ -1024,7 +1024,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# without resetting the counter. If set to 2, every 2 deaths, the tombs are destroyed. (Sign is dropped) 0: = Disabled");
         stream.println("maxDeaths: " + maxDeaths);
         stream.println();
-        stream.println("# When a Tomb is destroyed, the respawn point is reset.");
+        stream.println("# When a DTPTomb is destroyed, the respawn point is reset.");
         stream.println("resetTombRespawn: " + resetTombRespawn);
         stream.println();
         stream.println("#--------- Messages  for DeathTpPlus");

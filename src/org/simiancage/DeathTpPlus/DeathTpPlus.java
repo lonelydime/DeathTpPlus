@@ -12,7 +12,9 @@ package org.simiancage.DeathTpPlus;
  * an updated fork of Furt https://github.com/Furt of
  * Cenopath - A Dead Man's Chest plugin for Bukkit
  * By Jim Drey (Southpaw018) <moof@moofit.com>
- * Original Copyright (C) 2011 Steven "Drakia" Scott <Drakia@Gmail.com>
+ * and material from
+ * DTPTomb a plugin from Belphemur https://github.com/Belphemur/DTPTomb
+ * Original Copyright (C) of DeathTpPlus 2011 Steven "Drakia" Scott <Drakia@Gmail.com>
  */
 
 import com.ensifera.animosity.craftirc.CraftIRC;
@@ -25,6 +27,7 @@ import com.nijikokun.register.payment.Methods;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -46,13 +49,17 @@ import org.simiancage.DeathTpPlus.listeners.DTPServerListener;
 import org.simiancage.DeathTpPlus.workers.DTPConfig;
 import org.simiancage.DeathTpPlus.workers.DTPLogger;
 import org.simiancage.DeathTpPlus.workers.DTPTombThread;
+import org.simiancage.DeathTpPlus.workers.DTPTombWorker;
 import org.yi.acru.bukkit.Lockette.Lockette;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 //Register
@@ -63,14 +70,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class DeathTpPlus extends JavaPlugin{
     // listeners
-    @SuppressWarnings({"FieldCanBeLocal"})
+
     private DTPEntityListener entityListener;
-    @SuppressWarnings({"FieldCanBeLocal"})
+
     private DTPBlockListener blockListener;
-    @SuppressWarnings({"FieldCanBeLocal"})
+
     private DTPServerListener serverListener;
-    @SuppressWarnings({"FieldCanBeLocal"})
+
     private DTPPlayerListener playerListener;
+    private WorldSaveListener worldSaveListener;
 
     // Enum
 
@@ -106,18 +114,25 @@ public class DeathTpPlus extends JavaPlugin{
     public HashMap<String, ArrayList<DTPTombBlock>> playerTombList = new HashMap<String, ArrayList<DTPTombBlock>>();
     protected HashMap<String, EntityDamageEvent> deathCause = new HashMap<String, EntityDamageEvent>();
     public boolean economyActive = false;
+    private static Server server = null;
 
     // Vault
     public boolean useVault = false;
     public Economy economy = null;
 
-   //craftirc
+    //craftirc
     public static CraftIRC craftircHandle = null;
 
     public void onDisable() {
         for (World w : getServer().getWorlds())
         {
             saveTombStoneList(w.getName());
+        }
+        if (config.isEnableTomb()){
+            DTPTombWorker.getInstance().save();
+            server.getScheduler().cancelTasks(this);
+            DTPTombWorker.setDisable(true);
+            DTPTombWorker.killInstance();
         }
         log.disableMsg();
     }
@@ -135,41 +150,30 @@ public class DeathTpPlus extends JavaPlugin{
         streakFile = new File(pluginPath+"streak.txt");
         deathlogFile = new File(pluginPath+"deathlog.txt");
         pm = this.getServer().getPluginManager();
-
-
-
         if (!locsName.exists()) {
             CreateDefaultFile(locsName);
         }
-
         if (!streakFile.exists()) {
             CreateDefaultFile(streakFile);
         }
-
         if (!deathlogFile.exists()) {
             CreateDefaultFile(deathlogFile);
         }
-
-
         log.info( config.getKillstreak().get("KILL_STREAK").size()+" Kill Streaks loaded.");
         log.info( config.getDeathstreak().get("DEATH_STREAK").size()+" Death Streaks loaded.");
-
-        if ( config.isRemoveTombStoneWhenEmpty())
+         if ( config.isRemoveTombStoneWhenEmpty())
         {
             log.warning("RemoveWhenEmpty is enabled. This is processor intensive!");
         }
-
         if ( config.isKeepTombStoneUntilEmpty())
         {
             log.warning("KeepUntilEmpty is enabled. This is processor intensive!");
         }
-
-        if ( config.getAllowWorldTravel().equalsIgnoreCase("yes"))
+         if ( config.getAllowWorldTravel().equalsIgnoreCase("yes"))
         {
             worldTravel = true;
         }
-
-        if (config.getAllowWorldTravel().equalsIgnoreCase("yes")||config.getAllowWorldTravel().equalsIgnoreCase("no")||config.getAllowWorldTravel().equalsIgnoreCase("permissions"))
+         if (config.getAllowWorldTravel().equalsIgnoreCase("yes")||config.getAllowWorldTravel().equalsIgnoreCase("no")||config.getAllowWorldTravel().equalsIgnoreCase("permissions"))
         {
             log.info("allow-wordtravel is: "+ config.getAllowWorldTravel());
         } else {
@@ -187,17 +191,31 @@ public class DeathTpPlus extends JavaPlugin{
             pm.registerEvent(Event.Type.ENTITY_COMBUST, entityListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Normal, this);
         }
-        // register entityListener for Deathnotify and Show Streaks
-        if (config.isShowDeathNotify() || config.isShowStreaks() ) {
+        // register entityListener for Deathnotify , Show Streaks  or DTPTomb
+        if (config.isShowDeathNotify() || config.isShowStreaks() || config.isEnableTomb()) {
             pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.Normal, this);
         }
-        // register entityListener for Enable Tombstone
-        if (config.isEnableTombStone())
+        //register entityListener for Enable Tombstone or Enable DTPTomb
+        if (config.isEnableTombStone() || config.isEnableTomb())
         {
             pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Highest, this);
             lwcPlugin = (LWCPlugin) checkPlugin("LWC");
             LockettePlugin = (Lockette) checkPlugin("Lockette");
+        }
+         // register entityListener for Enable DTPTomb
+        if (config.isEnableTomb())
+        {
+            pm.registerEvent(Event.Type.SIGN_CHANGE, blockListener, Priority.Normal, this);
+            pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
+            pm.registerEvent(Event.Type.PLAYER_RESPAWN, playerListener, Priority.Highest, this);
+            pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, this);
+            pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
+            pm.registerEvent(Event.Type.WORLD_SAVE, worldSaveListener, Priority.Normal, this);
+            server = getServer();
+            DTPTombWorker.setDisable(false);
+            DTPTombWorker.getInstance().setPluginInstance(this);
+            DTPTombWorker.getInstance().load();
         }
 
         //Register Server Listener
@@ -239,7 +257,11 @@ public class DeathTpPlus extends JavaPlugin{
         log.enableMsg();
     }
 
-     private void CreateDefaultFile(File file) {
+    public static Server getBukkitServer() {
+        return server;
+    }
+
+    private void CreateDefaultFile(File file) {
         try {
             file.createNewFile();
         } catch (IOException e) {
