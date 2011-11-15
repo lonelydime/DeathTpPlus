@@ -70,6 +70,7 @@ permissions:
             deathtpplus.admin.remove: true
             deathtpplus.admin.time: true
             deathtpplus.admin.version: true
+            deathtpplus.admin.tomb: true
             deathtpplus.tombstone.use: true
             deathtpplus.tombstone.freechest: true
             deathtpplus.tombstone.large: true
@@ -82,6 +83,8 @@ permissions:
             deathtpplus.tombstone.list: true
             deathtpplus.tombstone.reset: true
             deathtpplus.tombstone.time: true
+            deathtpplus.tomb.create: true
+            deathtpplus.tomb.free: true
     deathtpplus.admin.*:
         description: Gives access to all DeathTpPlus admin commands
         children:
@@ -91,6 +94,7 @@ permissions:
             deathtpplus.admin.remove: true
             deathtpplus.admin.time: true
             deathtpplus.admin.version: true
+            deathtpplus.admin.tomb: true
     deathtpplus.tombstone.*:
         description: Gives access to default DeathTpPlus tombstone commands
         children:
@@ -102,6 +106,12 @@ permissions:
             deathtpplus.tombstone.large: true
             deathtpplus.tombstone.lwc: true
             deathtpplus.tombstone.lockette: true
+    deathtpplus.tomb.*:
+        description: Gives access to all DeathTpPlus tomb commands
+        children:
+            deathtpplus.tomb.create: true
+            deathtpplus.tomb.free: true
+
     deathtpplus.deathtp:
         description: Gives access to the deathtp command
         default: op
@@ -134,6 +144,12 @@ permissions:
         default: op
     deathtpplus.admin.version:
         description: Allows you to check if the plugin is the newest version
+        default: op
+    deathtpplus.admin.tomb:
+        description: Manage Tomb Signs and Respawn points
+        default: op
+    deathtpplus.tomb.create:
+        description: Allows player to create a tomb sign
         default: op
     deathtpplus.tombstone.use:
         description: Allows you to use the tombstones
@@ -170,4 +186,7 @@ permissions:
         default: op
     deathtpplus.tombstone.time:
         description: Allows you to check the time configuration of your tombstone
+        default: op
+    deathtpplus.tomb.free:
+        description: Allows to get a free Tomb Sign
         default: op

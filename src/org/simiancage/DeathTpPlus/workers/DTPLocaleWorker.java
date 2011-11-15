@@ -8,12 +8,12 @@ package org.simiancage.DeathTpPlus.workers;
  * Time: 20:34
  */
 
+import org.bukkit.util.config.Configuration;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-
-import org.bukkit.util.config.Configuration;
 
 
 public class DTPLocaleWorker {
@@ -28,6 +28,7 @@ public class DTPLocaleWorker {
             instance = new DTPLocaleWorker();
             log = DTPLogger.getLogger();
             config = DTPConfig.getInstance();
+        }
         return instance;
     }
 
@@ -35,7 +36,7 @@ public class DTPLocaleWorker {
      *
      */
     @SuppressWarnings("unchecked")
-    private LocaleWorker() {
+    private DTPLocaleWorker() {
         File configFile = new File(DTPTombWorker.getInstance().getPlugin()
                 .getDataFolder().getPath()
                 + File.separator + "locales.yml");

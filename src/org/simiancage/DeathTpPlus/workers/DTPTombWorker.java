@@ -9,18 +9,16 @@ package org.simiancage.DeathTpPlus.workers;
  */
 
 
-import java.util.HashMap;
-import java.util.logging.Logger;
-
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-
 import org.simiancage.DeathTpPlus.DTPTomb;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 
+import java.util.HashMap;
 
-public class DTPTombWorker extends DTPWorker {
+
+public class DTPTombWorker {
     private static DTPTombWorker instance;
     protected HashMap<String, DTPTomb> tombs = new HashMap<String, DTPTomb>();
     protected static DeathTpPlus pluginInstance;
@@ -39,15 +37,6 @@ public class DTPTombWorker extends DTPWorker {
     }
 
 
-    /*public static void killInstance() {
-        workerLog.info("DTPWorker Instance destroyed");
-        for (Handler h : workerLog.getHandlers()) {
-            h.close();
-            workerLog.removeHandler(h);
-        }
-        instance = null;
-    }
-*/
     private DTPTombWorker() {
     }
 
@@ -58,11 +47,14 @@ public class DTPTombWorker extends DTPWorker {
 
     //ToDo check how to use this together with log formatter
 
-/*    public void setPluginInstance(DeathTpPlus pluginInstance) {
+    public void setPluginInstance(DeathTpPlus pluginInstance) {
         this.pluginInstance = pluginInstance;
         String path = pluginInstance.getDataFolder().getPath();
         saveSys = new DTPSaveSystem(path);
-        try {
+        log = DTPLogger.getLogger();
+        config = DTPConfig.getInstance();
+    }
+/*        try {
 
 // This block configure the logger with handler and formatter
             File logger = new File(path + File.separator + "log.txt");
@@ -86,29 +78,7 @@ public class DTPTombWorker extends DTPWorker {
         configInit();
     }
 
-    *//**
-     * Check if the config file exist, load it if exist else create it
-     *//*
-    private void configInit() {
-        config = pluginInstance.getConfiguration();
-        if (!new File(pluginInstance.getDataFolder().getPath() + File.separator + "config.yml")
-                .exists()) {
-            config.setProperty("reset-deathloc", true);
-            config.setProperty("use-iConomy", true);
-            config.setProperty("creation-price", 10.0D);
-            config.setProperty("deathtp-price", 50.0D);
-            config.setProperty("allow-tp", true);
-            config.setProperty("maxTombStone", 0);
-            config.setProperty("TombKeyword", "[DTPTomb]");
-            config.setProperty("use-tombAsSpawnPoint", true);
-            config.setProperty("cooldownTp", 5.0D);
-            config.setProperty("reset-respawn", false);
-            config.setProperty("maxDeaths", 0);
-            config.save();
-            workerLog.info("Config created");
-        }
-        config.load();
-    */}
+ */
 
     /**
      * Return the number of tomb the player has.
@@ -124,55 +94,47 @@ public class DTPTombWorker extends DTPWorker {
     }
 
     /**
-     * Function to check if iConomy is found and the setting used for it.
+     * Function to check if economy is found and the setting used for it.
      *
      * @param player
      * @param action
      * @return
      */
-    public boolean iConomyCheck(Player player, String action) {
-        if (DTPWorker.getPayement() != null && this.getConfig().getBoolean("use-iConomy", true)
-                && !this.hasPerm(player, "tomb.free", false)) {
-            if (DTPWorker.getPayement().hasAccount(player.getName())) {
-                if (!DTPWorker.getPayement().getAccount(player.getName())
-                        .hasEnough(this.getConfig().getDouble(action, 1.0))) {
-                    player.sendMessage(graveDigger + ChatColor.RED + "You don't have "
-                            + DTPWorker.getPayement().format(this.getConfig().getDouble(action, 1.0))
-                            + " to pay me.");
-                    return false;
-                } else {
-                    DTPWorker.getPayement().getAccount(player.getName())
-                            .subtract(this.getConfig().getDouble(action, 1.0));
-                    if (this.getConfig().getDouble(action, 1.0) != 0)
-                        player.sendMessage(graveDigger
-                                + DTPWorker.getPayement().format(
-                                this.getConfig().getDouble(action, 1.0))
-                                + ChatColor.DARK_GRAY + " used to paying me.");
-                    return true;
-                }
+    public boolean economyCheck(Player player, String action) {
+        double tombCost =  Double.parseDouble(config.getTombCost());
+        if ((tombCost > 0) && !player.hasPermission("deathtpplus.tomb.free")) {
 
-            } else {
-                player.sendMessage(graveDigger + ChatColor.RED
-                        + "You must have an account to paying me.");
-                return false;
+
+            if (pluginInstance.isEconomyActive()){
+                if (pluginInstance.getEconomy().getBalance(player.getName())> tombCost) {
+                    pluginInstance.getEconomy().withdrawPlayer(player.getName(), tombCost);
+
+                    player.sendMessage(graveDigger + tombCost + ChatColor.DARK_GRAY +" used to paying me.");
+                    return true;
+                } else {
+                    player.sendMessage(graveDigger + ChatColor.RED + "You don't have  "+tombCost+" to pay me.");
+                    return false;
+                }
             }
         }
         return true;
     }
 
- /*   *//**
+
+    /*   *//**
      * @return the config
      *//*
     public Configuration getConfig() {
         return config;
     }
-
-    *//**
+*/
+    /**
      * @return the pluginInstance
-     *//*
-    public TombPlugin getPlugin() {
+     */
+    public DeathTpPlus getPlugin() {
         return pluginInstance;
-    }*/
+    }
+
 
     /**
      * Check if the player have already a tomb
@@ -188,7 +150,7 @@ public class DTPTombWorker extends DTPWorker {
      * Add the DTPTomb
      *
      * @param player
-     * @param sign
+     * @param DTPTomb
      */
     public void setTomb(String player, DTPTomb DTPTomb) {
         tombs.put(player, DTPTomb);

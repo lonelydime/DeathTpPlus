@@ -193,7 +193,7 @@ public class DTPLogger {
      */
     public void debug(String msg) {
         if (config.isDebugLogEnabled()) {
-            this.logger.info(msg);
+            this.logger.info(this.formatMessage(msg));
         }
     }
 
@@ -244,7 +244,7 @@ public class DTPLogger {
      * @param exception exception to output
      */
     public void severe(String msg, Throwable exception) {
-        this.log(Level.SEVERE, msg, exception);
+        this.log(Level.SEVERE,this.formatMessage(msg), exception);
     }
 
     /**
@@ -265,7 +265,7 @@ public class DTPLogger {
      * @param exception exception to output
      */
     public void warning(String msg, Throwable exception) {
-        this.log(Level.WARNING, msg, exception);
+        this.log(Level.WARNING, this.formatMessage(msg), exception);
     }
 
     /**

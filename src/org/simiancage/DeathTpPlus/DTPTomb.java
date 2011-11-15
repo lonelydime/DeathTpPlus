@@ -17,6 +17,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
+import org.simiancage.DeathTpPlus.workers.DTPConfig;
+import org.simiancage.DeathTpPlus.workers.DTPLogger;
 import org.simiancage.DeathTpPlus.workers.DTPTombWorker;
 
 public class DTPTomb {
@@ -29,11 +31,15 @@ public class DTPTomb {
     protected Location respawn;
     protected long timeStamp;
     protected Block lastBlock;
+    private DTPLogger log;
+    private DTPConfig config;
 
     public DTPTomb() {
         this.signBlocks = new CopyOnWriteArrayList<Block>();
         timeStamp = 0;
         sema = new Semaphore(1, true);
+        log = DTPLogger.getLogger();
+        config = DTPConfig.getInstance();
     }
 
     /**
@@ -78,12 +84,12 @@ public class DTPTomb {
         if (!signBlocks.isEmpty()) {
 
             final String msg = cutMsg(message);
-            TombPlugin.getBukkitServer().getScheduler()
-                    .scheduleAsyncDelayedTask(DTPTombWorker.getInstance().getPlugin(), new Runnable() {
+            DeathTpPlus.getBukkitServer().getScheduler().scheduleAsyncDelayedTask(DTPTombWorker.getInstance().getPlugin(), new Runnable() {
                         public void run() {
                             try {
                                 sema.acquire();
                             } catch (InterruptedException e) {
+                                log.debug("Couldn't acquire semaphore", e);
 // e.printStackTrace();
                             }
                             Sign sign;
@@ -99,7 +105,7 @@ public class DTPTomb {
                                     }
                                 } else {
                                     signBlocks.remove(block);
-                                    DTPTombWorker.workerLog.info("[setLine]DTPTomb of " + playerName
+                                    log.info("[setLine]DTPTomb of " + playerName
                                             + " Block :(" + block.getWorld().getName() + ", "
                                             + block.getX() + ", " + block.getY() + ", "
                                             + block.getZ() + ") DESTROYED.");
@@ -115,16 +121,17 @@ public class DTPTomb {
         if (!signBlocks.isEmpty()) {
             final String deathNb = cutMsg(deaths + " Deaths");
             final String deathReason = cutMsg(reason);
-            TombPlugin.getBukkitServer().getScheduler()
+            DeathTpPlus.getBukkitServer().getScheduler()
                     .scheduleAsyncDelayedTask(DTPTombWorker.getInstance().getPlugin(), new Runnable() {
                         public void run() {
                             try {
                                 sema.acquire();
                             } catch (InterruptedException e) {
+                                log.debug("Couldn't acquire semaphore", e);
 // e.printStackTrace();
                             }
                             Sign sign;
-                            DTPTombWorker.workerLog.info("[updateDeath] " + playerName
+                            log.info("[updateDeath] " + playerName
                                     + " died updating tomb(s).");
                             for (Block block : signBlocks) {
                                 if (isSign(block)) {
@@ -141,7 +148,7 @@ public class DTPTomb {
                                     signBlocks.remove(block);
                                     block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.SIGN,1));
                                     block.setType(Material.AIR);
-                                    DTPTombWorker.workerLog.info("[updateDeath]DTPTomb of " + playerName
+                                    log.info("[updateDeath]DTPTomb of " + playerName
                                             + " Block :(" + block.getWorld().getName() + ", "
                                             + block.getX() + ", " + block.getY() + ", "
                                             + block.getZ() + ") DESTROYED.");
@@ -165,12 +172,13 @@ public class DTPTomb {
      * Check every block if they are always a sign.
      */
     public void checkSigns() {
-        TombPlugin.getBukkitServer().getScheduler()
+        DeathTpPlus.getBukkitServer().getScheduler()
                 .scheduleAsyncDelayedTask(DTPTombWorker.getInstance().getPlugin(), new Runnable() {
                     public void run() {
                         try {
                             sema.acquire();
                         } catch (InterruptedException e) {
+                            log.debug("Couldn't acquire semaphore", e);
 // e.printStackTrace();
                         }
                         for (Block block : signBlocks)
@@ -178,7 +186,7 @@ public class DTPTomb {
                                 signBlocks.remove(block);
                                 block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.SIGN,1));
                                 block.setType(Material.AIR);
-                                DTPTombWorker.workerLog.info("[CheckSigns]DTPTomb of " + playerName
+                                log.info("[CheckSigns]DTPTomb of " + playerName
                                         + " Block :(" + block.getWorld().getName() + ", "
                                         + block.getX() + ", " + block.getY() + ", " + block.getZ()
                                         + ") DESTROYED.");
@@ -272,7 +280,7 @@ public class DTPTomb {
      * Update the new block
      */
     public void updateNewBlock() {
-        TombPlugin.getBukkitServer().getScheduler()
+        DeathTpPlus.getBukkitServer().getScheduler()
                 .scheduleAsyncDelayedTask(DTPTombWorker.getInstance().getPlugin(), new Runnable() {
                     public void run() {
                         Sign sign;
@@ -305,7 +313,7 @@ public class DTPTomb {
                 || sign.getType() == Material.SIGN_POST || sign.getState() instanceof Sign)
             return true;
         else {
-            DTPTombWorker.log.severe("DTPTomb of " + playerName + " Block :(" + sign.getWorld().getName()
+            log.severe("DTPTomb of " + playerName + " Block :(" + sign.getWorld().getName()
                     + ", " + sign.getX() + ", " + sign.getY() + ", " + sign.getZ()
                     + ") is not a sign it's a " + sign.getType());
             return false;
@@ -322,10 +330,11 @@ public class DTPTomb {
             try {
                 sema.acquire();
             } catch (InterruptedException e) {
+                log.debug("Couldn't acquire semaphore", e);
 // e.printStackTrace();
             }
             this.signBlocks.add(sign);
-            DTPTombWorker.workerLog.info("DTPTomb of " + playerName + " Block :("
+            log.info("DTPTomb of " + playerName + " Block :("
                     + sign.getWorld().getName() + ", " + sign.getX() + ", " + sign.getY() + ", "
                     + sign.getZ() + ") Added.");
             lastBlock = sign;
@@ -339,13 +348,14 @@ public class DTPTomb {
      * Clear the signBlock vector
      */
     public void resetTombBlocks() {
-        TombPlugin.getBukkitServer().getScheduler()
+        DeathTpPlus.getBukkitServer().getScheduler()
                 .scheduleAsyncDelayedTask(DTPTombWorker.getInstance().getPlugin(), new Runnable() {
                     public void run() {
 
                         try {
                             sema.acquire();
                         } catch (InterruptedException e) {
+                            log.debug("Couldn't acquire semaphore", e);
 // e.printStackTrace();
                         }
                         for (Block block : signBlocks) {
@@ -361,7 +371,7 @@ public class DTPTomb {
                             }
                         }
                         signBlocks.clear();
-                        DTPTombWorker.workerLog.info("[resetTombBlocks] DTPTomb of " + playerName
+                        log.info("[resetTombBlocks] DTPTomb of " + playerName
                                 + " reseted.");
                         sema.release();
                     }
@@ -375,7 +385,7 @@ public class DTPTomb {
      */
     public void removeSignBlock(final Block sign) {
         if (hasSign(sign))
-            TombPlugin.getBukkitServer().getScheduler()
+            DeathTpPlus.getBukkitServer().getScheduler()
                     .scheduleAsyncDelayedTask(DTPTombWorker.getInstance().getPlugin(), new Runnable() {
                         public void run() {
 
@@ -385,7 +395,7 @@ public class DTPTomb {
 // e.printStackTrace();
                             }
                             signBlocks.remove(sign);
-                            DTPTombWorker.workerLog.info("[removeSignBlock]DTPTomb of " + playerName
+                            log.info("[removeSignBlock]DTPTomb of " + playerName
                                     + " Block :(" + sign.getWorld().getName() + ", " + sign.getX()
                                     + ", " + sign.getY() + ", " + sign.getZ() + ") REMOVED.");
                             sema.release();

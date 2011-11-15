@@ -42,10 +42,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.simiancage.DeathTpPlus.commands.*;
-import org.simiancage.DeathTpPlus.listeners.DTPBlockListener;
-import org.simiancage.DeathTpPlus.listeners.DTPEntityListener;
-import org.simiancage.DeathTpPlus.listeners.DTPPlayerListener;
-import org.simiancage.DeathTpPlus.listeners.DTPServerListener;
+import org.simiancage.DeathTpPlus.listeners.*;
 import org.simiancage.DeathTpPlus.workers.DTPConfig;
 import org.simiancage.DeathTpPlus.workers.DTPLogger;
 import org.simiancage.DeathTpPlus.workers.DTPTombThread;
@@ -78,7 +75,7 @@ public class DeathTpPlus extends JavaPlugin{
     private DTPServerListener serverListener;
 
     private DTPPlayerListener playerListener;
-    private WorldSaveListener worldSaveListener;
+    private DTPWorldSaveListener worldSaveListener;
 
     // Enum
 
@@ -131,9 +128,7 @@ public class DeathTpPlus extends JavaPlugin{
         if (config.isEnableTomb()){
             DTPTombWorker.getInstance().save();
             server.getScheduler().cancelTasks(this);
-            DTPTombWorker.setDisable(true);
-            DTPTombWorker.killInstance();
-        }
+           }
         log.disableMsg();
     }
 
@@ -213,7 +208,6 @@ public class DeathTpPlus extends JavaPlugin{
             pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.WORLD_SAVE, worldSaveListener, Priority.Normal, this);
             server = getServer();
-            DTPTombWorker.setDisable(false);
             DTPTombWorker.getInstance().setPluginInstance(this);
             DTPTombWorker.getInstance().load();
         }

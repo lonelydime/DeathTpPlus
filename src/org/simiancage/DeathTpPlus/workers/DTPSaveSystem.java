@@ -14,7 +14,7 @@ import org.simiancage.DeathTpPlus.DTPTombSave;
 import java.io.*;
 import java.util.HashMap;
 
-.TombSave;
+
 
 public class DTPSaveSystem {
     String path;

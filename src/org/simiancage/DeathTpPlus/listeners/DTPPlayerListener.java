@@ -8,7 +8,6 @@ package org.simiancage.DeathTpPlus.listeners;
  * Time: 22:01
  */
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,64 +19,27 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.DTPTomb;
 import org.simiancage.DeathTpPlus.workers.DTPConfig;
 import org.simiancage.DeathTpPlus.workers.DTPLogger;
+import org.simiancage.DeathTpPlus.workers.DTPTombWorker;
 
 public class DTPPlayerListener extends PlayerListener {
     private DeathTpPlus plugin;
     private DTPConfig config;
     private DTPLogger log;
+    private DTPTombWorker worker;
 
     public DTPPlayerListener(DeathTpPlus instance) {
         this.plugin = instance;
         log = DTPLogger.getLogger();
         config = DTPConfig.getInstance();
+        worker = DTPTombWorker.getInstance();
         log.debug("PlayerListener active");
     }
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
         log.debug("onPlayerInteract executing");
-
-        if (config.isEnableTomb()){
-            Player p = event.getPlayer();
-            if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
-                    && (worker.getConfig().getBoolean("allow-tp", true) || worker.hasPerm(p, "tomb.tp",
-                    false))) {
-                Block block = event.getClickedBlock();
-                if (block.getType().equals(Material.WALL_SIGN)
-                        || block.getType().equals(Material.SIGN_POST)) {
-                    if (worker.hasTomb(p.getName())) {
-                        DTPTomb DTPTomb = worker.getTomb(p.getName());
-                        if (DTPTomb.hasSign(block)) {
-                            Location toTp;
-                            if ((toTp = DTPTomb.getDeathLoc()) != null) {
-                                if (DTPTomb.canTeleport()) {
-                                    if (worker.iConomyCheck(p, "deathtp-price")) {
-                                        p.teleport(toTp);
-                                        DTPTomb.setTimeStamp(System.currentTimeMillis()
-                                                + (int) (worker.getConfig().getDouble("cooldownTp",
-                                                5.0D) * 60000));
-                                        if (worker.getConfig().getBoolean("reset-deathloc", true))
-                                            DTPTomb.setDeathLoc(null);
-                                    }
-                                } else {
-                                    long timeLeft = DTPTomb.getTimeStamp() - System.currentTimeMillis();
-                                    p.sendMessage(worker.graveDigger + " You have to wait "
-                                            + ChatColor.GOLD + timeLeft / 60000 + " mins "
-                                            + (timeLeft / 1000) % 60 + " secs" + ChatColor.WHITE
-                                            + " to use the death tp.");
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
 
         if (config.isEnableTombStone()){
             if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
@@ -174,15 +136,11 @@ public class DTPPlayerListener extends PlayerListener {
         }
     }
 
-    @Override
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        worker.removePermissionNode(event.getPlayer().getName());
-    }
 
     @Override
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player p = event.getPlayer();
-        if (worker.getConfig().getBoolean("use-tombAsSpawnPoint", true)
+        if (config.isUseTombAsRespawnPoint()
                 && worker.hasTomb(p.getName())) {
             Location respawn = worker.getTomb(p.getName()).getRespawn();
             if (respawn != null)

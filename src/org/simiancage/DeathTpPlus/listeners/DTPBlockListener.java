@@ -21,17 +21,20 @@ import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.workers.DTPConfig;
 import org.simiancage.DeathTpPlus.workers.DTPLogger;
+import org.simiancage.DeathTpPlus.workers.DTPTombWorker;
 
 public class DTPBlockListener extends BlockListener {
 
     private DeathTpPlus plugin;
     private DTPLogger log;
     private DTPConfig config;
+    private DTPTombWorker worker;
 
     public DTPBlockListener(DeathTpPlus instance) {
         this.plugin = instance;
         log = DTPLogger.getLogger();
         config = DTPConfig.getInstance();
+        worker = DTPTombWorker.getInstance();
         log.debug("BlockListener active");
     }
 
@@ -101,12 +104,12 @@ public class DTPBlockListener extends BlockListener {
                 Block block = b;
                 String playerName = event.getPlayer().getName();
                 Sign sign = (Sign) block.getState();
-                if (sign.getLine(0).indexOf(worker.getConfig().getString("TombKeyword", "[DTPTomb]")) == 0) {
+                if (sign.getLine(0).indexOf(config.getTombKeyWord()) == 0) {
                     DTPTomb DTPTomb;
-                    if (worker.hasPerm(event.getPlayer(), "DTPTomb.admin")) {
+                    if (event.getPlayer().hasPermission("deathtpplus.admin.tomb")) {
                         if ((DTPTomb = worker.getTomb(block)) != null) {
                             DTPTomb.removeSignBlock(block);
-                            if (worker.getConfig().getBoolean("reset-respawn", false)) {
+                            if (config.isResetTombRespawn()) {
                                 DTPTomb.setRespawn(null);
                                 event.getPlayer().sendMessage(
                                         worker.graveDigger + DTPTomb.getPlayer()
@@ -121,7 +124,7 @@ public class DTPBlockListener extends BlockListener {
                         else {
                             DTPTomb = worker.getTomb(playerName);
                             DTPTomb.removeSignBlock(block);
-                            if (worker.getConfig().getBoolean("reset-respawn", false)) {
+                            if (config.isResetTombRespawn()) {
                                 DTPTomb.setRespawn(null);
                                 event.getPlayer().sendMessage(
                                         worker.graveDigger + DTPTomb.getPlayer()
@@ -142,8 +145,8 @@ public class DTPBlockListener extends BlockListener {
         String line0 = e.getLine(0);
         Player p = e.getPlayer();
         boolean admin = false;
-        if (line0.indexOf(worker.getConfig().getString("TombKeyword", "[DTPTomb]")) == 0) {
-            if (!e.getLine(1).isEmpty() && worker.hasPerm(p, "DTPTomb.admin"))
+        if (line0.indexOf(config.getTombKeyWord()) == 0) {
+            if (!e.getLine(1).isEmpty() && p.hasPermission("deathtpplus.admin.tomb"))
                 admin = true;
 // Sign check
             DTPTomb DTPTomb = null;
@@ -171,15 +174,15 @@ public class DTPBlockListener extends BlockListener {
             if (DTPTomb != null)
                 nbSign = DTPTomb.getNbSign();
 // max check
-            int maxTombs = worker.getConfig().getInt("maxTombStone", 0);
+            int maxTombs = config.getMaxTomb();
             if (!admin && maxTombs != 0 && (nbSign + 1) > maxTombs) {
                 p.sendMessage(worker.graveDigger + "You have reached your DTPTomb limit.");
                 e.setCancelled(true);
                 return;
             }
 // perm and iConomy check
-            if ((!admin && !worker.hasPerm(p, "DTPTomb.create"))
-                    || !worker.iConomyCheck(p, "creation-price")) {
+            if ((!admin && !p.hasPermission("deathtpplus.tomb.create"))
+                    || !worker.economyCheck(p, "creation-price")) {
                 e.setCancelled(true);
                 return;
             }
@@ -194,7 +197,7 @@ public class DTPBlockListener extends BlockListener {
                     worker.setTomb(deadName, DTPTomb);
                 }
                 DTPTomb.updateNewBlock();
-                if (worker.getConfig().getBoolean("use-tombAsSpawnPoint", true)) {
+                if (config.isUseTombAsRespawnPoint()) {
                     DTPTomb.setRespawn(p.getLocation());
                     if (admin)
                         p.sendMessage(worker.graveDigger + " When " + deadName
@@ -204,7 +207,7 @@ public class DTPBlockListener extends BlockListener {
                 }
             } catch (IllegalArgumentException e2) {
                 p.sendMessage(worker.graveDigger
-                        + "It's not a good place for a DTPTomb. Try somewhere else.");
+                        + "It's not a good place for a Tomb. Try somewhere else.");
             }
 
         }

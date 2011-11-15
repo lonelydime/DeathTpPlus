@@ -2,7 +2,7 @@ package org.simiancage.DeathTpPlus.listeners;
 
 /**
  * PluginName: DeathTpPlugin
- * Class: WorldSaveListener
+ * Class: DTPWorldSaveListener
  * User: DonRedhorse
  * Date: 14.11.11
  * Time: 20:47
@@ -15,11 +15,10 @@ import org.simiancage.DeathTpPlus.workers.DTPTombWorker;
 
 
 
-public class WorldSaveListener extends WorldListener {
+public class DTPWorldSaveListener extends WorldListener {
     @Override
     public void onWorldSave(WorldSaveEvent event) {
-        if (!DTPTombWorker.isDisable())
-            DTPTombWorker.getInstance().save();
+          DTPTombWorker.getInstance().save();
     }
 
 }
