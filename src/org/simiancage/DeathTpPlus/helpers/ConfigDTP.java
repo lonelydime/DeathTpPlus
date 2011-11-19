@@ -1,8 +1,8 @@
-package org.simiancage.DeathTpPlus.workers;
+package org.simiancage.DeathTpPlus.helpers;
 /**
  *
  * PluginName: DeathTpPlus
- * Class: DTPConfig
+ * Class: ConfigDTP
  * User: DonRedhorse
  * Date: 10.11.11
  * Time: 14:14
@@ -20,7 +20,7 @@ import java.util.*;
 
 
 /**
- * The DTPConfig Class allows you to write a custom config file for craftbukkit plugins incl. comments.
+ * The ConfigDTP Class allows you to write a custom config file for craftbukkit plugins incl. comments.
  * It allows autoupdating config changes, checking for plugin updates and writing back the configuration.
  * Please note that writing to the config file will overwrite any manual changes.<p>
  * You NEED to fix all ToDos, otherwise the class will NOT work!<p>
@@ -28,12 +28,12 @@ import java.util.*;
  * @author Don Redhorse
  */
 @SuppressWarnings({"UnusedDeclaration"})
-public class DTPConfig {
+public class ConfigDTP {
 
     /**
      * Instance of the Configuration Class
      */
-    private static DTPConfig instance = null;
+    private static ConfigDTP instance = null;
 
 // Nothing to change from here to ==>>>
     /**
@@ -108,11 +108,11 @@ public class DTPConfig {
     @SuppressWarnings({"FieldCanBeLocal"})
     private final String versionURL = "https://raw.github.com/dredhorse/DeathTpPlus/master/Resources/deathtpplus.ver";
     /**
-     * Reference of the DTPLogger class.
+     * Reference of the LoggerDTP class.
      *
-     * @see DTPLogger
+     * @see LoggerDTP
      */
-    private static DTPLogger log;
+    private static LoggerDTP log;
 
     // ToDo Change the configCurrent if the config changes!
     /**
@@ -292,24 +292,24 @@ public class DTPConfig {
     /** Timeout for Security Removal in seconds*/
     private String removeTombStoneSecurityTimeOut = "3600";
 
-// DTPTomb Features
+// TombDTP Features
 
-    /** Enable the DTPTomb feature*/
+    /** Enable the TombDTP feature*/
     private boolean enableTomb = true;
-    /** Price for createing a DTPTomb*/
+    /** Price for createing a TombDTP*/
     private String tombCost = "10";
     /** Amount of Tombs a player can have*/
     private int maxTomb = 1;
-    /** Use the DTPTomb as a respawn point*/
+    /** Use the TombDTP as a respawn point*/
     private boolean useTombAsRespawnPoint = false;
     /** Keyword used to detect a Tobmb*/
-    private String tombKeyWord= "[DTPTomb]";
+    private String tombKeyWord= "[TombDTP]";
     /**
      *  Number of death before destruction of every tomb of the player
      *  without resetting the counter. If set to 2, every 2 deaths, the tombs are destroyed. (Sign is dropped) 0 = Disabled
      */
     private int maxDeaths = 0;
-    /** When a DTPTomb is destroyed, the respawn point is reset.*/
+    /** When a TombDTP is destroyed, the respawn point is reset.*/
     private boolean resetTombRespawn = false;
 
 // Messages  for DeathTpPlus
@@ -718,7 +718,7 @@ afterwards parsable again from the configuration class of bukkit
 // TombStone Features (Security)
         config.addDefault("removeTombStoneSecurity", removeTombStoneSecurity);
         config.addDefault("removeTombStoneSecurityTimeOut", removeTombStoneSecurityTimeOut);
-// DTPTomb Features
+// TombDTP Features
         config.addDefault("enableTomb", enableTomb);
         config.addDefault("tombCost",tombCost);
         config.addDefault("maxTomb", maxTomb);
@@ -751,6 +751,10 @@ afterwards parsable again from the configuration class of bukkit
         enableLWC = config.getBoolean("enableLWC");
         locale = config.getString("locale");
         allowWorldTravel = config.getString("allowWorldTravel");
+        tombStoneSign[0] = config.getString("tombStoneSign.Line1","{name}");
+        tombStoneSign[1] = config.getString("tombStoneSign.Line2","RIP");
+        tombStoneSign[2] = config.getString("tombStoneSign.Line3","{date}");
+        tombStoneSign[3] = config.getString("tombStoneSign.Line4","{time}");
 // DeathTpPlus Features
         enableDeathtp = config.getBoolean("enableDeathtp");
         showDeathNotify = config.getBoolean("showDeathNotify");
@@ -770,10 +774,6 @@ afterwards parsable again from the configuration class of bukkit
         allowInterfere = config.getBoolean("allowInterfere");
         voidCheck = config.getBoolean("voidCheck");
         creeperProtection = config.getBoolean("creeperProtection");
-        tombStoneSign[0] = config.getString("tombStoneSign.Line1","{name}");
-        tombStoneSign[1] = config.getString("tombStoneSign.Line2","RIP");
-        tombStoneSign[2] = config.getString("tombStoneSign.Line3","{date}");
-        tombStoneSign[3] = config.getString("tombStoneSign.Line4","{time}");
 // Tombstone Features (Removal)
         destroyOnQuickLoot = config.getBoolean("destroyOnQuickLoot");
         removeTombStone = config.getBoolean("removeTombStone");
@@ -783,7 +783,7 @@ afterwards parsable again from the configuration class of bukkit
 // Tombstone Features (Security)
         removeTombStoneSecurity = config.getBoolean("removeTombStoneSecurity");
         removeTombStoneSecurityTimeOut = config.getString("removeTombStoneSecurityTimeOut");
-// DTPTomb Features
+// TombDTP Features
         enableTomb = config.getBoolean("enableTomb");
         tombCost = config.getString("tombCost");
         maxTomb = config.getInt("maxTomb");
@@ -908,6 +908,18 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# Allow World Travel: yes, no, permissions");
         stream.println("allowWorldTravel: '" + allowWorldTravel + "'");
         stream.println();
+        stream.println("# Each line may be one of any custom text OR:");
+        stream.println("# {name} for player name");
+        stream.println("# {date} for day of death");
+        stream.println("# {time} for time of death (server time)");
+        stream.println("# {reason} for cause of death");
+        stream.println("# REMEMBER: LINES ARE LIMITED TO 15 CHARACTERS, AND DON'T FORGET THE QUOTES!");
+        stream.println("tombStoneSign:");
+        stream.println("   Line1: '" + tombStoneSign[0] + "'");
+        stream.println("   Line2: '" + tombStoneSign[1] + "'");
+        stream.println("   Line3: '" + tombStoneSign[2] + "'");
+        stream.println("   Line4: '" + tombStoneSign[3] + "'");
+        stream.println();
         stream.println("#--------- DeathTp Features");
         stream.println();
         stream.println("# Enable DeathTp Features");
@@ -964,18 +976,6 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# after they are unlocked, enable this");
         stream.println("creeperProtection: " + creeperProtection);
         stream.println();
-        stream.println("# Each line may be one of any custom text OR:");
-        stream.println("# {name} for player name");
-        stream.println("# {date} for day of death");
-        stream.println("# {time} for time of death (server time)");
-        stream.println("# {reason} for cause of death");
-        stream.println("# REMEMBER: LINES ARE LIMITED TO 15 CHARACTERS, AND DON'T FORGET THE QUOTES!");
-        stream.println("tombStoneSign:");
-        stream.println("   Line1: '" + tombStoneSign[0] + "'");
-        stream.println("   Line2: '" + tombStoneSign[1] + "'");
-        stream.println("   Line3: '" + tombStoneSign[2] + "'");
-        stream.println("   Line4: '" + tombStoneSign[3] + "'");
-        stream.println();
         stream.println("#--------- TombStone features (Removal");
         stream.println();
         stream.println("# Destroy Tombstone on player quickloot");
@@ -1003,18 +1003,18 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# Timeout for Security Removal in seconds");
         stream.println("removeTombStoneSecurityTimeOut: '" +removeTombStoneSecurityTimeOut +"'");
         stream.println();
-        stream.println("#--------- DTPTomb Features");
+        stream.println("#--------- TombDTP Features");
         stream.println();
-        stream.println("# Enable the DTPTomb feature");
+        stream.println("# Enable the TombDTP feature");
         stream.println("enableTomb: " + enableTomb);
         stream.println();
-        stream.println("# Price for createing a DTPTomb");
+        stream.println("# Price for createing a TombDTP");
         stream.println("tombCost: '" + tombCost + "'");
         stream.println();
         stream.println("# Amount of Tombs a player can have");
         stream.println("maxTomb: " + maxTomb);
         stream.println();
-        stream.println("# Use the DTPTomb as a respawn point");
+        stream.println("# Use the TombDTP as a respawn point");
         stream.println("useTombAsRespawnPoint: " + useTombAsRespawnPoint);
         stream.println();
         stream.println("# Keyword used to detect a Tobmb");
@@ -1024,7 +1024,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# without resetting the counter. If set to 2, every 2 deaths, the tombs are destroyed. (Sign is dropped) 0: = Disabled");
         stream.println("maxDeaths: " + maxDeaths);
         stream.println();
-        stream.println("# When a DTPTomb is destroyed, the respawn point is reset.");
+        stream.println("# When a TombDTP is destroyed, the respawn point is reset.");
         stream.println("resetTombRespawn: " + resetTombRespawn);
         stream.println();
         stream.println("#--------- Messages  for DeathTpPlus");
@@ -1274,11 +1274,11 @@ afterwards parsable again from the configuration class of bukkit
      *
      * @return instance of class
      */
-    public static DTPConfig getInstance() {
+    public static ConfigDTP getInstance() {
         if (instance == null) {
-            instance = new DTPConfig();
+            instance = new ConfigDTP();
         }
-        log = DTPLogger.getLogger();
+        log = LoggerDTP.getLogger();
         return instance;
     }
 
@@ -1290,12 +1290,12 @@ afterwards parsable again from the configuration class of bukkit
      *
      * @return instance of class
      */
-    public static DTPConfig getInstance(String configuratonFile, Plugin plugin) {
+    public static ConfigDTP getInstance(String configuratonFile, Plugin plugin) {
         if (instance == null) {
-            instance = new DTPConfig();
-            DTPConfig.plugin = plugin;
+            instance = new ConfigDTP();
+            ConfigDTP.plugin = plugin;
         }
-        log = DTPLogger.getLogger();
+        log = LoggerDTP.getLogger();
         configFile = configuratonFile;
         return instance;
     }
@@ -1316,7 +1316,7 @@ afterwards parsable again from the configuration class of bukkit
 // The class stuff first
 
 
-    private DTPConfig() {
+    private ConfigDTP() {
 
     }
 

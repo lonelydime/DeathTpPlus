@@ -13,7 +13,7 @@ package org.simiancage.DeathTpPlus;
  * Cenopath - A Dead Man's Chest plugin for Bukkit
  * By Jim Drey (Southpaw018) <moof@moofit.com>
  * and material from
- * DTPTomb a plugin from Belphemur https://github.com/Belphemur/DTPTomb
+ * TombDTP a plugin from Belphemur https://github.com/Belphemur/TombDTP
  * Original Copyright (C) of DeathTpPlus 2011 Steven "Drakia" Scott <Drakia@Gmail.com>
  */
 
@@ -42,11 +42,12 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.simiancage.DeathTpPlus.commands.*;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.listeners.*;
-import org.simiancage.DeathTpPlus.workers.DTPConfig;
-import org.simiancage.DeathTpPlus.workers.DTPLogger;
-import org.simiancage.DeathTpPlus.workers.DTPTombThread;
-import org.simiancage.DeathTpPlus.workers.DTPTombWorker;
+import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
+import org.simiancage.DeathTpPlus.workers.TombStoneThreadDTP;
+import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 import org.yi.acru.bukkit.Lockette.Lockette;
 
 import java.io.BufferedWriter;
@@ -68,14 +69,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class DeathTpPlus extends JavaPlugin{
     // listeners
 
-    private DTPEntityListener entityListener;
+    private EntityListenerDTP entityListener;
 
-    private DTPBlockListener blockListener;
+    private BlockListenerDTP blockListener;
 
-    private DTPServerListener serverListener;
+    private ServerListenerDTP serverListener;
 
-    private DTPPlayerListener playerListener;
-    private DTPWorldSaveListener worldSaveListener;
+    private PlayerListenerDTP playerListener;
+    private WorldSaveListenerDTP worldSaveListener;
 
     // Enum
 
@@ -88,8 +89,8 @@ public class DeathTpPlus extends JavaPlugin{
         }
     }
 
-    private DTPConfig config;
-    private DTPLogger log;
+    private ConfigDTP config;
+    private LoggerDTP log;
 
 
 
@@ -106,9 +107,9 @@ public class DeathTpPlus extends JavaPlugin{
     private FileConfiguration configuration;
     public LWCPlugin lwcPlugin = null;
     public Lockette LockettePlugin = null;
-    public ConcurrentLinkedQueue<DTPTombBlock> tombList = new ConcurrentLinkedQueue<DTPTombBlock>();
-    public HashMap<Location, DTPTombBlock> tombBlockList = new HashMap<Location, DTPTombBlock>();
-    public HashMap<String, ArrayList<DTPTombBlock>> playerTombList = new HashMap<String, ArrayList<DTPTombBlock>>();
+    public ConcurrentLinkedQueue<TombBlockDTP> tombListDTP = new ConcurrentLinkedQueue<TombBlockDTP>();
+    public HashMap<Location, TombBlockDTP> tombBlockList = new HashMap<Location, TombBlockDTP>();
+    public HashMap<String, ArrayList<TombBlockDTP>> playerTombList = new HashMap<String, ArrayList<TombBlockDTP>>();
     protected HashMap<String, EntityDamageEvent> deathCause = new HashMap<String, EntityDamageEvent>();
     public boolean economyActive = false;
     private static Server server = null;
@@ -126,20 +127,20 @@ public class DeathTpPlus extends JavaPlugin{
             saveTombStoneList(w.getName());
         }
         if (config.isEnableTomb()){
-            DTPTombWorker.getInstance().save();
+            TombWorkerDTP.getInstance().save();
             server.getScheduler().cancelTasks(this);
            }
         log.disableMsg();
     }
 
     public void onEnable() {
-        log = DTPLogger.getInstance(this);
-        config = DTPConfig.getInstance();
+        log = LoggerDTP.getInstance(this);
+        config = ConfigDTP.getInstance();
         config.setupConfig(configuration, plugin);
-        entityListener = new DTPEntityListener(this);
-        blockListener = new DTPBlockListener(this);
-        serverListener = new DTPServerListener(this);
-        playerListener = new DTPPlayerListener(this);
+        entityListener = new EntityListenerDTP(this);
+        blockListener = new BlockListenerDTP(this);
+        serverListener = new ServerListenerDTP(this);
+        playerListener = new PlayerListenerDTP(this);
         pluginPath = getDataFolder() + System.getProperty("file.separator");
         locsName = new File(pluginPath+"locs.txt");
         streakFile = new File(pluginPath+"streak.txt");
@@ -186,11 +187,11 @@ public class DeathTpPlus extends JavaPlugin{
             pm.registerEvent(Event.Type.ENTITY_COMBUST, entityListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Normal, this);
         }
-        // register entityListener for Deathnotify , Show Streaks  or DTPTomb
+        // register entityListener for Deathnotify , Show Streaks  or TombDTP
         if (config.isShowDeathNotify() || config.isShowStreaks() || config.isEnableTomb()) {
             pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.Normal, this);
         }
-        //register entityListener for Enable Tombstone or Enable DTPTomb
+        //register entityListener for Enable Tombstone or Enable TombDTP
         if (config.isEnableTombStone() || config.isEnableTomb())
         {
             pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
@@ -198,7 +199,7 @@ public class DeathTpPlus extends JavaPlugin{
             lwcPlugin = (LWCPlugin) checkPlugin("LWC");
             LockettePlugin = (Lockette) checkPlugin("Lockette");
         }
-         // register entityListener for Enable DTPTomb
+         // register entityListener for Enable TombDTP
         if (config.isEnableTomb())
         {
             pm.registerEvent(Event.Type.SIGN_CHANGE, blockListener, Priority.Normal, this);
@@ -208,13 +209,13 @@ public class DeathTpPlus extends JavaPlugin{
             pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.WORLD_SAVE, worldSaveListener, Priority.Normal, this);
             server = getServer();
-            DTPTombWorker.getInstance().setPluginInstance(this);
-            DTPTombWorker.getInstance().load();
+            TombWorkerDTP.getInstance().setPluginInstance(this);
+            TombWorkerDTP.getInstance().load();
         }
 
         //Register Server Listener
-        getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, new DTPServerListener(this), Priority.Monitor, this);
-        getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_DISABLE, new DTPServerListener(this), Priority.Monitor, this);
+        getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, new ServerListenerDTP(this), Priority.Monitor, this);
+        getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_DISABLE, new ServerListenerDTP(this), Priority.Monitor, this);
 
 
         //craftirc
@@ -240,7 +241,7 @@ public class DeathTpPlus extends JavaPlugin{
         if (config.isRemoveTombStoneSecurity() || config.isRemoveTombStone())
         {
             getServer().getScheduler().scheduleSyncRepeatingTask(this,
-                    new DTPTombThread(plugin), 0L, 100L);
+                    new TombStoneThreadDTP(plugin), 0L, 100L);
         }
 
         // registering commands
@@ -326,15 +327,15 @@ public class DeathTpPlus extends JavaPlugin{
         return worldTravel;
     }
 
-    public ConcurrentLinkedQueue<DTPTombBlock> getTombList() {
-        return tombList;
+    public ConcurrentLinkedQueue<TombBlockDTP> getTombListDTP() {
+        return tombListDTP;
     }
 
-    public HashMap<Location, DTPTombBlock> getTombBlockList() {
+    public HashMap<Location, TombBlockDTP> getTombBlockList() {
         return tombBlockList;
     }
 
-    public HashMap<String, ArrayList<DTPTombBlock>> getPlayerTombList() {
+    public HashMap<String, ArrayList<TombBlockDTP>> getPlayerTombList() {
         return playerTombList;
     }
 
@@ -353,7 +354,7 @@ public class DeathTpPlus extends JavaPlugin{
             return;
         }
         try {
-            File fh = new File(this.getDataFolder().getPath(), "tombList-"
+            File fh = new File(this.getDataFolder().getPath(), "tombListDTP-"
                     + world + ".db");
             if (!fh.exists())
                 return;
@@ -373,21 +374,21 @@ public class DeathTpPlus extends JavaPlugin{
                             + fh.getName());
                     continue;
                 }
-                DTPTombBlock tBlock = new DTPTombBlock(block, lBlock, sign, owner,
+                TombBlockDTP tBlockDTP = new TombBlockDTP(block, lBlock, sign, owner,
                         time, lwc);
-                tombList.offer(tBlock);
+                tombListDTP.offer(tBlockDTP);
                 // Used for quick tombStone lookup
-                tombBlockList.put(block.getLocation(), tBlock);
+                tombBlockList.put(block.getLocation(), tBlockDTP);
                 if (lBlock != null)
-                    tombBlockList.put(lBlock.getLocation(), tBlock);
+                    tombBlockList.put(lBlock.getLocation(), tBlockDTP);
                 if (sign != null)
-                    tombBlockList.put(sign.getLocation(), tBlock);
-                ArrayList<DTPTombBlock> pList = playerTombList.get(owner);
+                    tombBlockList.put(sign.getLocation(), tBlockDTP);
+                ArrayList<TombBlockDTP> pList = playerTombList.get(owner);
                 if (pList == null) {
-                    pList = new ArrayList<DTPTombBlock>();
+                    pList = new ArrayList<TombBlockDTP>();
                     playerTombList.put(owner, pList);
                 }
-                pList.add(tBlock);
+                pList.add(tBlockDTP);
             }
             scanner.close();
             log.info("Successfully loaded TombStone list");
@@ -433,15 +434,15 @@ public class DeathTpPlus extends JavaPlugin{
     // Register commands
 
     private void addCommands() {
-        getCommand("dtplist").setExecutor(new DTPListCommand(this));
-        getCommand("dtpfind").setExecutor(new DTPFindCommand(this));
-        getCommand("dtptime").setExecutor(new DTPTimeCommand(this));
-        getCommand("dtpreset").setExecutor(new DTPResetCommand(this));
-        getCommand("dtpadmin").setExecutor(new DTPAdminCommand(this));
-        getCommand("deathtp").setExecutor(new DTPDeathtpCommand(this));
-        getCommand("deaths").setExecutor(new DTPDeathsCommand(this));
-        getCommand("kills").setExecutor(new DTPKillsCommand(this));
-        getCommand("streak").setExecutor(new DTPStreakCommand(this));
+        getCommand("dtplist").setExecutor(new ListCommandDTP(this));
+        getCommand("dtpfind").setExecutor(new FindCommandDTP(this));
+        getCommand("dtptime").setExecutor(new TimeCommandDTP(this));
+        getCommand("dtpreset").setExecutor(new ResetCommandDTP(this));
+        getCommand("dtpadmin").setExecutor(new AdminCommandDTP(this));
+        getCommand("deathtp").setExecutor(new DeathtpCommandDTP(this));
+        getCommand("deaths").setExecutor(new DeathsCommandDTP(this));
+        getCommand("kills").setExecutor(new KillsCommandDTP(this));
+        getCommand("streak").setExecutor(new StreakCommandDTP(this));
     }
 
 
@@ -451,29 +452,29 @@ public class DeathTpPlus extends JavaPlugin{
         if (!config.isSaveTombStoneList())
             return;
         try {
-            File fh = new File(this.getDataFolder().getPath(), "tombList-"
+            File fh = new File(this.getDataFolder().getPath(), "tombListDTP-"
                     + world + ".db");
             BufferedWriter bw = new BufferedWriter(new FileWriter(fh));
-            for (Iterator<DTPTombBlock> iter = tombList.iterator(); iter.hasNext();) {
-                DTPTombBlock tBlock = iter.next();
+            for (Iterator<TombBlockDTP> iter = tombListDTP.iterator(); iter.hasNext();) {
+                TombBlockDTP tBlockDTP = iter.next();
                 // Skip not this world
-                if (!tBlock.getBlock().getWorld().getName()
+                if (!tBlockDTP.getBlock().getWorld().getName()
                         .equalsIgnoreCase(world))
                     continue;
 
                 StringBuilder builder = new StringBuilder();
 
-                bw.append(printBlock(tBlock.getBlock()));
+                bw.append(printBlock(tBlockDTP.getBlock()));
                 bw.append(":");
-                bw.append(printBlock(tBlock.getLBlock()));
+                bw.append(printBlock(tBlockDTP.getLBlock()));
                 bw.append(":");
-                bw.append(printBlock(tBlock.getSign()));
+                bw.append(printBlock(tBlockDTP.getSign()));
                 bw.append(":");
-                bw.append(tBlock.getOwner());
+                bw.append(tBlockDTP.getOwner());
                 bw.append(":");
-                bw.append(String.valueOf(tBlock.getTime()));
+                bw.append(String.valueOf(tBlockDTP.getTime()));
                 bw.append(":");
-                bw.append(String.valueOf(tBlock.getLwcEnabled()));
+                bw.append(String.valueOf(tBlockDTP.getLwcEnabled()));
 
                 bw.append(builder.toString());
                 bw.newLine();
@@ -495,7 +496,7 @@ public class DeathTpPlus extends JavaPlugin{
 
     //
 
-    public Boolean activateLWC(Player player, DTPTombBlock tBlock) {
+    public Boolean activateLWC(Player player, TombBlockDTP tBlockDTP) {
         if (!config.isEnableLWC())
             return false;
         if (lwcPlugin == null)
@@ -503,8 +504,8 @@ public class DeathTpPlus extends JavaPlugin{
         LWC lwc = lwcPlugin.getLWC();
 
 // Register the chest + sign as private
-        Block block = tBlock.getBlock();
-        Block sign = tBlock.getSign();
+        Block block = tBlockDTP.getBlock();
+        Block sign = tBlockDTP.getSign();
         lwc.getPhysicalDatabase().registerProtection(block.getTypeId(),
                 ProtectionTypes.PRIVATE, block.getWorld().getName(),
                 player.getName(), "", block.getX(), block.getY(), block.getZ());
@@ -515,11 +516,11 @@ public class DeathTpPlus extends JavaPlugin{
                             block.getWorld().getName(), player.getName(), "",
                             sign.getX(), sign.getY(), sign.getZ());
 
-        tBlock.setLwcEnabled(true);
+        tBlockDTP.setLwcEnabled(true);
         return true;
     }
 
-    public Boolean protectWithLockette(Player player, DTPTombBlock tBlock) {
+    public Boolean protectWithLockette(Player player, TombBlockDTP tBlockDTP) {
         if (!config.isEnableLockette())
             return false;
         if (LockettePlugin == null)
@@ -527,7 +528,7 @@ public class DeathTpPlus extends JavaPlugin{
 
         Block signBlock = null;
 
-        signBlock = findPlace(tBlock.getBlock(), true);
+        signBlock = findPlace(tBlockDTP.getBlock(), true);
         if (signBlock == null) {
             sendMessage(player, "No room for Lockette sign! Chest unsecured!");
             return false;
@@ -538,7 +539,7 @@ public class DeathTpPlus extends JavaPlugin{
 // Bukkit 818
         signBlock.setType(Material.WALL_SIGN);
 
-        String facing = getDirection((getYawTo(signBlock.getLocation(), tBlock
+        String facing = getDirection((getYawTo(signBlock.getLocation(), tBlockDTP
                 .getBlock().getLocation()) + 270) % 360);
         if (facing == "East")
             signBlock.setData((byte) 0x02);
@@ -569,13 +570,13 @@ public class DeathTpPlus extends JavaPlugin{
                 sign.update();
             }
         });
-        tBlock.setLocketteSign(sign);
+        tBlockDTP.setLocketteSign(sign);
         return true;
     }
 
 
 
-    public void deactivateLWC(DTPTombBlock tBlock, boolean force) {
+    public void deactivateLWC(TombBlockDTP tBlockDTP, boolean force) {
         if (!config.isEnableLWC())
             return;
         if (lwcPlugin == null)
@@ -583,7 +584,7 @@ public class DeathTpPlus extends JavaPlugin{
         LWC lwc = lwcPlugin.getLWC();
 
 // Remove the protection on the chest
-        Block _block = tBlock.getBlock();
+        Block _block = tBlockDTP.getBlock();
         Protection protection = lwc.findProtection(_block);
         if (protection != null) {
             lwc.getPhysicalDatabase().unregisterProtection(protection.getId());
@@ -591,12 +592,12 @@ public class DeathTpPlus extends JavaPlugin{
             if (config.isLwcPublic() && !force)
                 lwc.getPhysicalDatabase().registerProtection(
                         _block.getTypeId(), ProtectionTypes.PUBLIC,
-                        _block.getWorld().getName(), tBlock.getOwner(), "",
+                        _block.getWorld().getName(), tBlockDTP.getOwner(), "",
                         _block.getX(), _block.getY(), _block.getZ());
         }
 
 // Remove the protection on the sign
-        _block = tBlock.getSign();
+        _block = tBlockDTP.getSign();
         if (_block != null) {
             protection = lwc.findProtection(_block);
             if (protection != null) {
@@ -605,44 +606,44 @@ public class DeathTpPlus extends JavaPlugin{
                 if (config.isLwcPublic() && !force)
                     lwc.getPhysicalDatabase().registerProtection(
                             _block.getTypeId(), ProtectionTypes.PUBLIC,
-                            _block.getWorld().getName(), tBlock.getOwner(), "",
+                            _block.getWorld().getName(), tBlockDTP.getOwner(), "",
                             _block.getX(), _block.getY(), _block.getZ());
             }
         }
-        tBlock.setLwcEnabled(false);
+        tBlockDTP.setLwcEnabled(false);
     }
 
-    public void deactivateLockette(DTPTombBlock tBlock) {
-        if (tBlock.getLocketteSign() == null)
+    public void deactivateLockette(TombBlockDTP tBlockDTP) {
+        if (tBlockDTP.getLocketteSign() == null)
             return;
-        tBlock.getLocketteSign().getBlock().setType(Material.AIR);
-        tBlock.removeLocketteSign();
+        tBlockDTP.getLocketteSign().getBlock().setType(Material.AIR);
+        tBlockDTP.removeLocketteSign();
     }
 
-    public void removeTomb(DTPTombBlock tBlock, boolean removeList) {
-        if (tBlock == null)
+    public void removeTomb(TombBlockDTP tBlockDTP, boolean removeList) {
+        if (tBlockDTP == null)
             return;
 
-        tombBlockList.remove(tBlock.getBlock().getLocation());
-        if (tBlock.getLBlock() != null)
-            tombBlockList.remove(tBlock.getLBlock().getLocation());
-        if (tBlock.getSign() != null)
-            tombBlockList.remove(tBlock.getSign().getLocation());
+        tombBlockList.remove(tBlockDTP.getBlock().getLocation());
+        if (tBlockDTP.getLBlock() != null)
+            tombBlockList.remove(tBlockDTP.getLBlock().getLocation());
+        if (tBlockDTP.getSign() != null)
+            tombBlockList.remove(tBlockDTP.getSign().getLocation());
 
-// Remove just this tomb from tombList
-        ArrayList<DTPTombBlock> tList = playerTombList.get(tBlock.getOwner());
+// Remove just this tomb from tombListDTP
+        ArrayList<TombBlockDTP> tList = playerTombList.get(tBlockDTP.getOwner());
         if (tList != null) {
-            tList.remove(tBlock);
+            tList.remove(tBlockDTP);
             if (tList.size() == 0) {
-                playerTombList.remove(tBlock.getOwner());
+                playerTombList.remove(tBlockDTP.getOwner());
             }
         }
 
         if (removeList)
-            tombList.remove(tBlock);
+            tombListDTP.remove(tBlockDTP);
 
-        if (tBlock.getBlock() != null)
-            saveTombStoneList(tBlock.getBlock().getWorld().getName());
+        if (tBlockDTP.getBlock() != null)
+            saveTombStoneList(tBlockDTP.getBlock().getWorld().getName());
     }
 
     /*
@@ -797,21 +798,21 @@ public class DeathTpPlus extends JavaPlugin{
         destroyTombStone(tombBlockList.get(loc));
     }
 
-    public void destroyTombStone(DTPTombBlock tBlock) {
-        tBlock.getBlock().getWorld().loadChunk(tBlock.getBlock().getChunk());
+    public void destroyTombStone(TombBlockDTP tBlockDTP) {
+        tBlockDTP.getBlock().getWorld().loadChunk(tBlockDTP.getBlock().getChunk());
 
-        deactivateLWC(tBlock, true);
+        deactivateLWC(tBlockDTP, true);
 
-        if (tBlock.getSign() != null)
-            tBlock.getSign().setType(Material.AIR);
-        deactivateLockette(tBlock);
-        tBlock.getBlock().setType(Material.AIR);
-        if (tBlock.getLBlock() != null)
-            tBlock.getLBlock().setType(Material.AIR);
+        if (tBlockDTP.getSign() != null)
+            tBlockDTP.getSign().setType(Material.AIR);
+        deactivateLockette(tBlockDTP);
+        tBlockDTP.getBlock().setType(Material.AIR);
+        if (tBlockDTP.getLBlock() != null)
+            tBlockDTP.getLBlock().setType(Material.AIR);
 
-        removeTomb(tBlock, true);
+        removeTomb(tBlockDTP, true);
 
-        Player p = getServer().getPlayer(tBlock.getOwner());
+        Player p = getServer().getPlayer(tBlockDTP.getOwner());
         if (p != null)
             sendMessage(p, "Your tombstone has been destroyed!");
     }

@@ -1,25 +1,25 @@
-package org.simiancage.DeathTpPlus.workers;
+package org.simiancage.DeathTpPlus.helpers;
 
 /**
  * PluginName: ${plugin}
- * Class: DTPSaveSystem
+ * Class: TombSaveSystemDTP
  * User: DonRedhorse
  * Date: 14.11.11
  * Time: 20:39
  */
 
-import org.simiancage.DeathTpPlus.DTPTomb;
-import org.simiancage.DeathTpPlus.DTPTombSave;
+import org.simiancage.DeathTpPlus.objects.TombDTP;
+import org.simiancage.DeathTpPlus.objects.TombSaveDTP;
 
 import java.io.*;
 import java.util.HashMap;
 
 
 
-public class DTPSaveSystem {
+public class TombSaveSystemDTP {
     String path;
 
-    public DTPSaveSystem(String path) {
+    public TombSaveSystemDTP(String path) {
         this.path = path;
         File dir = new File(path);
         if (!dir.exists())
@@ -31,7 +31,7 @@ public class DTPSaveSystem {
      *
      * @param toBeSaved
      */
-    public void save(HashMap<String, DTPTomb> toBeSaved) {
+    public void save(HashMap<String, TombDTP> toBeSaved) {
         File saveFile = new File(this.path + File.separator + "tombs.dat");
         if (!saveFile.exists())
             try {
@@ -39,7 +39,7 @@ public class DTPSaveSystem {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        HashMap<String, DTPTombSave> toWrite = new HashMap<String, DTPTombSave>();
+        HashMap<String, TombSaveDTP> toWrite = new HashMap<String, TombSaveDTP>();
         for (String name : toBeSaved.keySet())
             toWrite.put(name, toBeSaved.get(name).save());
 
@@ -55,12 +55,12 @@ public class DTPSaveSystem {
     }
 
     @SuppressWarnings("unchecked")
-    public HashMap<String, DTPTomb> load() {
-        HashMap<String, DTPTomb> result = new HashMap<String, DTPTomb>();
-        HashMap<String, DTPTombSave> saved=null;
+    public HashMap<String, TombDTP> load() {
+        HashMap<String, TombDTP> result = new HashMap<String, TombDTP>();
+        HashMap<String, TombSaveDTP> saved=null;
         File saveFile = new File(this.path + File.separator + "tombs.dat");
         if (!saveFile.exists())
-            return new HashMap<String, DTPTomb>();
+            return new HashMap<String, TombDTP>();
 
         FileInputStream fis = null;
         ObjectInputStream in = null;
@@ -68,7 +68,7 @@ public class DTPSaveSystem {
         try {
             fis = new FileInputStream(saveFile);
             in = new ObjectInputStream(fis);
-            saved = (HashMap<String, DTPTombSave>) in.readObject();
+            saved = (HashMap<String, TombSaveDTP>) in.readObject();
             in.close();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -76,7 +76,7 @@ public class DTPSaveSystem {
             ex.printStackTrace();
         }
         if(saved == null)
-            return new HashMap<String, DTPTomb>();
+            return new HashMap<String, TombDTP>();
         for(String name : saved.keySet())
             result.put(name, saved.get(name).load());
 

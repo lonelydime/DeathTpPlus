@@ -2,7 +2,7 @@ package org.simiancage.DeathTpPlus.commands;
 
 /**
  * PluginName: DeathTpPlus
- * Class: DTPFindCommand
+ * Class: FindCommandDTP
  * User: DonRedhorse
  * Date: 19.10.11
  * Time: 22:04
@@ -12,23 +12,23 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.simiancage.DeathTpPlus.DTPTombBlock;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.workers.DTPConfig;
-import org.simiancage.DeathTpPlus.workers.DTPLogger;
 
 import java.util.ArrayList;
 
-public class DTPFindCommand implements CommandExecutor {
+public class FindCommandDTP implements CommandExecutor {
 
     private DeathTpPlus plugin;
-    private DTPLogger log;
-    private DTPConfig config;
+    private LoggerDTP log;
+    private ConfigDTP config;
 
-    public DTPFindCommand(DeathTpPlus instance) {
+    public FindCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
-        log = DTPLogger.getLogger();
-        config = DTPConfig.getInstance();
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
         log.info("dtpfind command registered");
     }
 
@@ -42,7 +42,7 @@ public class DTPFindCommand implements CommandExecutor {
         }
         if (args.length != 1)
             return false;
-        ArrayList<DTPTombBlock> pList = plugin.playerTombList
+        ArrayList<TombBlockDTP> pList = plugin.playerTombList
                 .get(sender.getName());
         if (pList == null) {
             plugin.sendMessage(sender, "You have no tombstones.");
@@ -61,10 +61,10 @@ public class DTPFindCommand implements CommandExecutor {
             plugin.sendMessage(sender, "Invalid tombstone");
             return true;
         }
-        DTPTombBlock tBlock = pList.get(slot);
-        double degrees = (plugin.getYawTo(tBlock.getBlock().getLocation(),
+        TombBlockDTP tBlockDTP = pList.get(slot);
+        double degrees = (plugin.getYawTo(tBlockDTP.getBlock().getLocation(),
                 p.getLocation()) + 270) % 360;
-        p.setCompassTarget(tBlock.getBlock().getLocation());
+        p.setCompassTarget(tBlockDTP.getBlock().getLocation());
         plugin.sendMessage(
                 sender,
                 "Your tombstone #"

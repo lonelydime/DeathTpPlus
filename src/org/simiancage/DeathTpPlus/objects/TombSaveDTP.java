@@ -1,0 +1,143 @@
+package org.simiancage.DeathTpPlus.objects;
+
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+
+/**
+ * PluginName: DeathTpPlus
+ * Class: TombSaveDTP
+ * User: DonRedhorse
+ * Date: 14.11.11
+ * Time: 20:28
+ */
+
+public class TombSaveDTP implements Serializable {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 312699013882578456L;
+    protected ArrayList<LocSaveDTP> signBlocks = new ArrayList<LocSaveDTP>();
+    protected int deaths;
+    protected String player;
+    protected String reason;
+    protected LocSaveDTP deathLoc;
+    protected LocSaveDTP respawn;
+    private ConfigDTP config;
+    private LoggerDTP log;
+
+    public TombSaveDTP(TombDTP TombDTP) {
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
+        for (Block b : TombDTP.getSignBlocks())
+            signBlocks.add(new LocSaveDTP(b));
+        reason = TombDTP.getReason();
+        player = TombDTP.getPlayer();
+        deaths = TombDTP.getDeaths();
+        if (TombDTP.getDeathLoc() != null)
+            try {
+                deathLoc = new LocSaveDTP(TombDTP.getDeathLoc());
+            } catch (NullPointerException e) {
+                deathLoc = null;
+                log.warning("Player :" + player + " : NPE avoided with deathLoc",e);
+            }
+
+        else
+            deathLoc = null;
+        if (TombDTP.getRespawn() != null)
+            try {
+                respawn = new LocSaveDTP(TombDTP.getRespawn());
+            } catch (NullPointerException e) {
+                respawn = null;
+                log.warning("Player :" + player + " : NPE avoided with respawn",e);
+            }
+        else
+            respawn = null;
+    }
+
+    public TombDTP load() {
+        TombDTP TombDTP = new TombDTP();
+        if (deathLoc != null)
+            TombDTP.setDeathLoc(deathLoc.getLoc());
+        else
+            TombDTP.setDeathLoc(null);
+
+        if (respawn != null)
+            TombDTP.setRespawn(respawn.getLoc());
+        else
+            TombDTP.setRespawn(null);
+        TombDTP.setDeaths(deaths);
+        TombDTP.setPlayer(player);
+        TombDTP.setReason(reason);
+        for (LocSaveDTP loc : signBlocks) {
+            try {
+                Block b = loc.getBlock();
+                if (b != null)
+                    TombDTP.addSignBlock(b);
+            } catch (IllegalArgumentException e) {
+                log.info("One of the TombDTP of " + player + " was destroyed. :\n"
+                        + loc);
+            }
+        }
+        return TombDTP;
+    }
+}
+
+class LocSaveDTP implements Serializable {
+    /**
+     *
+     */
+    private LoggerDTP log;
+    private ConfigDTP config;
+    private static final long serialVersionUID = 8631716113887974333L;
+    private double x;
+    private double y;
+    private double z;
+    private String world;
+
+    public LocSaveDTP(Location loc) throws NullPointerException {
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
+        x = loc.getX();
+        y = loc.getY();
+        z = loc.getZ();
+        world = loc.getWorld().getName();
+
+    }
+
+    public LocSaveDTP(Block block) {
+        this(block.getLocation());
+    }
+
+    public Location getLoc() {
+        return new Location(DeathTpPlus.getBukkitServer().getWorld(world), x, y, z);
+    }
+
+    public Block getBlock() {
+        World w = DeathTpPlus.getBukkitServer().getWorld(world);
+        if (w == null) {
+            log.info("World is not loaded :\n" + this);
+            return null;
+        }
+        return w.getBlockAt(getLoc());
+    }
+
+    /*
+    * (non-Javadoc)
+    *
+    * @see java.lang.Object#toString()
+    */
+    @Override
+    public String toString() {
+        return "LocSaveDTP={World=" + world + ", x=" + x + ", y=" + y + ", z=" + z + "}";
+
+    }
+}
+
+

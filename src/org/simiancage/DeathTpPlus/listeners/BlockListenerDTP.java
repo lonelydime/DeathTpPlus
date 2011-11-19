@@ -2,59 +2,61 @@ package org.simiancage.DeathTpPlus.listeners;
 
 /**
  * PluginName: DeathTpPlus
- * Class: DTPBlockListener
+ * Class: BlockListenerDTP
  * User: DonRedhorse
  * Date: 19.10.11
  * Time: 21:59
  */
 
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.SignChangeEvent;
-import org.simiancage.DeathTpPlus.DTPTomb;
-import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.workers.DTPConfig;
-import org.simiancage.DeathTpPlus.workers.DTPLogger;
-import org.simiancage.DeathTpPlus.workers.DTPTombWorker;
+import org.simiancage.DeathTpPlus.events.onBlockBreakDTP;
+import org.simiancage.DeathTpPlus.events.onSignChangeDTP;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
-public class DTPBlockListener extends BlockListener {
+public class BlockListenerDTP extends BlockListener {
 
     private DeathTpPlus plugin;
-    private DTPLogger log;
-    private DTPConfig config;
-    private DTPTombWorker worker;
+    private LoggerDTP log;
+    private ConfigDTP config;
+    private TombWorkerDTP worker;
+    private onBlockBreakDTP obb;
+    private onSignChangeDTP oss;
 
-    public DTPBlockListener(DeathTpPlus instance) {
+    public BlockListenerDTP(DeathTpPlus instance) {
         this.plugin = instance;
-        log = DTPLogger.getLogger();
-        config = DTPConfig.getInstance();
-        worker = DTPTombWorker.getInstance();
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
+        worker = TombWorkerDTP.getInstance();
         log.debug("BlockListener active");
     }
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        log.debug("onBlockBreak executing");
+
         Block b = event.getBlock();
         Player p = event.getPlayer();
 
-        if (config.isEnableTombStone())
+        if (config.isEnableTombStone() && !event.isCancelled())
         {
-            if (b.getType() == Material.WALL_SIGN) {
+            obb = new onBlockBreakDTP();
+            obb.oBBTombStone(plugin, event);
+
+           /* if (b.getType() == Material.WALL_SIGN) {
                 org.bukkit.material.Sign signData = (org.bukkit.material.Sign) b
                         .getState().getData();
-                DTPTombBlock tBlock = plugin.tombBlockList.get(b.getRelative(
+                TombBlockDTP tBlockDTP = plugin.tombBlockList.get(b.getRelative(
                         signData.getAttachedFace()).getLocation());
-                if (tBlock == null)
+                if (tBlockDTP == null)
                     return;
 
-                if (tBlock.getLocketteSign() != null) {
+                if (tBlockDTP.getLocketteSign() != null) {
                     Sign sign = (Sign) b.getState();
                     event.setCancelled(true);
                     sign.update();
@@ -65,9 +67,9 @@ public class DTPBlockListener extends BlockListener {
             if (b.getType() != Material.CHEST && b.getType() != Material.SIGN_POST)
                 return;
 
-            DTPTombBlock tBlock = plugin.tombBlockList.get(b.getLocation());
+            TombBlockDTP tBlockDTP = plugin.tombBlockList.get(b.getLocation());
 
-            if (tBlock == null)
+            if (tBlockDTP == null)
                 return;
             Location location = b.getLocation();
             String loc = location.getWorld().getName();
@@ -84,10 +86,10 @@ public class DTPBlockListener extends BlockListener {
             }
 
             if (plugin.lwcPlugin != null && config.isEnableLWC()
-                    && tBlock.getLwcEnabled()) {
-                if (tBlock.getOwner().equals(p.getName())
+                    && tBlockDTP.getLwcEnabled()) {
+                if (tBlockDTP.getOwner().equals(p.getName())
                         || plugin.hasPerm(p, "admin", false)) {
-                    plugin.deactivateLWC(tBlock, true);
+                    plugin.deactivateLWC(tBlockDTP, true);
                 } else {
                     event.setCancelled(true);
                     return;
@@ -95,24 +97,27 @@ public class DTPBlockListener extends BlockListener {
             }
             log.debug(p.getName() + " destroyed tombstone at "
                     + loc);
-            plugin.removeTomb(tBlock, true);
+            plugin.removeTomb(tBlockDTP, true);*/
         }
-// ToDo DTPTomb Integration
-        if (config.isEnableTomb())
+// ToDo TombDTP Integration
+        if (config.isEnableTomb() && !event.isCancelled())
         {
-            if (b.getState() instanceof Sign) {
+            obb = new onBlockBreakDTP();
+            obb.oBBTomb(plugin, event);
+
+           /* if (b.getState() instanceof Sign) {
                 Block block = b;
                 String playerName = event.getPlayer().getName();
                 Sign sign = (Sign) block.getState();
                 if (sign.getLine(0).indexOf(config.getTombKeyWord()) == 0) {
-                    DTPTomb DTPTomb;
+                    TombDTP TombDTP;
                     if (event.getPlayer().hasPermission("deathtpplus.admin.tomb")) {
-                        if ((DTPTomb = worker.getTomb(block)) != null) {
-                            DTPTomb.removeSignBlock(block);
+                        if ((TombDTP = worker.getTomb(block)) != null) {
+                            TombDTP.removeSignBlock(block);
                             if (config.isResetTombRespawn()) {
-                                DTPTomb.setRespawn(null);
+                                TombDTP.setRespawn(null);
                                 event.getPlayer().sendMessage(
-                                        worker.graveDigger + DTPTomb.getPlayer()
+                                        worker.graveDigger + TombDTP.getPlayer()
                                                 + "'s respawn point has been reset.");
                             }
                         }
@@ -122,12 +127,12 @@ public class DTPBlockListener extends BlockListener {
                         if (!worker.getTomb(playerName).hasSign(block))
                             event.setCancelled(true);
                         else {
-                            DTPTomb = worker.getTomb(playerName);
-                            DTPTomb.removeSignBlock(block);
+                            TombDTP = worker.getTomb(playerName);
+                            TombDTP.removeSignBlock(block);
                             if (config.isResetTombRespawn()) {
-                                DTPTomb.setRespawn(null);
+                                TombDTP.setRespawn(null);
                                 event.getPlayer().sendMessage(
-                                        worker.graveDigger + DTPTomb.getPlayer()
+                                        worker.graveDigger + TombDTP.getPlayer()
                                                 + "'s respawn point has been reset.");
                             }
                         }
@@ -135,70 +140,78 @@ public class DTPBlockListener extends BlockListener {
                         event.setCancelled(true);
                 }
 
-            }
+            }*/
         }
     }
 
-// ToDo edit DTPTomb Integration!
+// ToDo edit TombDTP Integration!
 
-    public void onSignChange(SignChangeEvent e) {
-        String line0 = e.getLine(0);
-        Player p = e.getPlayer();
+    public void onSignChange(SignChangeEvent event) {
+
+        if (config.isEnableTomb() && !event.isCancelled()){
+           oss = new onSignChangeDTP();
+           oss.oSCTomb(plugin, event);
+
+        }
+
+       /*
+        String line0 = event.getLine(0);
+        Player p = event.getPlayer();
         boolean admin = false;
         if (line0.indexOf(config.getTombKeyWord()) == 0) {
-            if (!e.getLine(1).isEmpty() && p.hasPermission("deathtpplus.admin.tomb"))
+            if (!event.getLine(1).isEmpty() && p.hasPermission("deathtpplus.admin.tomb"))
                 admin = true;
 // Sign check
-            DTPTomb DTPTomb = null;
-            String deadName = e.getLine(1);
+            TombDTP TombDTP = null;
+            String deadName = event.getLine(1);
             if (admin) {
-                if ((DTPTomb = worker.getTomb(deadName)) == null)
+                if ((TombDTP = worker.getTomb(deadName)) == null)
                     try {
-                        deadName = p.getServer().getPlayer(e.getLine(1)).getName();
+                        deadName = p.getServer().getPlayer(event.getLine(1)).getName();
                     } catch (Exception e2) {
-                        p.sendMessage(worker.graveDigger + "The player " + e.getLine(1)
+                        p.sendMessage(worker.graveDigger + "The player " + event.getLine(1)
                                 + "was not found.(The player HAS to be CONNECTED)");
                         return;
                     }
                 else
-                    deadName = DTPTomb.getPlayer();
+                    deadName = TombDTP.getPlayer();
             } else
-                deadName = e.getPlayer().getName();
-            if (DTPTomb != null)
-                DTPTomb.checkSigns();
+                deadName = event.getPlayer().getName();
+            if (TombDTP != null)
+                TombDTP.checkSigns();
             else if (worker.hasTomb(deadName)) {
-                DTPTomb = worker.getTomb(deadName);
-                DTPTomb.checkSigns();
+                TombDTP = worker.getTomb(deadName);
+                TombDTP.checkSigns();
             }
             int nbSign = 0;
-            if (DTPTomb != null)
-                nbSign = DTPTomb.getNbSign();
+            if (TombDTP != null)
+                nbSign = TombDTP.getNbSign();
 // max check
             int maxTombs = config.getMaxTomb();
             if (!admin && maxTombs != 0 && (nbSign + 1) > maxTombs) {
-                p.sendMessage(worker.graveDigger + "You have reached your DTPTomb limit.");
-                e.setCancelled(true);
+                p.sendMessage(worker.graveDigger + "You have reached your TombDTP limit.");
+                event.setCancelled(true);
                 return;
             }
 // perm and iConomy check
             if ((!admin && !p.hasPermission("deathtpplus.tomb.create"))
                     || !worker.economyCheck(p, "creation-price")) {
-                e.setCancelled(true);
+                event.setCancelled(true);
                 return;
             }
-            Block block = e.getBlock();
+            Block block = event.getBlock();
             try {
 
-                if (DTPTomb != null) {
-                    DTPTomb.addSignBlock(block);
+                if (TombDTP != null) {
+                    TombDTP.addSignBlock(block);
                 } else {
-                    DTPTomb = new DTPTomb(block);
-                    DTPTomb.setPlayer(deadName);
-                    worker.setTomb(deadName, DTPTomb);
+                    TombDTP = new TombDTP(block);
+                    TombDTP.setPlayer(deadName);
+                    worker.setTomb(deadName, TombDTP);
                 }
-                DTPTomb.updateNewBlock();
+                TombDTP.updateNewBlock();
                 if (config.isUseTombAsRespawnPoint()) {
-                    DTPTomb.setRespawn(p.getLocation());
+                    TombDTP.setRespawn(p.getLocation());
                     if (admin)
                         p.sendMessage(worker.graveDigger + " When " + deadName
                                 + " die, he/she will respawn here.");
@@ -211,6 +224,6 @@ public class DTPBlockListener extends BlockListener {
             }
 
         }
-
+*/
     }
 }

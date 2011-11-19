@@ -2,38 +2,29 @@ package org.simiancage.DeathTpPlus.listeners;
 
 //java imports
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.*;
-import org.bukkit.inventory.ItemStack;
-import org.simiancage.DeathTpPlus.DTPTombBlock;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.DTPTomb;
-import org.simiancage.DeathTpPlus.workers.DTPConfig;
-import org.simiancage.DeathTpPlus.workers.DTPLogger;
-import org.simiancage.DeathTpPlus.workers.DTPLocaleWorker;
-import org.simiancage.DeathTpPlus.workers.DTPTombWorker;
+import org.simiancage.DeathTpPlus.events.onEntityDamageDTP;
+import org.simiancage.DeathTpPlus.events.onEntityDeathDTP;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
+import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
 
 //bukkit imports
 
-public class DTPEntityListener extends EntityListener {
+public class EntityListenerDTP extends EntityListener {
     private DeathTpPlus plugin;
-    private ArrayList<String> lastDamagePlayer = new ArrayList<String>();
-    private ArrayList<String> lastDamageType = new ArrayList<String>();
+    public ArrayList<String> lastDamagePlayer = new ArrayList<String>();
+    public ArrayList<String> lastDamageType = new ArrayList<String>();
     private String beforedamage = "";
     private PlayerDeathEvent playerDeathEvent = null;
     private String loghowdied;
-    protected DTPTombWorker worker = DTPTombWorker.getInstance();
+    protected TombWorkerDTP worker = TombWorkerDTP.getInstance();
     enum DeathTypes {FALL, DROWNING, SUFFOCATION, FIRE_TICK, FIRE, LAVA, BLOCK_EXPLOSION, CREEPER, SKELETON, SPIDER, PIGZOMBIE, ZOMBIE, CONTACT, SLIME, VOID, GHAST, WOLF, LIGHTNING, STARVATION, CAVESPIDER, ENDERMAN, SILVERFISH, PVP, FISTS, UNKNOWN, SUICIDE;
 
         @Override public String toString() {
@@ -42,17 +33,55 @@ public class DTPEntityListener extends EntityListener {
             return s.substring(0, 1)+s.substring(1).toLowerCase();
         }
     }
-    private DTPConfig config;
-    private DTPLogger log;
+    private ConfigDTP config;
+    private LoggerDTP log;
+    private onEntityDamageDTP oedam;
+    private onEntityDeathDTP oedea;
+    private EntityListenerDTP instance;
 
-    public DTPEntityListener(DeathTpPlus instance) {
-        plugin = instance;
-        log = DTPLogger.getLogger();
-        config = DTPConfig.getInstance();
+    public EntityListenerDTP(DeathTpPlus plugin) {
+        this.plugin = plugin;
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
         log.debug("EntityListener active");
-
+        instance = this;
     }
 
+
+
+    public ArrayList<String> getLastDamagePlayer() {
+        return lastDamagePlayer;
+    }
+
+    public void setLastDamagePlayer(ArrayList<String> lastDamagePlayer) {
+        this.lastDamagePlayer = lastDamagePlayer;
+    }
+
+    public ArrayList<String> getLastDamageType() {
+        return lastDamageType;
+    }
+
+    public void setLastDamageType(ArrayList<String> lastDamageType) {
+        this.lastDamageType = lastDamageType;
+    }
+
+    public String getBeforedamage() {
+        return beforedamage;
+    }
+
+    public void setBeforedamage(String beforedamage) {
+        this.beforedamage = beforedamage;
+    }
+
+    public PlayerDeathEvent getPlayerDeathEvent() {
+        return playerDeathEvent;
+    }
+
+    public void setPlayerDeathEvent(PlayerDeathEvent playerDeathEvent) {
+        this.playerDeathEvent = playerDeathEvent;
+    }
+
+/*
     String getEvent(String deathType){
         int messageindex = 0;
         if (config.getDeathevents().get(deathType).size() > 1)
@@ -62,18 +91,30 @@ public class DTPEntityListener extends EntityListener {
         }
         return config.getDeathevents().get(deathType).get(messageindex);
     }
+*/
 
 
 
     public void onEntityDeath(EntityDeathEvent event) {
 
+
+        if (config.isAllowDeathtp()){
+            oedea = new onEntityDeathDTP();
+            oedea.oEDeaDeathTp(plugin, instance, event);
+        }
+
+        if (config.isShowDeathNotify() || config.isShowStreaks() || config.isAllowDeathLog() || config.isEnableTombStone()|| config.isEnableTomb() ) {
+            oedea = new onEntityDeathDTP();
+            oedea.oEDeaGeneralDeath(plugin, instance, event);
+        }
+/*
         beforedamage = "";
 
         if (event.getEntity() instanceof Player) {
-            log.debug("onEntityDeath executing");
+            log.debug("onEntityDeathDTP executing");
             Player player = (Player) event.getEntity();
-            /*EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
-            damageEvent.getType();*/
+            *//*EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
+            damageEvent.getType();*//*
             String damagetype = lastDamageType.get(lastDamagePlayer.indexOf(player.getName()));
             String eventAnnounce = "";
             String fileOutput = "";
@@ -217,30 +258,30 @@ public class DTPEntityListener extends EntityListener {
                         sign.setLine(3, signtext);
                     }
                 }
-                // ToDo DTPTomb Integration
+                // ToDo TombDTP Integration
                 if (config.isEnableTomb())
                 {
                     if (worker.hasTomb(player.getName())) {
-                        DTPTomb DTPTomb = worker.getTomb(player.getName());
+                        TombDTP TombDTP = worker.getTomb(player.getName());
                         String signtext;
 
                         if (howtheydied[0].equals("PVP"))
-                            signtext = DTPLocaleWorker.getInstance().getPvpLocale(howtheydied[2]);
+                            signtext = LocaleHelperDTP.getInstance().getPvpLocale(howtheydied[2]);
                         else
-                            signtext = DTPLocaleWorker.getInstance().getLocale(
+                            signtext = LocaleHelperDTP.getInstance().getLocale(
                                     howtheydied[0].toLowerCase());
                         int deathLimit = config.getMaxDeaths();
-                        DTPTomb.addDeath();
-                        if (deathLimit != 0 && (DTPTomb.getDeaths() % deathLimit) == 0) {
-                            DTPTomb.resetTombBlocks();
+                        TombDTP.addDeath();
+                        if (deathLimit != 0 && (TombDTP.getDeaths() % deathLimit) == 0) {
+                            TombDTP.resetTombBlocks();
                             player.sendMessage(worker.graveDigger
-                                    + "You've reached the number of deaths before DTPTomb reset.("
+                                    + "You've reached the number of deaths before TombDTP reset.("
                                     + ChatColor.DARK_RED + deathLimit + ChatColor.WHITE
                                     + ") All your tombs are now destroyed.");
                         } else {
-                            DTPTomb.setReason(signtext);
-                            DTPTomb.setDeathLoc(player.getLocation());
-                            DTPTomb.updateDeath();
+                            TombDTP.setReason(signtext);
+                            TombDTP.setDeathLoc(player.getLocation());
+                            TombDTP.updateDeath();
                         }
                     }
                 }
@@ -397,7 +438,7 @@ public class DTPEntityListener extends EntityListener {
                         removeSign = 0;
 
 // Create a TombBlock for this tombstone
-                    DTPTombBlock tBlock = new DTPTombBlock(sChest.getBlock(),
+                    TombBlockDTP tBlockDTP = new TombBlockDTP(sChest.getBlock(),
                             (lChest != null) ? lChest.getBlock() : null, sBlock,
                             player.getName(), (System.currentTimeMillis() / 1000));
 
@@ -405,33 +446,33 @@ public class DTPEntityListener extends EntityListener {
                     Boolean prot = false;
                     Boolean protLWC = false;
                     if (plugin.hasPerm(player, "tombstone.lwc", false))
-                        prot = plugin.activateLWC(player, tBlock);
-                    tBlock.setLwcEnabled(prot);
+                        prot = plugin.activateLWC(player, tBlockDTP);
+                    tBlockDTP.setLwcEnabled(prot);
                     if (prot)
                         protLWC = true;
 
 // Protect the chest with Lockette if installed, enabled, and
 // unprotected.
                     if (plugin.hasPerm(player, "tombstone.lockette", false)){
-                        prot = plugin.protectWithLockette(player, tBlock);
+                        prot = plugin.protectWithLockette(player, tBlockDTP);
                     }
 // Add tombstone to list
-                    plugin.tombList.offer(tBlock);
+                    plugin.tombListDTP.offer(tBlockDTP);
 
 // Add tombstone blocks to tombBlockList
-                    plugin.tombBlockList.put(tBlock.getBlock().getLocation(), tBlock);
-                    if (tBlock.getLBlock() != null)
-                        plugin.tombBlockList.put(tBlock.getLBlock().getLocation(), tBlock);
-                    if (tBlock.getSign() != null)
-                        plugin.tombBlockList.put(tBlock.getSign().getLocation(), tBlock);
+                    plugin.tombBlockList.put(tBlockDTP.getBlock().getLocation(), tBlockDTP);
+                    if (tBlockDTP.getLBlock() != null)
+                        plugin.tombBlockList.put(tBlockDTP.getLBlock().getLocation(), tBlockDTP);
+                    if (tBlockDTP.getSign() != null)
+                        plugin.tombBlockList.put(tBlockDTP.getSign().getLocation(), tBlockDTP);
 
 // Add tombstone to player lookup list
-                    ArrayList<DTPTombBlock> pList = plugin.playerTombList.get(player.getName());
+                    ArrayList<TombBlockDTP> pList = plugin.playerTombList.get(player.getName());
                     if (pList == null) {
-                        pList = new ArrayList<DTPTombBlock>();
+                        pList = new ArrayList<TombBlockDTP>();
                         plugin.playerTombList.put(player.getName(), pList);
                     }
-                    pList.add(tBlock);
+                    pList.add(tBlockDTP);
 
                     plugin.saveTombStoneList(player.getWorld().getName());
 
@@ -536,8 +577,22 @@ public class DTPEntityListener extends EntityListener {
 
 
                 }
+            }*/
+        }
+
+     public void onEntityExplode(EntityExplodeEvent event) {
+        log.debug("onEntityExplodeDTP executing");
+        if (event.isCancelled())
+            return;
+        if (!config.isCreeperProtection())
+            return;
+        for (Block block : event.blockList()) {
+            TombBlockDTP tBlockDTP = plugin.tombBlockList.get(block.getLocation());
+            if (tBlockDTP != null) {
+                event.setCancelled(true);
             }
         }
+    }
 
 
 
@@ -546,14 +601,15 @@ public class DTPEntityListener extends EntityListener {
             return;
         }
         if(event.getEntity() instanceof Player) {
-            log.debug("onEntityDamage executing");
-            Player player = (Player) event.getEntity();
+            oedam = new onEntityDamageDTP();
+            oedam.setLastDamageDone(instance, event);
+            /*Player player = (Player) event.getEntity();
             //player.sendMessage(event.getType().toString());
-            lastDamageDone(player, event);
+            lastDamageDone(player, event);*/
         }
     }
 
-    void lastDamageDone(Player player, EntityDamageEvent event) {
+   /* void lastDamageDone(Player player, EntityDamageEvent event) {
         String lastdamage = event.getCause().name();
         //player.sendMessage(lastdamage);
         //checks for mob/PVP damage
@@ -569,14 +625,14 @@ public class DTPEntityListener extends EntityListener {
             }
 
             // Todo check if duplicate
-            /*else if (attacker instanceof Player) {
+            *//*else if (attacker instanceof Player) {
                 Player pvper = (Player) attacker;
                 String usingitem = pvper.getItemInHand().getType().name();
                 if (usingitem == "AIR") {
                     usingitem = "BARE_KNUCKLES";
                 }
                 lastdamage = "PVP:"+usingitem+":"+pvper.getName();
-            }*/
+            }*//*
             else if (attacker.toString().toLowerCase().matches("craftslime")) {
                 lastdamage = "SLIME";
             }
@@ -647,17 +703,17 @@ public class DTPEntityListener extends EntityListener {
         }
 
         beforedamage = lastdamage;
-    }
+    }*/
 
-    public void onEntityExplode(EntityExplodeEvent event) {
-        log.debug("onEntityExplode executing");
+ /*   public void onEntityExplode(EntityExplodeEvent event) {
+        log.debug("onEntityExplodeDTP executing");
         if (event.isCancelled())
             return;
         if (!config.isCreeperProtection())
             return;
         for (Block block : event.blockList()) {
-            DTPTombBlock tBlock = plugin.tombBlockList.get(block.getLocation());
-            if (tBlock != null) {
+            TombBlockDTP tBlockDTP = plugin.tombBlockList.get(block.getLocation());
+            if (tBlockDTP != null) {
                 event.setCancelled(true);
             }
         }
@@ -740,10 +796,10 @@ public class DTPEntityListener extends EntityListener {
         if (exp.getType() == Material.CHEST)
             return true;
         return false;
-    }
+    }*/
 
 
-    void writeToStreak(String defender, String attacker) {
+    /*void writeToStreak(String defender, String attacker) {
 
         //read the file
         try {
@@ -901,5 +957,5 @@ public class DTPEntityListener extends EntityListener {
             log.warning("Could not edit deathlog", e);
         }
 
-    }
+    }*/
 }

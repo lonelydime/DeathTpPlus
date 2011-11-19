@@ -5,30 +5,30 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.workers.DTPConfig;
-import org.simiancage.DeathTpPlus.workers.DTPLogger;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 
 /**
  * PluginName: DeathTpPlus
- * Class: DTPKillsCommand
+ * Class: KillsCommandDTP
  * User: DonRedhorse
  * Date: 19.10.11
  * Time: 22:09
  */
 
-public class DTPKillsCommand implements CommandExecutor {
+public class KillsCommandDTP implements CommandExecutor {
 
     private DeathTpPlus plugin;
-    private DTPLogger log;
-    private DTPConfig config;
+    private LoggerDTP log;
+    private ConfigDTP config;
 
-    public DTPKillsCommand(DeathTpPlus instance) {
+    public KillsCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
-        log = DTPLogger.getLogger();
-        config = DTPConfig.getInstance();
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
         log.info("dtpfind command registered");
     }
 

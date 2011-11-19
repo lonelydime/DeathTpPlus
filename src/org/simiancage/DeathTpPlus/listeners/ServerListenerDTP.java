@@ -10,22 +10,22 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.workers.DTPConfig;
-import org.simiancage.DeathTpPlus.workers.DTPLogger;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.yi.acru.bukkit.Lockette.Lockette;
 
-public class DTPServerListener extends ServerListener {
+public class ServerListenerDTP extends ServerListener {
     private static DeathTpPlus plugin;
 
-    private DTPLogger log;
-    private DTPConfig config;
+    private LoggerDTP log;
+    private ConfigDTP config;
     private boolean missingEconomyWarn = true;
 
 
-    public DTPServerListener(DeathTpPlus plugin) {
+    public ServerListenerDTP(DeathTpPlus plugin) {
         this.plugin = plugin;
-        log = DTPLogger.getLogger();
-        config = DTPConfig.getInstance();
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
         log.debug("ServerListener active");
 
     }

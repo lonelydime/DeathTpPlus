@@ -1,8 +1,8 @@
-package org.simiancage.DeathTpPlus;
+package org.simiancage.DeathTpPlus.objects;
 
 /**
  * PluginName: DeathTpPlus
- * Class: DTPTombBlock
+ * Class: TombBlockDTP
  * User: DonRedhorse
  * Date: 19.10.11
  * Time: 22:21
@@ -11,7 +11,7 @@ package org.simiancage.DeathTpPlus;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
-public class DTPTombBlock {
+public class TombBlockDTP {
     private Block block;
     private Block lBlock;
     private Block sign;
@@ -20,7 +20,7 @@ public class DTPTombBlock {
     private String owner;
     private boolean lwcEnabled = false;
 
-    public DTPTombBlock(Block block, Block lBlock, Block sign, String owner,
+    public TombBlockDTP(Block block, Block lBlock, Block sign, String owner,
                         long time) {
         this.block = block;
         this.lBlock = lBlock;
@@ -29,7 +29,7 @@ public class DTPTombBlock {
         this.time = time;
     }
 
-    DTPTombBlock(Block block, Block lBlock, Block sign, String owner, long time,
+    TombBlockDTP(Block block, Block lBlock, Block sign, String owner, long time,
                  boolean lwc) {
         this.block = block;
         this.lBlock = lBlock;
@@ -71,11 +71,11 @@ public class DTPTombBlock {
         lwcEnabled = val;
     }
 
-    void setLocketteSign(Sign sign) {
+    public void setLocketteSign(Sign sign) {
         this.LocketteSign = sign;
     }
 
-    void removeLocketteSign() {
+    public void removeLocketteSign() {
         this.LocketteSign = null;
     }
 }

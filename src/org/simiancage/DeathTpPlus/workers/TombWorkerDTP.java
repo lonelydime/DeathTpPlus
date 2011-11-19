@@ -2,7 +2,7 @@ package org.simiancage.DeathTpPlus.workers;
 
 /**
  * PluginName: DeathTpPlus
- * Class: DTPTombWorker
+ * Class: TombWorkerDTP
  * User: DonRedhorse
  * Date: 14.11.11
  * Time: 20:05
@@ -12,32 +12,35 @@ package org.simiancage.DeathTpPlus.workers;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.simiancage.DeathTpPlus.DTPTomb;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.helpers.TombSaveSystemDTP;
+import org.simiancage.DeathTpPlus.objects.TombDTP;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 import java.util.HashMap;
 
 
-public class DTPTombWorker {
-    private static DTPTombWorker instance;
-    protected HashMap<String, DTPTomb> tombs = new HashMap<String, DTPTomb>();
+public class TombWorkerDTP {
+    private static TombWorkerDTP instance;
+    protected HashMap<String, TombDTP> tombs = new HashMap<String, TombDTP>();
     protected static DeathTpPlus pluginInstance;
-    protected DTPSaveSystem saveSys;
+    protected TombSaveSystemDTP saveSys;
     public String graveDigger = "[" + ChatColor.GOLD + "Gravedigger" + ChatColor.WHITE + "] ";
-    private static DTPLogger log;
-    private static DTPConfig config;
+    private static LoggerDTP log;
+    private static ConfigDTP config;
 
-    public static DTPTombWorker getInstance() {
+    public static TombWorkerDTP getInstance() {
         if (instance == null){
-            instance = new DTPTombWorker();
-            log = DTPLogger.getLogger();
-            config = DTPConfig.getInstance();
+            instance = new TombWorkerDTP();
+            log = LoggerDTP.getLogger();
+            config = ConfigDTP.getInstance();
         }
         return instance;
     }
 
 
-    private DTPTombWorker() {
+    private TombWorkerDTP() {
     }
 
     /**
@@ -50,9 +53,9 @@ public class DTPTombWorker {
     public void setPluginInstance(DeathTpPlus pluginInstance) {
         this.pluginInstance = pluginInstance;
         String path = pluginInstance.getDataFolder().getPath();
-        saveSys = new DTPSaveSystem(path);
-        log = DTPLogger.getLogger();
-        config = DTPConfig.getInstance();
+        saveSys = new TombSaveSystemDTP(path);
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
     }
 /*        try {
 
@@ -147,13 +150,13 @@ public class DTPTombWorker {
     }
 
     /**
-     * Add the DTPTomb
+     * Add the TombDTP
      *
      * @param player
-     * @param DTPTomb
+     * @param TombDTP
      */
-    public void setTomb(String player, DTPTomb DTPTomb) {
-        tombs.put(player, DTPTomb);
+    public void setTomb(String player, TombDTP TombDTP) {
+        tombs.put(player, TombDTP);
     }
 
     /**
@@ -170,8 +173,8 @@ public class DTPTombWorker {
      * @param player
      * @return the tombs of the player
      */
-    public DTPTomb getTomb(final String player) {
-        DTPTomb t = null;
+    public TombDTP getTomb(final String player) {
+        TombDTP t = null;
 
         if ((t = tombs.get(player)) != null)
             return t;
@@ -197,9 +200,9 @@ public class DTPTombWorker {
         }
     }
 
-    public DTPTomb getTomb(Block sign) {
+    public TombDTP getTomb(Block sign) {
         for (String name : tombs.keySet()) {
-            DTPTomb result;
+            TombDTP result;
             if ((result = tombs.get(name)).hasSign(sign))
                 return result;
         }

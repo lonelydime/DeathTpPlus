@@ -1,14 +1,15 @@
-package org.simiancage.DeathTpPlus.workers;
+package org.simiancage.DeathTpPlus.helpers;
 
 /**
  * PluginName: DeathTpPlus
- * Class: DTPLocaleWorker
+ * Class: LocaleHelperDTP
  * User: DonRedhorse
  * Date: 14.11.11
  * Time: 20:34
  */
 
 import org.bukkit.util.config.Configuration;
+import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,18 +17,19 @@ import java.util.HashMap;
 import java.util.Random;
 
 
-public class DTPLocaleWorker {
+public class LocaleHelperDTP {
+    // ToDo change this to new configuration class style
     Configuration localeFile;
     HashMap<String, ArrayList<String>> locales = new HashMap<String, ArrayList<String>>();
-    private static DTPLocaleWorker instance;
-    private static DTPConfig config;
-    private static DTPLogger log;
+    private static LocaleHelperDTP instance;
+    private static ConfigDTP config;
+    private static LoggerDTP log;
 
-    public static DTPLocaleWorker getInstance() {
+    public static LocaleHelperDTP getInstance() {
         if (instance == null){
-            instance = new DTPLocaleWorker();
-            log = DTPLogger.getLogger();
-            config = DTPConfig.getInstance();
+            instance = new LocaleHelperDTP();
+            log = LoggerDTP.getLogger();
+            config = ConfigDTP.getInstance();
         }
         return instance;
     }
@@ -36,8 +38,8 @@ public class DTPLocaleWorker {
      *
      */
     @SuppressWarnings("unchecked")
-    private DTPLocaleWorker() {
-        File configFile = new File(DTPTombWorker.getInstance().getPlugin()
+    private LocaleHelperDTP() {
+        File configFile = new File(TombWorkerDTP.getInstance().getPlugin()
                 .getDataFolder().getPath()
                 + File.separator + "locales.yml");
         localeFile = new Configuration(configFile);

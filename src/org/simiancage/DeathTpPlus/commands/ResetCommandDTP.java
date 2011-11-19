@@ -2,7 +2,7 @@ package org.simiancage.DeathTpPlus.commands;
 
 /**
  * PluginName: DeathTpPlus
- * Class: DTPResetCommand
+ * Class: ResetCommandDTP
  * User: DonRedhorse
  * Date: 19.10.11
  * Time: 22:07
@@ -15,19 +15,19 @@ import org.bukkit.entity.Player;
 
 
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.workers.DTPConfig;
-import org.simiancage.DeathTpPlus.workers.DTPLogger;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 
-public class DTPResetCommand implements CommandExecutor {
+public class ResetCommandDTP implements CommandExecutor {
 
     private DeathTpPlus plugin;
-    private DTPLogger log;
-    private DTPConfig config;
+    private LoggerDTP log;
+    private ConfigDTP config;
 
-    public DTPResetCommand(DeathTpPlus instance) {
+    public ResetCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
-        log = DTPLogger.getLogger();
-        config = DTPConfig.getInstance();
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
         log.info("dtpreset command registered");
     }
 

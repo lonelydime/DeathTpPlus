@@ -4,24 +4,24 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.simiancage.DeathTpPlus.DTPTombBlock;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.workers.DTPConfig;
-import org.simiancage.DeathTpPlus.workers.DTPLogger;
 
 import java.util.ArrayList;
 
 
-public class DTPAdminCommand implements CommandExecutor {
+public class AdminCommandDTP implements CommandExecutor {
 
     private DeathTpPlus plugin;
-    private DTPLogger log;
-    private DTPConfig config;
+    private LoggerDTP log;
+    private ConfigDTP config;
 
-    public DTPAdminCommand(DeathTpPlus instance) {
+    public AdminCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
-        log = DTPLogger.getLogger();
-        config = DTPConfig.getInstance();
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
         log.info("dtpadmin command registered");
     }
 
@@ -62,22 +62,22 @@ public class DTPAdminCommand implements CommandExecutor {
                 }
                 return true;
             }
-            ArrayList<DTPTombBlock> pList = plugin.playerTombList.get(args[1]);
+            ArrayList<TombBlockDTP> pList = plugin.playerTombList.get(args[1]);
             if (pList == null) {
                 plugin.sendMessage(p, "No tombstones found for " + args[1] + ".");
                 return true;
             }
             plugin.sendMessage(p, "Tombstone List:");
             int i = 0;
-            for (DTPTombBlock tomb : pList) {
+            for (TombBlockDTP tombDTP : pList) {
                 i++;
-                if (tomb.getBlock() == null)
+                if (tombDTP.getBlock() == null)
                     continue;
-                int X = tomb.getBlock().getX();
-                int Y = tomb.getBlock().getY();
-                int Z = tomb.getBlock().getZ();
+                int X = tombDTP.getBlock().getX();
+                int Y = tombDTP.getBlock().getY();
+                int Z = tombDTP.getBlock().getZ();
                 plugin.sendMessage(p, " " + i + " - World: "
-                        + tomb.getBlock().getWorld().getName() + " @(" + X
+                        + tombDTP.getBlock().getWorld().getName() + " @(" + X
                         + "," + Y + "," + Z + ")");
             }
             return true;
@@ -86,7 +86,7 @@ public class DTPAdminCommand implements CommandExecutor {
                 plugin.sendMessage(p, "Permission Denied");
                 return true;
             }
-            ArrayList<DTPTombBlock> pList = plugin.playerTombList.get(args[1]);
+            ArrayList<TombBlockDTP> pList = plugin.playerTombList.get(args[1]);
             if (pList == null) {
                 plugin.sendMessage(p, "No tombstones found for " + args[1] + ".");
                 return true;
@@ -103,12 +103,12 @@ public class DTPAdminCommand implements CommandExecutor {
                 plugin.sendMessage(p, "Invalid tombstone entry.");
                 return true;
             }
-            DTPTombBlock tBlock = pList.get(slot);
-            double degrees = (plugin.getYawTo(tBlock.getBlock().getLocation(),
+            TombBlockDTP tBlockDTP = pList.get(slot);
+            double degrees = (plugin.getYawTo(tBlockDTP.getBlock().getLocation(),
                     p.getLocation()) + 270) % 360;
-            int X = tBlock.getBlock().getX();
-            int Y = tBlock.getBlock().getY();
-            int Z = tBlock.getBlock().getZ();
+            int X = tBlockDTP.getBlock().getX();
+            int Y = tBlockDTP.getBlock().getY();
+            int Z = tBlockDTP.getBlock().getZ();
             plugin.sendMessage(p, args[1] + "'s tombstone #" + args[2]
                     + " is at " + X + "," + Y + "," + Z + ", to the "
                     + plugin.getDirection(degrees) + ".");
@@ -120,7 +120,7 @@ public class DTPAdminCommand implements CommandExecutor {
             }
             if (args.length != 3)
                 return false;
-            ArrayList<DTPTombBlock> pList = plugin.playerTombList.get(args[1]);
+            ArrayList<TombBlockDTP> pList = plugin.playerTombList.get(args[1]);
             if (pList == null) {
                 plugin.sendMessage(p, "No tombstones found for " + args[1] + ".");
                 return true;
@@ -138,10 +138,10 @@ public class DTPAdminCommand implements CommandExecutor {
                 return true;
             }
             long cTime = System.currentTimeMillis() / 1000;
-            DTPTombBlock tBlock = pList.get(slot);
-            long secTimeLeft = (tBlock.getTime() + Long.parseLong(config.getRemoveTombStoneSecurityTimeOut()))
+            TombBlockDTP tBlockDTP = pList.get(slot);
+            long secTimeLeft = (tBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneSecurityTimeOut()))
                     - cTime;
-            long remTimeLeft = (tBlock.getTime() + Long.parseLong(config.getRemoveTombStoneTime())) - cTime;
+            long remTimeLeft = (tBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneTime())) - cTime;
             if (config.isRemoveTombStoneSecurity() && secTimeLeft > 0)
                 plugin.sendMessage(p, "Security removal: " + secTimeLeft
                         + " seconds.");
@@ -172,7 +172,7 @@ public class DTPAdminCommand implements CommandExecutor {
                 plugin.sendMessage(p, "Permission Denied");
                 return true;
             }
-            ArrayList<DTPTombBlock> pList = plugin.playerTombList.get(args[1]);
+            ArrayList<TombBlockDTP> pList = plugin.playerTombList.get(args[1]);
             if (pList == null) {
                 plugin.sendMessage(p, "No tombstones found for " + args[1] + ".");
                 return true;
@@ -189,8 +189,8 @@ public class DTPAdminCommand implements CommandExecutor {
                 plugin.sendMessage(p, "Invalid tombstone entry.");
                 return true;
             }
-            DTPTombBlock tBlock = pList.get(slot);
-            plugin.destroyTombStone(tBlock);
+            TombBlockDTP tBlockDTP = pList.get(slot);
+            plugin.destroyTombStone(tBlockDTP);
 
         } else {
             plugin.sendMessage(p, "Usage: /dtpadmin list");

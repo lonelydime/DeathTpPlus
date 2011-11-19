@@ -2,7 +2,7 @@ package org.simiancage.DeathTpPlus.workers;
 
 /**
  * PluginName: TODO insert Pluginname here
- * Class: DTPTombThread
+ * Class: TombStoneThreadDTP
  * User: DonRedhorse
  * Date: 19.10.11
  * Time: 22:23
@@ -11,35 +11,37 @@ package org.simiancage.DeathTpPlus.workers;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.simiancage.DeathTpPlus.DTPTombBlock;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 import java.util.Iterator;
 
-public class DTPTombThread extends Thread {
+public class TombStoneThreadDTP extends Thread {
     private DeathTpPlus plugin;
-    private DTPLogger log;
-    private DTPConfig config;
+    private LoggerDTP log;
+    private ConfigDTP config;
 
-    public DTPTombThread(DeathTpPlus instance) {
+    public TombStoneThreadDTP(DeathTpPlus instance) {
         this.plugin = instance;
-        log = DTPLogger.getLogger();
-        config = DTPConfig.getInstance();
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
     }
 
     public void run() {
         long cTime = System.currentTimeMillis() / 1000;
-        for (Iterator<DTPTombBlock> iter = plugin.tombList.iterator(); iter
+        for (Iterator<TombBlockDTP> iter = plugin.tombListDTP.iterator(); iter
                 .hasNext();) {
-            DTPTombBlock tBlock = iter.next();
+            TombBlockDTP tBlockDTP = iter.next();
 
 // "empty" option checks
             if (config.isKeepTombStoneUntilEmpty() || config.isRemoveTombStoneWhenEmpty()) {
-                if (tBlock.getBlock().getState() instanceof Chest) {
+                if (tBlockDTP.getBlock().getState() instanceof Chest) {
                     int itemCount = 0;
 
-                    Chest sChest = (Chest) tBlock.getBlock().getState();
-                    Chest lChest = (tBlock.getLBlock() != null) ? (Chest) tBlock
+                    Chest sChest = (Chest) tBlockDTP.getBlock().getState();
+                    Chest lChest = (tBlockDTP.getLBlock() != null) ? (Chest) tBlockDTP
                             .getLBlock().getState() : null;
 
                     for (ItemStack item : sChest.getInventory().getContents()) {
@@ -60,7 +62,7 @@ public class DTPTombThread extends Thread {
                     }
                     if (config.isRemoveTombStoneWhenEmpty()) {
                         if (itemCount == 0)
-                            plugin.destroyTombStone(tBlock);
+                            plugin.destroyTombStone(tBlockDTP);
                         iter.remove(); // TODO bugcheck on this addition
                     }
                 }
@@ -68,19 +70,19 @@ public class DTPTombThread extends Thread {
 
 // Security removal check
             if (config.isRemoveTombStoneSecurity()) {
-                Player p = plugin.getServer().getPlayer(tBlock.getOwner());
+                Player p = plugin.getServer().getPlayer(tBlockDTP.getOwner());
 
-                if (cTime >= (tBlock.getTime() + Long.parseLong(config.getRemoveTombStoneSecurityTimeOut()))) {
-                    if (tBlock.getLwcEnabled() && plugin.lwcPlugin != null) {
-                        plugin.deactivateLWC(tBlock, false);
-                        tBlock.setLwcEnabled(false);
+                if (cTime >= (tBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneSecurityTimeOut()))) {
+                    if (tBlockDTP.getLwcEnabled() && plugin.lwcPlugin != null) {
+                        plugin.deactivateLWC(tBlockDTP, false);
+                        tBlockDTP.setLwcEnabled(false);
                         if (p != null)
                             plugin.sendMessage(p,
                                     "LWC protection disabled on your tombstone!");
                     }
-                    if (tBlock.getLocketteSign() != null
+                    if (tBlockDTP.getLocketteSign() != null
                             && plugin.LockettePlugin != null) {
-                        plugin.deactivateLockette(tBlock);
+                        plugin.deactivateLockette(tBlockDTP);
                         if (p != null)
                             plugin.sendMessage(p,
                                     "Lockette protection disabled on your tombstone!");
@@ -90,8 +92,8 @@ public class DTPTombThread extends Thread {
 
 // Block removal check
             if (config.isRemoveTombStone()
-                    && cTime > (tBlock.getTime() + Long.parseLong(config.getRemoveTombStoneTime()))) {
-                plugin.destroyTombStone(tBlock); // TODO this originally included
+                    && cTime > (tBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneTime()))) {
+                plugin.destroyTombStone(tBlockDTP); // TODO this originally included
 // the only instance of
 // removeTomb(tblock, false).
 // check for bugs caused by the

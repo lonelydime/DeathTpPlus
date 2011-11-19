@@ -2,7 +2,7 @@ package org.simiancage.DeathTpPlus.listeners;
 
 /**
  * PluginName: DeathTpPlus
- * Class: DTPPlayerListener
+ * Class: PlayerListenerDTP
  * User: DonRedhorse
  * Date: 19.10.11
  * Time: 22:01
@@ -17,29 +17,29 @@ import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
-import org.simiancage.DeathTpPlus.DTPTombBlock;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.workers.DTPConfig;
-import org.simiancage.DeathTpPlus.workers.DTPLogger;
-import org.simiancage.DeathTpPlus.workers.DTPTombWorker;
+import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
-public class DTPPlayerListener extends PlayerListener {
+public class PlayerListenerDTP extends PlayerListener {
     private DeathTpPlus plugin;
-    private DTPConfig config;
-    private DTPLogger log;
-    private DTPTombWorker worker;
+    private ConfigDTP config;
+    private LoggerDTP log;
+    private TombWorkerDTP worker;
 
-    public DTPPlayerListener(DeathTpPlus instance) {
+    public PlayerListenerDTP(DeathTpPlus instance) {
         this.plugin = instance;
-        log = DTPLogger.getLogger();
-        config = DTPConfig.getInstance();
-        worker = DTPTombWorker.getInstance();
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
+        worker = TombWorkerDTP.getInstance();
         log.debug("PlayerListener active");
     }
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
-        log.debug("onPlayerInteract executing");
+        log.debug("onPlayerInteractDTP executing");
 
         if (config.isEnableTombStone()){
             if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
@@ -57,15 +57,15 @@ public class DTPPlayerListener extends PlayerListener {
             if (!plugin.hasPerm(event.getPlayer(), "quickloot", false))
                 return;
 
-            DTPTombBlock tBlock = plugin.tombBlockList.get(b.getLocation());
-            if (tBlock == null || !(tBlock.getBlock().getState() instanceof Chest))
+            TombBlockDTP tBlockDTP = plugin.tombBlockList.get(b.getLocation());
+            if (tBlockDTP == null || !(tBlockDTP.getBlock().getState() instanceof Chest))
                 return;
 
-            if (!tBlock.getOwner().equals(event.getPlayer().getName()))
+            if (!tBlockDTP.getOwner().equals(event.getPlayer().getName()))
                 return;
 
-            Chest sChest = (Chest) tBlock.getBlock().getState();
-            Chest lChest = (tBlock.getLBlock() != null) ? (Chest) tBlock
+            Chest sChest = (Chest) tBlockDTP.getBlock().getState();
+            Chest lChest = (tBlockDTP.getLBlock() != null) ? (Chest) tBlockDTP
                     .getLBlock().getState() : null;
 
             ItemStack[] items = sChest.getInventory().getContents();
@@ -111,14 +111,14 @@ public class DTPPlayerListener extends PlayerListener {
                 event.setCancelled(true);
 
                 if (config.isDestroyOnQuickLoot()) {
-                    plugin.destroyTombStone(tBlock);
+                    plugin.destroyTombStone(tBlockDTP);
                 }
             }
 
 // Manually update inventory for the time being.
             event.getPlayer().updateInventory();
             plugin.sendMessage(event.getPlayer(), "Tombstone quicklooted!");
-            Location location = tBlock.getBlock().getLocation();
+            Location location = tBlockDTP.getBlock().getLocation();
             String loc = location.getWorld().getName();
             loc = loc +", x=" + location.getBlock().getX();
             loc = loc +", y=" + location.getBlock().getY();
