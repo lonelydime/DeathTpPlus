@@ -205,6 +205,7 @@ public class DeathTpPlus extends JavaPlugin{
             pm.registerEvent(Event.Type.PLAYER_RESPAWN, playerListener, Priority.Highest, this);
             pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
+            //ToDo check if this is really needed
             //pm.registerEvent(Event.Type.WORLD_SAVE, worldSaveListener, Priority.Normal, this);
             server = getServer();
             TombWorkerDTP.getInstance().setPluginInstance(this);
