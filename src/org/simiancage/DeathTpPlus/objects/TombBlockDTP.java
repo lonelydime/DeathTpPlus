@@ -29,8 +29,8 @@ public class TombBlockDTP {
         this.time = time;
     }
 
-    TombBlockDTP(Block block, Block lBlock, Block sign, String owner, long time,
-                 boolean lwc) {
+    public TombBlockDTP(Block block, Block lBlock, Block sign, String owner, long time,
+                        boolean lwc) {
         this.block = block;
         this.lBlock = lBlock;
         this.sign = sign;

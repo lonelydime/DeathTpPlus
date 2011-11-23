@@ -22,8 +22,6 @@ import com.griefcraft.lwc.LWC;
 import com.griefcraft.lwc.LWCPlugin;
 import com.griefcraft.model.Protection;
 import com.griefcraft.model.ProtectionTypes;
-import com.nijikokun.register.payment.Method;
-import com.nijikokun.register.payment.Methods;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -207,7 +205,7 @@ public class DeathTpPlus extends JavaPlugin{
             pm.registerEvent(Event.Type.PLAYER_RESPAWN, playerListener, Priority.Highest, this);
             pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
-            pm.registerEvent(Event.Type.WORLD_SAVE, worldSaveListener, Priority.Normal, this);
+            //pm.registerEvent(Event.Type.WORLD_SAVE, worldSaveListener, Priority.Normal, this);
             server = getServer();
             TombWorkerDTP.getInstance().setPluginInstance(this);
             TombWorkerDTP.getInstance().load();
@@ -818,7 +816,7 @@ public class DeathTpPlus extends JavaPlugin{
     }
 
 
-    // Register Mesthod
+/*    // Register Mesthod
 
     public Method getRegisterMethod(){
         try{
@@ -827,5 +825,5 @@ public class DeathTpPlus extends JavaPlugin{
         } // ugly solution, I know ...
         return null;
 
-    }
+    }*/
 }

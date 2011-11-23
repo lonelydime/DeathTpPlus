@@ -29,8 +29,8 @@ public class TombSaveDTP implements Serializable {
     protected String reason;
     protected LocSaveDTP deathLoc;
     protected LocSaveDTP respawn;
-    private ConfigDTP config;
-    private LoggerDTP log;
+    private transient ConfigDTP config;
+    private transient LoggerDTP log;
 
     public TombSaveDTP(TombDTP TombDTP) {
         log = LoggerDTP.getLogger();
@@ -93,8 +93,8 @@ class LocSaveDTP implements Serializable {
     /**
      *
      */
-    private LoggerDTP log;
-    private ConfigDTP config;
+    private transient LoggerDTP log;
+    private transient ConfigDTP config;
     private static final long serialVersionUID = 8631716113887974333L;
     private double x;
     private double y;

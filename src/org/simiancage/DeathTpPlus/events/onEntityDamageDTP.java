@@ -26,7 +26,6 @@ public class onEntityDamageDTP {
     public onEntityDamageDTP() {
         this.log = LoggerDTP.getLogger();
         this.config = ConfigDTP.getInstance();
-
     }
 
     public void setLastDamageDone (EntityListenerDTP entityListenerDTP, EntityDamageEvent entityDamageEvent)
@@ -38,7 +37,9 @@ public class onEntityDamageDTP {
         log.debug("lastdamage", lastdamage );
         if (entityDamageEvent instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent mobevent = (EntityDamageByEntityEvent) entityDamageEvent;
+            log.debug("mobevent",mobevent );
             Entity attacker = mobevent.getDamager();
+            log.debug("attacker",attacker );
             if (attacker instanceof Fireball) {
                 lastdamage = (((Fireball) attacker).getShooter().toString());
                 log.debug("lastdamage",lastdamage );
@@ -66,8 +67,14 @@ public class onEntityDamageDTP {
                 log.debug("lastdamage",lastdamage );
             }
 
+            else if (attacker instanceof Squid) {
+                lastdamage = "SQUID";
+                log.debug("lastdamage",lastdamage );
+            }
+
             else if (attacker instanceof Monster) {
                 Monster mob = (Monster) attacker;
+                log.debug("mob",mob );
 
                 if (mob instanceof PigZombie) {
                     lastdamage = "PIGZOMBIE";
@@ -109,6 +116,11 @@ public class onEntityDamageDTP {
                     lastdamage = "SILVERFISH";
                     log.debug("lastdamage",lastdamage );
                 }
+                //ToDo implemented MC 1.0 Blaze
+                /*else if (mob instanceof Blaze) {
+                    lastdamage = "BLAZE";
+                    log.debug("lastdamage",lastdamage );
+                }*/
             }
             else if (attacker instanceof Player) {
                 Player pvper = (Player) attacker;

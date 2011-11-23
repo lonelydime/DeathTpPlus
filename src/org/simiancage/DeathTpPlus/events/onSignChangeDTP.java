@@ -22,12 +22,12 @@ public class onSignChangeDTP {
     private LoggerDTP log;
     private ConfigDTP config;
     private DeathTpPlus plugin;
-    private TombWorkerDTP tombWorker;
+    private TombWorkerDTP tombWorkerDTP;
 
     public onSignChangeDTP() {
         this.log = LoggerDTP.getLogger();
         this.config = ConfigDTP.getInstance();
-        this.tombWorker = TombWorkerDTP.getInstance();
+        this.tombWorkerDTP = TombWorkerDTP.getInstance();
     }
 
     public void oSCTomb (DeathTpPlus plugin, SignChangeEvent event){
@@ -42,11 +42,11 @@ public class onSignChangeDTP {
             TombDTP TombDTP = null;
             String deadName = event.getLine(1);
             if (admin) {
-                if ((TombDTP = tombWorker.getTomb(deadName)) == null)
+                if ((TombDTP = tombWorkerDTP.getTomb(deadName)) == null)
                     try {
                         deadName = p.getServer().getPlayer(event.getLine(1)).getName();
                     } catch (Exception e2) {
-                        p.sendMessage(tombWorker.graveDigger + "The player " + event.getLine(1)
+                        p.sendMessage(tombWorkerDTP.graveDigger + "The player " + event.getLine(1)
                                 + "was not found.(The player HAS to be CONNECTED)");
                         return;
                     }
@@ -54,10 +54,11 @@ public class onSignChangeDTP {
                     deadName = TombDTP.getPlayer();
             } else
                 deadName = event.getPlayer().getName();
+            log.debug("deadName",deadName );
             if (TombDTP != null)
                 TombDTP.checkSigns();
-            else if (tombWorker.hasTomb(deadName)) {
-                TombDTP = tombWorker.getTomb(deadName);
+            else if (tombWorkerDTP.hasTomb(deadName)) {
+                TombDTP = tombWorkerDTP.getTomb(deadName);
                 TombDTP.checkSigns();
             }
             int nbSign = 0;
@@ -66,13 +67,13 @@ public class onSignChangeDTP {
 // max check
             int maxTombs = config.getMaxTomb();
             if (!admin && maxTombs != 0 && (nbSign + 1) > maxTombs) {
-                p.sendMessage(tombWorker.graveDigger + "You have reached your TombDTP limit.");
+                p.sendMessage(tombWorkerDTP.graveDigger + "You have reached your Tomb limit.");
                 event.setCancelled(true);
                 return;
             }
 // perm and economy check
             if ((!admin && !p.hasPermission("deathtpplus.tomb.create"))
-                    || !tombWorker.economyCheck(p, "creation-price")) {
+                    || !tombWorkerDTP.economyCheck(p, "creation-price")) {
                 event.setCancelled(true);
                 return;
             }
@@ -80,23 +81,24 @@ public class onSignChangeDTP {
             try {
 
                 if (TombDTP != null) {
+                    TombDTP.setPlayer(deadName);
                     TombDTP.addSignBlock(block);
                 } else {
                     TombDTP = new TombDTP(block);
                     TombDTP.setPlayer(deadName);
-                    tombWorker.setTomb(deadName, TombDTP);
+                    tombWorkerDTP.setTomb(deadName, TombDTP);
                 }
                 TombDTP.updateNewBlock();
                 if (config.isUseTombAsRespawnPoint()) {
                     TombDTP.setRespawn(p.getLocation());
                     if (admin)
-                        p.sendMessage(tombWorker.graveDigger + " When " + deadName
+                        p.sendMessage(tombWorkerDTP.graveDigger + " When " + deadName
                                 + " die, he/she will respawn here.");
                     else
-                        p.sendMessage(tombWorker.graveDigger + " When you die you'll respawn here.");
+                        p.sendMessage(tombWorkerDTP.graveDigger + " When you die you'll respawn here.");
                 }
             } catch (IllegalArgumentException e2) {
-                p.sendMessage(tombWorker.graveDigger
+                p.sendMessage(tombWorkerDTP.graveDigger
                         + "It's not a good place for a Tomb. Try somewhere else.");
             }
 

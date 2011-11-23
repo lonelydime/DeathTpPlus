@@ -105,7 +105,7 @@ public class TombDTP {
                                     }
                                 } else {
                                     signBlocks.remove(block);
-                                    log.info("[setLine]TombDTP of " + playerName
+                                    log.info("[setLine]Tomb of " + playerName
                                             + " Block :(" + block.getWorld().getName() + ", "
                                             + block.getX() + ", " + block.getY() + ", "
                                             + block.getZ() + ") DESTROYED.");
@@ -118,45 +118,45 @@ public class TombDTP {
     }
 
     public void updateDeath() {
+        log.debug("updating death signs");
         if (!signBlocks.isEmpty()) {
             final String deathNb = cutMsg(deaths + " Deaths");
             final String deathReason = cutMsg(reason);
-            DeathTpPlus.getBukkitServer().getScheduler()
-                    .scheduleAsyncDelayedTask(TombWorkerDTP.getInstance().getPlugin(), new Runnable() {
-                        public void run() {
-                            try {
-                                sema.acquire();
-                            } catch (InterruptedException e) {
-                                log.debug("Couldn't acquire semaphore", e);
+            DeathTpPlus.getBukkitServer().getScheduler().scheduleAsyncDelayedTask(TombWorkerDTP.getInstance().getPlugin(), new Runnable() {
+                public void run() {
+                    try {
+                        sema.acquire();
+                    } catch (InterruptedException e) {
+                        log.debug("Couldn't acquire semaphore", e);
 // e.printStackTrace();
-                            }
-                            Sign sign;
-                            log.info("[updateDeath] " + playerName
-                                    + " died updating tomb(s).");
-                            for (Block block : signBlocks) {
-                                if (isSign(block)) {
-                                    sign = (Sign) block.getState();
-                                    sign.setLine(2, deathNb);
-                                    sign.setLine(3, deathReason);
-                                    sign.update(true);
-                                    try {
-                                        Thread.sleep(110);
-                                    } catch (InterruptedException e) {
+                    }
+                    Sign sign;
+                    log.info("[updateDeath] " + playerName
+                            + " died updating tomb(s).");
+                    for (Block block : signBlocks) {
+                        if (isSign(block)) {
+                            sign = (Sign) block.getState();
+                            sign.setLine(2, deathNb);
+                            sign.setLine(3, deathReason);
+                            sign.update(true);
+                            try {
+                                Thread.sleep(110);
+                            } catch (InterruptedException e) {
 
-                                    }
-                                } else {
-                                    signBlocks.remove(block);
-                                    block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.SIGN,1));
-                                    block.setType(Material.AIR);
-                                    log.info("[updateDeath]TombDTP of " + playerName
-                                            + " Block :(" + block.getWorld().getName() + ", "
-                                            + block.getX() + ", " + block.getY() + ", "
-                                            + block.getZ() + ") DESTROYED.");
-                                }
                             }
-                            sema.release();
+                        } else {
+                            signBlocks.remove(block);
+                            block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.SIGN, 1));
+                            block.setType(Material.AIR);
+                            log.info("[updateDeath]Tomb of " + playerName
+                                    + " Block :(" + block.getWorld().getName() + ", "
+                                    + block.getX() + ", " + block.getY() + ", "
+                                    + block.getZ() + ") DESTROYED.");
                         }
-                    });
+                    }
+                    sema.release();
+                }
+            });
         }
     }
 
@@ -186,7 +186,7 @@ public class TombDTP {
                                 signBlocks.remove(block);
                                 block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.SIGN,1));
                                 block.setType(Material.AIR);
-                                log.info("[CheckSigns]TombDTP of " + playerName
+                                log.info("[CheckSigns]Tomb of " + playerName
                                         + " Block :(" + block.getWorld().getName() + ", "
                                         + block.getX() + ", " + block.getY() + ", " + block.getZ()
                                         + ") DESTROYED.");
@@ -280,26 +280,26 @@ public class TombDTP {
      * Update the new block
      */
     public void updateNewBlock() {
-        DeathTpPlus.getBukkitServer().getScheduler()
-                .scheduleAsyncDelayedTask(TombWorkerDTP.getInstance().getPlugin(), new Runnable() {
-                    public void run() {
-                        Sign sign;
-                        Block block = lastBlock;
-                        if (isSign(block)) {
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                            }
-                            sign = (Sign) block.getState();
-                            sign.setLine(1, cutMsg(playerName));
-                            sign.setLine(2, cutMsg(deaths + " Deaths"));
-                            if (reason != null && !reason.isEmpty())
-                                sign.setLine(3, cutMsg(reason));
-                            sign.update(true);
-
-                        }
+        log.debug("Registering Scheduler for new block",lastBlock );
+        DeathTpPlus.getBukkitServer().getScheduler().scheduleAsyncDelayedTask(TombWorkerDTP.getInstance().getPlugin(), new Runnable() {
+            public void run() {
+                Sign sign;
+                Block block = lastBlock;
+                if (isSign(block)) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
                     }
-                });
+                    sign = (Sign) block.getState();
+                    sign.setLine(1, cutMsg(playerName));
+                    sign.setLine(2, cutMsg(deaths + " Deaths"));
+                    if (reason != null && !reason.isEmpty())
+                        sign.setLine(3, cutMsg(reason));
+                    sign.update(true);
+
+                }
+            }
+        });
     }
 
     /**
@@ -313,7 +313,7 @@ public class TombDTP {
                 || sign.getType() == Material.SIGN_POST || sign.getState() instanceof Sign)
             return true;
         else {
-            log.severe("TombDTP of " + playerName + " Block :(" + sign.getWorld().getName()
+            log.severe("Tomb of " + playerName + " Block :(" + sign.getWorld().getName()
                     + ", " + sign.getX() + ", " + sign.getY() + ", " + sign.getZ()
                     + ") is not a sign it's a " + sign.getType());
             return false;
@@ -333,8 +333,8 @@ public class TombDTP {
                 log.debug("Couldn't acquire semaphore", e);
 // e.printStackTrace();
             }
-            this.signBlocks.add(sign);
-            log.info("TombDTP of " + playerName + " Block :("
+            signBlocks.add(sign);
+            log.info("Tomb Block :("
                     + sign.getWorld().getName() + ", " + sign.getX() + ", " + sign.getY() + ", "
                     + sign.getZ() + ") Added.");
             lastBlock = sign;
@@ -371,7 +371,7 @@ public class TombDTP {
                             }
                         }
                         signBlocks.clear();
-                        log.info("[resetTombBlocks] TombDTP of " + playerName
+                        log.info("[resetTombBlocks] Tomb of " + playerName
                                 + " reseted.");
                         sema.release();
                     }
@@ -395,7 +395,7 @@ public class TombDTP {
 // e.printStackTrace();
                             }
                             signBlocks.remove(sign);
-                            log.info("[removeSignBlock]TombDTP of " + playerName
+                            log.info("[removeSignBlock]Tomb of " + playerName
                                     + " Block :(" + sign.getWorld().getName() + ", " + sign.getX()
                                     + ", " + sign.getY() + ", " + sign.getZ() + ") REMOVED.");
                             sema.release();

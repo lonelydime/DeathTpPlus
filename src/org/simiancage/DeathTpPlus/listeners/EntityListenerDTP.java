@@ -25,14 +25,7 @@ public class EntityListenerDTP extends EntityListener {
     private PlayerDeathEvent playerDeathEvent = null;
     private String loghowdied;
     protected TombWorkerDTP worker = TombWorkerDTP.getInstance();
-    enum DeathTypes {FALL, DROWNING, SUFFOCATION, FIRE_TICK, FIRE, LAVA, BLOCK_EXPLOSION, CREEPER, SKELETON, SPIDER, PIGZOMBIE, ZOMBIE, CONTACT, SLIME, VOID, GHAST, WOLF, LIGHTNING, STARVATION, CAVESPIDER, ENDERMAN, SILVERFISH, PVP, FISTS, UNKNOWN, SUICIDE;
 
-        @Override public String toString() {
-            //only capitalize the first letter
-            String s = super.toString();
-            return s.substring(0, 1)+s.substring(1).toLowerCase();
-        }
-    }
     private ConfigDTP config;
     private LoggerDTP log;
     private onEntityDamageDTP oedam;
@@ -97,15 +90,16 @@ public class EntityListenerDTP extends EntityListener {
 
     public void onEntityDeath(EntityDeathEvent event) {
 
-
-        if (config.isAllowDeathtp()){
-            oedea = new onEntityDeathDTP();
+        if (event.getEntity() instanceof Player){
+        if (config.isEnableDeathtp()){
+            oedea = new onEntityDeathDTP(plugin);
             oedea.oEDeaDeathTp(plugin, instance, event);
         }
 
         if (config.isShowDeathNotify() || config.isShowStreaks() || config.isAllowDeathLog() || config.isEnableTombStone()|| config.isEnableTomb() ) {
-            oedea = new onEntityDeathDTP();
+            oedea = new onEntityDeathDTP(plugin);
             oedea.oEDeaGeneralDeath(plugin, instance, event);
+        }
         }
 /*
         beforedamage = "";

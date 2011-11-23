@@ -9,7 +9,6 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
@@ -43,10 +42,11 @@ public class onEntityDeathDTP {
     private String loghowdied;
 
 
-    public onEntityDeathDTP() {
+    public onEntityDeathDTP(DeathTpPlus plugin) {
         this.log = LoggerDTP.getLogger();
         this.config = ConfigDTP.getInstance();
         this.tombWorker = TombWorkerDTP.getInstance();
+        this.plugin = plugin;
     }
 
     public void oEDeaDeathTp (DeathTpPlus plugin, EntityListenerDTP entityListenerDTP, EntityDeathEvent entityDeathEvent) {
@@ -157,13 +157,13 @@ public class onEntityDeathDTP {
         if (config.isShowDeathSign()) {
             ShowDeathSign(player, howtheydied, loghowdied);
         }
-
+// Tomb part
         if (config.isEnableTomb())
         {
             UpdateTomb(player, howtheydied);
         }
 
-        // Tombstone part
+// Tombstone part
         if (config.isEnableTombStone()){
             CreateTombStone(plugin, entityDeathEvent, player);
         }
@@ -442,6 +442,7 @@ public class onEntityDeathDTP {
     private void UpdateTomb(Player player, String[] howtheydied) {
         if (tombWorker.hasTomb(player.getName())) {
             TombDTP TombDTP = tombWorker.getTomb(player.getName());
+            log.debug("TombDTP",TombDTP );
             String signtext;
 
             if (howtheydied[0].equals("PVP"))

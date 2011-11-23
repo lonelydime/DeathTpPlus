@@ -132,6 +132,9 @@ public class ConfigDTP {
 
 // Helper Variables
 
+    //Todo create stuff for:
+    // Blaze, Squid, FallingSand, EnderDragon
+
     /** Array which holds default Death Streak messages*/
     private String[] defaultDeathStreaks;
     /** Array which holds default Kill Streak messages*/
@@ -831,6 +834,10 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("enableLockette",enableLockette );
         log.debug("enableLWC",enableLWC );
         log.debug("locale",locale );
+        log.debug("tombStoneSign",tombStoneSign[0] );
+        log.debug("tombStoneSign",tombStoneSign[1] );
+        log.debug("tombStoneSign",tombStoneSign[2] );
+        log.debug("tombStoneSign",tombStoneSign[3] );
         log.debug("allowWordTravel", allowWorldTravel );
         log.debug("enableDeathtp",enableDeathtp );
         log.debug("showDeathNotify",showDeathNotify );
@@ -849,7 +856,6 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("allowInterfere",allowInterfere);
         log.debug("voidCheck",voidCheck);
         log.debug("creeperProtection",creeperProtection );
-        log.debug("tombStoneSign",tombStoneSign );
         log.debug("destroyOnQuickLoot",destroyOnQuickLoot);
         log.debug("removeTombStone",removeTombStone);
         log.debug("removeTombStoneTime", removeTombStoneTime);
