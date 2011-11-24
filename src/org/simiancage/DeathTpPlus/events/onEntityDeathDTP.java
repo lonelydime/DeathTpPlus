@@ -12,9 +12,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
-import org.simiancage.DeathTpPlus.helpers.LocaleHelperDTP;
-import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.helpers.*;
 import org.simiancage.DeathTpPlus.listeners.EntityListenerDTP;
 import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
 import org.simiancage.DeathTpPlus.objects.TombDTP;
@@ -36,9 +34,11 @@ public class onEntityDeathDTP {
 
     private LoggerDTP log;
     private ConfigDTP config;
+    private DeathMessagesDTP deathMessages;
     private DeathTpPlus plugin;
     private EntityListenerDTP entityListenerDTP;
     private TombWorkerDTP tombWorker = TombWorkerDTP.getInstance();
+    private TombMessagesDTP tombMessages;
     private String loghowdied;
 
 
@@ -46,6 +46,8 @@ public class onEntityDeathDTP {
         this.log = LoggerDTP.getLogger();
         this.config = ConfigDTP.getInstance();
         this.tombWorker = TombWorkerDTP.getInstance();
+        this.deathMessages = DeathMessagesDTP.getInstance();
+        this.tombMessages = TombMessagesDTP.getInstance();
         this.plugin = plugin;
     }
 
@@ -446,16 +448,15 @@ public class onEntityDeathDTP {
             String signtext;
 
             if (howtheydied[0].equals("PVP"))
-                signtext = LocaleHelperDTP.getInstance().getPvpLocale(howtheydied[2]);
+                signtext = tombMessages.getPvpMessage(howtheydied[2]);
             else
-                signtext = LocaleHelperDTP.getInstance().getLocale(
-                        howtheydied[0].toLowerCase());
+                signtext = tombMessages.getMessage(howtheydied[0]);
             int deathLimit = config.getMaxDeaths();
             TombDTP.addDeath();
             if (deathLimit != 0 && (TombDTP.getDeaths() % deathLimit) == 0) {
                 TombDTP.resetTombBlocks();
                 player.sendMessage(tombWorker.graveDigger
-                        + "You've reached the number of deaths before TombDTP reset.("
+                        + "You've reached the number of deaths before Tomb reset.("
                         + ChatColor.DARK_RED + deathLimit + ChatColor.WHITE
                         + ") All your tombs are now destroyed.");
             } else {
@@ -611,12 +612,12 @@ public class onEntityDeathDTP {
 
     String getEventMessage (String deathType){
         int messageindex = 0;
-        if (config.getDeathevents().get(deathType).size() > 1)
+        if (deathMessages.getDeathevents().get(deathType).size() > 1)
         {
             Random rand = new Random();
-            messageindex = rand.nextInt(config.getDeathevents().get(deathType).size());
+            messageindex = rand.nextInt(deathMessages.getDeathevents().get(deathType).size());
         }
-        return config.getDeathevents().get(deathType).get(messageindex);
+        return deathMessages.getDeathevents().get(deathType).get(messageindex);
     }
 
     void writeToStreak(String defender, String attacker) {
@@ -669,7 +670,7 @@ public class onEntityDeathDTP {
 
             //Check to see if we should announce a streak
             //Deaths
-            HashMap<String, List<String>> deathstreak = config.getDeathstreak();
+            HashMap<String, List<String>> deathstreak = deathMessages.getDeathstreak();
             for (int i=0;i < deathstreak.get("DEATH_STREAK").size();i++) {
                 teststreak = deathstreak.get("DEATH_STREAK").get(i);
                 testsplit = teststreak.split(":");
@@ -679,7 +680,7 @@ public class onEntityDeathDTP {
                 }
             }
             //Kills
-            HashMap<String, List<String>> killstreak = config.getKillstreak();
+            HashMap<String, List<String>> killstreak = deathMessages.getKillstreak();
             for (int i=0;i < killstreak.get("KILL_STREAK").size();i++) {
                 teststreak = killstreak.get("KILL_STREAK").get(i);
                 testsplit = teststreak.split(":");

@@ -5,7 +5,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.DeathMessagesDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.helpers.TombMessagesDTP;
 import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 
@@ -17,11 +19,15 @@ public class AdminCommandDTP implements CommandExecutor {
     private DeathTpPlus plugin;
     private LoggerDTP log;
     private ConfigDTP config;
+    private DeathMessagesDTP deathMessages;
+    private TombMessagesDTP tombMessages;
 
     public AdminCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
+        deathMessages = DeathMessagesDTP.getInstance();
+        tombMessages = TombMessagesDTP.getInstance();
         log.info("dtpadmin command registered");
     }
 
@@ -167,6 +173,22 @@ public class AdminCommandDTP implements CommandExecutor {
             } else if (config.getConfigVer().equalsIgnoreCase(config.getConfigCurrent())) {
                 plugin.sendMessage(p, "Your config file is up to date.");
             }
+
+            if (deathMessages.isDeathMessagesRequiresUpdate()){
+                message = "Your deathmessages are out of date.";
+            } else {
+                message = "Your deathmessages are up to date.";
+            }
+            plugin.sendMessage(p, message);
+
+            if (tombMessages.isTombMessagesRequiresUpdate()){
+                message = "Your tombmessages are out of date.";
+            } else {
+                message = "Your tombmessages are up to date.";
+            }
+            plugin.sendMessage(p, message);
+
+
         } else if (args[0].equalsIgnoreCase("remove")) {
             if (!plugin.hasPerm(sender, "admin.remove", false)) {
                 plugin.sendMessage(p, "Permission Denied");

@@ -1,4 +1,5 @@
-package org.simiancage.DeathTpPlus.helpers; /**
+package org.simiancage.DeathTpPlus.helpers;
+/**
  *
  * PluginName: DeathTpPlus
  * Class: DeathMessagesDTP
@@ -10,6 +11,7 @@ package org.simiancage.DeathTpPlus.helpers; /**
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
@@ -29,7 +31,7 @@ import java.util.List;
 public class DeathMessagesDTP {
 
     /**
-     * Instance of the Configuration Class
+     * Instance of the DeathMessagesDTP Class
      */
     private static DeathMessagesDTP instance = null;
 
@@ -594,7 +596,7 @@ afterwards parsable again from the configuration class of bukkit
      * @param stream will be handed over by  writeConfig
      */
 
-    private void writeCustomConfig(PrintWriter stream) {
+    private void writeCustomDeathMessages(PrintWriter stream) {
 //Start here writing your deathMessages variables into the deathMessages file inkl. all comments
 
         stream.println("#--------- Messages  for DeathTpPlus");
@@ -742,11 +744,13 @@ afterwards parsable again from the configuration class of bukkit
      *
      * @return configVer  Config File Version
      */
-    public String configVer() {
+    public String deathMessagesVer() {
         return deathMessagesVer;
     }
 
-
+    public boolean isDeathMessagesRequiresUpdate() {
+        return deathMessagesRequiresUpdate;
+    }
 
 // And the rest
 
@@ -754,45 +758,39 @@ afterwards parsable again from the configuration class of bukkit
 
     /**
      * Method to setup the configuration.
-     * If the configuration file doesn't exist it will be created by {@link #defaultConfig()}
-     * After that the configuration is loaded {@link #loadConfig()}
+     * If the configuration file doesn't exist it will be created by {@link #defaultDeathMessages()}
+     * After that the configuration is loaded {@link #loadDeathMessages()}
      * We than check if an configuration update is necessary {@link #updateNecessary()}
-     * and if {@link #autoUpdateConfig} is true we update the configuration {@link #updateConfig()}
-     * If {@link #checkForUpdate} is true we check if there is a new version of the plugin {@link #versionCheck()}
-     * and set {@link #deathMessagesAvailable} to true
+     * and if {@link org.simiancage.DeathTpPlus.helpers.ConfigDTP#isAutoUpdateConfig()} is true we update the configuration {@link #updateDeathMessages()}
+     * and finally set {@link #deathMessagesAvailable} to true
      *
-     * @param deathmessages references the deathMessages file
+     *
      * @param plugin references the plugin for this configuration
      *
-     * @see #defaultConfig()
-     * @see #loadConfig()
+     * @see #defaultDeathMessages()
+     * @see #loadDeathMessages()
      * @see #updateNecessary()
-     * @see #updateConfig()
-     * @see #versionCheck()
-     */
+     * @see #updateDeathMessages()
+      */
 
-    public void setupConfig(FileConfiguration deathmessages, Plugin plugin) {
+    public void setupDeathMessages(Plugin plugin) {
 
-        this.deathMessages = deathmessages;
+        this.deathMessages = new YamlConfiguration();
         this.plugin = plugin;
 // Checking if deathMessages file exists, if not create it
         if (!(new File(plugin.getDataFolder(), deathMessageFileName)).exists()) {
-            log.info("Creating default deahtmessages file");
-            defaultConfig();
+            log.info("Creating default deathmessages file");
+            defaultDeathMessages();
         }
 // Loading the deathMessages from file
-        loadConfig();
+        loadDeathMessages();
 
 // Checking internal deathMessagesCurrent and deathMessages file deathMessagesVer
 
         updateNecessary();
 // If deathMessages file has new options update it if enabled
         if (config.isAutoUpdateConfig()) {
-            updateConfig();
-        }
-// Also check for New Version of the plugin
-        if (config.isCheckForUpdate()) {
-            versionCheck();
+            updateDeathMessages();
         }
         deathMessagesAvailable = true;
     }
@@ -814,12 +812,14 @@ afterwards parsable again from the configuration class of bukkit
      * @see #customDefaultConfig()
      */
 
-    private void defaultConfig() {
+    private void defaultDeathMessages() {
         setupCustomDefaultVariables();
-        if (!writeConfig()) {
+        if (!writeDeathMessages()) {
             log.info("Using internal Defaults!");
         }
         deathMessageFile = new File(plugin.getDataFolder(), deathMessageFileName);
+        log.debug("deathMessageFile",deathMessageFile );
+        log.debug("deathMessages",deathMessages);
         try {
             deathMessages.load(deathMessageFile);
         } catch (IOException e) {
@@ -845,7 +845,7 @@ afterwards parsable again from the configuration class of bukkit
      * @see #loadCustomConfig()
      */
 
-    private void loadConfig() {
+    private void loadDeathMessages() {
         deathMessageFile = new File(plugin.getDataFolder(), deathMessageFileName);
         try {
             deathMessages.load(deathMessageFile);
@@ -859,6 +859,7 @@ afterwards parsable again from the configuration class of bukkit
         // Debug OutPut NOW!
         log.debug("deathMessagesCurrent", deathMessagesCurrent);
         log.debug("deathMessagesVer", deathMessagesVer);
+        setupCustomDefaultVariables();
         loadCustomConfig();
 
         log.info("Deathmessages v." + deathMessagesVer + " loaded.");
@@ -868,16 +869,16 @@ afterwards parsable again from the configuration class of bukkit
 //  Writing the deathMessages file
 
     /**
-     * Method for writing the configuration file.
+     * Method for writing the deathmessages file.
      * First we write the standard configuration part, than we
      * write the custom configuration part via #writeCustomConfig()
      *
      * @return true if writing the deathMessages was successful
      *
-     * @see #writeCustomConfig(java.io.PrintWriter)
+     * @see #writeCustomDeathMessages(java.io.PrintWriter)
      */
 
-    private boolean writeConfig() {
+    private boolean writeDeathMessages() {
         boolean success = false;
         try {
             PrintWriter stream;
@@ -899,7 +900,7 @@ afterwards parsable again from the configuration class of bukkit
             stream.println();
 
 // Getting the custom deathMessages information from the top of the class
-            writeCustomConfig(stream);
+            writeCustomDeathMessages(stream);
 
             stream.println();
 
@@ -915,7 +916,7 @@ afterwards parsable again from the configuration class of bukkit
     }
 
 
-// Checking if the configVersions differ
+// Checking if the deathMessagesVersions differ
 
     /**
      * Method to check if the configuration version are different.
@@ -940,10 +941,10 @@ afterwards parsable again from the configuration class of bukkit
     /**
      * Method to update the configuration if it is necessary.
      */
-    private void updateConfig() {
+    private void updateDeathMessages() {
         if (deathMessagesRequiresUpdate) {
             deathMessagesVer = deathMessagesCurrent;
-            if (writeConfig()) {
+            if (writeDeathMessages()) {
                 log.info("Deathmessages were updated with new default values.");
                 log.info("Please change them to your liking.");
             } else {
@@ -961,14 +962,14 @@ afterwards parsable again from the configuration class of bukkit
      * @return msg with the status of the reload
      */
 
-    public String reloadConfig() {
+    public String reloadDeathMessages() {
         String msg;
         if (deathMessagesAvailable) {
-            loadConfig();
+            loadDeathMessages();
             log.info("Deathmessages reloaded");
             msg = "Deathmessages were reloaded";
         } else {
-            log.severe("Reloading Deathmessages before it exists.");
+            log.severe("Reloading Deathmessages before they exists.");
             log.severe("Flog the developer!");
             msg = "Something terrible terrible did go really really wrong, see console log!";
         }
@@ -982,10 +983,10 @@ afterwards parsable again from the configuration class of bukkit
      *
      * @return true if the save was successful
      */
-    public boolean saveConfig() {
+    public boolean saveDeathMessages() {
         boolean saved = false;
         if (config.isSaveConfig()) {
-            saved = writeConfig();
+            saved = writeDeathMessages();
         }
         return saved;
     }

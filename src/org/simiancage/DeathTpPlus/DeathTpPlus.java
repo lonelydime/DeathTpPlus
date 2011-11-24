@@ -41,7 +41,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.simiancage.DeathTpPlus.commands.*;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.DeathMessagesDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.helpers.TombMessagesDTP;
 import org.simiancage.DeathTpPlus.listeners.*;
 import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
 import org.simiancage.DeathTpPlus.workers.TombStoneThreadDTP;
@@ -74,7 +76,8 @@ public class DeathTpPlus extends JavaPlugin{
     private ServerListenerDTP serverListener;
 
     private PlayerListenerDTP playerListener;
-    private WorldSaveListenerDTP worldSaveListener;
+
+    // private WorldSaveListenerDTP worldSaveListener;
 
     // Enum
 
@@ -89,6 +92,9 @@ public class DeathTpPlus extends JavaPlugin{
 
     private ConfigDTP config;
     private LoggerDTP log;
+    private DeathMessagesDTP deathMessages;
+    private TombMessagesDTP tombMessages;
+
 
 
 
@@ -135,6 +141,10 @@ public class DeathTpPlus extends JavaPlugin{
         log = LoggerDTP.getInstance(this);
         config = ConfigDTP.getInstance();
         config.setupConfig(configuration, plugin);
+        deathMessages = DeathMessagesDTP.getInstance();
+        deathMessages.setupDeathMessages(plugin);
+        tombMessages = TombMessagesDTP.getInstance();
+        tombMessages.setupTombMessages(plugin);
         entityListener = new EntityListenerDTP(this);
         blockListener = new BlockListenerDTP(this);
         serverListener = new ServerListenerDTP(this);
@@ -153,8 +163,8 @@ public class DeathTpPlus extends JavaPlugin{
         if (!deathlogFile.exists()) {
             CreateDefaultFile(deathlogFile);
         }
-        log.info( config.getKillstreak().get("KILL_STREAK").size()+" Kill Streaks loaded.");
-        log.info( config.getDeathstreak().get("DEATH_STREAK").size()+" Death Streaks loaded.");
+        log.info( deathMessages.getKillstreak().get("KILL_STREAK").size()+" Kill Streaks loaded.");
+        log.info( deathMessages.getDeathstreak().get("DEATH_STREAK").size()+" Death Streaks loaded.");
          if ( config.isRemoveTombStoneWhenEmpty())
         {
             log.warning("RemoveWhenEmpty is enabled. This is processor intensive!");
