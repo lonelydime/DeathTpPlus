@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.logs.DeathLocationsLogDTP;
+import org.simiancage.DeathTpPlus.models.DeathLocationRecordDTP;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -29,11 +31,13 @@ public class DeathtpCommandDTP implements CommandExecutor {
     private DeathTpPlus plugin;
     private LoggerDTP log;
     private ConfigDTP config;
+    private DeathLocationsLogDTP deathLocationsLog;
 
     public DeathtpCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
+        deathLocationsLog = plugin.getDeathLocationLog();
         log.info("deathtp command registered");
     }
 

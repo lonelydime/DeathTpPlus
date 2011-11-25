@@ -45,6 +45,9 @@ import org.simiancage.DeathTpPlus.helpers.DeathMessagesDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.helpers.TombMessagesDTP;
 import org.simiancage.DeathTpPlus.listeners.*;
+import org.simiancage.DeathTpPlus.logs.DeathLocationsLogDTP;
+import org.simiancage.DeathTpPlus.logs.DeathLogDTP;
+import org.simiancage.DeathTpPlus.logs.StreakLogDTP;
 import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
 import org.simiancage.DeathTpPlus.workers.TombStoneThreadDTP;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
@@ -77,19 +80,6 @@ public class DeathTpPlus extends JavaPlugin{
 
     private PlayerListenerDTP playerListener;
 
-    // private WorldSaveListenerDTP worldSaveListener;
-
-    // Enum
-
-    public enum DeathTypes {FALL, DROWNING, SUFFOCATION, FIRE_TICK, FIRE, LAVA, BLOCK_EXPLOSION, CREEPER, SKELETON, SPIDER, PIGZOMBIE, ZOMBIE, CONTACT, SLIME, VOID, GHAST, WOLF, LIGHTNING, STARVATION, CAVESPIDER, ENDERMAN, SILVERFISH, PVP, FISTS, UNKNOWN, SUICIDE;
-
-        @Override public String toString() {
-            //only capitalize the first letter
-            String s = super.toString();
-            return s.substring(0, 1)+s.substring(1).toLowerCase();
-        }
-    }
-
     private ConfigDTP config;
     private LoggerDTP log;
     private DeathMessagesDTP deathMessages;
@@ -102,9 +92,9 @@ public class DeathTpPlus extends JavaPlugin{
     //plugin variables
 
     private DeathTpPlus plugin = this;
-    public static File locsName;
-    public static File streakFile;
-    public static File deathlogFile;
+    public static DeathLocationsLogDTP deathLocationLog;
+    public static DeathLogDTP deathLog;
+    public static StreakLogDTP streakLog;
     protected static String pluginPath;
     protected static PluginManager pm;
     private boolean worldTravel = false;
@@ -150,22 +140,11 @@ public class DeathTpPlus extends JavaPlugin{
         serverListener = new ServerListenerDTP(this);
         playerListener = new PlayerListenerDTP(this);
         pluginPath = getDataFolder() + System.getProperty("file.separator");
-        locsName = new File(pluginPath+"locs.txt");
-        streakFile = new File(pluginPath+"streak.txt");
-        deathlogFile = new File(pluginPath+"deathlog.txt");
+        deathLocationLog = new DeathLocationsLogDTP(this);
+        deathLog = new DeathLogDTP(this);
+        streakLog = new StreakLogDTP(this);
         pm = this.getServer().getPluginManager();
-        if (!locsName.exists()) {
-            CreateDefaultFile(locsName);
-        }
-        if (!streakFile.exists()) {
-            CreateDefaultFile(streakFile);
-        }
-        if (!deathlogFile.exists()) {
-            CreateDefaultFile(deathlogFile);
-        }
-        log.info( deathMessages.getKillstreak().get("KILL_STREAK").size()+" Kill Streaks loaded.");
-        log.info( deathMessages.getDeathstreak().get("DEATH_STREAK").size()+" Death Streaks loaded.");
-         if ( config.isRemoveTombStoneWhenEmpty())
+        if ( config.isRemoveTombStoneWhenEmpty())
         {
             log.warning("RemoveWhenEmpty is enabled. This is processor intensive!");
         }
@@ -269,7 +248,6 @@ public class DeathTpPlus extends JavaPlugin{
         try {
             file.createNewFile();
         } catch (IOException e) {
-            // Todo Enable Logger
             log.warning("Cannot create file "+file.getPath()+"/"+file.getName());
         }
     }
@@ -320,18 +298,6 @@ public class DeathTpPlus extends JavaPlugin{
         this.economy = economy;
     }
 
-    public static File getLocsName() {
-        return locsName;
-    }
-
-    public static File getStreakFile() {
-        return streakFile;
-    }
-
-    public static File getDeathlogFile() {
-        return deathlogFile;
-    }
-
     public boolean isWorldTravel() {
         return worldTravel;
     }
@@ -356,6 +322,18 @@ public class DeathTpPlus extends JavaPlugin{
         return economyActive;
     }
 
+    public static DeathLocationsLogDTP getDeathLocationLog() {
+        return deathLocationLog;
+    }
+
+    public static DeathLogDTP getDeathLog() {
+        return deathLog;
+    }
+
+    public static StreakLogDTP getStreakLog() {
+        return streakLog;
+    }
+
     // Load Tomblist
     void loadTombList(String world) {
         if (!config.isSaveTombStoneList())
@@ -363,7 +341,7 @@ public class DeathTpPlus extends JavaPlugin{
             return;
         }
         try {
-            File fh = new File(this.getDataFolder().getPath(), "tombListDTP-"
+            File fh = new File(this.getDataFolder().getPath(), "tombList-"
                     + world + ".db");
             if (!fh.exists())
                 return;
@@ -461,7 +439,7 @@ public class DeathTpPlus extends JavaPlugin{
         if (!config.isSaveTombStoneList())
             return;
         try {
-            File fh = new File(this.getDataFolder().getPath(), "tombListDTP-"
+            File fh = new File(this.getDataFolder().getPath(), "tombList-"
                     + world + ".db");
             BufferedWriter bw = new BufferedWriter(new FileWriter(fh));
             for (Iterator<TombBlockDTP> iter = tombListDTP.iterator(); iter.hasNext();) {

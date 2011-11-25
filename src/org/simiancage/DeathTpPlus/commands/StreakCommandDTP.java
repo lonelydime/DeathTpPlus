@@ -1,6 +1,5 @@
 package org.simiancage.DeathTpPlus.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -8,11 +7,8 @@ import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.List;
+import org.simiancage.DeathTpPlus.logs.StreakLogDTP;
+import org.simiancage.DeathTpPlus.models.StreakRecordDTP;
 
 /**
  * PluginName: DeathTpPlus
@@ -27,11 +23,13 @@ public class StreakCommandDTP implements CommandExecutor {
     private DeathTpPlus plugin;
     private LoggerDTP log;
     private ConfigDTP config;
+    private StreakLogDTP streakLog;
 
     public StreakCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
+        streakLog = plugin.getStreakLog();
         log.info("streak command registered");
     }
 
@@ -39,78 +37,43 @@ public class StreakCommandDTP implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         log.debug("streak command executing");
         boolean canUseCommand = false;
-            if (sender instanceof Player) {
-                Player player = (Player)sender;
-                canUseCommand =  player.hasPermission("deathtpplus.streak");
-                
-            }
+        if (sender instanceof Player) {
+            Player player = (Player)sender;
+            canUseCommand =  player.hasPermission("deathtpplus.streak");
 
-            if (canUseCommand) {
-                if (config.isShowStreaks() ) {
-                    // File streakFile = new File("plugins/DeathTpPlus/streak.txt");
-                    String line;
-                    String[] splittext;
-                    Player check;
-                    String playername = "player";
+        }
 
-                    if (args.length > 1) {
-                        playername = args[0];
+        if (canUseCommand) {
+            if (config.isShowStreaks() ) {
+
+                StreakRecordDTP streak = DeathTpPlus.streakLog.getRecord(args.length > 0 ? args[0] : ((Player) sender).getName());
+
+                if (streak != null) {
+                    if (streak.getCount() < 0) {
+                        if (args.length > 0) {
+                            sender.sendMessage(String.format("%s is on a %d death streak.", args[0], streak.getCount() * -1));
+                        }
+                        else {
+                            sender.sendMessage(String.format("You are on a %d death streak.", streak.getCount() * -1));
+                        }
                     }
                     else {
-                        if (sender instanceof Player) {
-                            check = (Player)sender;
-                            playername = check.getName();
+                        if (args.length > 0) {
+                            sender.sendMessage(String.format("%s is on a %d kill streak.", args[0], streak.getCount()));
+                        }
+                        else {
+                            sender.sendMessage(String.format("You are on a %d kill streak.", streak.getCount()));
                         }
                     }
-
-                    List<Player> lookup = plugin.getServer().matchPlayer(playername);
-
-                    if (lookup.size() == 0) {
-                        sender.sendMessage(ChatColor.RED+ "No matching player.");
-                        return true;
-                    }
-                    else if (lookup.size() != 1) {
-                        sender.sendMessage(ChatColor.RED+ "Matched more than one player! Be more specific!");
-                        return true;
-                    }
-                    else {
-                        check = lookup.get(0);
-
-                        try {
-                            FileReader fr = new FileReader(plugin.streakFile);
-                            BufferedReader br = new BufferedReader(fr);
-                            boolean entryfound = false;
-                            while((line = br.readLine()) != null) {
-                                if (!line.startsWith("#")) {
-                                    splittext = line.split(":");
-                                    if (check.getName().matches(splittext[0])) {
-                                        if (Integer.parseInt(splittext[1]) < 0) {
-                                            sender.sendMessage(ChatColor.GRAY+check.getName()+"'s Current Streak: "+splittext[1].replace("-", "")+" Death(s)");
-                                        }
-                                        else {
-                                            sender.sendMessage(ChatColor.GRAY+check.getName()+"'s Current Streak: "+splittext[1]+" Kill(s)");
-                                        }
-
-                                        entryfound = true;
-                                    }
-                                }
-                            }
-                            if (!entryfound) {
-                                sender.sendMessage("No streak found");
-                            }
-                            br.close();
-                            return true;
-                        }
-                        catch (IOException e) {
-                            log.warning("Problems reading the Streak File",e);
-                        }
-                    }
-
-
                 }
+                else {
+                    sender.sendMessage("No record found.");
+                }
+
+
             }
-
-
+            return true;
+        }
 
 
         return false;

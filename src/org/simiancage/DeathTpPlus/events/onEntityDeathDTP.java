@@ -14,13 +14,19 @@ import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.*;
 import org.simiancage.DeathTpPlus.listeners.EntityListenerDTP;
+import org.simiancage.DeathTpPlus.logs.DeathLocationsLogDTP;
+import org.simiancage.DeathTpPlus.logs.DeathLogDTP;
+import org.simiancage.DeathTpPlus.logs.StreakLogDTP;
+import org.simiancage.DeathTpPlus.models.DeathDetailDTP;
 import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
 import org.simiancage.DeathTpPlus.objects.TombDTP;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
-import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Random;
 
 /**
  * PluginName: DeathTpPlus
@@ -40,20 +46,28 @@ public class onEntityDeathDTP {
     private TombWorkerDTP tombWorker = TombWorkerDTP.getInstance();
     private TombMessagesDTP tombMessages;
     private String loghowdied;
+    private DeathLocationsLogDTP deathLocationsLog;
+    private StreakLogDTP streakLog;
+    private DeathLogDTP deathLog;
 
 
     public onEntityDeathDTP(DeathTpPlus plugin) {
-        this.log = LoggerDTP.getLogger();
-        this.config = ConfigDTP.getInstance();
-        this.tombWorker = TombWorkerDTP.getInstance();
-        this.deathMessages = DeathMessagesDTP.getInstance();
-        this.tombMessages = TombMessagesDTP.getInstance();
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
+        tombWorker = TombWorkerDTP.getInstance();
+        deathMessages = DeathMessagesDTP.getInstance();
+        tombMessages = TombMessagesDTP.getInstance();
         this.plugin = plugin;
+        deathLocationsLog = plugin.getDeathLocationLog();
+        streakLog = plugin.getStreakLog();
+        deathLog = plugin.getDeathLog();
     }
 
     public void oEDeaDeathTp (DeathTpPlus plugin, EntityListenerDTP entityListenerDTP, EntityDeathEvent entityDeathEvent) {
         log.debug("onEntityDeath DeathTP executing");
-        Player player = (Player) entityDeathEvent.getEntity();
+        DeathDetailDTP deathDetail = new DeathDetailDTP(entityDeathEvent);
+        deathLocationsLog.setRecord(deathDetail);
+/*        Player player = (Player) entityDeathEvent.getEntity();
         ArrayList<String> filetext = new ArrayList<String>();
         boolean readCheck = false;
         boolean newPlayerDeath = true;
@@ -98,11 +112,12 @@ public class onEntityDeathDTP {
         }
         catch (IOException e) {
             log.warning("cannot write file "+ plugin.locsName , e);
-        }
+        }*/
     }
 
     public void oEDeaGeneralDeath (DeathTpPlus plugin, EntityListenerDTP entityListenerDTP, EntityDeathEvent entityDeathEvent) {
         log.debug("onEntityDeath GeneralDeath executing");
+        DeathDetailDTP deathDetail = new DeathDetailDTP(entityDeathEvent);
         String eventAnnounce = "";
         Player player = (Player) entityDeathEvent.getEntity();
         String[] howtheydied;
@@ -129,11 +144,11 @@ public class onEntityDeathDTP {
             eventAnnounce = eventAnnounce.replace("%i", howtheydied[1]);
             eventAnnounce = eventAnnounce.replace("%a", howtheydied[2]);
             if (config.isShowStreaks()){
-                writeToStreak(player.getName(), howtheydied[2]);
+                streakLog.setRecord(deathDetail);
             }
             //write kill to deathlog
             if (config.isAllowDeathLog()) {
-                writeToLog("kill", howtheydied[2], player.getName());
+                deathLog.setRecord(deathDetail);
             }
         }
         if (eventAnnounce.equals(""))
@@ -144,20 +159,25 @@ public class onEntityDeathDTP {
         eventAnnounce = plugin.convertSamloean(eventAnnounce);
 
         if (config.isShowDeathNotify()) {
-            ShowDeathNotify(entityDeathEvent, eventAnnounce);
+            String deathMessage = DeathMessagesDTP.getDeathMessage(deathDetail);
+
+            if (entityDeathEvent instanceof PlayerDeathEvent) {
+                ((PlayerDeathEvent) entityDeathEvent).setDeathMessage(deathMessage);
+            }
+
+            // CraftIRC
+            if (plugin.craftircHandle != null) {
+                plugin.craftircHandle.sendMessageToTag(UtilsDTP.removeColorCodes(deathMessage), config.getIrcDeathTpTag());
+            }
         }
 
-        //CraftIRC
-        if (plugin.craftircHandle != null) {
-            CraftIRCSendMessage(plugin, eventAnnounce);
-        }
 
         if (config.isAllowDeathLog()) {
-            writeToLog("death", player.getName(), loghowdied);
+            deathLog.setRecord(deathDetail);
         }
 
         if (config.isShowDeathSign()) {
-            ShowDeathSign(player, howtheydied, loghowdied);
+            ShowDeathSign(player, deathDetail);
         }
 // Tomb part
         if (config.isEnableTomb())
@@ -167,11 +187,12 @@ public class onEntityDeathDTP {
 
 // Tombstone part
         if (config.isEnableTombStone()){
-            CreateTombStone(plugin, entityDeathEvent, player);
+            CreateTombStone(plugin, entityDeathEvent, deathDetail);
         }
     }
 
-    private void CreateTombStone(DeathTpPlus plugin, EntityDeathEvent entityDeathEvent, Player player) {
+    private void CreateTombStone(DeathTpPlus plugin, EntityDeathEvent entityDeathEvent, DeathDetailDTP deathDetail) {
+        Player player = deathDetail.getPlayer();
         if (!plugin.hasPerm(player, "tombstone.use", false))
             return;
 
@@ -303,13 +324,13 @@ public class onEntityDeathDTP {
             sBlock = sChest.getWorld().getBlockAt(sChest.getX(),
                     sChest.getY() + 1, sChest.getZ());
             if (plugin.canReplace(sBlock.getType())) {
-                createSign(sBlock, player);
+                createSign(sBlock, deathDetail);
                 removeSign = 1;
             } else if (lChest != null) {
                 sBlock = lChest.getWorld().getBlockAt(lChest.getX(),
                         lChest.getY() + 1, lChest.getZ());
                 if (plugin.canReplace(sBlock.getType())) {
-                    createSign(sBlock, player);
+                    createSign(sBlock, deathDetail);
                     removeSign = 1;
                 }
             }
@@ -467,12 +488,9 @@ public class onEntityDeathDTP {
         }
     }
 
-    private void ShowDeathSign(Player player, String[] howtheydied, String loghowdied) {
+    private void ShowDeathSign(Player player, DeathDetailDTP deathDetail) {
         //place sign
-        Block signBlock = player.getWorld().getBlockAt(player.getLocation().getBlockX(),
-                player.getLocation().getBlockY(),
-                player.getLocation().getBlockZ());
-
+        Block signBlock = deathDetail.getPlayer().getWorld().getBlockAt(deathDetail.getPlayer().getLocation());
         signBlock.setType(Material.SIGN_POST);
 
         BlockState state = signBlock.getState();
@@ -481,11 +499,15 @@ public class onEntityDeathDTP {
             Sign sign = (Sign)state;
             String date = new SimpleDateFormat(config.getDateFormat()).format(new Date());
             String time = new SimpleDateFormat(config.getTimeFormat()).format(new Date());
-            String name = player.getName();
-            String reason = loghowdied.substring(0, 1)+loghowdied.substring(1).toLowerCase();
-            if (howtheydied[0].equals("PVP")){
-                reason = howtheydied[2];
+            String name = deathDetail.getPlayer().getName();
+            String reason;
+            if (deathDetail.isPVPDeath()) {
+                reason = deathDetail.getKiller().getName();
             }
+            else {
+                reason = deathDetail.getCauseOfDeath().toString().substring(0, 1) + deathDetail.getCauseOfDeath().toString().substring(1).toLowerCase();
+            }
+
             String[] signMessage = config.getTombStoneSign();
             for (int x = 0; x < 4; x++) {
                 String line = signMessage[x];
@@ -533,11 +555,17 @@ public class onEntityDeathDTP {
 
 
 
-    private void createSign(Block signBlock, Player p) {
+    private void createSign(Block signBlock, DeathDetailDTP deathDetail) {
         String date = new SimpleDateFormat(config.getDateFormat()).format(new Date());
         String time = new SimpleDateFormat(config.getTimeFormat()).format(new Date());
-        String name = p.getName();
-        String reason = loghowdied.substring(0, 1)+loghowdied.substring(1).toLowerCase();
+        String name = deathDetail.getPlayer().getName();
+        String reason;
+        if (deathDetail.isPVPDeath()) {
+            reason = deathDetail.getKiller().getName();
+        }
+        else {
+            reason = deathDetail.getCauseOfDeath().toString().substring(0, 1) + deathDetail.getCauseOfDeath().toString().substring(1).toLowerCase();
+        }
 
         signBlock.setType(Material.SIGN_POST);
         final Sign sign = (Sign) signBlock.getState();
@@ -555,10 +583,10 @@ public class onEntityDeathDTP {
         }
 
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                    public void run() {
-                        sign.update();
-                    }
-                });
+            public void run() {
+                sign.update();
+            }
+        });
     }
 
     Block findLarge(Block base) {
@@ -612,15 +640,15 @@ public class onEntityDeathDTP {
 
     String getEventMessage (String deathType){
         int messageindex = 0;
-        if (deathMessages.getDeathevents().get(deathType).size() > 1)
+        if (deathMessages.getDeathMessages().get(deathType).size() > 1)
         {
             Random rand = new Random();
-            messageindex = rand.nextInt(deathMessages.getDeathevents().get(deathType).size());
+            messageindex = rand.nextInt(deathMessages.getDeathMessages().get(deathType).size());
         }
-        return deathMessages.getDeathevents().get(deathType).get(messageindex);
+        return deathMessages.getDeathMessages().get(deathType).get(messageindex);
     }
 
-    void writeToStreak(String defender, String attacker) {
+/*    void writeToStreak(String defender, String attacker) {
 
         //read the file
         try {
@@ -778,7 +806,7 @@ public class onEntityDeathDTP {
             log.warning("Could not edit deathlog", e);
         }
 
-    }
+    }*/
 }
 
 

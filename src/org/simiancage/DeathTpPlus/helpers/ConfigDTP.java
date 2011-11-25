@@ -146,8 +146,6 @@ public class ConfigDTP {
     private boolean enableLWC = true;
     /** Set LWC Protection to public instead of removing it*/
     private boolean lwcPublic = false;
-    /** Locale Version for translation features*/
-    private String locale = "English";
     /** Allow World Travel = yes, no, permissions*/
     private String allowWorldTravel = "no";
 
@@ -162,8 +160,10 @@ public class ConfigDTP {
     private boolean allowDeathtp = false;
     /** Log the deaths to file*/
     private boolean allowDeathLog = true;
-    /**Show kill or death streaks read in from killstreak.txt and deathstrek.txt*/
+    /** Show kill, death streaks and multi kills */
     private boolean showStreaks = true;
+    /** Window of time (in milliseconds) to count kills towards a multikill */
+    private String multiKillTimeWindow = "5000";
     /** Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports */
     private String chargeItem ="0";
     /** Show Deathsign (aka Tombstone Signs) upon death*/
@@ -234,7 +234,7 @@ public class ConfigDTP {
     /** Timeout for Security Removal in seconds*/
     private String removeTombStoneSecurityTimeOut = "3600";
 
-// TombDTP Features
+// Tomb Features
 
     /** Enable the TombDTP feature*/
     private boolean enableTomb = true;
@@ -244,8 +244,8 @@ public class ConfigDTP {
     private int maxTomb = 1;
     /** Use the TombDTP as a respawn point*/
     private boolean useTombAsRespawnPoint = false;
-    /** Keyword used to detect a Tobmb*/
-    private String tombKeyWord= "[TombDTP]";
+    /** Keyword used to detect a Tomb*/
+    private String tombKeyWord= "[Tomb]";
     /**
      *  Number of death before destruction of every tomb of the player
      *  without resetting the counter. If set to 2, every 2 deaths, the tombs are destroyed. (Sign is dropped) 0 = Disabled
@@ -288,7 +288,6 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("timeFormat", timeFormat);
         config.addDefault("enableLockette", enableLockette);
         config.addDefault("enableLWC", enableLWC);
-        config.addDefault("locale", locale);
         config.addDefault("allowWorldTravel",allowWorldTravel);
 // DeathTp Features Variables
         config.addDefault("enableDeathtp", enableDeathtp);
@@ -296,6 +295,7 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("allowDeathtp", allowDeathtp);
         config.addDefault("allowDeathLog", allowDeathLog);
         config.addDefault("showStreaks", showStreaks);
+        config.addDefault("multiKillTimeWindow", multiKillTimeWindow);
         config.addDefault("chargeItem", chargeItem);
         config.addDefault("showDeathSign", showDeathSign);
         config.addDefault("deathtpCost", deathtpCost);
@@ -344,7 +344,6 @@ afterwards parsable again from the configuration class of bukkit
         timeFormat = config.getString("timeFormat");
         enableLockette = config.getBoolean("enableLockette");
         enableLWC = config.getBoolean("enableLWC");
-        locale = config.getString("locale");
         allowWorldTravel = config.getString("allowWorldTravel");
         tombStoneSign[0] = config.getString("tombStoneSign.Line1","{name}");
         tombStoneSign[1] = config.getString("tombStoneSign.Line2","RIP");
@@ -356,6 +355,7 @@ afterwards parsable again from the configuration class of bukkit
         allowDeathtp = config.getBoolean("allowDeathtp");
         allowDeathLog = config.getBoolean("allowDeathLog");
         showStreaks = config.getBoolean("showStreaks");
+        multiKillTimeWindow = config.getString("multiKillTimeWindow");
         chargeItem = config.getString("chargeItem");
         showDeathSign = config.getBoolean("showDeathSign");
         deathtpCost = config.getString("deathtpCost");
@@ -395,7 +395,6 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("timeFormat",timeFormat );
         log.debug("enableLockette",enableLockette );
         log.debug("enableLWC",enableLWC );
-        log.debug("locale",locale );
         log.debug("tombStoneSign",tombStoneSign[0] );
         log.debug("tombStoneSign",tombStoneSign[1] );
         log.debug("tombStoneSign",tombStoneSign[2] );
@@ -406,6 +405,7 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("allowDeathtp",allowDeathtp);
         log.debug("allowDeathLog",allowDeathLog);
         log.debug("showStreaks",showStreaks);
+        log.debug("multiKillTimeWindow",multiKillTimeWindow );
         log.debug("chargeItem",chargeItem );
         log.debug("showDeathSign",showDeathSign );
         log.debug("deathtpCost",deathtpCost );
@@ -467,9 +467,6 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# Set LWC Protection to public instead of removing it");
         stream.println("lwcPublic: " + lwcPublic);
         stream.println();
-        stream.println("# Locale Version for translation features");
-        stream.println("locale: '" + locale + "'");
-        stream.println();
         stream.println("# Allow World Travel: yes, no, permissions");
         stream.println("allowWorldTravel: '" + allowWorldTravel + "'");
         stream.println();
@@ -499,8 +496,11 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# Log the deaths to file");
         stream.println("allowDeathLog: " + allowDeathLog);
         stream.println();
-        stream.println("#Show kill or death streaks read in from killstreak.txt and deathstrek.txt");
+        stream.println("# Show kill, death streaks and multi kill messages");
         stream.println("showStreaks: " + showStreaks);
+        stream.println();
+        stream.println("# Window of time (in milliseconds) to count kills towards a multikill");
+        stream.println("multiKillTimeWindow: '" + multiKillTimeWindow +"'");
         stream.println();
         stream.println("# Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports ");
         stream.println("chargeItem: '" + chargeItem + "'");
@@ -640,8 +640,8 @@ afterwards parsable again from the configuration class of bukkit
         return lwcPublic;
     }
 
-    public String getLocale() {
-        return locale;
+    public String getMultiKillTimeWindow() {
+        return multiKillTimeWindow;
     }
 
     public boolean isEnableDeathtp() {
