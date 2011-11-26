@@ -15,14 +15,16 @@ import org.bukkit.event.Event;
 public class DeathStreakEventDTP extends Event
 {
     private Player player;
+    private Player killer;
     private String message;
     private Integer deaths;
 
-    public DeathStreakEventDTP(Player player, String message, Integer deaths)
+    public DeathStreakEventDTP(Player player, Player killer, String message, Integer deaths)
     {
         super("DeathStreakEventDTP");
 
         this.player = player;
+        this.killer = killer;
         this.message = message;
         this.deaths = deaths;
     }
@@ -35,6 +37,16 @@ public class DeathStreakEventDTP extends Event
     public void setPlayer(Player player)
     {
         this.player = player;
+    }
+
+    public Player getKiller()
+    {
+        return killer;
+    }
+
+    public void setKiller (Player killer)
+    {
+        this.killer = killer;
     }
 
     public String getMessage()

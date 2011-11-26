@@ -127,17 +127,17 @@ public class StreakLogDTP {
             // Deaths
             String deathStreakMessage = DeathMessagesDTP.getDeathStreakMessage(deathStreakRecord.getCount());
             if (deathStreakMessage != null) {
-                plugin.getServer().getPluginManager().callEvent(new DeathStreakEventDTP(deathDetail.getPlayer(), deathStreakMessage, deathStreakRecord.getCount()));
+                plugin.getServer().getPluginManager().callEvent(new DeathStreakEventDTP(deathDetail.getPlayer(), deathDetail.getKiller(), deathStreakMessage, deathStreakRecord.getCount()));
             }
             // Kills
             String multiKillMessage = DeathMessagesDTP.getMultiKillMessage(killStreakRecord.getMultiKillCount());
             if (multiKillMessage != null && killStreakRecord.isWithinMutiKillTimeWindow(Long.valueOf(config.getMultiKillTimeWindow()))) {
-                plugin.getServer().getPluginManager().callEvent(new KillStreakEventDTP(deathDetail.getKiller(), multiKillMessage, killStreakRecord.getMultiKillCount()));
+                plugin.getServer().getPluginManager().callEvent(new KillStreakEventDTP(deathDetail.getKiller(), deathDetail.getPlayer() ,multiKillMessage, killStreakRecord.getMultiKillCount()));
             }
             else {
                 String killStreakMessage = DeathMessagesDTP.getKillStreakMessage(killStreakRecord.getCount());
                 if (killStreakMessage != null) {
-                    plugin.getServer().getPluginManager().callEvent(new KillStreakEventDTP(deathDetail.getKiller(), killStreakMessage, killStreakRecord.getCount()));
+                    plugin.getServer().getPluginManager().callEvent(new KillStreakEventDTP(deathDetail.getKiller(), deathDetail.getPlayer(), killStreakMessage, killStreakRecord.getCount()));
                 }
             }
         }
