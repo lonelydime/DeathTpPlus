@@ -1,7 +1,7 @@
 package org.simiancage.DeathTpPlus.workers;
 
 /**
- * PluginName: TODO insert Pluginname here
+ * PluginName: DeathTpPlus
  * Class: TombStoneThreadDTP
  * User: DonRedhorse
  * Date: 19.10.11
@@ -93,7 +93,8 @@ public class TombStoneThreadDTP extends Thread {
 // Block removal check
             if (config.isRemoveTombStone()
                     && cTime > (tBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneTime()))) {
-                plugin.destroyTombStone(tBlockDTP); // TODO this originally included
+                plugin.destroyTombStone(tBlockDTP);
+// TODO this originally included
 // the only instance of
 // removeTomb(tblock, false).
 // check for bugs caused by the

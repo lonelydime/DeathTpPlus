@@ -35,6 +35,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -79,6 +80,8 @@ public class DeathTpPlus extends JavaPlugin{
     private ServerListenerDTP serverListener;
 
     private PlayerListenerDTP playerListener;
+
+    private StreakEventsListenerDTP streakListener;
 
     private ConfigDTP config;
     private LoggerDTP log;
@@ -139,30 +142,13 @@ public class DeathTpPlus extends JavaPlugin{
         blockListener = new BlockListenerDTP(this);
         serverListener = new ServerListenerDTP(this);
         playerListener = new PlayerListenerDTP(this);
+        streakListener = new StreakListenerDTP(this);
         pluginPath = getDataFolder() + System.getProperty("file.separator");
         deathLocationLog = new DeathLocationsLogDTP(this);
         deathLog = new DeathLogDTP(this);
         streakLog = new StreakLogDTP(this);
         pm = this.getServer().getPluginManager();
-        if ( config.isRemoveTombStoneWhenEmpty())
-        {
-            log.warning("RemoveWhenEmpty is enabled. This is processor intensive!");
-        }
-        if ( config.isKeepTombStoneUntilEmpty())
-        {
-            log.warning("KeepUntilEmpty is enabled. This is processor intensive!");
-        }
-         if ( config.getAllowWorldTravel().equalsIgnoreCase("yes"))
-        {
-            worldTravel = true;
-        }
-         if (config.getAllowWorldTravel().equalsIgnoreCase("yes")||config.getAllowWorldTravel().equalsIgnoreCase("no")||config.getAllowWorldTravel().equalsIgnoreCase("permissions"))
-        {
-            log.info("allow-wordtravel is: "+ config.getAllowWorldTravel());
-        } else {
-            log.warning("Wrong allow-worldtravel value of "+config.getAllowWorldTravel()+". Defaulting to NO!");
-            worldTravel = false;
-        }
+
 //Create the pluginmanager pm.
         PluginManager pm = getServer().getPluginManager();
 
@@ -174,11 +160,12 @@ public class DeathTpPlus extends JavaPlugin{
             pm.registerEvent(Event.Type.ENTITY_COMBUST, entityListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Normal, this);
         }
-        // register entityListener for Deathnotify , Show Streaks  or TombDTP
+        // register entityListener for Deathnotify , Show Streaks  or Tomb
         if (config.isShowDeathNotify() || config.isShowStreaks() || config.isEnableTomb()) {
             pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.Normal, this);
+            pm.registerEvent(Type.CUSTOM_EVENT, streakListener, Priority.Normal, this);
         }
-        //register entityListener for Enable Tombstone or Enable TombDTP
+        //register entityListener for Enable Tombstone or Tomb
         if (config.isEnableTombStone() || config.isEnableTomb())
         {
             pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
@@ -186,7 +173,7 @@ public class DeathTpPlus extends JavaPlugin{
             lwcPlugin = (LWCPlugin) checkPlugin("LWC");
             LockettePlugin = (Lockette) checkPlugin("Lockette");
         }
-         // register entityListener for Enable TombDTP
+         // register entityListener for Enable Tomb
         if (config.isEnableTomb())
         {
             pm.registerEvent(Event.Type.SIGN_CHANGE, blockListener, Priority.Normal, this);

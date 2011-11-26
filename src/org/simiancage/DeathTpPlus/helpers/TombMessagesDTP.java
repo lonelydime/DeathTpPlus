@@ -575,6 +575,17 @@ afterwards parsable again from the configuration class of bukkit
             log.info("Creating default tombmessages file");
             defaultTombMessages();
         }
+        tombMessageFile = new File(plugin.getDataFolder(), tombMessageFileName);
+        try {
+            tombMessages.load(tombMessageFile);
+        } catch (IOException e) {
+            log.debug("Error loading tombmessages file", e);
+        } catch (InvalidConfigurationException e) {
+            log.debug("Error in the tombmessages configuration", e);
+        }
+        // Loading the Defaults all the time do to issues with bukkit configuration class defaults
+        setupCustomDefaultVariables();
+        customDefaultConfig();
 // Loading the tombMessages from file
         loadTombMessages();
 
@@ -639,14 +650,6 @@ afterwards parsable again from the configuration class of bukkit
      */
 
     private void loadTombMessages() {
-        tombMessageFile = new File(plugin.getDataFolder(), tombMessageFileName);
-        try {
-            tombMessages.load(tombMessageFile);
-        } catch (IOException e) {
-            log.debug("Error loading tombmessages file", e);
-        } catch (InvalidConfigurationException e) {
-            log.debug("Error in the tombmessages configuration", e);
-        }
         // Starting to update the standard configuration
         tombMessagesVer = tombMessages.getString("tombMessagesVer");
         // Debug OutPut NOW!

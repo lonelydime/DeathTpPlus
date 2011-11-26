@@ -283,6 +283,7 @@ afterwards parsable again from the configuration class of bukkit
     private void customDefaultConfig() {
 
 // Default DeathTpPlus Variables
+        log.debug("config",config );
         config.addDefault("ircDeathTpTag", ircDeathTpTag);
         config.addDefault("dateFormat", dateFormat);
         config.addDefault("timeFormat", timeFormat);
@@ -432,6 +433,26 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("tombKeyWord", tombKeyWord);
         log.debug("maxDeaths",maxDeaths );
         log.debug("resetTombRespawn",resetTombRespawn );
+
+// and now some working...
+
+
+        if (isRemoveTombStoneWhenEmpty())
+        {
+            log.warning("RemoveWhenEmpty is enabled. This is processor intensive!");
+        }
+        if (isKeepTombStoneUntilEmpty())
+        {
+            log.warning("KeepUntilEmpty is enabled. This is processor intensive!");
+        }
+
+        if (getAllowWorldTravel().equalsIgnoreCase("yes")||getAllowWorldTravel().equalsIgnoreCase("no")||getAllowWorldTravel().equalsIgnoreCase("permissions"))
+        {
+            log.info("allow-wordtravel is: "+ getAllowWorldTravel());
+        } else {
+            log.warning("Wrong allow-worldtravel value of "+getAllowWorldTravel()+". Defaulting to NO!");
+            allowWorldTravel = "no";
+        }
 
     }
 
@@ -939,17 +960,21 @@ afterwards parsable again from the configuration class of bukkit
      * @see #versionCheck()
      */
 
-    public void setupConfig(FileConfiguration config, Plugin plugin) {
+    public void setupConfig(FileConfiguration fileConfiguration, Plugin plugin) {
 
-        this.config = config;
+        this.config = fileConfiguration;
         this.plugin = plugin;
 // Checking if config file exists, if not create it
         if (!(new File(plugin.getDataFolder(), configFile)).exists()) {
             log.info("Creating default configuration file");
             defaultConfig();
         }
+        config = plugin.getConfig();
+        log.debug("config",config );
 // Loading the Defaults all the time do to issues with bukkit configuration class defaults
         setupCustomDefaultVariables();
+        log.debug("config",config );
+        customDefaultConfig();
 // Loading the config from file
         loadConfig();
 
@@ -1014,7 +1039,7 @@ afterwards parsable again from the configuration class of bukkit
      */
 
     private void loadConfig() {
-        config = plugin.getConfig();
+
         // Starting to update the standard configuration
         configVer = config.getString("configVer");
         errorLogEnabled = config.getBoolean("errorLogEnabled");

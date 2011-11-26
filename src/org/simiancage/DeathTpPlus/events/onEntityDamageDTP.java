@@ -135,7 +135,7 @@ public class onEntityDamageDTP {
             }
         }
 
-        // ToDO Figure out what beforedamage is.
+
         /*if ((beforedamage.equals("GHAST") && lastdamage.equals("BLOCK_EXPLOSION")) ||(beforedamage.equals("GHAST") && lastdamage.equals("GHAST"))) {
             lastdamage = "GHAST";
         }*/

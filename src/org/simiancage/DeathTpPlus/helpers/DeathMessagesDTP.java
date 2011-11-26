@@ -37,7 +37,7 @@ public class DeathMessagesDTP {
     /**
      * Bukkit Death Events
      */
-     public static enum DeathEventType {
+    public static enum DeathEventType {
         BLOCK_EXPLOSION, CAVE_SPIDER, CONTACT, CREEPER, DROWNING, ENDERMAN, FALL, FIRE, FIRE_TICK, GHAST, GIANT, LAVA, LIGHTNING, MONSTER, PIG_ZOMBIE, PVP, PVP_FISTS, PVP_TAMED, SILVERFISH, SKELETON, SLIME, SPIDER, STARVATION, SUFFOCATION, SUICIDE, UNKNOWN, VOID, WOLF, ZOMBIE
     };
 
@@ -190,7 +190,7 @@ public class DeathMessagesDTP {
      *  format <#of kills>: <text to display> %n = player getting the message (in this case, the one on a deathStreakMessages).
      */
     private static List<String> deathStreakMessages;
-     /**
+    /**
      *  Multi Kill Messages
      *  format <#of kills>: <text to display>
      */
@@ -265,7 +265,7 @@ afterwards parsable again from the configuration class of bukkit
         deathStreakMessages = Arrays.asList(defaultDeathStreaks);
 
 // Default Multi Kill Messages
-        defaultKillStreaks = new String[]{
+        defaultMultiKill = new String[]{
                 "2:&cDouble Kill!",
                 "3:&cMulti Kill!",
                 "4:&cMega Kill!",
@@ -274,285 +274,285 @@ afterwards parsable again from the configuration class of bukkit
                 "7:&cLudicrous Kill!",
                 "8:&cHoly S**t!"
         };
-        multiKillMessages = Arrays.asList(defaultKillStreaks);
+        multiKillMessages = Arrays.asList(defaultMultiKill);
 
 // Default Death Messages
 
         /** Creating the default fall messages*/
         defaultFallMessages = new String[]{
-                "&5n&7 tripped and fell...down a cliff.",
-                "&5n&7 leapt before looking.",
-                "&5n&7 forgot to bring a parachute!",
-                "&5n&7 learned to fly...briefly...",
-                "&5n&7 felt the full effect of gravity.",
-                "&5n&7 just experienced physics in action.",
-                "&5n&7 fell to his death.",
-                "&5n&7 forgot to look out below!",
-                "&5n&7 got a little too close to the edge!",
-                "&5%n, gravity is calling your name!",
-                "&5n&7 faceplanted into the ground!",
-                "&5n&7 yells, \"Geronimo!\"....*thud*",
-                "What goes up must come down, right &5%n?"
+                "&5%n&7 tripped and fell...down a cliff.",
+                "&5%n&7 leapt before looking.",
+                "&5%n&7 forgot to bring a parachute!",
+                "&5%n&7 learned to fly...briefly...",
+                "&5%n&7 felt the full effect of gravity.",
+                "&5%n&7 just experienced physics in action.",
+                "&5%n&7 fell to his death.",
+                "&5%n&7 forgot to look out below!",
+                "&5%n&7 got a little too close to the edge!",
+                "&5%n&7, gravity is calling your name!",
+                "&5%n&7 faceplanted into the ground!",
+                "&5%n&7 yells, \"Geronimo!\"....*thud*",
+                "What goes up must come down, right &5%n&7?"
         };
         deathMessages.put(DeathEventType.FALL ,Arrays.asList(defaultFallMessages));
         /** Creating the default drowning messages*/
         defaultDrowningMessages = new String[]{
-                "&5n&7 has drowned.",
-                "&5n&7 has become one with the ocean!",
-                "&5n&7 sunk to the bottom of the ocean.",
-                "&5n&7 went diving but forgot the diving gear!",
-                "&5n&7 needs swimming lessons.",
-                "&5n ''s&7 lungs have been replaced with H20.",
-                "&5n&7 forgot to come up for air!",
-                "&5n&7 is swimming with the fishes!",
-                "&5n&7 had a surfing accident!",
-                "&5n&7 tried to walk on water.",
-                "&5n&7 set a record for holding breath underwater."
+                "&5%n&7 has drowned.",
+                "&5%n&7 has become one with the ocean!",
+                "&5%n&7 sunk to the bottom of the ocean.",
+                "&5%n&7 went diving but forgot the diving gear!",
+                "&5%n&7 needs swimming lessons.",
+                "&5%n ''s&7 lungs have been replaced with H20.",
+                "&5%n&7 forgot to come up for air!",
+                "&5%n&7 is swimming with the fishes!",
+                "&5%n&7 had a surfing accident!",
+                "&5%n&7 tried to walk on water.",
+                "&5%n&7 set a record for holding breath underwater."
         };
         deathMessages.put(DeathEventType.DROWNING, Arrays.asList(defaultDrowningMessages));
         /** Creating the default fire messages*/
         defaultFireMessages = new String[]{
-                "&5n&7 burned to death.",
-                "&5n&7 has been set on fire!",
-                "&5n&7 is toast! Literally...",
-                "&5n&7 just got barbequed!",
-                "&5n&7 forgot to stop, drop, and roll!",
-                "&5n&7 is extra-crispy!",
-                "&5n&7 spontaneously combusted!",
-                "&5n&7 put his hands in the toaster!",
-                "&5n&7 just got burned!"
+                "&5%n&7 burned to death.",
+                "&5%n&7 has been set on fire!",
+                "&5%n&7 is toast! Literally...",
+                "&5%n&7 just got barbequed!",
+                "&5%n&7 forgot to stop, drop, and roll!",
+                "&5%n&7 is extra-crispy!",
+                "&5%n&7 spontaneously combusted!",
+                "&5%n&7 put his hands in the toaster!",
+                "&5%n&7 just got burned!"
         };
         deathMessages.put(DeathEventType.FIRE, Arrays.asList(defaultFireMessages));
         /** Creating the default fire_tick messages*/
         defaultFireTickMessages = new String[]{
-                "&5n&7 burned to death.",
-                "&5n&7 has been set on fire!",
-                "&5n&7 is toast! Literally...",
-                "&5n&7 just got barbequed!",
-                "&5n&7 forgot to stop, drop, and roll!",
-                "n&7 likes it extra-crispy!",
-                "&5n&7 spontaneously combusted!",
-                "&5n&7 put his hands in the toaster!",
-                "&5n&7 just got burned!"
+                "&5%n&7 burned to death.",
+                "&5%n&7 has been set on fire!",
+                "&5%n&7 is toast! Literally...",
+                "&5%n&7 just got barbequed!",
+                "&5%n&7 forgot to stop, drop, and roll!",
+                "%n&7 likes it extra-crispy!",
+                "&5%n&7 spontaneously combusted!",
+                "&5%n&7 put his hands in the toaster!",
+                "&5%n&7 just got burned!"
         };
         deathMessages.put(DeathEventType.FIRE_TICK, Arrays.asList(defaultFireTickMessages));
         /** Creating the default lava messages*/
         defaultLavaMessages = new String[]{
-                "&5n&7 became obsidian.",
-                "&5n&7 was caught in an active volanic eruption!",
-                "&5n&7 tried to swim in a pool of lava.",
-                "&5n&7 was killed by a lava eruption!",
-                "&5n&7 was forged into obsidian by molten lava.",
-                "&5n&7 took a dip in the wrong kind of pool!",
-                "&5n&7 found out how to encase himself in carbonite.",
-                "&5%n, the floor is lava! The floor is lava!"
+                "&5%n&7 became obsidian.",
+                "&5%n&7 was caught in an active volanic eruption!",
+                "&5%n&7 tried to swim in a pool of lava.",
+                "&5%n&7 was killed by a lava eruption!",
+                "&5%n&7 was forged into obsidian by molten lava.",
+                "&5%n&7 took a dip in the wrong kind of pool!",
+                "&5%n&7 found out how to encase himself in carbonite.",
+                "&5%n&7, the floor is lava! The floor is lava!"
 
         };
         deathMessages.put(DeathEventType.LAVA,Arrays.asList(defaultLavaMessages));
         /** Creating the default creeper messages*/
         defaultCreeperMessages = new String[]{
-                "&5n&7 was creeper bombed!",
-                "A creeper exploded on &5%n!",
-                "A creeper snuck up on &5%n!",
+                "&5%n&7 was creeper bombed!",
+                "A creeper exploded on &5%n&7!",
+                "A creeper snuck up on &5%n&7!",
                 "A creeper tried to make love with &5%n&7...mmm.",
-                "&5n&7 just got the KiSSssss of death!",
-                "&5n&7 tried to hug a creeper!",
-                "&5n&7 is frowning like a creeper now!"
+                "&5%n&7 just got the KiSSssss of death!",
+                "&5%n&7 tried to hug a creeper!",
+                "&5%n&7 is frowning like a creeper now!"
         };
         deathMessages.put(DeathEventType.CREEPER,Arrays.asList(defaultCreeperMessages));
         /** Creating the default skeleton messages*/
         defaultSkeletonMessages = new String[] {
-                "A skeleton shot &5n&7 to death!",
-                "&5An&7 was on the wrong end of the bow. ",
-                "&5An&7 has a skeleton in the closet...",
+                "A skeleton shot &5%n&7 to death!",
+                "&5%n&7 was on the wrong end of the bow. ",
+                "&5%n&7 has a skeleton in the closet...",
                 "&5%n&7, strafe the arrows! Strafe the arrows!",
                 "A skeleton just got a headshot on &5%n&7!"
         };
         deathMessages.put(DeathEventType.SKELETON,Arrays.asList(defaultSkeletonMessages));
         /** Creating the default spider messages*/
         defaultSpiderMessages = new String[]{
-                "&5n&7 is all webbed up.",
-                "&5n&7 got trampled by arachnids!",
-                "&5n&7 got jumped by a spidah!",
+                "&5%n&7 is all webbed up.",
+                "&5%n&7 got trampled by arachnids!",
+                "&5%n&7 got jumped by a spidah!",
                 "Spiders just climbed all over &5%n&7!",
-                "&5n&7 forgot spiders could climb!"
+                "&5%n&7 forgot spiders could climb!"
         };
         deathMessages.put(DeathEventType.SPIDER,Arrays.asList(defaultSpiderMessages));
         /** Creating the default zombie messages*/
         defaultZombieMessages = new String[]{
-                "&5n&7 was punched to death by zombies!",
-                "&5n&7 was bitten by a zombie!",
-                "&5n&7 fell to the hunger of the horde!",
-                "&5n&7 Hasn''t played enough L4D2!",
-                "&5n&7 couldn''t run faster than the zombie!"
+                "&5%n&7 was punched to death by zombies!",
+                "&5%n&7 was bitten by a zombie!",
+                "&5%n&7 fell to the hunger of the horde!",
+                "&5%n&7 Hasn''t played enough L4D2!",
+                "&5%n&7 couldn''t run faster than the zombie!"
         };
         deathMessages.put(DeathEventType.ZOMBIE,Arrays.asList(defaultZombieMessages));
         /** Creating the default pvp messages*/
         defaultPVPMessages = new String[] {
-                "&f%a&7 killed &5&5n&7 using a(n) &3%i&7!",
-                "&f%a&7 slays &5n&7 with a &3%i&7!",
-                "&f%a&7 hunts &5n&7 down with a &3%i&7!",
-                "&5n&7 was killed by a &3%i&7 wielding %a!",
-                "&f%a&7 leaves &5n&7 a bloody mess!",
+                "&f%a&7 killed &5%n&7 using a(n) &3%i&7!",
+                "&f%a&7 slays &5%n&7 with a &3%i&7!",
+                "&f%a&7 hunts &5%n&7 down with a &3%i&7!",
+                "&5%n&7 was killed by a &3%i&7 wielding %a!",
+                "&f%a&7 leaves &5%n&7 a bloody mess!",
                 "&f%a&7 uses a &3%i&7 to end &5%n''s&7 life!",
-                "&5n&7 collapses due to &3%i&7 attacks from %a!",
-                "&5n&7 is now a bloody mess thanks to %a''s &3%i&7!",
-                "&f%a&7 beats &5n&7 with a &3%i&7!",
-                "&5n&7 was killed by %a''s &3%i&7 attack!",
-                "&f%a&7 defeats &5n&7 with a &3%i&7 attack!",
+                "&5%n&7 collapses due to &3%i&7 attacks from %a!",
+                "&5%n&7 is now a bloody mess thanks to %a''s &3%i&7!",
+                "&f%a&7 beats &5%n&7 with a &3%i&7!",
+                "&5%n&7 was killed by %a''s &3%i&7 attack!",
+                "&f%a&7 defeats &5%n&7 with a &3%i&7 attack!",
                 "&f%a&7 raises a &3%i&7 and puts and end to &5%n''s&7 life!",
-                "&f%a&7 took out &5n&7 with a &3%i&7!",
-                "&5n&7 was victimised by %a''s &3%i&7!",
-                "&5n&7 was eliminated by %a''s &3%i&7!",
-                "&f%a&7 executes &5n&7 with a &3%i&7!",
-                "&f%a&7 finishes &5n&7 with a &3%i&7!",
-                "&f%a&7''s &3%i&7 has claimed &5n&7 as another victim!",
-                "&5n&7 lost a savage duel to %a!",
-                "&f%a&7 has beaten &5n&7 to a pulp!",
-                "&f%a&7 pwns &5n&7 in a vicious duel!",
-                "&5Score %a 1 - &5n&7 0!",
-                "&f%a&7 has defeated &5n&7 in battle!",
-                "&5n&7 has been slain by %a!",
+                "&f%a&7 took out &5%n&7 with a &3%i&7!",
+                "&5%n&7 was victimised by %a''s &3%i&7!",
+                "&5%n&7 was eliminated by %a''s &3%i&7!",
+                "&f%a&7 executes &5%n&7 with a &3%i&7!",
+                "&f%a&7 finishes &5%n&7 with a &3%i&7!",
+                "&f%a&7''s &3%i&7 has claimed &5%n&7 as another victim!",
+                "&5%n&7 lost a savage duel to %a!",
+                "&f%a&7 has beaten &5%n&7 to a pulp!",
+                "&f%a&7 pwns &5%n&7 in a vicious duel!",
+                "&5Score %a 1 - &5%n&7 0!",
+                "&f%a&7 has defeated &5%n&7 in battle!",
+                "&5%n&7 has been slain by %a!",
                 "&f%a&7 emerges victorious in a duel with &5%n&7!",
-                "&5n&7 has been pwned by %a!",
-                "&5n&7 was killed by %a!",
-                "&5n&7 was dominated by %a!",
-                "&5n&7 was fragged by %a!",
-                "&5n&7 needs more practice and was killed by %a!",
-                "&5n&7 was beheaded by %a!"
+                "&5%n&7 has been pwned by %a!",
+                "&5%n&7 was killed by %a!",
+                "&5%n&7 was dominated by %a!",
+                "&5%n&7 was fragged by %a!",
+                "&5%n&7 needs more practice and was killed by %a!",
+                "&5%n&7 was beheaded by %a!"
         };
         deathMessages.put(DeathEventType.PVP,Arrays.asList(defaultPVPMessages));
         /** Creating the default pvp-fists messages*/
         defaultPVPFistMessages = new String[]{
-                "&f%a&7 pummeled &5n&7 to death",
-                "&f%a&7 crusted &5n&7 with their bare hands"
+                "&f%a&7 pummeled &5%n&7 to death",
+                "&f%a&7 crusted &5%n&7 with their bare hands"
         };
         deathMessages.put(DeathEventType.PVP_FISTS,Arrays.asList(defaultPVPFistMessages));
         /** Creating the default block_explosion messages*/
         defaultBlockExplosionMessages = new String[]{
                 "Careful &5%n&7, TNT goes boom!",
-                "&5n&7 was last seen playing with dynamite.",
-                "&5n&7 exploded into a million pieces!",
-                "&5n&7 cut the wrong wire!",
-                "&5n&7 has left his (bloody) mark on the world.",
-                "&5n&7 was attempting to exterminate gophers with dynamite!",
-                "&5n&7 was playing landmine hopscotch!",
-                "&5n&7 stuck his head in a microwave!"
+                "&5%n&7 was last seen playing with dynamite.",
+                "&5%n&7 exploded into a million pieces!",
+                "&5%n&7 cut the wrong wire!",
+                "&5%n&7 has left his (bloody) mark on the world.",
+                "&5%n&7 was attempting to exterminate gophers with dynamite!",
+                "&5%n&7 was playing landmine hopscotch!",
+                "&5%n&7 stuck his head in a microwave!"
         };
         deathMessages.put(DeathEventType.BLOCK_EXPLOSION,Arrays.asList(defaultBlockExplosionMessages));
         /** Creating the default contact messages*/
         defaultContactMessages = new String[]{
-                "&5n&7 got a little too close to a cactus!",
-                "&5n&7 tried to hug a cactus!",
-                "&5n&7 needs to be more careful around cactuses!",
-                "&5n&7 feels the wrath of cactusjack!",
-                "&5n&7 learns the results of rubbing a cactus!",
-                "&5n&7 died from cactus injuries!",
-                "&5n&7 poked himself with a cactus...and died.",
-                "&5n&7 ran into some pointy green stuff that wasn''t grass.",
-                "&5n&7 was distracted by a tumbleweed and died by cactus."
+                "&5%n&7 got a little too close to a cactus!",
+                "&5%n&7 tried to hug a cactus!",
+                "&5%n&7 needs to be more careful around cactuses!",
+                "&5%n&7 feels the wrath of cactusjack!",
+                "&5%n&7 learns the results of rubbing a cactus!",
+                "&5%n&7 died from cactus injuries!",
+                "&5%n&7 poked himself with a cactus...and died.",
+                "&5%n&7 ran into some pointy green stuff that wasn''t grass.",
+                "&5%n&7 was distracted by a tumbleweed and died by cactus."
         };
         deathMessages.put(DeathEventType.CONTACT,Arrays.asList(defaultContactMessages));
         /** Creating the default ghast messages*/
         defaultGhastMessages = new String[]{
-                "&5n&7 was blown to bits by a ghast.",
+                "&5%n&7 was blown to bits by a ghast.",
                 "Those aren''t babies you hear, &5%n&7!",
-                "&5n&7 was killed by a ghostly hadouken!",
-                "&5n&7 just got exploded by a fireball!",
-                "&5n&7 got too comfy in the Nether!"
+                "&5%n&7 was killed by a ghostly hadouken!",
+                "&5%n&7 just got exploded by a fireball!",
+                "&5%n&7 got too comfy in the Nether!"
         };
         deathMessages.put(DeathEventType.GHAST,Arrays.asList(defaultGhastMessages));
         /** Creating the default slime messages*/
         defaultSlimeMessages = new String[]{
-                "A slime found &5n&7. The slime won.",
-                "&5n&7 just was playing with slime. The slime ain''t happy."
+                "A slime found &5%n&7. The slime won.",
+                "&5%n&7 just was playing with slime. The slime ain''t happy."
         };
         deathMessages.put(DeathEventType.SLIME,Arrays.asList(defaultSlimeMessages));
         /** Creating the default suffocation messages*/
         defaultSuffocationMessages = new String[]{
-                "&5n&7 suffocated.",
-                "&5n&7 was looking up while digging!",
-                "&5n&7 choked to death on earth!",
-                "&5n&7 choked on a ham sandwich"
+                "&5%n&7 suffocated.",
+                "&5%n&7 was looking up while digging!",
+                "&5%n&7 choked to death on earth!",
+                "&5%n&7 choked on a ham sandwich"
         };
         deathMessages.put(DeathEventType.SUFFOCATION,Arrays.asList(defaultSuffocationMessages));
         /** Creating the default pigzombie messages*/
         defaultPigzombieMessages = new String[]{
-                "&5n&7 lost a fight against a zombie pig.",
-                "&5%n, touching a zombie pig is never a good idea.",
-                "&5%n, looked at a pigzombie the wrong way."
+                "&5%n&7 lost a fight against a zombie pig.",
+                "&5%n&7, touching a zombie pig is never a good idea.",
+                "&5%n&7, looked at a pigzombie the wrong way."
         };
         deathMessages.put(DeathEventType.PIG_ZOMBIE,Arrays.asList(defaultPigzombieMessages));
         /** Creating the default void messages*/
         defaultVoidMessages = new String[]{
-                "&5n&7 died in The Void."
+                "&5%n&7 died in The Void."
         };
         deathMessages.put(DeathEventType.VOID,Arrays.asList(defaultVoidMessages));
         /** Creating the default Wolfs messages*/
         defaultWolfMessages = new String[]{
-                "&5n&7 became a wolf''s lunch.",
-                "&5n&7 couldn't howl with the wolfs."
+                "&5%n&7 became a wolf''s lunch.",
+                "&5%n&7 couldn't howl with the wolfs."
         };
         deathMessages.put(DeathEventType.WOLF,Arrays.asList(defaultWolfMessages));
         /** Creating the default lightning messages*/
         defaultLightningMessages = new String[]{
-                "&5n&7 was struck down by Zeus'' bolt.",
-                "&5n&7 was electrecuted.",
-                "&5n&7 figured out that it wasn't a pig's nose in the wall."
+                "&5%n&7 was struck down by Zeus'' bolt.",
+                "&5%n&7 was electrecuted.",
+                "&5%n&7 figured out that it wasn't a pig's nose in the wall."
         };
         /** Creating the default lightning messages*/
         deathMessages.put(DeathEventType.LIGHTNING,Arrays.asList(defaultLightningMessages));
         defaultSuicideMessages = new String[]{
-                "&5n&7 took matters into his own hands.",
-                "&5n&7 isn't causing NPE's anymore."
+                "&5%n&7 took matters into his own hands.",
+                "&5%n&7 isn't causing NPE's anymore."
         };
         /** Creating the default suicide messages*/
         deathMessages.put(DeathEventType.SUICIDE,Arrays.asList(defaultSuicideMessages));
         defaultUnknownMessages = new String[]{
-                "&5n&7 died from unknown causes.",
-                "&5n&7 has imploded into nothingness",
-                "&5n&7 has been vaporized",
-                "&5n&7 died from explosive diarrhea",
-                "&5n&7 was killed by Chuck Norris",
-                "&5n&7 was running with scissors...now he runs no more",
-                "&5n&7 was hit by a falling piano",
-                "&5n&7 was assasinated by a shuriken headshot from the shadow",
-                "&5n&7 was barrel rolling...and died",
-                "&5n&7 was killed by Cthulhu",
-                "&5n&7 forgot to wear his spacesuit",
-                "&5n&7 choked on a ham sandwich",
-                "&5n&7 died at the hands of ninja assassins"
+                "&5%n&7 died from unknown causes.",
+                "&5%n&7 has imploded into nothingness",
+                "&5%n&7 has been vaporized",
+                "&5%n&7 died from explosive diarrhea",
+                "&5%n&7 was killed by Chuck Norris",
+                "&5%n&7 was running with scissors...now he runs no more",
+                "&5%n&7 was hit by a falling piano",
+                "&5%n&7 was assasinated by a shuriken headshot from the shadow",
+                "&5%n&7 was barrel rolling...and died",
+                "&5%n&7 was killed by Cthulhu",
+                "&5%n&7 forgot to wear his spacesuit",
+                "&5%n&7 choked on a ham sandwich",
+                "&5%n&7 died at the hands of ninja assassins"
         };
         /** Creating the default unknown messages*/
         deathMessages.put(DeathEventType.UNKNOWN,Arrays.asList(defaultUnknownMessages));
         defaultStarvationMessages = new String[]{
-                "&5n&7 did forget to eat his lunch.",
-                "&5n&7 didn''t find the next Burger.",
-                "&5n&7 became a skeleton.",
-                "&5n&7 TALKS ALL CAPITALS NOW."
+                "&5%n&7 did forget to eat his lunch.",
+                "&5%n&7 didn''t find the next Burger.",
+                "&5%n&7 became a skeleton.",
+                "&5%n&7 TALKS ALL CAPITALS NOW."
         };
         /** Creating the default starvation messages*/
         deathMessages.put(DeathEventType.STARVATION,Arrays.asList(defaultStarvationMessages));
         /** Creating the default enderman messages*/
         defaultEndermanMessages = new String[]{
-                "&5%n, looked at a enderman the wrong way.",
-                "&5An enderman pulled n&7 leg..... off!"
+                "&5%n&7, looked at a enderman the wrong way.",
+                "An enderman pulled &5%n&7 leg..... off!"
         };
         deathMessages.put(DeathEventType.ENDERMAN,Arrays.asList(defaultEndermanMessages));
         /** Creating the default cavespider messages*/
         defaultCaveSpiderMessages = new String[]{
-                "&5n&7 will never say itsybitsyspider again.",
-                "&5n&7 is all webbed up.",
-                "&5n&7 got trampled by arachnids!",
-                "&5n&7 got jumped by a spidah!",
-                "Spiders just climbed all over &5n&7!",
-                "&5n&7 forgot spiders could climb!"
+                "&5%n&7 will never say itsybitsyspider again.",
+                "&5%n&7 is all webbed up.",
+                "&5%n&7 got trampled by arachnids!",
+                "&5%n&7 got jumped by a spidah!",
+                "Spiders just climbed all over &5%n&7!",
+                "&5%n&7 forgot spiders could climb!"
         };
         deathMessages.put(DeathEventType.CAVE_SPIDER,Arrays.asList(defaultCaveSpiderMessages));
         /** Creating the default silverfish messages*/
         defaultSilverfishMessages = new String[]{
-                "&5n&7 was killed by a silverfish!",
-                "&5n&7 found something hidden below a rock"
+                "&5%n&7 was killed by a silverfish!",
+                "&5%n&7 found something hidden below a rock"
         };
         deathMessages.put(DeathEventType.SILVERFISH,Arrays.asList(defaultSilverfishMessages));
         /** Creating the default PVP tamed messages*/
@@ -563,8 +563,8 @@ afterwards parsable again from the configuration class of bukkit
         deathMessages.put(DeathEventType.PVP_TAMED,Arrays.asList(defaultPVPTamedMessages));
         /** Creating the default Giant messages*/
         defaultGiantMessages = new String[]{
-                "&5n&7 was stomped by a giant!",
-                "&5n&7 was flattened by a giant!"
+                "&5%n&7 was stomped by a giant!",
+                "&5%n&7 was flattened by a giant!"
         };
         deathMessages.put(DeathEventType.GIANT,Arrays.asList(defaultGiantMessages));
 
@@ -603,11 +603,14 @@ afterwards parsable again from the configuration class of bukkit
         log.info(killStreakMessages.size() + " messages loaded for killstreak");
 // Death Streak Messages
         deathStreakMessages =  deathMessageFileConfig.getList ("deathstreak", Arrays.asList(defaultDeathStreaks));
-         log.info(deathStreakMessages.size() + " messages loaded for deathstreak");
+        log.info(deathStreakMessages.size() + " messages loaded for deathstreak");
 // Multi Kill Messages
         multiKillMessages = deathMessageFileConfig.getList("mulitkill", Arrays.asList(defaultMultiKill));
         log.info(multiKillMessages.size() + " messages loaded for multikill");
 // DeathTp Messages
+        // Workaround for NPE as Monster isn't defined in the deathmessages
+        deathMessages.put(DeathEventType.MONSTER, Arrays.asList(defaultUnknownMessages));
+        // Normal Death Messages
         deathMessages.put(DeathEventType.FALL,  deathMessageFileConfig.getList ("fall", Arrays.asList(defaultFallMessages)));
         deathMessages.put(DeathEventType.DROWNING,  deathMessageFileConfig.getList ("drowning", Arrays.asList(defaultDrowningMessages)));
         deathMessages.put(DeathEventType.FIRE,  deathMessageFileConfig.getList ("fire", Arrays.asList(defaultFireMessages)));
@@ -637,12 +640,14 @@ afterwards parsable again from the configuration class of bukkit
         deathMessages.put(DeathEventType.PVP_TAMED, deathMessageFileConfig.getList("pvp-tamed", Arrays.asList(defaultPVPTamedMessages)));
         deathMessages.put(DeathEventType.GIANT, deathMessageFileConfig.getList("giant", Arrays.asList(defaultGiantMessages)));
         for (DeathEventType deathEventType : DeathEventType.values()){
-                log.info(deathMessages.get(deathEventType).size() + " messages loaded for " + deathEventType);
+            log.debug("deathEventType",deathEventType );
+            log.info(deathMessages.get(deathEventType).size() + " messages loaded for " + deathEventType);
         }
 // Debugging
 
         log.debug("killStreakMessages", killStreakMessages);
         log.debug("deathStreakMessages", deathStreakMessages);
+        log.debug("mulitKillMessages", multiKillMessages);
         log.debug("deathMessages", deathMessages);
 
     }
@@ -713,9 +718,14 @@ afterwards parsable again from the configuration class of bukkit
 
         for (DeathEventType deathEventType : DeathEventType.values())
         {
+            // Workaround for missing Monster Death Messages
+            if (deathEventType != DeathEventType.MONSTER)
+            {
             stream.println(mapTypeToNodeName(deathEventType) +":");
-            for (String msg : deathMessages.get(deathEventType)) {
-                stream.println("    -'" + msg + "'");
+
+                for (String msg : deathMessages.get(deathEventType)) {
+                    stream.println("    -'" + msg + "'");
+                }
             }
         }
 
@@ -911,7 +921,7 @@ afterwards parsable again from the configuration class of bukkit
      * @see #loadDeathMessages()
      * @see #updateNecessary()
      * @see #updateDeathMessages()
-      */
+     */
 
     public void setupDeathMessages(Plugin plugin) {
 
@@ -922,6 +932,20 @@ afterwards parsable again from the configuration class of bukkit
             log.info("Creating default deathmessages file");
             defaultDeathMessages();
         }
+
+        deathMessageFile = new File(plugin.getDataFolder(), deathMessageFileName);
+        try {
+            deathMessageFileConfig.load(deathMessageFile);
+        } catch (IOException e) {
+            log.debug("Error loading deathmessages file", e);
+        } catch (InvalidConfigurationException e) {
+            log.debug("Error in the deathmessages configuration", e);
+        }
+
+        // Loading the Defaults all the time do to issues with bukkit configuration class defaults
+        setupCustomDefaultVariables();
+        customDefaultConfig();
+
 // Loading the deathMessageFileConfig from file
         loadDeathMessages();
 
@@ -986,14 +1010,7 @@ afterwards parsable again from the configuration class of bukkit
      */
 
     private void loadDeathMessages() {
-        deathMessageFile = new File(plugin.getDataFolder(), deathMessageFileName);
-        try {
-            deathMessageFileConfig.load(deathMessageFile);
-        } catch (IOException e) {
-            log.debug("Error loading deathmessages file", e);
-        } catch (InvalidConfigurationException e) {
-            log.debug("Error in the deathmessages configuration", e);
-        }
+
         // Starting to update the standard configuration
         deathMessagesVer = deathMessageFileConfig.getString("deathMessagesVer");
         // Debug OutPut NOW!

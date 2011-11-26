@@ -182,7 +182,13 @@ public class LoggerDTP {
      */
     public void debug(String msg, Object object) {
         if (config.isDebugLogEnabled()) {
-            this.logger.info(this.formatMessage(msg + "= [" + object.toString() + "]"));
+            String objectMsg;
+            if (object == null){
+                objectMsg = "null";
+            } else {
+                objectMsg = object.toString();
+            }
+            this.logger.info(this.formatMessage(msg + "= [" + objectMsg + "]"));
         }
     }
 

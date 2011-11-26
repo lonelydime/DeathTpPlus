@@ -105,7 +105,8 @@ public class PlayerListenerDTP extends PlayerListener {
             if (!overflow) {
 // We're quicklooting, so no need to resume this interaction
                 event.setUseInteractedBlock(Result.DENY);
-                event.setUseItemInHand(Result.DENY); // TODO: Minor bug here - if
+                event.setUseItemInHand(Result.DENY);
+// TODO: Minor bug here - if
 // you're holding a sign,
 // it'll still pop up
                 event.setCancelled(true);

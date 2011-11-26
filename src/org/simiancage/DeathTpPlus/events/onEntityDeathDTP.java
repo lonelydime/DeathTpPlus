@@ -66,6 +66,7 @@ public class onEntityDeathDTP {
     public void oEDeaDeathTp (DeathTpPlus plugin, EntityListenerDTP entityListenerDTP, EntityDeathEvent entityDeathEvent) {
         log.debug("onEntityDeath DeathTP executing");
         DeathDetailDTP deathDetail = new DeathDetailDTP(entityDeathEvent);
+        log.debug("deathDetail", deathDetail );
         deathLocationsLog.setRecord(deathDetail);
 /*        Player player = (Player) entityDeathEvent.getEntity();
         ArrayList<String> filetext = new ArrayList<String>();
@@ -125,7 +126,7 @@ public class onEntityDeathDTP {
         String damagetype = entityListenerDTP.getLastDamageType().get(entityListenerDTP.getLastDamagePlayer().indexOf(player.getName()));
         howtheydied = damagetype.split(":");
 
-        // Todo change into case statement and create methods for eventAnnounce
+        // Todo use same approach for TombStone and Tomb than for the rest of the plugin (Mung3r's approach!)
 
         if ((howtheydied[0])==null){
             howtheydied[0] = "UNKNOWN";
@@ -137,7 +138,7 @@ public class onEntityDeathDTP {
 
         if (howtheydied[0].matches("PVP")) {
             if (howtheydied[2].equals("bare hands")) {
-                eventAnnounce = getEventMessage("FISTS").replace("%n", player.getDisplayName());
+                eventAnnounce = getEventMessage("FISTS".toString() ).replace("%n", player.getDisplayName());
             }
 
             loghowdied = howtheydied[2];
@@ -160,7 +161,7 @@ public class onEntityDeathDTP {
 
         if (config.isShowDeathNotify()) {
             String deathMessage = DeathMessagesDTP.getDeathMessage(deathDetail);
-
+            log.debug("deathMessage", deathMessage );
             if (entityDeathEvent instanceof PlayerDeathEvent) {
                 ((PlayerDeathEvent) entityDeathEvent).setDeathMessage(deathMessage);
             }
@@ -640,12 +641,14 @@ public class onEntityDeathDTP {
 
     String getEventMessage (String deathType){
         int messageindex = 0;
-        if (deathMessages.getDeathMessages().get(deathType).size() > 1)
+        log.debug("deathType",deathType );
+        DeathMessagesDTP.DeathEventType eventType = DeathMessagesDTP.DeathEventType.valueOf(deathType);
+        if (deathMessages.getDeathMessages().get(eventType).size() > 1)
         {
             Random rand = new Random();
-            messageindex = rand.nextInt(deathMessages.getDeathMessages().get(deathType).size());
+            messageindex = rand.nextInt(deathMessages.getDeathMessages().get(eventType).size());
         }
-        return deathMessages.getDeathMessages().get(deathType).get(messageindex);
+        return deathMessages.getDeathMessages().get(eventType).get(messageindex);
     }
 
 /*    void writeToStreak(String defender, String attacker) {

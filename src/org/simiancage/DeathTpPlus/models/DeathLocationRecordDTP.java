@@ -73,6 +73,10 @@ public class DeathLocationRecordDTP {
     @Override
     public String toString()
     {
-        return String.format("%s:%f:%f:%f:%s", playerName, location.getX(), location.getY(), location.getZ(), worldName);
+        // Fix for issues with , instead of .
+        String x = Double.toString(location.getX()).replace(",",".");
+        String y = Double.toString(location.getY()).replace(",",".");
+        String z = Double.toString(location.getZ()).replace(",",".");
+        return String.format("%s:%s:%s:%sf:%s", playerName, x, y, z, worldName);
     }
 }

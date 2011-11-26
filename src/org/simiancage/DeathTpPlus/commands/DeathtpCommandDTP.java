@@ -14,10 +14,6 @@ import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.logs.DeathLocationsLogDTP;
 import org.simiancage.DeathTpPlus.models.DeathLocationRecordDTP;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-
 /**
  * PluginName: DeathTpPlus
  * Class: DeathtpCommandDTP
@@ -31,13 +27,13 @@ public class DeathtpCommandDTP implements CommandExecutor {
     private DeathTpPlus plugin;
     private LoggerDTP log;
     private ConfigDTP config;
-    private DeathLocationsLogDTP deathLocationsLog;
+    private DeathLocationsLogDTP deathLocationLog;
 
     public DeathtpCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
-        deathLocationsLog = plugin.getDeathLocationLog();
+        deathLocationLog = plugin.getDeathLocationLog();
         log.info("deathtp command registered");
     }
 
@@ -45,131 +41,56 @@ public class DeathtpCommandDTP implements CommandExecutor {
         boolean canUseCommand = false;
         boolean teleportok = true;
         boolean teleported = false;
+        boolean worldTravel = false;
         log.debug("deathtp command executing");
 
 
         if (sender instanceof Player) {
             Player player = (Player)sender;
-            String thisWorld = player.getWorld().getName().toString();
-            if (player.hasPermission("deathtpplus.worldtravel") && config.getAllowWorldTravel().equalsIgnoreCase("permissions"))
-            {
-                plugin.setWorldTravel(true);
-            }
-            double economyCost = Double.valueOf(config.getDeathtpCost().trim()).doubleValue();
-
             canUseCommand = (player.hasPermission("deathtpplus.deathtp") || config.isAllowDeathtp());
 
             if (canUseCommand) {
                 log.debug("canUseCommand",canUseCommand );
-                //costs item in inventory
-                if (!config.getChargeItem().equals("0") ) {
-                    if (player.getItemInHand().getType().getId() != Integer.parseInt(config.getChargeItem())) {
-                        player.sendMessage("You must be holding a "+ Material.getMaterial(Integer.parseInt(config.getChargeItem())).toString()+" to teleport.");
-                        teleportok = false;
+                String thisWorld = player.getWorld().getName().toString();
+                if ((player.hasPermission("deathtpplus.worldtravel") && config.getAllowWorldTravel().equalsIgnoreCase("permissions")) || config.getAllowWorldTravel().equalsIgnoreCase("yes"))
+                {
+                    worldTravel = true;
+                }
+                if (!canTp(player)) {
+                    log.debug("canTp","nope" );
+                    return true;
+                }
+
+
+                DeathLocationRecordDTP locationRecord = deathLocationLog.getRecord(player.getName());
+
+                if (locationRecord != null) {
+
+                    World deathWorld = player.getServer().getWorld(locationRecord.getWorldName());
+                    Location deathLocation = deathWorld.getHighestBlockAt(locationRecord.getLocation().getBlockX(), locationRecord.getLocation().getBlockZ()).getLocation();
+
+                    if (!thisWorld.equals(deathWorld.getName())) {
+                        if (worldTravel) {
+                            deathLocation.setWorld(deathWorld);
+                            player.teleport(deathLocation);
+                            registerTp(player);
+                        }
+                        else {
+                            player.sendMessage("You do not have the right to travel between worlds via deathtp!");
+                        }
                     }
                     else {
-                        ItemStack currentitem = player.getItemInHand();
-                        int itemnum = currentitem.getAmount();
-                        itemnum--;
-                        if (itemnum > 0) {
-                            currentitem.setAmount(itemnum);
-                            player.setItemInHand(currentitem);
-                        }
-                        else {
-                            player.getInventory().clear(player.getInventory().getHeldItemSlot());
-                        }
+                        player.teleport(deathLocation);
+                        registerTp(player);
                     }
-                }
-
-
-                //costs Economy
-                if (economyCost > 0) {
-                    if (plugin.isEconomyActive()){
-                        if (plugin.getEconomy().getBalance(player.getName())> economyCost) {
-                            plugin.getEconomy().withdrawPlayer(player.getName(), economyCost);
-                            player.sendMessage("You used "+economyCost+" to use /deathtp");
-                        } else {
-                            player.sendMessage("You need "+economyCost+" coins to use /deathtp");
-                            teleportok = false;
-                        }
-                    }
-                }
-
-
-                if (teleportok) {
-
-                    try {
-                        String line = "";
-                        String teleloc = "";
-                        String[] location;
-                        FileReader fr = new FileReader(plugin.getLocsName());
-                        BufferedReader br = new BufferedReader(fr);
-
-                        while((line = br.readLine()) != null) {
-                            if (line.contains(player.getName()+":")) {
-                                teleloc = line;
-                            }
-                        }
-
-                        if (teleloc != "") {
-                            location = teleloc.split(":");
-                            Location sendLocation = player.getLocation();
-                            double x, y, z;
-
-                            x=Double.valueOf(location[1].trim()).doubleValue();
-                            y=Double.valueOf(location[2].trim()).doubleValue();
-                            z=Double.valueOf(location[3].trim()).doubleValue();
-                            World deathWorld = plugin.getServer().getWorld(location[4].trim());
-                            sendLocation.setX(x);
-                            sendLocation.setY(y);
-                            sendLocation.setZ(z);
-
-                            boolean safeTele = false;
-                            int test1=-1, test2=-1;
-                            while (!safeTele) {
-                                test1 = player.getWorld().getBlockTypeIdAt(sendLocation);
-                                test2 = player.getWorld().getBlockTypeIdAt(sendLocation);
-                                if (test1 == 0 && test2 == 0) {
-                                    safeTele = true;
-                                }
-
-                                sendLocation.setY(sendLocation.getY()+1);
-                            }
-
-                            if (!thisWorld.equals(deathWorld.getName()))
-                            {
-                                if (plugin.isWorldTravel())
-                                {
-                                    sendLocation.setWorld(deathWorld);
-                                    player.teleport(sendLocation);
-                                    teleported = true;
-                                } else {
-                                    player.sendMessage("You do not have the right to travel between worlds via deathtp!");
-                                }
-                            }
-                            else {
-                                player.teleport(sendLocation);
-                                teleported = true;
-                            }
-                        }
-                        else {
-                            player.sendMessage("You do not have a last known death location.");
-                        }
-
-                        if (plugin.isEconomyActive() && !teleported) {
-                            plugin.getEconomy().depositPlayer(player.getName(), economyCost);
-                            player.sendMessage("Giving you back "+economyCost);
-                        }
-                    }
-                    catch (IOException e) {
-                      log.warning("Problems with reading the deathlocations", e);
-                    }
-                }
-                else {
-                    player.sendMessage("That command is not available");
                 }
 
             }
+            else {
+                player.sendMessage("That command is not available");
+            }
+
+
 
             return true;
         }
@@ -178,7 +99,74 @@ public class DeathtpCommandDTP implements CommandExecutor {
             log.warning("This is only a player command.");
             return true;
         }
-
-
     }
+
+    private Boolean canTp(Player player)
+    {
+        return hasItem(player) && hasFunds(player);
+    }
+
+    private void registerTp(Player player)
+    {
+        if (hasItem(player)) {
+            if (Integer.parseInt(config.getChargeItem()) != 0) {
+                ItemStack itemInHand = player.getItemInHand();
+
+                if (itemInHand.getAmount() == 1) {
+                    player.getInventory().clear(player.getInventory().getHeldItemSlot());
+                }
+                else {
+                    itemInHand.setAmount(itemInHand.getAmount() - 1);
+                    player.setItemInHand(itemInHand);
+                }
+            }
+        }
+
+        if (hasFunds(player)) {
+            if (plugin.isEconomyActive()){
+                double deathTpCost = Double.valueOf(config.getDeathtpCost().trim()).doubleValue();
+                plugin.getEconomy().withdrawPlayer(player.getName(), deathTpCost);
+                player.sendMessage(String.format("You used %s to use /deathtp.", plugin.getEconomy().format(deathTpCost)));
+            }
+        }
+    }
+
+    private Boolean hasItem(Player player)
+    {
+        int chargeItem = Integer.parseInt(config.getChargeItem());
+        log.debug("chargeItem",chargeItem );
+        // costs item in inventory
+        if (chargeItem == 0 || chargeItem == player.getItemInHand().getType().getId()) {
+            log.debug("hasItem",true );
+            return true;
+        }
+
+        player.sendMessage(String.format("You must be holding a %s to teleport.", Material.getMaterial(chargeItem).toString().toLowerCase()));
+
+        return false;
+    }
+
+    private Boolean hasFunds(Player player)
+    {
+        double deathTpCost = Double.valueOf(config.getDeathtpCost().trim()).doubleValue();
+        log.debug("deathTpCost",deathTpCost );
+        if (deathTpCost == 0)
+            return true;
+
+        // costs economy
+        if (plugin.isEconomyActive()) {
+            log.debug("isEconomyActive","yes" );
+            if (plugin.getEconomy().getBalance(player.getName()) > deathTpCost) {
+                log.debug("hasFunds",true );
+                return true;
+            }
+            else {
+                player.sendMessage(String.format("You need %s coins to use /deathtp.", plugin.getEconomy().format(deathTpCost)));
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
+

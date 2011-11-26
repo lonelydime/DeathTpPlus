@@ -90,7 +90,7 @@ public class DeathLocationsLogDTP {
             deathLocationLogReader.close();
         }
         catch (IOException e) {
-            log.severe("Failed to read death location lo", e);
+            log.severe("Failed to read death location log", e);
         }
 
         if (playerRecord == null) {
@@ -104,6 +104,7 @@ public class DeathLocationsLogDTP {
             for (DeathLocationRecordDTP deathLocation : deathLocations) {
                 deathLocationLogWriter.write(deathLocation.toString());
                 deathLocationLogWriter.newLine();
+                log.debug("DeathLocation written:",deathLocation );
             }
 
             deathLocationLogWriter.close();
