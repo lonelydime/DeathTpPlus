@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.objects;
+package org.simiancage.DeathTpPlus.logs;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -6,19 +6,20 @@ import org.bukkit.block.Block;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.objects.TombDTP;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * PluginName: DeathTpPlus
- * Class: TombSaveDTP
+ * Class: TombLogDTP
  * User: DonRedhorse
  * Date: 14.11.11
  * Time: 20:28
  */
 
-public class TombSaveDTP implements Serializable {
+public class TombLogDTP implements Serializable {
     /**
      *
      */
@@ -32,7 +33,7 @@ public class TombSaveDTP implements Serializable {
     private transient ConfigDTP config;
     private transient LoggerDTP log;
 
-    public TombSaveDTP(TombDTP TombDTP) {
+    public TombLogDTP(TombDTP TombDTP) {
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
         for (Block b : TombDTP.getSignBlocks())
@@ -81,7 +82,7 @@ public class TombSaveDTP implements Serializable {
                 if (b != null)
                     TombDTP.addSignBlock(b);
             } catch (IllegalArgumentException e) {
-                log.info("One of the TombDTP of " + player + " was destroyed. :\n"
+                log.info("One of the Tomb of " + player + " was destroyed. :\n"
                         + loc);
             }
         }
@@ -135,7 +136,7 @@ class LocSaveDTP implements Serializable {
     */
     @Override
     public String toString() {
-        return "LocSaveDTP={World=" + world + ", x=" + x + ", y=" + y + ", z=" + z + "}";
+        return "LocSave={World=" + world + ", x=" + x + ", y=" + y + ", z=" + z + "}";
 
     }
 }

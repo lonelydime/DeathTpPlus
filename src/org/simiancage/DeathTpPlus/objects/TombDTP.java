@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.logs.TombLogDTP;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -453,8 +454,8 @@ public class TombDTP {
      *
      * @return
      */
-    public TombSaveDTP save() {
-        return new TombSaveDTP(this);
+    public TombLogDTP save() {
+        return new TombLogDTP(this);
     }
 
 }

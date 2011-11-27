@@ -46,6 +46,8 @@ public class onEntityDeathDTP {
     private DeathLocationsLogDTP deathLocationsLog;
     private StreakLogDTP streakLog;
     private DeathLogDTP deathLog;
+    private TombStoneHelperDTP tombStoneHelper;
+
 
 
     public onEntityDeathDTP(DeathTpPlus plugin) {
@@ -58,6 +60,7 @@ public class onEntityDeathDTP {
         deathLocationsLog = plugin.getDeathLocationLog();
         streakLog = plugin.getStreakLog();
         deathLog = plugin.getDeathLog();
+        tombStoneHelper = TombStoneHelperDTP.getInstance();
     }
 
     public void oEDeaDeathTp (DeathTpPlus plugin, EntityListenerDTP entityListenerDTP, EntityDeathEvent entityDeathEvent) {
@@ -208,7 +211,7 @@ public class onEntityDeathDTP {
         }
 
 // Check if we can replace the block.
-        block = plugin.findPlace(block, false);
+        block = tombStoneHelper.findPlace(block, false);
         if (block == null) {
             plugin.sendMessage(player,
                     "Could not find room for chest. Inventory dropped");
@@ -276,13 +279,13 @@ public class onEntityDeathDTP {
 // Find a place to put the sign, then place the sign.
             sBlock = sChest.getWorld().getBlockAt(sChest.getX(),
                     sChest.getY() + 1, sChest.getZ());
-            if (plugin.canReplace(sBlock.getType())) {
+            if (tombStoneHelper.canReplace(sBlock.getType())) {
                 createSign(sBlock, deathDetail);
                 removeSign = 1;
             } else if (lChest != null) {
                 sBlock = lChest.getWorld().getBlockAt(lChest.getX(),
                         lChest.getY() + 1, lChest.getZ());
-                if (plugin.canReplace(sBlock.getType())) {
+                if (tombStoneHelper.canReplace(sBlock.getType())) {
                     createSign(sBlock, deathDetail);
                     removeSign = 1;
                 }
@@ -301,7 +304,7 @@ public class onEntityDeathDTP {
         Boolean prot = false;
         Boolean protLWC = false;
         if (plugin.hasPerm(player, "tombstone.lwc", false))
-            prot = plugin.activateLWC(player, tStoneBlockDTP);
+            prot = tombStoneHelper.activateLWC(player, tStoneBlockDTP);
         tStoneBlockDTP.setLwcEnabled(prot);
         if (prot)
             protLWC = true;
@@ -309,27 +312,27 @@ public class onEntityDeathDTP {
 // Protect the chest with Lockette if installed, enabled, and
 // unprotected.
         if (plugin.hasPerm(player, "tombstone.lockette", false)){
-            prot = plugin.protectWithLockette(player, tStoneBlockDTP);
+            prot = tombStoneHelper.protectWithLockette(player, tStoneBlockDTP);
         }
 // Add tombstone to list
-        plugin.tombStoneListDTP.offer(tStoneBlockDTP);
+        tombStoneHelper.offerTombStoneList(tStoneBlockDTP);
 
-// Add tombstone blocks to tombBlockList
-        plugin.tombBlockList.put(tStoneBlockDTP.getBlock().getLocation(), tStoneBlockDTP);
+// Add tombstone blocks to tombStoneBlockList
+        tombStoneHelper.putTombStoneBlockList(tStoneBlockDTP.getBlock().getLocation(), tStoneBlockDTP);
         if (tStoneBlockDTP.getLBlock() != null)
-            plugin.tombBlockList.put(tStoneBlockDTP.getLBlock().getLocation(), tStoneBlockDTP);
+            tombStoneHelper.putTombStoneBlockList(tStoneBlockDTP.getLBlock().getLocation(), tStoneBlockDTP);
         if (tStoneBlockDTP.getSign() != null)
-            plugin.tombBlockList.put(tStoneBlockDTP.getSign().getLocation(), tStoneBlockDTP);
+            tombStoneHelper.putTombStoneBlockList(tStoneBlockDTP.getSign().getLocation(), tStoneBlockDTP);
 
 // Add tombstone to player lookup list
-        ArrayList<TombStoneBlockDTP> pList = plugin.playerTombList.get(player.getName());
+        ArrayList<TombStoneBlockDTP> pList = tombStoneHelper.getPlayerTombStoneList(player.getName());
         if (pList == null) {
             pList = new ArrayList<TombStoneBlockDTP>();
-            plugin.playerTombList.put(player.getName(), pList);
+            tombStoneHelper.putPlayerTombStoneList(player.getName(), pList);
         }
         pList.add(tStoneBlockDTP);
 
-        plugin.saveTombStoneList(player.getWorld().getName());
+        tombStoneHelper.saveTombStoneList(player.getWorld().getName());
 
 // Next get the players inventory using the getDrops() method.
         for (Iterator<ItemStack> iter = deathDrops.listIterator(); iter
@@ -418,6 +421,7 @@ public class onEntityDeathDTP {
     private void UpdateTomb(DeathDetailDTP deathDetail) {
         Player player = deathDetail.getPlayer();
         if (tombWorker.hasTomb(player.getName())) {
+            log.debug("UpdateTomb");
             TombDTP TombDTP = tombWorker.getTomb(player.getName());
             log.debug("TombDTP",TombDTP );
             String signtext;
@@ -551,22 +555,22 @@ public class onEntityDeathDTP {
         Block exp;
         exp = base.getWorld().getBlockAt(base.getX() - 1, base.getY(),
                 base.getZ());
-        if (plugin.canReplace(exp.getType())
+        if (tombStoneHelper.canReplace(exp.getType())
                 && (config.isAllowInterfere() || !checkChest(exp)))
             return exp;
         exp = base.getWorld().getBlockAt(base.getX(), base.getY(),
                 base.getZ() - 1);
-        if (plugin.canReplace(exp.getType())
+        if (tombStoneHelper.canReplace(exp.getType())
                 && (config.isAllowInterfere() || !checkChest(exp)))
             return exp;
         exp = base.getWorld().getBlockAt(base.getX() + 1, base.getY(),
                 base.getZ());
-        if (plugin.canReplace(exp.getType())
+        if (tombStoneHelper.canReplace(exp.getType())
                 && (config.isAllowInterfere() || !checkChest(exp)))
             return exp;
         exp = base.getWorld().getBlockAt(base.getX(), base.getY(),
                 base.getZ() + 1);
-        if (plugin.canReplace(exp.getType())
+        if (tombStoneHelper.canReplace(exp.getType())
                 && (config.isAllowInterfere() || !checkChest(exp)))
             return exp;
         return null;

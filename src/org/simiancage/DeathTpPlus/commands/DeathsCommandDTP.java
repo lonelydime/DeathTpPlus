@@ -62,7 +62,7 @@ public class DeathsCommandDTP implements CommandExecutor {
             switch (args.length) {
                 case 0:
                     Player player = (Player) sender;
-                    total = DeathTpPlus.deathLog.getTotalByType(player.getName(), DeathRecordType.death);
+                    total = plugin.getDeathLog().getTotalByType(player.getName(), DeathRecordType.death);
                     if (total > -1) {
                         sender.sendMessage(String.format("You died %d time(s)", total));
                     }
@@ -71,7 +71,7 @@ public class DeathsCommandDTP implements CommandExecutor {
                     }
                     break;
                 case 1:
-                    total = DeathTpPlus.deathLog.getTotalByType(args[0], DeathRecordType.death);
+                    total = plugin.getDeathLog().getTotalByType(args[0], DeathRecordType.death);
                     if (total > -1) {
                         sender.sendMessage(String.format("%s died %d time(s)", args[0], total));
                     }
@@ -80,7 +80,7 @@ public class DeathsCommandDTP implements CommandExecutor {
                     }
                     break;
                 case 2:
-                    DeathRecordDTP record = DeathTpPlus.deathLog.getRecordByType(args[0], args[1], DeathRecordType.death);
+                    DeathRecordDTP record = plugin.getDeathLog().getRecordByType(args[0], args[1], DeathRecordType.death);
                     if (record != null) {
                         sender.sendMessage(String.format("%s died by %s %d time(s)", args[0], args[1], record.getCount()));
                     }

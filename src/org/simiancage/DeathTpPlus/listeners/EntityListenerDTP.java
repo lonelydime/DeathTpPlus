@@ -12,6 +12,7 @@ import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.events.onEntityDeathDTP;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.helpers.TombStoneHelperDTP;
 import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
@@ -32,11 +33,13 @@ public class EntityListenerDTP extends EntityListener {
     private LoggerDTP log;
     private onEntityDeathDTP oedea;
     private EntityListenerDTP instance;
+    private TombStoneHelperDTP tombStoneHelper;
 
     public EntityListenerDTP(DeathTpPlus plugin) {
         this.plugin = plugin;
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
+        tombStoneHelper = TombStoneHelperDTP.getInstance();
         log.debug("EntityListener active");
         instance = this;
     }
@@ -102,7 +105,7 @@ public class EntityListenerDTP extends EntityListener {
         if (!config.isCreeperProtection())
             return;
         for (Block block : event.blockList()) {
-            TombStoneBlockDTP tStoneBlockDTP = plugin.tombBlockList.get(block.getLocation());
+            TombStoneBlockDTP tStoneBlockDTP = tombStoneHelper.getTombStoneBlockList(block.getLocation());
             if (tStoneBlockDTP != null) {
                 event.setCancelled(true);
             }

@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.helpers.TombStoneHelperDTP;
 import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 
 import java.util.ArrayList;
@@ -24,11 +25,13 @@ public class TimeCommandDTP implements CommandExecutor {
     private DeathTpPlus plugin;
     private LoggerDTP log;
     private ConfigDTP config;
+    private TombStoneHelperDTP tombStoneHelper;
 
     public TimeCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
+        tombStoneHelper = TombStoneHelperDTP.getInstance();
         log.info("dtptime command registered");
     }
 
@@ -43,7 +46,7 @@ public class TimeCommandDTP implements CommandExecutor {
         Player p = (Player) sender;
         if (args.length != 1)
             return false;
-        ArrayList<TombStoneBlockDTP> pList = plugin.playerTombList.get(p.getName());
+        ArrayList<TombStoneBlockDTP> pList = tombStoneHelper.getPlayerTombStoneList(p.getName());
         if (pList == null) {
             plugin.sendMessage(p, "You have no Tombstones.");
             return true;

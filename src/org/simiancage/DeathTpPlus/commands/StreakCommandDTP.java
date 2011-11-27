@@ -46,7 +46,7 @@ public class StreakCommandDTP implements CommandExecutor {
         if (canUseCommand) {
             if (config.isShowStreaks() ) {
 
-                StreakRecordDTP streak = DeathTpPlus.streakLog.getRecord(args.length > 0 ? args[0] : ((Player) sender).getName());
+                StreakRecordDTP streak = plugin.getStreakLog().getRecord(args.length > 0 ? args[0] : ((Player) sender).getName());
 
                 if (streak != null) {
                     if (streak.getCount() < 0) {

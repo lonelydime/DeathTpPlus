@@ -8,8 +8,8 @@ package org.simiancage.DeathTpPlus.helpers;
  * Time: 20:39
  */
 
+import org.simiancage.DeathTpPlus.logs.TombLogDTP;
 import org.simiancage.DeathTpPlus.objects.TombDTP;
-import org.simiancage.DeathTpPlus.objects.TombSaveDTP;
 
 import java.io.*;
 import java.util.HashMap;
@@ -39,7 +39,7 @@ public class TombSaveSystemDTP {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        HashMap<String, TombSaveDTP> toWrite = new HashMap<String, TombSaveDTP>();
+        HashMap<String, TombLogDTP> toWrite = new HashMap<String, TombLogDTP>();
         for (String name : toBeSaved.keySet())
             toWrite.put(name, toBeSaved.get(name).save());
 
@@ -57,7 +57,7 @@ public class TombSaveSystemDTP {
     @SuppressWarnings("unchecked")
     public HashMap<String, TombDTP> load() {
         HashMap<String, TombDTP> result = new HashMap<String, TombDTP>();
-        HashMap<String, TombSaveDTP> saved=null;
+        HashMap<String, TombLogDTP> saved=null;
         File saveFile = new File(this.path + File.separator + "tombs.dat");
         if (!saveFile.exists())
             return new HashMap<String, TombDTP>();
@@ -68,7 +68,7 @@ public class TombSaveSystemDTP {
         try {
             fis = new FileInputStream(saveFile);
             in = new ObjectInputStream(fis);
-            saved = (HashMap<String, TombSaveDTP>) in.readObject();
+            saved = (HashMap<String, TombLogDTP>) in.readObject();
             in.close();
         } catch (IOException ex) {
             ex.printStackTrace();

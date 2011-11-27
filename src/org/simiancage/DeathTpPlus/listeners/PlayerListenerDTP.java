@@ -19,6 +19,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.helpers.TombStoneHelperDTP;
 import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
@@ -28,12 +29,14 @@ public class PlayerListenerDTP extends PlayerListener {
     private ConfigDTP config;
     private LoggerDTP log;
     private TombWorkerDTP worker;
+    private TombStoneHelperDTP tombStoneHelper;
 
     public PlayerListenerDTP(DeathTpPlus instance) {
         this.plugin = instance;
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
         worker = TombWorkerDTP.getInstance();
+        tombStoneHelper = TombStoneHelperDTP.getInstance();
         log.debug("PlayerListener active");
     }
 
@@ -57,7 +60,7 @@ public class PlayerListenerDTP extends PlayerListener {
             if (!plugin.hasPerm(event.getPlayer(), "tombstone.quickloot", false))
                 return;
 
-            TombStoneBlockDTP tStoneBlockDTP = plugin.tombBlockList.get(b.getLocation());
+            TombStoneBlockDTP tStoneBlockDTP = tombStoneHelper.getTombStoneBlockList(b.getLocation());
             if (tStoneBlockDTP == null || !(tStoneBlockDTP.getBlock().getState() instanceof Chest))
                 return;
 
@@ -112,7 +115,7 @@ public class PlayerListenerDTP extends PlayerListener {
                 event.setCancelled(true);
 
                 if (config.isDestroyOnQuickLoot()) {
-                    plugin.destroyTombStone(tStoneBlockDTP);
+                    tombStoneHelper.destroyTombStone(tStoneBlockDTP);
                 }
             }
 

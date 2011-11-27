@@ -37,25 +37,25 @@ public class ServerListenerDTP extends ServerListener {
         PluginManager pm = plugin.getServer().getPluginManager();
         Plugin checkRegister = pm.getPlugin("Register");
         Plugin checkVault = pm.getPlugin("Vault");
-        if ((checkVault == null) && plugin.useVault) {
+        if ((checkVault == null) && plugin.isUseVault()) {
             RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
             if (economyProvider == null)
             {
-                plugin.useVault = false;
-                plugin.economyActive = false;
+                plugin.setUseVault(false);
+                plugin.setEconomyActive(false);
                 log.info("un-hooked from Vault.");
                 log.info("as Vault was unloaded / disabled.");
             }
         }
 
-        if (event.getPlugin() == plugin.lwcPlugin) {
+        if (event.getPlugin() == plugin.getLwcPlugin()) {
             log.info("LWC plugin lost.");
-            plugin.lwcPlugin = null;
+            plugin.setLwcPlugin(null);
         }
 
-        if (event.getPlugin() == plugin.LockettePlugin) {
+        if (event.getPlugin() == plugin.getLockettePlugin()) {
             log.info( "Lockette plugin lost.");
-            plugin.LockettePlugin = null;
+            plugin.setLockettePlugin(null);
         }
 
     }
@@ -65,21 +65,21 @@ public class ServerListenerDTP extends ServerListener {
         log.debug("onPluginEnable executing");
         PluginManager pm = plugin.getServer().getPluginManager();
         Plugin checkVault = pm.getPlugin("Vault");
-        if (checkVault !=null && !plugin.useVault)
+        if (checkVault !=null && !plugin.isUseVault())
         {
-            plugin.useVault = true;
+            plugin.setUseVault(true);
             log.info( "Vault detected");
             log.info("Checking ecnomony providers now!");
         }
 
 
-        if ((!plugin.economyActive) && plugin.useVault) {
+        if ((!plugin.isEconomyActive() && plugin.isUseVault())) {
 
             RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
             if (economyProvider != null) {
-                plugin.economy = economyProvider.getProvider();
-                plugin.economyActive = true;
-                log.info( "Economy provider found: "+plugin.economy.getName());
+                plugin.setEconomy(economyProvider.getProvider());
+                plugin.setEconomyActive(true);
+                log.info( "Economy provider found: "+plugin.getEconomy().getName());
 
             } else {
                 if (missingEconomyWarn){
@@ -90,19 +90,19 @@ public class ServerListenerDTP extends ServerListener {
             }
         }
 
-        if (plugin.lwcPlugin == null) {
+        if (plugin.getLwcPlugin() == null) {
             if (event.getPlugin().getDescription().getName()
                     .equalsIgnoreCase("LWC")) {
-                plugin.lwcPlugin = (LWCPlugin) plugin.checkPlugin(event
-                        .getPlugin());
+                plugin.setLwcPlugin((LWCPlugin) plugin.checkPlugin(event
+                        .getPlugin()));
             }
         }
 
-        if (plugin.LockettePlugin == null) {
+        if (plugin.getLockettePlugin() == null) {
             if (event.getPlugin().getDescription().getName()
                     .equalsIgnoreCase("Lockette")) {
-                plugin.LockettePlugin = (Lockette) plugin.checkPlugin(event
-                        .getPlugin());
+                plugin.setLockettePlugin((Lockette) plugin.checkPlugin(event
+                        .getPlugin()));
             }
         }
     }

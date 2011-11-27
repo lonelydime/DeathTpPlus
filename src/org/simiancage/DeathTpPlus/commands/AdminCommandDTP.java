@@ -4,10 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
-import org.simiancage.DeathTpPlus.helpers.DeathMessagesDTP;
-import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
-import org.simiancage.DeathTpPlus.helpers.TombMessagesDTP;
+import org.simiancage.DeathTpPlus.helpers.*;
 import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 
@@ -21,6 +18,7 @@ public class AdminCommandDTP implements CommandExecutor {
     private ConfigDTP config;
     private DeathMessagesDTP deathMessages;
     private TombMessagesDTP tombMessages;
+    private TombStoneHelperDTP tombStoneHelper;
 
     public AdminCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
@@ -28,6 +26,7 @@ public class AdminCommandDTP implements CommandExecutor {
         config = ConfigDTP.getInstance();
         deathMessages = DeathMessagesDTP.getInstance();
         tombMessages = TombMessagesDTP.getInstance();
+        tombStoneHelper = TombStoneHelperDTP.getInstance();
         log.info("dtpadmin command registered");
     }
 
@@ -58,17 +57,17 @@ public class AdminCommandDTP implements CommandExecutor {
                 return true;
             }
             if (args.length < 2) {
-                if (plugin.playerTombList.keySet().isEmpty()) {
+                if (tombStoneHelper.getPlayerTombStoneList().keySet().isEmpty()) {
                     plugin.sendMessage(p, "There are no tombstones.");
                     return true;
                 }
                 plugin.sendMessage(p, "Players with tombstones:");
-                for (String player : plugin.playerTombList.keySet()) {
+                for (String player : tombStoneHelper.getPlayerTombStoneList().keySet()) {
                     plugin.sendMessage(p, player);
                 }
                 return true;
             }
-            ArrayList<TombStoneBlockDTP> pList = plugin.playerTombList.get(args[1]);
+            ArrayList<TombStoneBlockDTP> pList = tombStoneHelper.getPlayerTombStoneList(args[1]);
             if (pList == null) {
                 plugin.sendMessage(p, "No tombstones found for " + args[1] + ".");
                 return true;
@@ -92,7 +91,7 @@ public class AdminCommandDTP implements CommandExecutor {
                 plugin.sendMessage(p, "Permission Denied");
                 return true;
             }
-            ArrayList<TombStoneBlockDTP> pList = plugin.playerTombList.get(args[1]);
+            ArrayList<TombStoneBlockDTP> pList = tombStoneHelper.getPlayerTombStoneList(args[1]);
             if (pList == null) {
                 plugin.sendMessage(p, "No tombstones found for " + args[1] + ".");
                 return true;
@@ -110,14 +109,14 @@ public class AdminCommandDTP implements CommandExecutor {
                 return true;
             }
             TombStoneBlockDTP tStoneBlockDTP = pList.get(slot);
-            double degrees = (plugin.getYawTo(tStoneBlockDTP.getBlock().getLocation(),
+            double degrees = (tombStoneHelper.getYawTo(tStoneBlockDTP.getBlock().getLocation(),
                     p.getLocation()) + 270) % 360;
             int X = tStoneBlockDTP.getBlock().getX();
             int Y = tStoneBlockDTP.getBlock().getY();
             int Z = tStoneBlockDTP.getBlock().getZ();
             plugin.sendMessage(p, args[1] + "'s tombstone #" + args[2]
                     + " is at " + X + "," + Y + "," + Z + ", to the "
-                    + plugin.getDirection(degrees) + ".");
+                    + tombStoneHelper.getDirection(degrees) + ".");
             return true;
         } else if (args[0].equalsIgnoreCase("time")) {
             if (!plugin.hasPerm(p, "admin.time", false)) {
@@ -126,7 +125,7 @@ public class AdminCommandDTP implements CommandExecutor {
             }
             if (args.length != 3)
                 return false;
-            ArrayList<TombStoneBlockDTP> pList = plugin.playerTombList.get(args[1]);
+            ArrayList<TombStoneBlockDTP> pList = tombStoneHelper.getPlayerTombStoneList(args[1]);
             if (pList == null) {
                 plugin.sendMessage(p, "No tombstones found for " + args[1] + ".");
                 return true;
@@ -194,7 +193,7 @@ public class AdminCommandDTP implements CommandExecutor {
                 plugin.sendMessage(p, "Permission Denied");
                 return true;
             }
-            ArrayList<TombStoneBlockDTP> pList = plugin.playerTombList.get(args[1]);
+            ArrayList<TombStoneBlockDTP> pList = tombStoneHelper.getPlayerTombStoneList(args[1]);
             if (pList == null) {
                 plugin.sendMessage(p, "No tombstones found for " + args[1] + ".");
                 return true;
@@ -212,7 +211,7 @@ public class AdminCommandDTP implements CommandExecutor {
                 return true;
             }
             TombStoneBlockDTP tStoneBlockDTP = pList.get(slot);
-            plugin.destroyTombStone(tStoneBlockDTP);
+            tombStoneHelper.destroyTombStone(tStoneBlockDTP);
 
         } else {
             plugin.sendMessage(p, "Usage: /dtpadmin list");

@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.helpers.TombStoneHelperDTP;
 import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 
@@ -24,11 +25,13 @@ public class FindCommandDTP implements CommandExecutor {
     private DeathTpPlus plugin;
     private LoggerDTP log;
     private ConfigDTP config;
+    private TombStoneHelperDTP tombStoneHelper;
 
     public FindCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
+        tombStoneHelper = TombStoneHelperDTP.getInstance();
         log.info("dtpfind command registered");
     }
 
@@ -42,8 +45,7 @@ public class FindCommandDTP implements CommandExecutor {
         }
         if (args.length != 1)
             return false;
-        ArrayList<TombStoneBlockDTP> pList = plugin.playerTombList
-                .get(sender.getName());
+        ArrayList<TombStoneBlockDTP> pList = tombStoneHelper.getPlayerTombStoneList(sender.getName());
         if (pList == null) {
             plugin.sendMessage(sender, "You have no tombstones.");
             return true;
@@ -62,7 +64,7 @@ public class FindCommandDTP implements CommandExecutor {
             return true;
         }
         TombStoneBlockDTP tStoneBlockDTP = pList.get(slot);
-        double degrees = (plugin.getYawTo(tStoneBlockDTP.getBlock().getLocation(),
+        double degrees = (tombStoneHelper.getYawTo(tStoneBlockDTP.getBlock().getLocation(),
                 p.getLocation()) + 270) % 360;
         p.setCompassTarget(tStoneBlockDTP.getBlock().getLocation());
         plugin.sendMessage(
@@ -70,7 +72,7 @@ public class FindCommandDTP implements CommandExecutor {
                 "Your tombstone #"
                         + args[0]
                         + " is to the "
-                        + DeathTpPlus.getDirection(degrees)
+                        + tombStoneHelper.getDirection(degrees)
                         + ". Your compass has been set to point at its location. Use /dtpreset to reset it to your spawn point.");
         return true;
     }
