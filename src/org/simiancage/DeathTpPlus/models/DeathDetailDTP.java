@@ -23,6 +23,7 @@ public class DeathDetailDTP {
     private DeathEventType causeOfDeath;
     private Player killer;
     private String murderWeapon;
+    private EntityDeathEvent entityDeathEvent;
     private static final ConfigDTP config = ConfigDTP.getInstance();
     private static final LoggerDTP log = LoggerDTP.getLogger();
 
@@ -33,6 +34,7 @@ public class DeathDetailDTP {
     public DeathDetailDTP(EntityDeathEvent event)
     {
         player = (Player) event.getEntity();
+        entityDeathEvent = event;
 
         EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
 
@@ -124,6 +126,14 @@ public class DeathDetailDTP {
     public void setMurderWeapon(String murderWeapon)
     {
         this.murderWeapon = murderWeapon;
+    }
+
+    public EntityDeathEvent getEntityDeathEvent() {
+        return entityDeathEvent;
+    }
+
+    public void setEntityDeathEvent(EntityDeathEvent entityDeathEvent) {
+        this.entityDeathEvent = entityDeathEvent;
     }
 
     public Boolean isPVPDeath()

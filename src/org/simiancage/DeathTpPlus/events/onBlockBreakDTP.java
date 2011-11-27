@@ -9,7 +9,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
-import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
+import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.objects.TombDTP;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
@@ -43,12 +43,12 @@ public class onBlockBreakDTP {
         if (b.getType() == Material.WALL_SIGN) {
             org.bukkit.material.Sign signData = (org.bukkit.material.Sign) b
                     .getState().getData();
-            TombBlockDTP tBlockDTP = plugin.tombBlockList.get(b.getRelative(
+            TombStoneBlockDTP tStoneBlockDTP = plugin.tombBlockList.get(b.getRelative(
                     signData.getAttachedFace()).getLocation());
-            if (tBlockDTP == null)
+            if (tStoneBlockDTP == null)
                 return;
 
-            if (tBlockDTP.getLocketteSign() != null) {
+            if (tStoneBlockDTP.getLocketteSign() != null) {
                 Sign sign = (Sign) b.getState();
                 event.setCancelled(true);
                 sign.update();
@@ -59,9 +59,9 @@ public class onBlockBreakDTP {
         if (b.getType() != Material.CHEST && b.getType() != Material.SIGN_POST)
             return;
 
-        TombBlockDTP tBlockDTP = plugin.tombBlockList.get(b.getLocation());
+        TombStoneBlockDTP tStoneBlockDTP = plugin.tombBlockList.get(b.getLocation());
 
-        if (tBlockDTP == null)
+        if (tStoneBlockDTP == null)
             return;
         Location location = b.getLocation();
         String loc = location.getWorld().getName();
@@ -78,10 +78,10 @@ public class onBlockBreakDTP {
         }
 
         if (plugin.lwcPlugin != null && config.isEnableLWC()
-                && tBlockDTP.getLwcEnabled()) {
-            if (tBlockDTP.getOwner().equals(p.getName())
+                && tStoneBlockDTP.getLwcEnabled()) {
+            if (tStoneBlockDTP.getOwner().equals(p.getName())
                     || plugin.hasPerm(p, "admin", false)) {
-                plugin.deactivateLWC(tBlockDTP, true);
+                plugin.deactivateLWC(tStoneBlockDTP, true);
             } else {
                 event.setCancelled(true);
                 return;
@@ -89,7 +89,7 @@ public class onBlockBreakDTP {
         }
         log.debug(p.getName() + " destroyed tombstone at "
                 + loc);
-        plugin.removeTomb(tBlockDTP, true);
+        plugin.removeTomb(tStoneBlockDTP, true);
 
 
     }

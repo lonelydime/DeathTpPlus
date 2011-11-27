@@ -13,7 +13,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
-import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
+import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class ListCommandDTP implements CommandExecutor {
             plugin.sendMessage(sender, "Permission Denied");
             return true;
         }
-        ArrayList<TombBlockDTP> pList = plugin.playerTombList
+        ArrayList<TombStoneBlockDTP> pList = plugin.playerTombList
                 .get(sender.getName());
         if (pList == null) {
             plugin.sendMessage(sender, "You have no tombstones.");
@@ -47,15 +47,15 @@ public class ListCommandDTP implements CommandExecutor {
         }
         plugin.sendMessage(sender, "Tombstone List:");
         int i = 0;
-        for (TombBlockDTP tombDTP : pList) {
+        for (TombStoneBlockDTP tombStoneDTP : pList) {
             i++;
-            if (tombDTP.getBlock() == null)
+            if (tombStoneDTP.getBlock() == null)
                 continue;
-            int X = tombDTP.getBlock().getX();
-            int Y = tombDTP.getBlock().getY();
-            int Z = tombDTP.getBlock().getZ();
+            int X = tombStoneDTP.getBlock().getX();
+            int Y = tombStoneDTP.getBlock().getY();
+            int Z = tombStoneDTP.getBlock().getZ();
             plugin.sendMessage(sender, " " + i + " - World: "
-                    + tombDTP.getBlock().getWorld().getName() + " @(" + X + ","
+                    + tombStoneDTP.getBlock().getWorld().getName() + " @(" + X + ","
                     + Y + "," + Z + ")");
         }
         return true;

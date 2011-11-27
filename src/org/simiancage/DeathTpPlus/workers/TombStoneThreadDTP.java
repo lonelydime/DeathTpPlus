@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
-import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
+import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 import java.util.Iterator;
@@ -31,17 +31,17 @@ public class TombStoneThreadDTP extends Thread {
 
     public void run() {
         long cTime = System.currentTimeMillis() / 1000;
-        for (Iterator<TombBlockDTP> iter = plugin.tombListDTP.iterator(); iter
+        for (Iterator<TombStoneBlockDTP> iter = plugin.tombStoneListDTP.iterator(); iter
                 .hasNext();) {
-            TombBlockDTP tBlockDTP = iter.next();
+            TombStoneBlockDTP tStoneBlockDTP = iter.next();
 
 // "empty" option checks
             if (config.isKeepTombStoneUntilEmpty() || config.isRemoveTombStoneWhenEmpty()) {
-                if (tBlockDTP.getBlock().getState() instanceof Chest) {
+                if (tStoneBlockDTP.getBlock().getState() instanceof Chest) {
                     int itemCount = 0;
 
-                    Chest sChest = (Chest) tBlockDTP.getBlock().getState();
-                    Chest lChest = (tBlockDTP.getLBlock() != null) ? (Chest) tBlockDTP
+                    Chest sChest = (Chest) tStoneBlockDTP.getBlock().getState();
+                    Chest lChest = (tStoneBlockDTP.getLBlock() != null) ? (Chest) tStoneBlockDTP
                             .getLBlock().getState() : null;
 
                     for (ItemStack item : sChest.getInventory().getContents()) {
@@ -62,7 +62,7 @@ public class TombStoneThreadDTP extends Thread {
                     }
                     if (config.isRemoveTombStoneWhenEmpty()) {
                         if (itemCount == 0)
-                            plugin.destroyTombStone(tBlockDTP);
+                            plugin.destroyTombStone(tStoneBlockDTP);
                         iter.remove(); // TODO bugcheck on this addition
                     }
                 }
@@ -70,19 +70,19 @@ public class TombStoneThreadDTP extends Thread {
 
 // Security removal check
             if (config.isRemoveTombStoneSecurity()) {
-                Player p = plugin.getServer().getPlayer(tBlockDTP.getOwner());
+                Player p = plugin.getServer().getPlayer(tStoneBlockDTP.getOwner());
 
-                if (cTime >= (tBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneSecurityTimeOut()))) {
-                    if (tBlockDTP.getLwcEnabled() && plugin.lwcPlugin != null) {
-                        plugin.deactivateLWC(tBlockDTP, false);
-                        tBlockDTP.setLwcEnabled(false);
+                if (cTime >= (tStoneBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneSecurityTimeOut()))) {
+                    if (tStoneBlockDTP.getLwcEnabled() && plugin.lwcPlugin != null) {
+                        plugin.deactivateLWC(tStoneBlockDTP, false);
+                        tStoneBlockDTP.setLwcEnabled(false);
                         if (p != null)
                             plugin.sendMessage(p,
                                     "LWC protection disabled on your tombstone!");
                     }
-                    if (tBlockDTP.getLocketteSign() != null
+                    if (tStoneBlockDTP.getLocketteSign() != null
                             && plugin.LockettePlugin != null) {
-                        plugin.deactivateLockette(tBlockDTP);
+                        plugin.deactivateLockette(tStoneBlockDTP);
                         if (p != null)
                             plugin.sendMessage(p,
                                     "Lockette protection disabled on your tombstone!");
@@ -92,8 +92,8 @@ public class TombStoneThreadDTP extends Thread {
 
 // Block removal check
             if (config.isRemoveTombStone()
-                    && cTime > (tBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneTime()))) {
-                plugin.destroyTombStone(tBlockDTP);
+                    && cTime > (tStoneBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneTime()))) {
+                plugin.destroyTombStone(tStoneBlockDTP);
 // TODO this originally included
 // the only instance of
 // removeTomb(tblock, false).

@@ -18,15 +18,12 @@ import org.simiancage.DeathTpPlus.logs.DeathLocationsLogDTP;
 import org.simiancage.DeathTpPlus.logs.DeathLogDTP;
 import org.simiancage.DeathTpPlus.logs.StreakLogDTP;
 import org.simiancage.DeathTpPlus.models.DeathDetailDTP;
-import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
+import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.objects.TombDTP;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Random;
+import java.util.*;
 
 /**
  * PluginName: DeathTpPlus
@@ -68,96 +65,51 @@ public class onEntityDeathDTP {
         DeathDetailDTP deathDetail = new DeathDetailDTP(entityDeathEvent);
         log.debug("deathDetail", deathDetail );
         deathLocationsLog.setRecord(deathDetail);
-/*        Player player = (Player) entityDeathEvent.getEntity();
-        ArrayList<String> filetext = new ArrayList<String>();
-        boolean readCheck = false;
-        boolean newPlayerDeath = true;
-        String fileOutput = "";
-        String line = "";
-        //text to write to file
-        fileOutput = player.getName()+":"+player.getLocation().getX()+":"+player.getLocation().getY()+":"+player.getLocation().getZ()+":"+player.getWorld().getName().toString();
-        try {
-            FileReader fr = new FileReader(plugin.locsName);
-            BufferedReader br = new BufferedReader(fr);
 
-            while((line = br.readLine()) != null) {
-                if (line.contains(player.getName()+":")) {
-                    line = fileOutput;
-                    newPlayerDeath = false;
-                }
-                filetext.add(line);
-                readCheck = true;
-            }
-
-            br.close();
-
-            BufferedWriter out = new BufferedWriter(new FileWriter(plugin.locsName));
-
-            for (int i = 0; i < filetext.size(); i++) {
-                out.write(filetext.get(i));
-                out.newLine();
-            }
-
-            if (!readCheck) {
-                out.write(fileOutput);
-                out.newLine();
-            }
-
-            if (newPlayerDeath && readCheck) {
-                out.write(fileOutput);
-                out.newLine();
-            }
-            //Close the output stream
-            out.close();
-            log.debug("Succesfully wrote DeathTp location to file: " + plugin.locsName);
-        }
-        catch (IOException e) {
-            log.warning("cannot write file "+ plugin.locsName , e);
-        }*/
     }
 
     public void oEDeaGeneralDeath (DeathTpPlus plugin, EntityListenerDTP entityListenerDTP, EntityDeathEvent entityDeathEvent) {
         log.debug("onEntityDeath GeneralDeath executing");
         DeathDetailDTP deathDetail = new DeathDetailDTP(entityDeathEvent);
-        String eventAnnounce = "";
-        Player player = (Player) entityDeathEvent.getEntity();
-        String[] howtheydied;
-        PlayerDeathEvent playerDeathEvent = null;
-        String damagetype = entityListenerDTP.getLastDamageType().get(entityListenerDTP.getLastDamagePlayer().indexOf(player.getName()));
-        howtheydied = damagetype.split(":");
+        /* String eventAnnounce = "";
+ Player player = (Player) entityDeathEvent.getEntity();
+ String[] howtheydied;
+ PlayerDeathEvent playerDeathEvent = null;
+ String damagetype = entityListenerDTP.getLastDamageType().get(entityListenerDTP.getLastDamagePlayer().indexOf(player.getName()));
+ howtheydied = damagetype.split(":");
 
-        // Todo use same approach for TombStone and Tomb than for the rest of the plugin (Mung3r's approach!)
+ // Todo use same approach for TombStone and Tomb than for the rest of the plugin (Mung3r's approach!)
 
-        if ((howtheydied[0])==null){
-            howtheydied[0] = "UNKNOWN";
+ if ((howtheydied[0])==null){
+     howtheydied[0] = "UNKNOWN";
+ }
+
+ loghowdied = howtheydied[0];
+
+ eventAnnounce = getEventMessage(howtheydied[0]).replace("%n", player.getDisplayName());
+
+ if (howtheydied[0].matches("PVP")) {
+     if (howtheydied[2].equals("bare hands")) {
+         eventAnnounce = getEventMessage("FISTS".toString() ).replace("%n", player.getDisplayName());
+     }
+
+     loghowdied = howtheydied[2];
+     eventAnnounce = eventAnnounce.replace("%i", howtheydied[1]);
+     eventAnnounce = eventAnnounce.replace("%a", howtheydied[2]);*/
+        if (config.isShowStreaks()){
+            streakLog.setRecord(deathDetail);
         }
-
-        loghowdied = howtheydied[0];
-
-        eventAnnounce = getEventMessage(howtheydied[0]).replace("%n", player.getDisplayName());
-
-        if (howtheydied[0].matches("PVP")) {
-            if (howtheydied[2].equals("bare hands")) {
-                eventAnnounce = getEventMessage("FISTS".toString() ).replace("%n", player.getDisplayName());
-            }
-
-            loghowdied = howtheydied[2];
-            eventAnnounce = eventAnnounce.replace("%i", howtheydied[1]);
-            eventAnnounce = eventAnnounce.replace("%a", howtheydied[2]);
-            if (config.isShowStreaks()){
-                streakLog.setRecord(deathDetail);
-            }
-            //write kill to deathlog
-            if (config.isAllowDeathLog()) {
-                deathLog.setRecord(deathDetail);
-            }
+        //write kill to deathlog
+        if (config.isAllowDeathLog()) {
+            deathLog.setRecord(deathDetail);
         }
+        /*}
         if (eventAnnounce.equals(""))
         {
             eventAnnounce = getEventMessage("UNKNOWN").replace("%n", player.getDisplayName());
         }
 
-        eventAnnounce = plugin.convertSamloean(eventAnnounce);
+        eventAnnounce = plugin.convertSamloean(eventAnnounce);*/
 
         if (config.isShowDeathNotify()) {
             String deathMessage = DeathMessagesDTP.getDeathMessage(deathDetail);
@@ -178,28 +130,28 @@ public class onEntityDeathDTP {
         }
 
         if (config.isShowDeathSign()) {
-            ShowDeathSign(player, deathDetail);
+            ShowDeathSign(deathDetail);
         }
 // Tomb part
         if (config.isEnableTomb())
         {
-            UpdateTomb(player, howtheydied);
+            UpdateTomb(deathDetail);
         }
 
 // Tombstone part
         if (config.isEnableTombStone()){
-            CreateTombStone(plugin, entityDeathEvent, deathDetail);
+            CreateTombStone(deathDetail);
         }
     }
 
-    private void CreateTombStone(DeathTpPlus plugin, EntityDeathEvent entityDeathEvent, DeathDetailDTP deathDetail) {
+    private void CreateTombStone(DeathDetailDTP deathDetail) {
         Player player = deathDetail.getPlayer();
         if (!plugin.hasPerm(player, "tombstone.use", false))
             return;
 
         log.debug(player.getName() + " died.");
-
-        if (entityDeathEvent.getDrops().size() == 0) {
+        List<ItemStack> deathDrops = deathDetail.getEntityDeathEvent().getDrops();
+        if (deathDrops.size() == 0) {
             plugin.sendMessage(player, "Inventory Empty.");
             log.debug(player.getName() + " inventory empty.");
             return;
@@ -238,7 +190,7 @@ public class onEntityDeathDTP {
 // Check if the player has a chest.
         int pChestCount = 0;
         int pSignCount = 0;
-        for (ItemStack item : entityDeathEvent.getDrops()) {
+        for (ItemStack item : deathDrops) {
             if (item == null)
                 continue;
             if (item.getType() == Material.CHEST)
@@ -295,7 +247,7 @@ public class onEntityDeathDTP {
         int maxSlot = sChest.getInventory().getSize();
 
 // Check if they need a large chest.
-        if (entityDeathEvent.getDrops().size() > maxSlot) {
+        if (deathDrops.size() > maxSlot) {
 // If they are allowed spawn a large chest to catch their entire
 // inventory.
             if (lBlock != null && plugin.hasPerm(player, "tombstone.large", false)) {
@@ -341,7 +293,7 @@ public class onEntityDeathDTP {
             removeSign = 0;
 
 // Create a TombBlock for this tombstone
-        TombBlockDTP tBlockDTP = new TombBlockDTP(sChest.getBlock(),
+        TombStoneBlockDTP tStoneBlockDTP = new TombStoneBlockDTP(sChest.getBlock(),
                 (lChest != null) ? lChest.getBlock() : null, sBlock,
                 player.getName(), (System.currentTimeMillis() / 1000));
 
@@ -349,38 +301,38 @@ public class onEntityDeathDTP {
         Boolean prot = false;
         Boolean protLWC = false;
         if (plugin.hasPerm(player, "tombstone.lwc", false))
-            prot = plugin.activateLWC(player, tBlockDTP);
-        tBlockDTP.setLwcEnabled(prot);
+            prot = plugin.activateLWC(player, tStoneBlockDTP);
+        tStoneBlockDTP.setLwcEnabled(prot);
         if (prot)
             protLWC = true;
 
 // Protect the chest with Lockette if installed, enabled, and
 // unprotected.
         if (plugin.hasPerm(player, "tombstone.lockette", false)){
-            prot = plugin.protectWithLockette(player, tBlockDTP);
+            prot = plugin.protectWithLockette(player, tStoneBlockDTP);
         }
 // Add tombstone to list
-        plugin.tombListDTP.offer(tBlockDTP);
+        plugin.tombStoneListDTP.offer(tStoneBlockDTP);
 
 // Add tombstone blocks to tombBlockList
-        plugin.tombBlockList.put(tBlockDTP.getBlock().getLocation(), tBlockDTP);
-        if (tBlockDTP.getLBlock() != null)
-            plugin.tombBlockList.put(tBlockDTP.getLBlock().getLocation(), tBlockDTP);
-        if (tBlockDTP.getSign() != null)
-            plugin.tombBlockList.put(tBlockDTP.getSign().getLocation(), tBlockDTP);
+        plugin.tombBlockList.put(tStoneBlockDTP.getBlock().getLocation(), tStoneBlockDTP);
+        if (tStoneBlockDTP.getLBlock() != null)
+            plugin.tombBlockList.put(tStoneBlockDTP.getLBlock().getLocation(), tStoneBlockDTP);
+        if (tStoneBlockDTP.getSign() != null)
+            plugin.tombBlockList.put(tStoneBlockDTP.getSign().getLocation(), tStoneBlockDTP);
 
 // Add tombstone to player lookup list
-        ArrayList<TombBlockDTP> pList = plugin.playerTombList.get(player.getName());
+        ArrayList<TombStoneBlockDTP> pList = plugin.playerTombList.get(player.getName());
         if (pList == null) {
-            pList = new ArrayList<TombBlockDTP>();
+            pList = new ArrayList<TombStoneBlockDTP>();
             plugin.playerTombList.put(player.getName(), pList);
         }
-        pList.add(tBlockDTP);
+        pList.add(tStoneBlockDTP);
 
         plugin.saveTombStoneList(player.getWorld().getName());
 
 // Next get the players inventory using the getDrops() method.
-        for (Iterator<ItemStack> iter = entityDeathEvent.getDrops().listIterator(); iter
+        for (Iterator<ItemStack> iter = deathDrops.listIterator(); iter
                 .hasNext();) {
             ItemStack item = iter.next();
             if (item == null)
@@ -428,8 +380,8 @@ public class onEntityDeathDTP {
 
 // Tell the player how many items went into chest.
         String msg = "Inventory stored in chest. ";
-        if (entityDeathEvent.getDrops().size() > 0)
-            msg += entityDeathEvent.getDrops().size() + " items wouldn't fit in chest.";
+        if (deathDrops.size() > 0)
+            msg += deathDrops.size() + " items wouldn't fit in chest.";
         plugin.sendMessage(player, msg);
         log.debug(player.getName() + " " + msg);
         if (prot && protLWC) {
@@ -463,16 +415,20 @@ public class onEntityDeathDTP {
         }
     }
 
-    private void UpdateTomb(Player player, String[] howtheydied) {
+    private void UpdateTomb(DeathDetailDTP deathDetail) {
+        Player player = deathDetail.getPlayer();
         if (tombWorker.hasTomb(player.getName())) {
             TombDTP TombDTP = tombWorker.getTomb(player.getName());
             log.debug("TombDTP",TombDTP );
             String signtext;
 
-            if (howtheydied[0].equals("PVP"))
-                signtext = tombMessages.getPvpMessage(howtheydied[2]);
-            else
-                signtext = tombMessages.getMessage(howtheydied[0]);
+            if (deathDetail.isPVPDeath()) {
+                signtext = deathDetail.getKiller().getName();
+            }
+            else {
+                signtext = deathDetail.getCauseOfDeath().toString().substring(0, 1) + deathDetail.getCauseOfDeath().toString().substring(1).toLowerCase();
+            }
+
             int deathLimit = config.getMaxDeaths();
             TombDTP.addDeath();
             if (deathLimit != 0 && (TombDTP.getDeaths() % deathLimit) == 0) {
@@ -489,7 +445,7 @@ public class onEntityDeathDTP {
         }
     }
 
-    private void ShowDeathSign(Player player, DeathDetailDTP deathDetail) {
+    private void ShowDeathSign(DeathDetailDTP deathDetail) {
         //place sign
         Block signBlock = deathDetail.getPlayer().getWorld().getBlockAt(deathDetail.getPlayer().getLocation());
         signBlock.setType(Material.SIGN_POST);
@@ -650,166 +606,6 @@ public class onEntityDeathDTP {
         }
         return deathMessages.getDeathMessages().get(eventType).get(messageindex);
     }
-
-/*    void writeToStreak(String defender, String attacker) {
-
-        //read the file
-        try {
-            String line = "";
-            ArrayList<String> filetext = new ArrayList<String>();
-
-            //File streakFile = new File("plugins/DeathTpPlus/streak.txt");
-            //File streakFile = new File(plugin.getDataFolder()+"/streak.txt");
-            BufferedReader br = new BufferedReader(new FileReader(plugin.streakFile));
-            String[] splittext;
-            int atkCurrentStreak = 0;
-            int defCurrentStreak = 0;
-            boolean foundDefender = false;
-            boolean foundAttacker = false;
-            boolean isNewFile = true;
-
-            while((line = br.readLine()) != null) {
-                if (line.contains(defender+":")) {
-                    splittext = line.split(":");
-                    defCurrentStreak = Integer.parseInt(splittext[1].trim());
-                    if (defCurrentStreak > 0) {
-                        defCurrentStreak = 0;
-                    }
-                    defCurrentStreak--;
-                    line = defender+":"+Integer.toString(defCurrentStreak);
-                    foundDefender = true;
-                }
-                if (line.contains(attacker+":")) {
-                    splittext = line.split(":");
-                    atkCurrentStreak = Integer.parseInt(splittext[1].trim());
-                    if (atkCurrentStreak < 0) {
-                        atkCurrentStreak = 0;
-                    }
-                    atkCurrentStreak++;
-                    line = attacker+":"+Integer.toString(atkCurrentStreak);
-                    foundAttacker = true;
-                }
-                filetext.add(line);
-                isNewFile = false;
-            }
-
-            br.close();
-
-
-            String teststreak = "";
-            String testsplit[];
-
-            //Check to see if we should announce a streak
-            //Deaths
-            HashMap<String, List<String>> deathstreak = deathMessages.getDeathstreak();
-            for (int i=0;i < deathstreak.get("DEATH_STREAK").size();i++) {
-                teststreak = deathstreak.get("DEATH_STREAK").get(i);
-                testsplit = teststreak.split(":");
-                if (Integer.parseInt(testsplit[0]) == -(defCurrentStreak)) {
-                    String announce = plugin.convertSamloean(testsplit[1]);
-                    plugin.getServer().broadcastMessage(announce.replace("%n", defender));
-                }
-            }
-            //Kills
-            HashMap<String, List<String>> killstreak = deathMessages.getKillstreak();
-            for (int i=0;i < killstreak.get("KILL_STREAK").size();i++) {
-                teststreak = killstreak.get("KILL_STREAK").get(i);
-                testsplit = teststreak.split(":");
-                if (Integer.parseInt(testsplit[0]) == atkCurrentStreak) {
-                    String announce = plugin.convertSamloean(testsplit[1]);
-                    plugin.getServer().broadcastMessage(announce.replace("%n", attacker));
-                }
-            }
-
-            // Write streaks to file
-            BufferedWriter out = new BufferedWriter(new FileWriter(plugin.streakFile));
-
-            for (int i = 0; i < filetext.size(); i++) {
-                out.write(filetext.get(i));
-                out.newLine();
-            }
-
-            if (isNewFile) {
-                out.write(attacker+":"+"1");
-                out.newLine();
-                out.write(defender+":"+"-1");
-                out.newLine();
-            }
-
-            if (!foundDefender && !isNewFile) {
-                out.write(defender+":"+"-1");
-                out.newLine();
-            }
-
-            if (!foundAttacker && !isNewFile) {
-                out.write(attacker+":"+"1");
-                out.newLine();
-            }
-            //Close the output stream
-            out.close();
-        }
-        catch(IOException e) {
-            log.warning("Could not write to Death Streak File", e);
-        }
-    }
-
-    void writeToLog(String logtype, String playername, String deathtype) {
-        // File deathlogFile = new File(plugin.getDataFolder()+"/deathlog.txt");
-        File deathlogTempFile = new File(plugin.getDataFolder()+System.getProperty("file.separator")+"deathtlog.tmp");
-        String line = "";
-        String[] splittext;
-        String writeline = "";
-        int newrecord = 0;
-        boolean foundrecord = false;
-
-        if (!deathlogTempFile.exists()) {
-            try {
-                deathlogTempFile.createNewFile();
-            } catch (IOException e) {
-                log.warning("cannot create file "+deathlogTempFile);
-            }
-        }
-
-        try {
-            //format name:type:mob/player:number
-            PrintWriter pw = new PrintWriter(new FileWriter(deathlogTempFile));
-            BufferedReader br = new BufferedReader(new FileReader(plugin.deathlogFile));
-
-            while((line = br.readLine()) != null) {
-                splittext = line.split(":");
-                writeline = line;
-                if (splittext[0].matches(playername)) {
-                    if (splittext[1].matches(logtype)) {
-                        if (splittext[2].matches(deathtype)) {
-                            newrecord = Integer.parseInt(splittext[3]);
-                            newrecord++;
-                            writeline = playername+":"+logtype+":"+deathtype+":"+newrecord;
-                            foundrecord = true;
-                        }
-                    }
-                }
-
-                pw.println(writeline);
-                pw.flush();
-            }
-
-            if (!foundrecord) {
-                writeline = playername+":"+logtype+":"+deathtype+":1";
-                pw.println(writeline);
-                pw.flush();
-            }
-
-            pw.close();
-            br.close();
-
-            plugin.deathlogFile.delete();
-            deathlogTempFile.renameTo(plugin.deathlogFile);
-        }
-        catch(IOException e) {
-            log.warning("Could not edit deathlog", e);
-        }
-
-    }*/
 }
 
 

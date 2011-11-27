@@ -1,0 +1,101 @@
+# DeathTpPlus 3.0 by [Don Redhorse]
+#
+# Tombmessage File for DeathTpPlus.
+#
+# TombMessages Version
+tombMessagesVer: '3.0'
+
+#--------- Messages  for DeathTpPlus
+
+#
+#--------- Tombmessages
+# Must contain at least 1 line. If there are more, it will appear randomly when a person dies.
+# don't exceed 18 characters and it must be UTF-8
+# %a name of player who attacked in pvp deaths
+#
+creeper:
+    -'Ksss BOUM'
+    -'CREEEEPPPPERRR'
+    -'Creeper Lover'
+pvp:
+    -'Killed by %a'
+lava:
+    -'Swim in lava'
+    -'Now obsidian'
+suicide:
+    -'Bad Aim'
+    -'Killed Himself'
+skeleton:
+    -'Skeleton Bow'
+    -'Arrow in Head'
+suffocation:
+    -'Suffocated'
+    -'Sand's breath'
+    -'Sand worm'
+block_explosion:
+    -'BOUM'
+    -'TNT'
+    -'Dynamite'
+drowning:
+    -'Has drowned'
+    -'Love fishing'
+    -'Drunk the sea'
+cavespider:
+    -'Spider venom'
+    -'Arachnophobia'
+fire:
+    -'Toasted'
+    -'Burned'
+    -'Fire! Fire!'
+enderman:
+    -'Stolen'
+    -'EnderManed'
+lightning:
+    -'By Zeus'
+    -'By Thor'
+    -'Lighting'
+unknown:
+    -'Unknown'
+fire_tick:
+    -'Toasted'
+    -'Burned'
+    -'Fire! Fire!'
+ghast:
+    -'In Nether'
+    -'Ghast'
+entity_explosion:
+    -'BOUM'
+    -'TNT'
+    -'Dynamite'
+contact:
+    -'Cactus'
+    -'Poked a Cactus'
+    -'Hug a Cactus'
+spider:
+    -'Spider venom'
+    -'Arachnophobia'
+pigzombie:
+    -'Zombie-Pig'
+wolf:
+    -'Eat by Wolf'
+    -'Wolf meal'
+    -'Wolf lunch'
+starvation:
+    -'Starved'
+    -'Forgot to eat'
+void:
+    -'Became Void'
+    -'End of World'
+silverfish:
+    -'Fish Food'
+slime:
+    -'Splouched'
+    -'Slime won'
+fall:
+    -'Tried to fly'
+    -'Love the ground'
+zombie:
+    -'L4D'
+    -'Braaaiiin'
+    -'Zombie rules'
+

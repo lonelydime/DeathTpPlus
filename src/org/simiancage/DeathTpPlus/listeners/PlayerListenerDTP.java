@@ -19,7 +19,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
-import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
+import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
@@ -54,18 +54,18 @@ public class PlayerListenerDTP extends PlayerListener {
             if (b.getType() == Material.CHEST
                     && (!config.isDestroyOnQuickLoot() || config.isAllowTombStoneDestroy()))
                 return;
-            if (!plugin.hasPerm(event.getPlayer(), "quickloot", false))
+            if (!plugin.hasPerm(event.getPlayer(), "tombstone.quickloot", false))
                 return;
 
-            TombBlockDTP tBlockDTP = plugin.tombBlockList.get(b.getLocation());
-            if (tBlockDTP == null || !(tBlockDTP.getBlock().getState() instanceof Chest))
+            TombStoneBlockDTP tStoneBlockDTP = plugin.tombBlockList.get(b.getLocation());
+            if (tStoneBlockDTP == null || !(tStoneBlockDTP.getBlock().getState() instanceof Chest))
                 return;
 
-            if (!tBlockDTP.getOwner().equals(event.getPlayer().getName()))
+            if (!tStoneBlockDTP.getOwner().equals(event.getPlayer().getName()))
                 return;
 
-            Chest sChest = (Chest) tBlockDTP.getBlock().getState();
-            Chest lChest = (tBlockDTP.getLBlock() != null) ? (Chest) tBlockDTP
+            Chest sChest = (Chest) tStoneBlockDTP.getBlock().getState();
+            Chest lChest = (tStoneBlockDTP.getLBlock() != null) ? (Chest) tStoneBlockDTP
                     .getLBlock().getState() : null;
 
             ItemStack[] items = sChest.getInventory().getContents();
@@ -112,14 +112,14 @@ public class PlayerListenerDTP extends PlayerListener {
                 event.setCancelled(true);
 
                 if (config.isDestroyOnQuickLoot()) {
-                    plugin.destroyTombStone(tBlockDTP);
+                    plugin.destroyTombStone(tStoneBlockDTP);
                 }
             }
 
 // Manually update inventory for the time being.
             event.getPlayer().updateInventory();
             plugin.sendMessage(event.getPlayer(), "Tombstone quicklooted!");
-            Location location = tBlockDTP.getBlock().getLocation();
+            Location location = tStoneBlockDTP.getBlock().getLocation();
             String loc = location.getWorld().getName();
             loc = loc +", x=" + location.getBlock().getX();
             loc = loc +", y=" + location.getBlock().getY();
@@ -141,9 +141,11 @@ public class PlayerListenerDTP extends PlayerListener {
     @Override
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player p = event.getPlayer();
+        log.debug("hasTomb",worker.hasTomb(p.getName()) );
         if (config.isUseTombAsRespawnPoint()
                 && worker.hasTomb(p.getName())) {
             Location respawn = worker.getTomb(p.getName()).getRespawn();
+            log.debug("respawn",respawn );
             if (respawn != null)
                 event.setRespawnLocation(respawn);
         }

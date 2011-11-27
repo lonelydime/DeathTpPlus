@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
-import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
+import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 
 import java.util.ArrayList;
 
@@ -43,7 +43,7 @@ public class TimeCommandDTP implements CommandExecutor {
         Player p = (Player) sender;
         if (args.length != 1)
             return false;
-        ArrayList<TombBlockDTP> pList = plugin.playerTombList.get(p.getName());
+        ArrayList<TombStoneBlockDTP> pList = plugin.playerTombList.get(p.getName());
         if (pList == null) {
             plugin.sendMessage(p, "You have no Tombstones.");
             return true;
@@ -61,9 +61,9 @@ public class TimeCommandDTP implements CommandExecutor {
             return true;
         }
         long cTime = System.currentTimeMillis() / 1000;
-        TombBlockDTP tBlockDTP = pList.get(slot);
-        long secTimeLeft = (tBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneSecurityTimeOut())) - cTime;
-        long remTimeLeft = (tBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneTime())) - cTime;
+        TombStoneBlockDTP tStoneBlockDTP = pList.get(slot);
+        long secTimeLeft = (tStoneBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneSecurityTimeOut())) - cTime;
+        long remTimeLeft = (tStoneBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneTime())) - cTime;
 
         if (config.isRemoveTombStoneSecurity() && secTimeLeft > 0)
             plugin.sendMessage(p,

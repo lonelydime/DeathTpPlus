@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
-import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
+import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class FindCommandDTP implements CommandExecutor {
         }
         if (args.length != 1)
             return false;
-        ArrayList<TombBlockDTP> pList = plugin.playerTombList
+        ArrayList<TombStoneBlockDTP> pList = plugin.playerTombList
                 .get(sender.getName());
         if (pList == null) {
             plugin.sendMessage(sender, "You have no tombstones.");
@@ -61,10 +61,10 @@ public class FindCommandDTP implements CommandExecutor {
             plugin.sendMessage(sender, "Invalid tombstone");
             return true;
         }
-        TombBlockDTP tBlockDTP = pList.get(slot);
-        double degrees = (plugin.getYawTo(tBlockDTP.getBlock().getLocation(),
+        TombStoneBlockDTP tStoneBlockDTP = pList.get(slot);
+        double degrees = (plugin.getYawTo(tStoneBlockDTP.getBlock().getLocation(),
                 p.getLocation()) + 270) % 360;
-        p.setCompassTarget(tBlockDTP.getBlock().getLocation());
+        p.setCompassTarget(tStoneBlockDTP.getBlock().getLocation());
         plugin.sendMessage(
                 sender,
                 "Your tombstone #"

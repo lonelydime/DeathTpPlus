@@ -4,13 +4,15 @@ package org.simiancage.DeathTpPlus.listeners;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.events.onEntityDamageDTP;
 import org.simiancage.DeathTpPlus.events.onEntityDeathDTP;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
-import org.simiancage.DeathTpPlus.objects.TombBlockDTP;
+import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
 import java.util.ArrayList;
@@ -28,7 +30,6 @@ public class EntityListenerDTP extends EntityListener {
 
     private ConfigDTP config;
     private LoggerDTP log;
-    private onEntityDamageDTP oedam;
     private onEntityDeathDTP oedea;
     private EntityListenerDTP instance;
 
@@ -101,25 +102,11 @@ public class EntityListenerDTP extends EntityListener {
         if (!config.isCreeperProtection())
             return;
         for (Block block : event.blockList()) {
-            TombBlockDTP tBlockDTP = plugin.tombBlockList.get(block.getLocation());
-            if (tBlockDTP != null) {
+            TombStoneBlockDTP tStoneBlockDTP = plugin.tombBlockList.get(block.getLocation());
+            if (tStoneBlockDTP != null) {
                 event.setCancelled(true);
             }
         }
     }
-
-
-
-    public void onEntityDamage(EntityDamageEvent event) {
-        if (event.isCancelled()){
-            return;
-        }
-        if(event.getEntity() instanceof Player) {
-            oedam = new onEntityDamageDTP();
-            oedam.setLastDamageDone(instance, event);
-
-        }
-    }
-
 
 }
