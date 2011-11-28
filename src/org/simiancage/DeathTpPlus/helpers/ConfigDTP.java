@@ -61,7 +61,7 @@ public class ConfigDTP {
     /**
      * Enable more logging.. could be messy!
      */
-    private boolean debugLogEnabled = true;
+    private boolean debugLogEnabled = false;
     /**
      * Check if there is a new version of the plugin out.
      */
@@ -119,11 +119,11 @@ public class ConfigDTP {
     /**
      * This is the internal config version
      */
-    private final String configCurrent = "3.0";
+    private final String configCurrent = "2.99";
     /**
      * This is the DEFAULT for the config file version, should be the same as configCurrent. Will afterwards be changed
      */
-    private String configVer = "3.0";
+    private String configVer = "2.99";
 
 
 // and now the real stuff
@@ -143,7 +143,7 @@ public class ConfigDTP {
     /** Enable Lockette Support*/
     private boolean enableLockette = true;
     /** Enable LWC Support*/
-    private boolean enableLWC = true;
+    private boolean enableLWC = false;
     /** Set LWC Protection to public instead of removing it*/
     private boolean lwcPublic = false;
     /** Allow World Travel = yes, no, permissions*/
@@ -238,7 +238,7 @@ public class ConfigDTP {
 
     /** Enable the TombDTP feature*/
     private boolean enableTomb = true;
-    /** Price for createing a TombDTP*/
+    /** Price for createing a Tomb*/
     private String tombCost = "10";
     /** Amount of Tombs a player can have*/
     private int maxTomb = 1;

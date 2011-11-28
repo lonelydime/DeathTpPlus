@@ -1,4 +1,4 @@
-# DeathTpPlus 3.0 by [Don Redhorse]
+# DeathTpPlus 2.99 by [Don Redhorse]
 #
 # Configuration File for DeathTpPlus.
 #
@@ -7,7 +7,7 @@
 #------- Default Configuration
 
 # Configuration Version
-configVer: '3.0'
+configVer: '2.99'
 
 # Error Log Enabled
 # Enable logging to server console
@@ -16,7 +16,7 @@ errorLogEnabled: true
 
 # Debug Log Enabled
 # Enable more logging.. could be messy!
-DebugLogEnabled: true
+DebugLogEnabled: false
 
 # Check for Update
 # Will check if there is a new version of the plugin out.
@@ -48,13 +48,10 @@ timeFormat: 'hh:mm a'
 enableLockette: true
 
 # Enable LWC Support
-enableLWC: true
+enableLWC: false
 
 # Set LWC Protection to public instead of removing it
 lwcPublic: false
-
-# Locale Version for translation features
-locale: 'English'
 
 # Allow World Travel: yes, no, permissions
 allowWorldTravel: 'no'
@@ -85,8 +82,11 @@ allowDeathtp: false
 # Log the deaths to file
 allowDeathLog: true
 
-#Show kill or death streaks read in from killstreak.txt and deathstrek.txt
+# Show kill, death streaks and multi kill messages
 showStreaks: true
+
+# Window of time (in milliseconds) to count kills towards a multikill
+multiKillTimeWindow: '5000'
 
 # Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports 
 chargeItem: '0'
@@ -154,28 +154,28 @@ removeTombStoneSecurity: false
 # Timeout for Security Removal in seconds
 removeTombStoneSecurityTimeOut: '3600'
 
-#--------- TombDTP Features
+#--------- Tomb Features
 
-# Enable the TombDTP feature
+# Enable the Tomb feature
 enableTomb: true
 
-# Price for createing a TombDTP
+# Price for createing a Tomb
 tombCost: '10'
 
 # Amount of Tombs a player can have
 maxTomb: 1
 
-# Use the TombDTP as a respawn point
+# Use the Tomb as a respawn point
 useTombAsRespawnPoint: false
 
-# Keyword used to detect a Tobmb
-tombKeyWord: '[TombDTP]'
+# Keyword used to detect a Tomb
+tombKeyWord: '[Tomb]'
 
 # Number of death before destruction of every tomb of the player
 # without resetting the counter. If set to 2, every 2 deaths, the tombs are destroyed. (Sign is dropped) 0: = Disabled
 maxDeaths: 0
 
-# When a TombDTP is destroyed, the respawn point is reset.
+# When a Tomb is destroyed, the respawn point is reset.
 resetTombRespawn: false
 
 

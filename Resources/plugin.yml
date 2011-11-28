@@ -2,7 +2,7 @@ name: DeathTpPlus
 main: org.simiancage.DeathTpPlus.DeathTpPlus
 version: 2.99
 website: https://github.com/dredhorse/DeathTpPlus
-authors: Don Redhorse, mung3r
+author: Don Redhorse
 description: Death teleport, tombstone and tombs
 softdepend: [Vault,CraftIRC]
 
