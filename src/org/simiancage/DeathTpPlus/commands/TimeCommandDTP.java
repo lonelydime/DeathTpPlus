@@ -5,29 +5,40 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.DTPTombBlock;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.helpers.TombStoneHelperDTP;
+import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 
 import java.util.ArrayList;
 
 /**
  * PluginName: DeathTpPlus
- * Class: DTPTimeCommand
+ * Class: TimeCommandDTP
  * User: DonRedhorse
  * Date: 19.10.11
  * Time: 22:08
  */
 
-public class DTPTimeCommand implements CommandExecutor {
+public class TimeCommandDTP implements CommandExecutor {
 
     private DeathTpPlus plugin;
+    private LoggerDTP log;
+    private ConfigDTP config;
+    private TombStoneHelperDTP tombStoneHelper;
 
-    public DTPTimeCommand(DeathTpPlus instance) {
+    public TimeCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
+        tombStoneHelper = TombStoneHelperDTP.getInstance();
+        log.info("dtptime command registered");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
+        log.debug("dpttime command executing");
         if (!plugin.hasPerm(sender, "tombstone.time", false)) {
             plugin.sendMessage(sender, "Permission Denied");
             return true;
@@ -35,7 +46,7 @@ public class DTPTimeCommand implements CommandExecutor {
         Player p = (Player) sender;
         if (args.length != 1)
             return false;
-        ArrayList<DTPTombBlock> pList = plugin.playerTombList.get(p.getName());
+        ArrayList<TombStoneBlockDTP> pList = tombStoneHelper.getPlayerTombStoneList(p.getName());
         if (pList == null) {
             plugin.sendMessage(p, "You have no Tombstones.");
             return true;
@@ -53,27 +64,27 @@ public class DTPTimeCommand implements CommandExecutor {
             return true;
         }
         long cTime = System.currentTimeMillis() / 1000;
-        DTPTombBlock tBlock = pList.get(slot);
-        long secTimeLeft = (tBlock.getTime() + plugin.securityTimeout()) - cTime;
-        long remTimeLeft = (tBlock.getTime() + plugin.removeTime()) - cTime;
+        TombStoneBlockDTP tStoneBlockDTP = pList.get(slot);
+        long secTimeLeft = (tStoneBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneSecurityTimeOut())) - cTime;
+        long remTimeLeft = (tStoneBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneTime())) - cTime;
 
-        if (plugin.securityRemove() && secTimeLeft > 0)
+        if (config.isRemoveTombStoneSecurity() && secTimeLeft > 0)
             plugin.sendMessage(p,
                     "Security will be removed from your Tombstone in "
                             + secTimeLeft + " seconds.");
 
-        if (plugin.tombstoneRemove() & remTimeLeft > 0)
+        if (config.isRemoveTombStone() & remTimeLeft > 0)
             plugin.sendMessage(p, "Your Tombstone will break in " + remTimeLeft
                     + " seconds");
-        if (plugin.removeWhenEmpty() && plugin.keepUntilEmpty())
+        if (config.isRemoveTombStoneWhenEmpty() && config.isKeepTombStoneUntilEmpty())
             plugin.sendMessage(
                     p,
                     "Break override: Your Tombstone will break when it is emptied, but will not break until then.");
         else {
-            if (plugin.removeWhenEmpty())
+            if (config.isRemoveTombStoneWhenEmpty())
                 plugin.sendMessage(p,
                         "Break override: Your Tombstone will break when it is emptied.");
-            if (plugin.keepUntilEmpty())
+            if (config.isKeepTombStoneUntilEmpty())
                 plugin.sendMessage(p,
                         "Break override: Your Tombstone will not break until it is empty.");
         }

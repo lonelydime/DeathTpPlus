@@ -3,23 +3,23 @@
 /.project
 /.settings
 
-# netbeans
+     *  netbeans
 /nbproject
-# we use maven!
+     *  we use maven!
 /build.xml
-# maven
+     *  maven
 /target
-# vim
+     *  vim
 .*.sw[a-p]
-# various other potential build files
+     *  various other potential build files
 /build
 /bin
 /dist
 /manifest.mf
 /world
-# Mac filesystem dust
+     *  Mac filesystem dust
 /.DS_Store
-# intellij
+     *  intellij
 *.iml
 *.ipr
 *.iws

@@ -1,10 +1,10 @@
 name: DeathTpPlus
 main: org.simiancage.DeathTpPlus.DeathTpPlus
-version: 2.03
+version: 2.99
 website: https://github.com/dredhorse/DeathTpPlus
-authors: [Don Redhorse, orig. by. lonelydime]
-description: Death commands including deathtp, deathnotify and deathstreaks.
-softdepend: [Register,CraftIRC]
+author: Don Redhorse
+description: Death teleport, tombstone and tombs
+softdepend: [Vault,CraftIRC]
 
 commands:
     deathtp:
@@ -70,6 +70,7 @@ permissions:
             deathtpplus.admin.remove: true
             deathtpplus.admin.time: true
             deathtpplus.admin.version: true
+            deathtpplus.admin.tombStoneDTP: true
             deathtpplus.tombstone.use: true
             deathtpplus.tombstone.freechest: true
             deathtpplus.tombstone.large: true
@@ -82,6 +83,8 @@ permissions:
             deathtpplus.tombstone.list: true
             deathtpplus.tombstone.reset: true
             deathtpplus.tombstone.time: true
+            deathtpplus.tomb.create: true
+            deathtpplus.tomb.free: true
     deathtpplus.admin.*:
         description: Gives access to all DeathTpPlus admin commands
         children:
@@ -91,6 +94,7 @@ permissions:
             deathtpplus.admin.remove: true
             deathtpplus.admin.time: true
             deathtpplus.admin.version: true
+            deathtpplus.admin.tombStoneDTP: true
     deathtpplus.tombstone.*:
         description: Gives access to default DeathTpPlus tombstone commands
         children:
@@ -102,18 +106,24 @@ permissions:
             deathtpplus.tombstone.large: true
             deathtpplus.tombstone.lwc: true
             deathtpplus.tombstone.lockette: true
+    deathtpplus.tomb.*:
+        description: Gives access to all DeathTpPlus tomb commands / features
+        children:
+            deathtpplus.tomb.create: true
+            deathtpplus.tomb.free: true
+
     deathtpplus.deathtp:
         description: Gives access to the deathtp command
         default: op
     deathtpplus.streak:
         description: Gives access to the streak command
-        default: op
+        default: true
     deathtpplus.deaths:
         description: Gives access to the deaths command
-        default: op
+        default: true
     deathtpplus.kills:
         description: Gives access to the kills command
-        default: op
+        default: true
     deathtpplus.worldtravel:
         description: Allows teleporting to another worlds death location
         default: op
@@ -135,9 +145,12 @@ permissions:
     deathtpplus.admin.version:
         description: Allows you to check if the plugin is the newest version
         default: op
+    deathtpplus.admin.tombStone:
+        description: Manage Tomb Signs and Respawn points
+        default: op
     deathtpplus.tombstone.use:
         description: Allows you to use the tombstones
-        default: op
+        default: true
     deathtpplus.tombstone.freechest:
         description: Allows the player to get a chest even if he doesn't has one
         default: op
@@ -146,10 +159,10 @@ permissions:
         default: op
     deathtpplus.tombstone.lwc:
         description: Allow LWC protection
-        default: op
+        default: true
     deathtpplus.tombstone.lockette:
         description: Allow Lockette protection
-        default: op
+        default: true
     deathtpplus.tombstone.sign:
         description: Allow player to get a sign on the tombstone
         default: op
@@ -158,7 +171,7 @@ permissions:
         default: op
     deathtpplus.tombstone.quickloot:
         description: Allow quicklooting the tombstone by rightclicking the sign
-        default: op
+        default: true
     deathtpplus.tombstone.find:
         description: Allows you to find your tombstone via the compass
         default: op
@@ -171,3 +184,10 @@ permissions:
     deathtpplus.tombstone.time:
         description: Allows you to check the time configuration of your tombstone
         default: op
+    deathtpplus.tomb.free:
+        description: Allows to get a free Tomb Sign
+        default: op
+    deathtpplus.tomb.create:
+        description: Allows player to create a tomb
+        default: true
+

@@ -2,7 +2,7 @@ package org.simiancage.DeathTpPlus.commands;
 
 /**
  * PluginName: DeathTpPlus
- * Class: DTPResetCommand
+ * Class: ResetCommandDTP
  * User: DonRedhorse
  * Date: 19.10.11
  * Time: 22:07
@@ -15,18 +15,26 @@ import org.bukkit.entity.Player;
 
 
 import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 
-public class DTPResetCommand implements CommandExecutor {
+public class ResetCommandDTP implements CommandExecutor {
 
     private DeathTpPlus plugin;
+    private LoggerDTP log;
+    private ConfigDTP config;
 
-    public DTPResetCommand(DeathTpPlus instance) {
+    public ResetCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
+        log = LoggerDTP.getLogger();
+        config = ConfigDTP.getInstance();
+        log.info("dtpreset command registered");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
+        log.debug("dtpreset command executing");
         if (!plugin.hasPerm(sender, "tombstone.reset", false)) {
             plugin.sendMessage(sender, "Permission Denied");
             return true;
