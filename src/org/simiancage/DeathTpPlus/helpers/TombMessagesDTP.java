@@ -144,6 +144,10 @@ public class TombMessagesDTP {
     private String[] defaultSilverfishMessages;
     /** Array which holds default entity_explosion messages*/
     private String[] defaultEntityExplosionMessages;
+    /** Array which holds default Giant messages*/
+    private String[] defaultGiantMessages;
+
+    // ToDo add new variables to the top
 
 // Messages  for DeathTpPlus
 
@@ -342,7 +346,15 @@ afterwards parsable again from the configuration class of bukkit
                 "Fish Food"
         };
         deathevents.put("SILVERFISH",Arrays.asList(defaultSilverfishMessages));
+        /** Creating the default Giant Messages*/
+        defaultGiantMessages = new String[]{
+                "stomped",
+                "By a giant"
+        };
+        deathevents.put("GIANT", Arrays.asList(defaultGiantMessages));
 
+
+        // ToDo add new tomb messages to the top
 
     }
 
@@ -400,7 +412,9 @@ afterwards parsable again from the configuration class of bukkit
         deathevents.put("ENDERMAN",  tombMessages.getList ("enderman", Arrays.asList(defaultEndermanMessages)));
         deathevents.put("CAVESPIDER",  tombMessages.getList ("cavespider", Arrays.asList(defaultCaveSpiderMessages)));
         deathevents.put("SILVERFISH",  tombMessages.getList ("silverfish", Arrays.asList(defaultSilverfishMessages)));
+        deathevents.put("GIANT",  tombMessages.getList ("giant", Arrays.asList(defaultGiantMessages)));
 
+        // ToDo add new deathevents on top
 // Debugging
 
         log.debug("deathevents", deathevents);

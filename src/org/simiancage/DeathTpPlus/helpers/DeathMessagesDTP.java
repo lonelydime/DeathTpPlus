@@ -172,8 +172,12 @@ public class DeathMessagesDTP {
     private String[] defaultSilverfishMessages;
     /** Array which holds default PVP Tamed messages*/
     private String[] defaultPVPTamedMessages;
+    /** Array which holds default entity_explosion messages*/
+    private String[] defaultEntityExplosionMessages;
     /** Array which holds default Giant messages*/
     private String[] defaultGiantMessages;
+
+    // ToDo add new variables on top
 
 // Messages  for DeathTpPlus
 
@@ -290,15 +294,15 @@ afterwards parsable again from the configuration class of bukkit
                 "&5%n&7 forgot to look out below!",
                 "&5%n&7 got a little too close to the edge!",
                 "&5%n&7, gravity is calling your name!",
-                "&5%n&7 faceplanted into the ground!",
+                "&5%n&7 face planted into the ground!",
                 "&5%n&7 yells, \"Geronimo!\"....*thud*",
                 "What goes up must come down, right &5%n&7?"
         };
         deathMessages.put(DeathEventType.FALL ,Arrays.asList(defaultFallMessages));
         /** Creating the default drowning messages*/
         defaultDrowningMessages = new String[]{
-                "&5%n&7 has drowned.",
-                "&5%n&7 has become one with the ocean!",
+                "&5%n&7 drowned",
+                "&5%n&7 become one with the ocean!",
                 "&5%n&7 sunk to the bottom of the ocean.",
                 "&5%n&7 went diving but forgot the diving gear!",
                 "&5%n&7 needs swimming lessons.",
@@ -307,13 +311,13 @@ afterwards parsable again from the configuration class of bukkit
                 "&5%n&7 is swimming with the fishes!",
                 "&5%n&7 had a surfing accident!",
                 "&5%n&7 tried to walk on water.",
-                "&5%n&7 set a record for holding breath underwater."
+                "&5%n&7 set a record for holding breath under water."
         };
         deathMessages.put(DeathEventType.DROWNING, Arrays.asList(defaultDrowningMessages));
         /** Creating the default fire messages*/
         defaultFireMessages = new String[]{
                 "&5%n&7 burned to death.",
-                "&5%n&7 has been set on fire!",
+                "&5%n&7 was set on fire!",
                 "&5%n&7 is toast! Literally...",
                 "&5%n&7 just got barbequed!",
                 "&5%n&7 forgot to stop, drop, and roll!",
@@ -326,7 +330,7 @@ afterwards parsable again from the configuration class of bukkit
         /** Creating the default fire_tick messages*/
         defaultFireTickMessages = new String[]{
                 "&5%n&7 burned to death.",
-                "&5%n&7 has been set on fire!",
+                "&5%n&7 was set on fire!",
                 "&5%n&7 is toast! Literally...",
                 "&5%n&7 just got barbequed!",
                 "&5%n&7 forgot to stop, drop, and roll!",
@@ -339,13 +343,13 @@ afterwards parsable again from the configuration class of bukkit
         /** Creating the default lava messages*/
         defaultLavaMessages = new String[]{
                 "&5%n&7 became obsidian.",
-                "&5%n&7 was caught in an active volanic eruption!",
+                "&5%n&7 was caught in an active volcanic eruption!",
                 "&5%n&7 tried to swim in a pool of lava.",
                 "&5%n&7 was killed by a lava eruption!",
                 "&5%n&7 was forged into obsidian by molten lava.",
                 "&5%n&7 took a dip in the wrong kind of pool!",
                 "&5%n&7 found out how to encase himself in carbonite.",
-                "&5%n&7, the floor is lava! The floor is lava!"
+                "&5%n&7! the floor is lava! The floor is lava!"
 
         };
         deathMessages.put(DeathEventType.LAVA,Arrays.asList(defaultLavaMessages));
@@ -364,9 +368,9 @@ afterwards parsable again from the configuration class of bukkit
         defaultSkeletonMessages = new String[] {
                 "A skeleton shot &5%n&7 to death!",
                 "&5%n&7 was on the wrong end of the bow. ",
-                "&5%n&7 has a skeleton in the closet...",
-                "&5%n&7, strafe the arrows! Strafe the arrows!",
-                "A skeleton just got a headshot on &5%n&7!"
+                "&5%n&7 had a skeleton in the closet...",
+                "&5%n&7! strafe the arrows! Strafe the arrows!",
+                "&7A skeleton just got a head shot on &5%n&7!"
         };
         deathMessages.put(DeathEventType.SKELETON,Arrays.asList(defaultSkeletonMessages));
         /** Creating the default spider messages*/
@@ -402,7 +406,7 @@ afterwards parsable again from the configuration class of bukkit
                 "&f%a&7 defeats &5%n&7 with a &3%i&7 attack!",
                 "&f%a&7 raises a &3%i&7 and puts and end to &5%n''s&7 life!",
                 "&f%a&7 took out &5%n&7 with a &3%i&7!",
-                "&5%n&7 was victimised by %a''s &3%i&7!",
+                "&5%n&7 was victimized by &f%a''s&7 &3%i&7!",
                 "&5%n&7 was eliminated by %a''s &3%i&7!",
                 "&f%a&7 executes &5%n&7 with a &3%i&7!",
                 "&f%a&7 finishes &5%n&7 with a &3%i&7!",
@@ -412,9 +416,9 @@ afterwards parsable again from the configuration class of bukkit
                 "&f%a&7 pwns &5%n&7 in a vicious duel!",
                 "&5Score %a 1 - &5%n&7 0!",
                 "&f%a&7 has defeated &5%n&7 in battle!",
-                "&5%n&7 has been slain by %a!",
+                "&5%n&7 was slain by &f%a&7!",
                 "&f%a&7 emerges victorious in a duel with &5%n&7!",
-                "&5%n&7 has been pwned by %a!",
+                "&5%n&7 was pwned by &f%a&7!",
                 "&5%n&7 was killed by %a!",
                 "&5%n&7 was dominated by %a!",
                 "&5%n&7 was fragged by %a!",
@@ -434,9 +438,9 @@ afterwards parsable again from the configuration class of bukkit
                 "&5%n&7 was last seen playing with dynamite.",
                 "&5%n&7 exploded into a million pieces!",
                 "&5%n&7 cut the wrong wire!",
-                "&5%n&7 has left his (bloody) mark on the world.",
-                "&5%n&7 was attempting to exterminate gophers with dynamite!",
-                "&5%n&7 was playing landmine hopscotch!",
+                "&5%n&7 left his (bloody) mark on the world.",
+                "&5%n&7 attempted to exterminate gophers with dynamite!",
+                "&5%n&7 played land mine hop scotch!",
                 "&5%n&7 stuck his head in a microwave!"
         };
         deathMessages.put(DeathEventType.BLOCK_EXPLOSION,Arrays.asList(defaultBlockExplosionMessages));
@@ -445,12 +449,12 @@ afterwards parsable again from the configuration class of bukkit
                 "&5%n&7 got a little too close to a cactus!",
                 "&5%n&7 tried to hug a cactus!",
                 "&5%n&7 needs to be more careful around cactuses!",
-                "&5%n&7 feels the wrath of cactusjack!",
-                "&5%n&7 learns the results of rubbing a cactus!",
+                "&5%n&7 felt the wrath of Cactus Jack!",
+                "&5%n&7 learned the result of rubbing a cactus!",
                 "&5%n&7 died from cactus injuries!",
                 "&5%n&7 poked himself with a cactus...and died.",
                 "&5%n&7 ran into some pointy green stuff that wasn''t grass.",
-                "&5%n&7 was distracted by a tumbleweed and died by cactus."
+                "&5%n&7 was distracted by a tumble weed and died by cactus."
         };
         deathMessages.put(DeathEventType.CONTACT,Arrays.asList(defaultContactMessages));
         /** Creating the default ghast messages*/
@@ -465,7 +469,7 @@ afterwards parsable again from the configuration class of bukkit
         /** Creating the default slime messages*/
         defaultSlimeMessages = new String[]{
                 "A slime found &5%n&7. The slime won.",
-                "&5%n&7 just was playing with slime. The slime ain''t happy."
+                "&5%n&7 wanted to play with slime. The slime wasn''t happy."
         };
         deathMessages.put(DeathEventType.SLIME,Arrays.asList(defaultSlimeMessages));
         /** Creating the default suffocation messages*/
@@ -510,8 +514,8 @@ afterwards parsable again from the configuration class of bukkit
         deathMessages.put(DeathEventType.SUICIDE,Arrays.asList(defaultSuicideMessages));
         defaultUnknownMessages = new String[]{
                 "&5%n&7 died from unknown causes.",
-                "&5%n&7 has imploded into nothingness",
-                "&5%n&7 has been vaporized",
+                "&5%n&7 imploded into nothingness",
+                "&5%n&7 was vaporized",
                 "&5%n&7 died from explosive diarrhea",
                 "&5%n&7 was killed by Chuck Norris",
                 "&5%n&7 was running with scissors...now he runs no more",
@@ -535,16 +539,16 @@ afterwards parsable again from the configuration class of bukkit
         deathMessages.put(DeathEventType.STARVATION,Arrays.asList(defaultStarvationMessages));
         /** Creating the default enderman messages*/
         defaultEndermanMessages = new String[]{
-                "&5%n&7, looked at a enderman the wrong way.",
+                "&5%n&7 looked at a enderman the wrong way.",
                 "An enderman pulled &5%n&7 leg..... off!"
         };
         deathMessages.put(DeathEventType.ENDERMAN,Arrays.asList(defaultEndermanMessages));
         /** Creating the default cavespider messages*/
         defaultCaveSpiderMessages = new String[]{
-                "&5%n&7 will never say itsybitsyspider again.",
+                "&5%n&7 will never sing itsybitsyspider again",
                 "&5%n&7 is all webbed up.",
-                "&5%n&7 got trampled by arachnids!",
-                "&5%n&7 got jumped by a spidah!",
+                "&5%n&7 was trampled by arachnids!",
+                "&5%n&7 was jumped by a spidah!",
                 "Spiders just climbed all over &5%n&7!",
                 "&5%n&7 forgot spiders could climb!"
         };
@@ -552,7 +556,10 @@ afterwards parsable again from the configuration class of bukkit
         /** Creating the default silverfish messages*/
         defaultSilverfishMessages = new String[]{
                 "&5%n&7 was killed by a silverfish!",
-                "&5%n&7 found something hidden below a rock"
+                "&5%n&7 found something hidden below a rock",
+                "&5%n&7 You can\'t stuff that many fish into your mouth!",
+                "&5%n&7 activated a silverfish trap",
+                "&54%n's&7 last words: Oh god they're coming out of the walls!"
         };
         deathMessages.put(DeathEventType.SILVERFISH,Arrays.asList(defaultSilverfishMessages));
         /** Creating the default PVP tamed messages*/
@@ -564,11 +571,12 @@ afterwards parsable again from the configuration class of bukkit
         /** Creating the default Giant messages*/
         defaultGiantMessages = new String[]{
                 "&5%n&7 was stomped by a giant!",
-                "&5%n&7 was flattened by a giant!"
+                "&5%n&7 was flattened by a giant!",
+                "&5%n&7 shouldn't have climbed the bean stalk."
         };
         deathMessages.put(DeathEventType.GIANT,Arrays.asList(defaultGiantMessages));
 
-
+        // ToDo add new messages on top
     }
 
 // And than we add the defaults
@@ -639,6 +647,8 @@ afterwards parsable again from the configuration class of bukkit
         deathMessages.put(DeathEventType.SILVERFISH,  deathMessageFileConfig.getList ("silverfish", Arrays.asList(defaultSilverfishMessages)));
         deathMessages.put(DeathEventType.PVP_TAMED, deathMessageFileConfig.getList("pvp-tamed", Arrays.asList(defaultPVPTamedMessages)));
         deathMessages.put(DeathEventType.GIANT, deathMessageFileConfig.getList("giant", Arrays.asList(defaultGiantMessages)));
+
+        //ToDo add new deathMessages to the top
         for (DeathEventType deathEventType : DeathEventType.values()){
             log.debug("deathEventType",deathEventType );
             log.info(deathMessages.get(deathEventType).size() + " messages loaded for " + deathEventType);

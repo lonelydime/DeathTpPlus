@@ -125,7 +125,7 @@ permissions:
         description: Gives access to the kills command
         default: true
     deathtpplus.worldtravel:
-        description: Allows teleporting to another worlds death location
+        description: Allows teleporting / respawn to another worlds death location if allowWordTravel is "permissions"
         default: op
     deathtpplus.admin:
         description: Allows you to destroy tombstones, also prerequisite for other admin commands.
