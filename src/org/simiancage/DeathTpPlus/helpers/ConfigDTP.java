@@ -346,10 +346,10 @@ afterwards parsable again from the configuration class of bukkit
         enableLockette = config.getBoolean("enableLockette");
         enableLWC = config.getBoolean("enableLWC");
         allowWorldTravel = config.getString("allowWorldTravel");
-        tombStoneSign[0] = config.getString("tombStoneSign.Line1","{name}");
-        tombStoneSign[1] = config.getString("tombStoneSign.Line2","RIP");
-        tombStoneSign[2] = config.getString("tombStoneSign.Line3","{date}");
-        tombStoneSign[3] = config.getString("tombStoneSign.Line4","{time}");
+        tombStoneSign[0] = config.getString("tombStoneSign.Line1",tombStoneSign[0]);
+        tombStoneSign[1] = config.getString("tombStoneSign.Line2",tombStoneSign[1]);
+        tombStoneSign[2] = config.getString("tombStoneSign.Line3",tombStoneSign[2]);
+        tombStoneSign[3] = config.getString("tombStoneSign.Line4",tombStoneSign[3]);
 // DeathTpPlus Features
         enableDeathtp = config.getBoolean("enableDeathtp");
         showDeathNotify = config.getBoolean("showDeathNotify");
