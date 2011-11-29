@@ -9,5 +9,7 @@ package org.simiancage.DeathTpPlus.events;
  */
 
 public class onEntityExplodeDTP {
+    // ToDO move the code
+
 }
 
