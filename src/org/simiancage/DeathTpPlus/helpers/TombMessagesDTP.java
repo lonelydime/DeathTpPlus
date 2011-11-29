@@ -14,7 +14,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 
@@ -59,7 +62,6 @@ public class TombMessagesDTP {
     private boolean tombMessagesAvailable = false;
 
 
-
     // The org.simiancage.DeathTpPlus.helpers.LoggerDTP should be renamed to the name of the class you did change the original org.simiancage.DeathTpPlus.helpers.LoggerClass too.
     /**
      * Reference of the org.simiancage.DeathTpPlus.helpers.LoggerDTP, needs to be renamed to correct name.
@@ -92,59 +94,113 @@ public class TombMessagesDTP {
     //Todo create stuff for:
     // Blaze, Squid, FallingSand, EnderDragon
 
-    /** Array which holds default fall messages*/
+    /**
+     * Array which holds default fall messages
+     */
     private String[] defaultFallMessages;
-    /** Array which holds default drowning messages*/
+    /**
+     * Array which holds default drowning messages
+     */
     private String[] defaultDrowningMessages;
-    /** Array which holds default fire messages*/
+    /**
+     * Array which holds default fire messages
+     */
     private String[] defaultFireMessages;
-    /** Array which holds default fire_tick messages*/
+    /**
+     * Array which holds default fire_tick messages
+     */
     private String[] defaultFireTickMessages;
-    /** Array which holds default Lava Messages*/
+    /**
+     * Array which holds default Lava Messages
+     */
     private String[] defaultLavaMessages;
-    /** Array which holds default creeper messages*/
+    /**
+     * Array which holds default creeper messages
+     */
     private String[] defaultCreeperMessages;
-    /** Array which holds default skeleton messages*/
+    /**
+     * Array which holds default skeleton messages
+     */
     private String[] defaultSkeletonMessages;
-    /** Array which holds default spider messages*/
+    /**
+     * Array which holds default spider messages
+     */
     private String[] defaultSpiderMessages;
-    /** Array which holds default zombie messages*/
+    /**
+     * Array which holds default zombie messages
+     */
     private String[] defaultZombieMessages;
-    /** Array which holds default PVP messages*/
+    /**
+     * Array which holds default PVP messages
+     */
     private String[] defaultPVPMessages;
-    /** Array which holds default block_explosion messages*/
+    /**
+     * Array which holds default block_explosion messages
+     */
     private String[] defaultBlockExplosionMessages;
-    /** Array which holds default contact messages*/
+    /**
+     * Array which holds default contact messages
+     */
     private String[] defaultContactMessages;
-    /** Array which holds default ghast messages*/
+    /**
+     * Array which holds default ghast messages
+     */
     private String[] defaultGhastMessages;
-    /** Array which holds default slime messages*/
+    /**
+     * Array which holds default slime messages
+     */
     private String[] defaultSlimeMessages;
-    /** Array which holds default suffocation messages*/
+    /**
+     * Array which holds default suffocation messages
+     */
     private String[] defaultSuffocationMessages;
-    /** Array which holds default pigzombie messages*/
+    /**
+     * Array which holds default pigzombie messages
+     */
     private String[] defaultPigzombieMessages;
-    /** Array which holds default void messages*/
+    /**
+     * Array which holds default void messages
+     */
     private String[] defaultVoidMessages;
-    /** Array which holds default wolf messages*/
+    /**
+     * Array which holds default wolf messages
+     */
     private String[] defaultWolfMessages;
-    /** Array which holds default Lightning messages*/
+    /**
+     * Array which holds default Lightning messages
+     */
     private String[] defaultLightningMessages;
-    /** Array which holds default suicide messages*/
+    /**
+     * Array which holds default suicide messages
+     */
     private String[] defaultSuicideMessages;
-    /** Array which holds default unknown messages*/
+    /**
+     * Array which holds default unknown messages
+     */
     private String[] defaultUnknownMessages;
-    /** Array which holds default starvation messages*/
+    /**
+     * Array which holds default starvation messages
+     */
     private String[] defaultStarvationMessages;
-    /** Array which holds default enderman messages*/
+    /**
+     * Array which holds default enderman messages
+     */
     private String[] defaultEndermanMessages;
-    /** Array which holds default CaveSpider messages*/
+    /**
+     * Array which holds default CaveSpider messages
+     */
     private String[] defaultCaveSpiderMessages;
-    /** Array which holds default silverfish messages*/
+    /**
+     * Array which holds default silverfish messages
+     */
     private String[] defaultSilverfishMessages;
-    /** Array which holds default entity_explosion messages*/
+    /**
+     * Array which holds default entity_explosion messages
+     */
     private String[] defaultEntityExplosionMessages;
-    /** Array which holds default Giant messages*/
+    /**
+     * Array which holds default Giant messages
+     */
     private String[] defaultGiantMessages;
 
     // ToDo add new variables to the top
@@ -153,14 +209,11 @@ public class TombMessagesDTP {
 
 // Tombs
     /**
-     *  Must contain at least 1 line. If there are more, it will appear randomly when a person dies.
-     *  don't exceed 18 characters and it must be UTF-8
-     *  %a name of player who attacked in pvp deaths
-     *
+     * Must contain at least 1 line. If there are more, it will appear randomly when a person dies.
+     * don't exceed 18 characters and it must be UTF-8
+     * %a name of player who attacked in pvp deaths
      */
     private HashMap<String, List<String>> deathevents = new HashMap<String, List<String>>();
-
-
 
 
 // *******************************************************************************************************************
@@ -187,7 +240,7 @@ afterwards parsable again from the configuration class of bukkit
                 "Tried to fly",
                 "Love the ground"
         };
-        deathevents.put("FALL",Arrays.asList(defaultFallMessages));
+        deathevents.put("FALL", Arrays.asList(defaultFallMessages));
         /** Creating the default drowning messages*/
         defaultDrowningMessages = new String[]{
                 "Has drowned",
@@ -214,96 +267,96 @@ afterwards parsable again from the configuration class of bukkit
                 "Swim in lava",
                 "Now obsidian"
         };
-        deathevents.put("LAVA",Arrays.asList(defaultLavaMessages));
+        deathevents.put("LAVA", Arrays.asList(defaultLavaMessages));
         /** Creating the default creeper messages*/
         defaultCreeperMessages = new String[]{
                 "Ksss BOUM",
                 "CREEEEPPPPERRR",
                 "Creeper Lover"
         };
-        deathevents.put("CREEPER",Arrays.asList(defaultCreeperMessages));
+        deathevents.put("CREEPER", Arrays.asList(defaultCreeperMessages));
         /** Creating the default skeleton messages*/
-        defaultSkeletonMessages = new String[] {
+        defaultSkeletonMessages = new String[]{
                 "Skeleton Bow",
                 "Arrow in Head"
         };
-        deathevents.put("SKELETON",Arrays.asList(defaultSkeletonMessages));
+        deathevents.put("SKELETON", Arrays.asList(defaultSkeletonMessages));
         /** Creating the default spider messages*/
         defaultSpiderMessages = new String[]{
                 "Spider venom",
                 "Arachnophobia"
         };
-        deathevents.put("SPIDER",Arrays.asList(defaultSpiderMessages));
+        deathevents.put("SPIDER", Arrays.asList(defaultSpiderMessages));
         /** Creating the default zombie messages*/
         defaultZombieMessages = new String[]{
                 "L4D",
                 "Braaaiiin",
                 "Zombie rules"
         };
-        deathevents.put("ZOMBIE",Arrays.asList(defaultZombieMessages));
+        deathevents.put("ZOMBIE", Arrays.asList(defaultZombieMessages));
         /** Creating the default pvp messages*/
-        defaultPVPMessages = new String[] {
+        defaultPVPMessages = new String[]{
                 "Killed by %a"
         };
-        deathevents.put("PVP",Arrays.asList(defaultPVPMessages));
+        deathevents.put("PVP", Arrays.asList(defaultPVPMessages));
         /** Creating the default block_explosion messages*/
         defaultBlockExplosionMessages = new String[]{
                 "BOUM",
                 "TNT",
                 "Dynamite"
         };
-        deathevents.put("BLOCK_EXPLOSION",Arrays.asList(defaultBlockExplosionMessages));
+        deathevents.put("BLOCK_EXPLOSION", Arrays.asList(defaultBlockExplosionMessages));
         /** Creating the default entity_explosion messages*/
         defaultEntityExplosionMessages = new String[]{
                 "BOUM",
                 "TNT",
                 "Dynamite"
         };
-        deathevents.put("ENTITY_EXPLOSION",Arrays.asList(defaultEntityExplosionMessages));
+        deathevents.put("ENTITY_EXPLOSION", Arrays.asList(defaultEntityExplosionMessages));
         /** Creating the default contact messages*/
         defaultContactMessages = new String[]{
                 "Cactus",
                 "Poked a Cactus",
                 "Hug a Cactus"
         };
-        deathevents.put("CONTACT",Arrays.asList(defaultContactMessages));
+        deathevents.put("CONTACT", Arrays.asList(defaultContactMessages));
         /** Creating the default ghast messages*/
         defaultGhastMessages = new String[]{
                 "In Nether",
                 "Ghast"
         };
-        deathevents.put("GHAST",Arrays.asList(defaultGhastMessages));
+        deathevents.put("GHAST", Arrays.asList(defaultGhastMessages));
         /** Creating the default slime messages*/
         defaultSlimeMessages = new String[]{
                 "Splouched",
                 "Slime won"
         };
-        deathevents.put("SLIME",Arrays.asList(defaultSlimeMessages));
+        deathevents.put("SLIME", Arrays.asList(defaultSlimeMessages));
         /** Creating the default suffocation messages*/
         defaultSuffocationMessages = new String[]{
                 "Suffocated",
                 "Sand\'s breath",
                 "Sand worm"
         };
-        deathevents.put("SUFFOCATION",Arrays.asList(defaultSuffocationMessages));
+        deathevents.put("SUFFOCATION", Arrays.asList(defaultSuffocationMessages));
         /** Creating the default pigzombie messages*/
         defaultPigzombieMessages = new String[]{
                 "Zombie-Pig"
         };
-        deathevents.put("PIGZOMBIE",Arrays.asList(defaultPigzombieMessages));
+        deathevents.put("PIGZOMBIE", Arrays.asList(defaultPigzombieMessages));
         /** Creating the default void messages*/
         defaultVoidMessages = new String[]{
                 "Became Void",
                 "End of World"
         };
-        deathevents.put("VOID",Arrays.asList(defaultVoidMessages));
+        deathevents.put("VOID", Arrays.asList(defaultVoidMessages));
         /** Creating the default Wolfs messages*/
         defaultWolfMessages = new String[]{
                 "Eat by Wolf",
                 "Wolf meal",
                 "Wolf lunch"
         };
-        deathevents.put("WOLF",Arrays.asList(defaultWolfMessages));
+        deathevents.put("WOLF", Arrays.asList(defaultWolfMessages));
         /** Creating the default lightning messages*/
         defaultLightningMessages = new String[]{
                 "By Zeus",
@@ -311,41 +364,41 @@ afterwards parsable again from the configuration class of bukkit
                 "Lighting"
         };
         /** Creating the default lightning messages*/
-        deathevents.put("LIGHTNING",Arrays.asList(defaultLightningMessages));
+        deathevents.put("LIGHTNING", Arrays.asList(defaultLightningMessages));
         defaultSuicideMessages = new String[]{
                 "Bad Aim",
                 "Killed Himself"
         };
         /** Creating the default suicide messages*/
-        deathevents.put("SUICIDE",Arrays.asList(defaultSuicideMessages));
+        deathevents.put("SUICIDE", Arrays.asList(defaultSuicideMessages));
         defaultUnknownMessages = new String[]{
                 "Unknown"
         };
         /** Creating the default unknown messages*/
-        deathevents.put("UNKNOWN",Arrays.asList(defaultUnknownMessages));
+        deathevents.put("UNKNOWN", Arrays.asList(defaultUnknownMessages));
         defaultStarvationMessages = new String[]{
                 "Starved",
                 "Forgot to eat"
         };
         /** Creating the default starvation messages*/
-        deathevents.put("STARVATION",Arrays.asList(defaultStarvationMessages));
+        deathevents.put("STARVATION", Arrays.asList(defaultStarvationMessages));
         /** Creating the default enderman messages*/
         defaultEndermanMessages = new String[]{
                 "Stolen",
                 "EnderManed"
         };
-        deathevents.put("ENDERMAN",Arrays.asList(defaultEndermanMessages));
+        deathevents.put("ENDERMAN", Arrays.asList(defaultEndermanMessages));
         /** Creating the default cavespider messages*/
         defaultCaveSpiderMessages = new String[]{
                 "Spider venom",
                 "Arachnophobia"
         };
-        deathevents.put("CAVESPIDER",Arrays.asList(defaultCaveSpiderMessages));
+        deathevents.put("CAVESPIDER", Arrays.asList(defaultCaveSpiderMessages));
         /** Creating the default silverfish messages*/
         defaultSilverfishMessages = new String[]{
                 "Fish Food"
         };
-        deathevents.put("SILVERFISH",Arrays.asList(defaultSilverfishMessages));
+        deathevents.put("SILVERFISH", Arrays.asList(defaultSilverfishMessages));
         /** Creating the default Giant Messages*/
         defaultGiantMessages = new String[]{
                 "stomped",
@@ -386,33 +439,33 @@ afterwards parsable again from the configuration class of bukkit
     private void loadCustomTombMessages() {
 
 
-        deathevents.put("FALL",  tombMessages.getList ("fall", Arrays.asList(defaultFallMessages)));
-        deathevents.put("DROWNING",  tombMessages.getList ("drowning", Arrays.asList(defaultDrowningMessages)));
-        deathevents.put("FIRE",  tombMessages.getList ("fire", Arrays.asList(defaultFireMessages)));
-        deathevents.put("FIRE_TICK",  tombMessages.getList ("fire_tick", Arrays.asList(defaultFireTickMessages)));
-        deathevents.put("LAVA",  tombMessages.getList ("lava", Arrays.asList(defaultLavaMessages)));
-        deathevents.put("CREEPER",  tombMessages.getList ("creeper", Arrays.asList(defaultCreeperMessages)));
-        deathevents.put("SKELETON",  tombMessages.getList ("skeleton", Arrays.asList(defaultSkeletonMessages)));
-        deathevents.put("SPIDER",  tombMessages.getList ("spider", Arrays.asList(defaultSpiderMessages)));
-        deathevents.put("ZOMBIE",  tombMessages.getList ("zombie", Arrays.asList(defaultZombieMessages)));
-        deathevents.put("PVP",  tombMessages.getList ("pvp", Arrays.asList(defaultPVPMessages)));
-        deathevents.put("BLOCK_EXPLOSION",  tombMessages.getList ("block_explosion", Arrays.asList(defaultBlockExplosionMessages)));
-        deathevents.put("ENTITY_EXPLOSION",  tombMessages.getList ("entity_explosion", Arrays.asList(defaultEntityExplosionMessages)));
-        deathevents.put("CONTACT",  tombMessages.getList ("contact", Arrays.asList(defaultContactMessages)));
-        deathevents.put("GHAST",  tombMessages.getList ("ghast", Arrays.asList(defaultGhastMessages)));
-        deathevents.put("SLIME",  tombMessages.getList ("slime", Arrays.asList(defaultSlimeMessages)));
-        deathevents.put("SUFFOCATION",  tombMessages.getList ("suffocation", Arrays.asList(defaultSuffocationMessages)));
-        deathevents.put("PIGZOMBIE",  tombMessages.getList ("pigzombie", Arrays.asList(defaultPigzombieMessages)));
-        deathevents.put("VOID",  tombMessages.getList ("void", Arrays.asList(defaultVoidMessages)));
-        deathevents.put("WOLF",  tombMessages.getList ("wolf", Arrays.asList(defaultWolfMessages)));
-        deathevents.put("LIGHTNING",  tombMessages.getList ("lightning", Arrays.asList(defaultLightningMessages)));
-        deathevents.put("SUICIDE",  tombMessages.getList ("suicide", Arrays.asList(defaultSuicideMessages)));
-        deathevents.put("UNKNOWN",  tombMessages.getList ("unknown", Arrays.asList(defaultUnknownMessages)));
-        deathevents.put("STARVATION",  tombMessages.getList ("starvation", Arrays.asList(defaultStarvationMessages)));
-        deathevents.put("ENDERMAN",  tombMessages.getList ("enderman", Arrays.asList(defaultEndermanMessages)));
-        deathevents.put("CAVESPIDER",  tombMessages.getList ("cavespider", Arrays.asList(defaultCaveSpiderMessages)));
-        deathevents.put("SILVERFISH",  tombMessages.getList ("silverfish", Arrays.asList(defaultSilverfishMessages)));
-        deathevents.put("GIANT",  tombMessages.getList ("giant", Arrays.asList(defaultGiantMessages)));
+        deathevents.put("FALL", tombMessages.getList("fall", Arrays.asList(defaultFallMessages)));
+        deathevents.put("DROWNING", tombMessages.getList("drowning", Arrays.asList(defaultDrowningMessages)));
+        deathevents.put("FIRE", tombMessages.getList("fire", Arrays.asList(defaultFireMessages)));
+        deathevents.put("FIRE_TICK", tombMessages.getList("fire_tick", Arrays.asList(defaultFireTickMessages)));
+        deathevents.put("LAVA", tombMessages.getList("lava", Arrays.asList(defaultLavaMessages)));
+        deathevents.put("CREEPER", tombMessages.getList("creeper", Arrays.asList(defaultCreeperMessages)));
+        deathevents.put("SKELETON", tombMessages.getList("skeleton", Arrays.asList(defaultSkeletonMessages)));
+        deathevents.put("SPIDER", tombMessages.getList("spider", Arrays.asList(defaultSpiderMessages)));
+        deathevents.put("ZOMBIE", tombMessages.getList("zombie", Arrays.asList(defaultZombieMessages)));
+        deathevents.put("PVP", tombMessages.getList("pvp", Arrays.asList(defaultPVPMessages)));
+        deathevents.put("BLOCK_EXPLOSION", tombMessages.getList("block_explosion", Arrays.asList(defaultBlockExplosionMessages)));
+        deathevents.put("ENTITY_EXPLOSION", tombMessages.getList("entity_explosion", Arrays.asList(defaultEntityExplosionMessages)));
+        deathevents.put("CONTACT", tombMessages.getList("contact", Arrays.asList(defaultContactMessages)));
+        deathevents.put("GHAST", tombMessages.getList("ghast", Arrays.asList(defaultGhastMessages)));
+        deathevents.put("SLIME", tombMessages.getList("slime", Arrays.asList(defaultSlimeMessages)));
+        deathevents.put("SUFFOCATION", tombMessages.getList("suffocation", Arrays.asList(defaultSuffocationMessages)));
+        deathevents.put("PIGZOMBIE", tombMessages.getList("pigzombie", Arrays.asList(defaultPigzombieMessages)));
+        deathevents.put("VOID", tombMessages.getList("void", Arrays.asList(defaultVoidMessages)));
+        deathevents.put("WOLF", tombMessages.getList("wolf", Arrays.asList(defaultWolfMessages)));
+        deathevents.put("LIGHTNING", tombMessages.getList("lightning", Arrays.asList(defaultLightningMessages)));
+        deathevents.put("SUICIDE", tombMessages.getList("suicide", Arrays.asList(defaultSuicideMessages)));
+        deathevents.put("UNKNOWN", tombMessages.getList("unknown", Arrays.asList(defaultUnknownMessages)));
+        deathevents.put("STARVATION", tombMessages.getList("starvation", Arrays.asList(defaultStarvationMessages)));
+        deathevents.put("ENDERMAN", tombMessages.getList("enderman", Arrays.asList(defaultEndermanMessages)));
+        deathevents.put("CAVESPIDER", tombMessages.getList("cavespider", Arrays.asList(defaultCaveSpiderMessages)));
+        deathevents.put("SILVERFISH", tombMessages.getList("silverfish", Arrays.asList(defaultSilverfishMessages)));
+        deathevents.put("GIANT", tombMessages.getList("giant", Arrays.asList(defaultGiantMessages)));
 
         // ToDo add new deathevents on top
 // Debugging
@@ -445,12 +498,11 @@ afterwards parsable again from the configuration class of bukkit
 
         List<String> events = new ArrayList<String>(deathevents.keySet());
         for (String event : events) {
-            stream.println(event.toLowerCase() +":");
+            stream.println(event.toLowerCase() + ":");
             for (String msg : deathevents.get(event)) {
                 stream.println("    -'" + msg + "'");
             }
         }
-
 
 
     }
@@ -481,10 +533,10 @@ afterwards parsable again from the configuration class of bukkit
         } else if (deathevents.containsKey("UNKNOWN")) {
             List<String> unknowns = deathevents.get("UNKNOWN");
             return unknowns.get(rand.nextInt(unknowns.size()));
-        } else
+        } else {
             return "Unknown";
+        }
     }
-
 
 
 // Last change coming up... choosing the right ClassName for the Logger..
@@ -529,8 +581,6 @@ afterwards parsable again from the configuration class of bukkit
 // NOTHING TO CHANGE NORMALLY BELOW!!!
 
 
-
-
 // *******************************************************************************************************************
 // Other Methods no change normally necessary
 
@@ -571,14 +621,13 @@ afterwards parsable again from the configuration class of bukkit
      * and if {@link org.simiancage.DeathTpPlus.helpers.ConfigDTP#isAutoUpdateConfig()} is true we update the configuration {@link #updateTombMessages()}
      * and finally set {@link #tombMessagesAvailable} to true
      *
-     *
      * @param plugin references the plugin for this configuration
      *
      * @see #defaultTombMessages()
      * @see #loadTombMessages()
      * @see #updateNecessary()
      * @see #updateTombMessages()
-      */
+     */
 
     public void setupTombMessages(Plugin plugin) {
 
@@ -743,7 +792,6 @@ afterwards parsable again from the configuration class of bukkit
             tombMessagesRequiresUpdate = true;
         }
     }
-
 
 
 // Updating the tombMessages

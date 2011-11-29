@@ -10,8 +10,8 @@ import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.helpers.TombStoneHelperDTP;
-import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.objects.TombDTP;
+import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
 /**
@@ -37,7 +37,7 @@ public class onBlockBreakDTP {
         tombStoneHelper = TombStoneHelperDTP.getInstance();
     }
 
-    public void oBBTombStone (DeathTpPlus plugin, BlockBreakEvent event){
+    public void oBBTombStone(DeathTpPlus plugin, BlockBreakEvent event) {
 
         log.debug("onBlockBreak TombStone executing");
         Block b = event.getBlock();
@@ -48,8 +48,9 @@ public class onBlockBreakDTP {
                     .getState().getData();
             TombStoneBlockDTP tStoneBlockDTP = tombStoneHelper.getTombStoneBlockList(b.getRelative(
                     signData.getAttachedFace()).getLocation());
-            if (tStoneBlockDTP == null)
+            if (tStoneBlockDTP == null) {
                 return;
+            }
 
             if (tStoneBlockDTP.getLocketteSign() != null) {
                 Sign sign = (Sign) b.getState();
@@ -59,18 +60,20 @@ public class onBlockBreakDTP {
             }
         }
 
-        if (b.getType() != Material.CHEST && b.getType() != Material.SIGN_POST)
+        if (b.getType() != Material.CHEST && b.getType() != Material.SIGN_POST) {
             return;
+        }
 
         TombStoneBlockDTP tStoneBlockDTP = tombStoneHelper.getTombStoneBlockList(b.getLocation());
 
-        if (tStoneBlockDTP == null)
+        if (tStoneBlockDTP == null) {
             return;
+        }
         Location location = b.getLocation();
         String loc = location.getWorld().getName();
-        loc = loc +", x=" + location.getBlock().getX();
-        loc = loc +", y=" + location.getBlock().getY();
-        loc = loc +", z=" + location.getBlock().getZ();
+        loc = loc + ", x=" + location.getBlock().getX();
+        loc = loc + ", y=" + location.getBlock().getY();
+        loc = loc + ", z=" + location.getBlock().getZ();
         if (!config.isAllowTombStoneDestroy() && !plugin.hasPerm(p, "admin", false)) {
 
             log.debug(p.getName() + " tried to destroy tombstone at "
@@ -97,24 +100,23 @@ public class onBlockBreakDTP {
 
     }
 
-    public void oBBTomb (DeathTpPlus plugin, BlockBreakEvent event){
+    public void oBBTomb(BlockBreakEvent event) {
 
         log.debug("onBlockBreak Tomb executing");
-        Block b = event.getBlock();
-        Player p = event.getPlayer();
+        Block block = event.getBlock();
+        Player player = event.getPlayer();
 
-        if (b.getState() instanceof Sign) {
-            Block block = b;
+        if (block.getState() instanceof Sign) {
             String playerName = event.getPlayer().getName();
             Sign sign = (Sign) block.getState();
             if (sign.getLine(0).indexOf(config.getTombKeyWord()) == 0) {
                 TombDTP TombDTP;
-                if (event.getPlayer().hasPermission("deathtpplus.admin.tomb")) {
+                if (player.hasPermission("deathtpplus.admin.tomb")) {
                     if ((TombDTP = tombWorker.getTomb(block)) != null) {
                         TombDTP.removeSignBlock(block);
                         if (config.isResetTombRespawn()) {
                             TombDTP.setRespawn(null);
-                            event.getPlayer().sendMessage(
+                            player.sendMessage(
                                     tombWorker.graveDigger + TombDTP.getPlayer()
                                             + "'s respawn point has been reset.");
                         }
@@ -122,20 +124,21 @@ public class onBlockBreakDTP {
                     return;
                 }
                 if (tombWorker.hasTomb(playerName)) {
-                    if (!tombWorker.getTomb(playerName).hasSign(block))
+                    if (!tombWorker.getTomb(playerName).hasSign(block)) {
                         event.setCancelled(true);
-                    else {
+                    } else {
                         TombDTP = tombWorker.getTomb(playerName);
                         TombDTP.removeSignBlock(block);
                         if (config.isResetTombRespawn()) {
                             TombDTP.setRespawn(null);
-                            event.getPlayer().sendMessage(
+                            player.sendMessage(
                                     tombWorker.graveDigger + TombDTP.getPlayer()
                                             + "'s respawn point has been reset.");
                         }
                     }
-                } else
+                } else {
                     event.setCancelled(true);
+                }
             }
 
         }

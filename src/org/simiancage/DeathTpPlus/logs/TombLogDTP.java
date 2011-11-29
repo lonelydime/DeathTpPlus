@@ -24,63 +24,68 @@ public class TombLogDTP implements Serializable {
      *
      */
     private static final long serialVersionUID = 312699013882578456L;
-    protected ArrayList<LocSaveDTP> signBlocks = new ArrayList<LocSaveDTP>();
-    protected int deaths;
-    protected String player;
-    protected String reason;
-    protected LocSaveDTP deathLoc;
-    protected LocSaveDTP respawn;
+    private ArrayList<LocSaveDTP> signBlocks = new ArrayList<LocSaveDTP>();
+    private int deaths;
+    private String player;
+    private String reason;
+    private LocSaveDTP deathLoc;
+    private LocSaveDTP respawn;
     private transient ConfigDTP config;
     private transient LoggerDTP log;
 
     public TombLogDTP(TombDTP TombDTP) {
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
-        for (Block b : TombDTP.getSignBlocks())
+        for (Block b : TombDTP.getSignBlocks()) {
             signBlocks.add(new LocSaveDTP(b));
+        }
         reason = TombDTP.getReason();
         player = TombDTP.getPlayer();
         deaths = TombDTP.getDeaths();
-        if (TombDTP.getDeathLoc() != null)
+        if (TombDTP.getDeathLoc() != null) {
             try {
                 deathLoc = new LocSaveDTP(TombDTP.getDeathLoc());
             } catch (NullPointerException e) {
                 deathLoc = null;
-                log.warning("Player :" + player + " : NPE avoided with deathLoc",e);
+                log.warning("Player :" + player + " : NPE avoided with deathLoc", e);
             }
-
-        else
+        } else {
             deathLoc = null;
-        if (TombDTP.getRespawn() != null)
+        }
+        if (TombDTP.getRespawn() != null) {
             try {
                 respawn = new LocSaveDTP(TombDTP.getRespawn());
             } catch (NullPointerException e) {
                 respawn = null;
-                log.warning("Player :" + player + " : NPE avoided with respawn",e);
+                log.warning("Player :" + player + " : NPE avoided with respawn", e);
             }
-        else
+        } else {
             respawn = null;
+        }
     }
 
     public TombDTP load() {
         TombDTP TombDTP = new TombDTP();
-        if (deathLoc != null)
+        if (deathLoc != null) {
             TombDTP.setDeathLoc(deathLoc.getLoc());
-        else
+        } else {
             TombDTP.setDeathLoc(null);
+        }
 
-        if (respawn != null)
+        if (respawn != null) {
             TombDTP.setRespawn(respawn.getLoc());
-        else
+        } else {
             TombDTP.setRespawn(null);
+        }
         TombDTP.setDeaths(deaths);
         TombDTP.setPlayer(player);
         TombDTP.setReason(reason);
         for (LocSaveDTP loc : signBlocks) {
             try {
                 Block b = loc.getBlock();
-                if (b != null)
+                if (b != null) {
                     TombDTP.addSignBlock(b);
+                }
             } catch (IllegalArgumentException e) {
                 log.info("One of the Tomb of " + player + " was destroyed. :\n"
                         + loc);

@@ -1,6 +1,7 @@
 package org.simiancage.DeathTpPlus.listeners;
 
 //import org.bukkit.event.Listener;
+
 import com.griefcraft.lwc.LWCPlugin;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.event.server.PluginDisableEvent;
@@ -35,12 +36,10 @@ public class ServerListenerDTP extends ServerListener {
     public void onPluginDisable(PluginDisableEvent event) {
         log.debug("onPluginDisable executing");
         PluginManager pm = plugin.getServer().getPluginManager();
-        Plugin checkRegister = pm.getPlugin("Register");
         Plugin checkVault = pm.getPlugin("Vault");
         if ((checkVault == null) && plugin.isUseVault()) {
             RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-            if (economyProvider == null)
-            {
+            if (economyProvider == null) {
                 plugin.setUseVault(false);
                 plugin.setEconomyActive(false);
                 log.info("un-hooked from Vault.");
@@ -54,7 +53,7 @@ public class ServerListenerDTP extends ServerListener {
         }
 
         if (event.getPlugin() == plugin.getLockettePlugin()) {
-            log.info( "Lockette plugin lost.");
+            log.info("Lockette plugin lost.");
             plugin.setLockettePlugin(null);
         }
 
@@ -65,10 +64,9 @@ public class ServerListenerDTP extends ServerListener {
         log.debug("onPluginEnable executing");
         PluginManager pm = plugin.getServer().getPluginManager();
         Plugin checkVault = pm.getPlugin("Vault");
-        if (checkVault !=null && !plugin.isUseVault())
-        {
+        if (checkVault != null && !plugin.isUseVault()) {
             plugin.setUseVault(true);
-            log.info( "Vault detected");
+            log.info("Vault detected");
             log.info("Checking ecnomony providers now!");
         }
 
@@ -79,10 +77,10 @@ public class ServerListenerDTP extends ServerListener {
             if (economyProvider != null) {
                 plugin.setEconomy(economyProvider.getProvider());
                 plugin.setEconomyActive(true);
-                log.info( "Economy provider found: "+plugin.getEconomy().getName());
+                log.info("Economy provider found: " + plugin.getEconomy().getName());
 
             } else {
-                if (missingEconomyWarn){
+                if (missingEconomyWarn) {
                     log.warning("No economy provider found.");
                     log.info("Still waiting for economy provider to show up.");
                     missingEconomyWarn = false;

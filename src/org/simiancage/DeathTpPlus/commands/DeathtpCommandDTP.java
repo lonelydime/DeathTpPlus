@@ -39,25 +39,22 @@ public class DeathtpCommandDTP implements CommandExecutor {
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         boolean canUseCommand = false;
-        boolean teleportok = true;
-        boolean teleported = false;
         boolean worldTravel = false;
         log.debug("deathtp command executing");
 
 
         if (sender instanceof Player) {
-            Player player = (Player)sender;
+            Player player = (Player) sender;
             canUseCommand = (player.hasPermission("deathtpplus.deathtp") || config.isAllowDeathtp());
 
             if (canUseCommand) {
-                log.debug("canUseCommand",canUseCommand );
-                String thisWorld = player.getWorld().getName().toString();
-                if ((player.hasPermission("deathtpplus.worldtravel") && config.getAllowWorldTravel().equalsIgnoreCase("permissions")) || config.getAllowWorldTravel().equalsIgnoreCase("yes"))
-                {
+                log.debug("canUseCommand", canUseCommand);
+                String thisWorld = player.getWorld().getName();
+                if ((player.hasPermission("deathtpplus.worldtravel") && config.getAllowWorldTravel().equalsIgnoreCase("permissions")) || config.getAllowWorldTravel().equalsIgnoreCase("yes")) {
                     worldTravel = true;
                 }
                 if (!canTp(player)) {
-                    log.debug("canTp","nope" );
+                    log.debug("canTp", "nope");
                     return true;
                 }
 
@@ -74,48 +71,39 @@ public class DeathtpCommandDTP implements CommandExecutor {
                             deathLocation.setWorld(deathWorld);
                             player.teleport(deathLocation);
                             registerTp(player);
-                        }
-                        else {
+                        } else {
                             player.sendMessage("You do not have the right to travel between worlds via deathtp!");
                         }
-                    }
-                    else {
+                    } else {
                         player.teleport(deathLocation);
                         registerTp(player);
                     }
                 }
 
-            }
-            else {
+            } else {
                 player.sendMessage("That command is not available");
             }
 
 
-
             return true;
-        }
-
-        else {
+        } else {
             log.warning("This is only a player command.");
             return true;
         }
     }
 
-    private Boolean canTp(Player player)
-    {
+    private Boolean canTp(Player player) {
         return hasItem(player) && hasFunds(player);
     }
 
-    private void registerTp(Player player)
-    {
+    private void registerTp(Player player) {
         if (hasItem(player)) {
             if (Integer.parseInt(config.getChargeItem()) != 0) {
                 ItemStack itemInHand = player.getItemInHand();
 
                 if (itemInHand.getAmount() == 1) {
                     player.getInventory().clear(player.getInventory().getHeldItemSlot());
-                }
-                else {
+                } else {
                     itemInHand.setAmount(itemInHand.getAmount() - 1);
                     player.setItemInHand(itemInHand);
                 }
@@ -123,21 +111,20 @@ public class DeathtpCommandDTP implements CommandExecutor {
         }
 
         if (hasFunds(player)) {
-            if (plugin.isEconomyActive()){
-                double deathTpCost = Double.valueOf(config.getDeathtpCost().trim()).doubleValue();
+            if (plugin.isEconomyActive()) {
+                double deathTpCost = Double.valueOf(config.getDeathtpCost().trim());
                 plugin.getEconomy().withdrawPlayer(player.getName(), deathTpCost);
                 player.sendMessage(String.format("You used %s to use /deathtp.", plugin.getEconomy().format(deathTpCost)));
             }
         }
     }
 
-    private Boolean hasItem(Player player)
-    {
+    private Boolean hasItem(Player player) {
         int chargeItem = Integer.parseInt(config.getChargeItem());
-        log.debug("chargeItem",chargeItem );
+        log.debug("chargeItem", chargeItem);
         // costs item in inventory
         if (chargeItem == 0 || chargeItem == player.getItemInHand().getType().getId()) {
-            log.debug("hasItem",true );
+            log.debug("hasItem", true);
             return true;
         }
 
@@ -146,21 +133,20 @@ public class DeathtpCommandDTP implements CommandExecutor {
         return false;
     }
 
-    private Boolean hasFunds(Player player)
-    {
-        double deathTpCost = Double.valueOf(config.getDeathtpCost().trim()).doubleValue();
-        log.debug("deathTpCost",deathTpCost );
-        if (deathTpCost == 0)
+    private Boolean hasFunds(Player player) {
+        double deathTpCost = Double.valueOf(config.getDeathtpCost().trim());
+        log.debug("deathTpCost", deathTpCost);
+        if (deathTpCost == 0) {
             return true;
+        }
 
         // costs economy
         if (plugin.isEconomyActive()) {
-            log.debug("isEconomyActive","yes" );
+            log.debug("isEconomyActive", "yes");
             if (plugin.getEconomy().getBalance(player.getName()) > deathTpCost) {
-                log.debug("hasFunds",true );
+                log.debug("hasFunds", true);
                 return true;
-            }
-            else {
+            } else {
                 player.sendMessage(String.format("You need %s coins to use /deathtp.", plugin.getEconomy().format(deathTpCost)));
                 return false;
             }

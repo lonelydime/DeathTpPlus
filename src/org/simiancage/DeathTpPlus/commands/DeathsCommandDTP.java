@@ -37,15 +37,8 @@ public class DeathsCommandDTP implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         log.debug("deaths command executing");
         boolean canUseCommand = false;
-        String playername = "";
-        String cause = "";
-        String line;
-        int totalnum = 0;
-        String[] splittext;
-        boolean foundrecord = false;
-
         if (sender instanceof Player) {
-            Player player = (Player)sender;
+            Player player = (Player) sender;
 
             if (player.hasPermission("deathtpplus.deaths")) {
                 canUseCommand = true;
@@ -56,8 +49,9 @@ public class DeathsCommandDTP implements CommandExecutor {
 
             int total;
 
-            if (args.length > 2)
+            if (args.length > 2) {
                 return false;
+            }
 
             switch (args.length) {
                 case 0:
@@ -65,8 +59,7 @@ public class DeathsCommandDTP implements CommandExecutor {
                     total = plugin.getDeathLog().getTotalByType(player.getName(), DeathRecordType.death);
                     if (total > -1) {
                         sender.sendMessage(String.format("You died %d time(s)", total));
-                    }
-                    else {
+                    } else {
                         sender.sendMessage("No record found.");
                     }
                     break;
@@ -74,8 +67,7 @@ public class DeathsCommandDTP implements CommandExecutor {
                     total = plugin.getDeathLog().getTotalByType(args[0], DeathRecordType.death);
                     if (total > -1) {
                         sender.sendMessage(String.format("%s died %d time(s)", args[0], total));
-                    }
-                    else {
+                    } else {
                         sender.sendMessage("No record found.");
                     }
                     break;
@@ -83,8 +75,7 @@ public class DeathsCommandDTP implements CommandExecutor {
                     DeathRecordDTP record = plugin.getDeathLog().getRecordByType(args[0], args[1], DeathRecordType.death);
                     if (record != null) {
                         sender.sendMessage(String.format("%s died by %s %d time(s)", args[0], args[1], record.getCount()));
-                    }
-                    else {
+                    } else {
                         sender.sendMessage("No record found.");
                     }
                     break;

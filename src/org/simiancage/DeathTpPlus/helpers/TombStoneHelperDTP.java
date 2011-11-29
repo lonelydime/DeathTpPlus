@@ -19,7 +19,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -50,7 +49,7 @@ public class TombStoneHelperDTP {
 
     }
 
-    public static TombStoneHelperDTP getInstance (){
+    public static TombStoneHelperDTP getInstance() {
         if (instance == null) {
             instance = new TombStoneHelperDTP();
         }
@@ -58,167 +57,181 @@ public class TombStoneHelperDTP {
     }
 
     public Boolean activateLWC(Player player, TombStoneBlockDTP tStoneBlockDTP) {
-           if (!config.isEnableLWC())
-               return false;
-           if (plugin.getLwcPlugin() == null)
-               return false;
-           LWC lwc = plugin.getLwcPlugin().getLWC();
+        if (!config.isEnableLWC()) {
+            return false;
+        }
+        if (plugin.getLwcPlugin() == null) {
+            return false;
+        }
+        LWC lwc = plugin.getLwcPlugin().getLWC();
 
 // Register the chest + sign as private
-           Block block = tStoneBlockDTP.getBlock();
-           Block sign = tStoneBlockDTP.getSign();
-           lwc.getPhysicalDatabase().registerProtection(block.getTypeId(),
-                   ProtectionTypes.PRIVATE, block.getWorld().getName(),
-                   player.getName(), "", block.getX(), block.getY(), block.getZ());
-           if (sign != null)
-               lwc.getPhysicalDatabase()
-                       .registerProtection(sign.getTypeId(),
-                               ProtectionTypes.PRIVATE,
-                               block.getWorld().getName(), player.getName(), "",
-                               sign.getX(), sign.getY(), sign.getZ());
+        Block block = tStoneBlockDTP.getBlock();
+        Block sign = tStoneBlockDTP.getSign();
+        lwc.getPhysicalDatabase().registerProtection(block.getTypeId(),
+                ProtectionTypes.PRIVATE, block.getWorld().getName(),
+                player.getName(), "", block.getX(), block.getY(), block.getZ());
+        if (sign != null) {
+            lwc.getPhysicalDatabase()
+                    .registerProtection(sign.getTypeId(),
+                            ProtectionTypes.PRIVATE,
+                            block.getWorld().getName(), player.getName(), "",
+                            sign.getX(), sign.getY(), sign.getZ());
+        }
 
-           tStoneBlockDTP.setLwcEnabled(true);
-           return true;
-       }
+        tStoneBlockDTP.setLwcEnabled(true);
+        return true;
+    }
 
-       public Boolean protectWithLockette(Player player, TombStoneBlockDTP tStoneBlockDTP) {
-           if (!config.isEnableLockette())
-               return false;
-           if (plugin.getLockettePlugin() == null)
-               return false;
+    public Boolean protectWithLockette(Player player, TombStoneBlockDTP tStoneBlockDTP) {
+        if (!config.isEnableLockette()) {
+            return false;
+        }
+        if (plugin.getLockettePlugin() == null) {
+            return false;
+        }
 
-           Block signBlock = null;
+        Block signBlock = null;
 
-           signBlock = findPlace(tStoneBlockDTP.getBlock(), true);
-           if (signBlock == null) {
-               plugin.sendMessage(player, "No room for Lockette sign! Chest unsecured!");
-               return false;
-           }
+        signBlock = findPlace(tStoneBlockDTP.getBlock(), true);
+        if (signBlock == null) {
+            plugin.sendMessage(player, "No room for Lockette sign! Chest unsecured!");
+            return false;
+        }
 
-           signBlock.setType(Material.AIR); // hack to prevent oddness with signs
+        signBlock.setType(Material.AIR); // hack to prevent oddness with signs
 // popping out of the ground as of
 // Bukkit 818
-           signBlock.setType(Material.WALL_SIGN);
+        signBlock.setType(Material.WALL_SIGN);
 
-           String facing = getDirection((getYawTo(signBlock.getLocation(), tStoneBlockDTP
-                   .getBlock().getLocation()) + 270) % 360);
-           if (facing == "East")
-               signBlock.setData((byte) 0x02);
-           else if (facing == "West")
-               signBlock.setData((byte) 0x03);
-           else if (facing == "North")
-               signBlock.setData((byte) 0x04);
-           else if (facing == "South")
-               signBlock.setData((byte) 0x05);
-           else {
-               plugin.sendMessage(player, "Error placing Lockette sign! Chest unsecured!");
-               return false;
-           }
+        String facing = getDirection((getYawTo(signBlock.getLocation(), tStoneBlockDTP
+                .getBlock().getLocation()) + 270) % 360);
+        if (facing.equals("East")) {
+            signBlock.setData((byte) 0x02);
+        } else if (facing.equals("West")) {
+            signBlock.setData((byte) 0x03);
+        } else if (facing.equals("North")) {
+            signBlock.setData((byte) 0x04);
+        } else if (facing.equals("South")) {
+            signBlock.setData((byte) 0x05);
+        } else {
+            plugin.sendMessage(player, "Error placing Lockette sign! Chest unsecured!");
+            return false;
+        }
 
-           BlockState signBlockState = null;
-           signBlockState = signBlock.getState();
-           final Sign sign = (Sign) signBlockState;
+        BlockState signBlockState = null;
+        signBlockState = signBlock.getState();
+        final Sign sign = (Sign) signBlockState;
 
-           String name = player.getName();
-           if (name.length() > 15)
-               name = name.substring(0, 15);
-           sign.setLine(0, "[Private]");
-           sign.setLine(1, name);
-           // Todo Check if replacing plugin with this is really the solution!!!
-           plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
-           {
-               public void run() {
-                   sign.update();
-               }
-           });
-           tStoneBlockDTP.setLocketteSign(sign);
-           return true;
-       }
+        String name = player.getName();
+        if (name.length() > 15) {
+            name = name.substring(0, 15);
+        }
+        sign.setLine(0, "[Private]");
+        sign.setLine(1, name);
+        // Todo Check if replacing plugin with this is really the solution!!!
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            public void run() {
+                sign.update();
+            }
+        });
+        tStoneBlockDTP.setLocketteSign(sign);
+        return true;
+    }
 
 
-
-       public void deactivateLWC(TombStoneBlockDTP tStoneBlockDTP, boolean force) {
-           if (!config.isEnableLWC())
-               return;
-           if (plugin.getLwcPlugin() == null)
-               return;
-           LWC lwc = plugin.getLwcPlugin().getLWC();
+    public void deactivateLWC(TombStoneBlockDTP tStoneBlockDTP, boolean force) {
+        if (!config.isEnableLWC()) {
+            return;
+        }
+        if (plugin.getLwcPlugin() == null) {
+            return;
+        }
+        LWC lwc = plugin.getLwcPlugin().getLWC();
 
 // Remove the protection on the chest
-           Block _block = tStoneBlockDTP.getBlock();
-           Protection protection = lwc.findProtection(_block);
-           if (protection != null) {
-               lwc.getPhysicalDatabase().unregisterProtection(protection.getId());
+        Block _block = tStoneBlockDTP.getBlock();
+        Protection protection = lwc.findProtection(_block);
+        if (protection != null) {
+            lwc.getPhysicalDatabase().unregisterProtection(protection.getId());
 // Set to public instead of removing completely
-               if (config.isLwcPublic() && !force)
-                   lwc.getPhysicalDatabase().registerProtection(
-                           _block.getTypeId(), ProtectionTypes.PUBLIC,
-                           _block.getWorld().getName(), tStoneBlockDTP.getOwner(), "",
-                           _block.getX(), _block.getY(), _block.getZ());
-           }
+            if (config.isLwcPublic() && !force) {
+                lwc.getPhysicalDatabase().registerProtection(
+                        _block.getTypeId(), ProtectionTypes.PUBLIC,
+                        _block.getWorld().getName(), tStoneBlockDTP.getOwner(), "",
+                        _block.getX(), _block.getY(), _block.getZ());
+            }
+        }
 
 // Remove the protection on the sign
-           _block = tStoneBlockDTP.getSign();
-           if (_block != null) {
-               protection = lwc.findProtection(_block);
-               if (protection != null) {
-                   protection.remove();
+        _block = tStoneBlockDTP.getSign();
+        if (_block != null) {
+            protection = lwc.findProtection(_block);
+            if (protection != null) {
+                protection.remove();
 // Set to public instead of removing completely
-                   if (config.isLwcPublic() && !force)
-                       lwc.getPhysicalDatabase().registerProtection(
-                               _block.getTypeId(), ProtectionTypes.PUBLIC,
-                               _block.getWorld().getName(), tStoneBlockDTP.getOwner(), "",
-                               _block.getX(), _block.getY(), _block.getZ());
-               }
-           }
-           tStoneBlockDTP.setLwcEnabled(false);
-       }
+                if (config.isLwcPublic() && !force) {
+                    lwc.getPhysicalDatabase().registerProtection(
+                            _block.getTypeId(), ProtectionTypes.PUBLIC,
+                            _block.getWorld().getName(), tStoneBlockDTP.getOwner(), "",
+                            _block.getX(), _block.getY(), _block.getZ());
+                }
+            }
+        }
+        tStoneBlockDTP.setLwcEnabled(false);
+    }
 
-       public void deactivateLockette(TombStoneBlockDTP tStoneBlockDTP) {
-           if (tStoneBlockDTP.getLocketteSign() == null)
-               return;
-           tStoneBlockDTP.getLocketteSign().getBlock().setType(Material.AIR);
-           tStoneBlockDTP.removeLocketteSign();
-       }
+    public void deactivateLockette(TombStoneBlockDTP tStoneBlockDTP) {
+        if (tStoneBlockDTP.getLocketteSign() == null) {
+            return;
+        }
+        tStoneBlockDTP.getLocketteSign().getBlock().setType(Material.AIR);
+        tStoneBlockDTP.removeLocketteSign();
+    }
 
-       public void removeTombStone(TombStoneBlockDTP tStoneBlockDTP, boolean removeList) {
-           if (tStoneBlockDTP == null)
-               return;
-           log.debug("removeTombStone", tStoneBlockDTP);
-           log.debug("removeList", removeList);
-           tombStoneBlockList.remove(tStoneBlockDTP.getBlock().getLocation());
-           if (tStoneBlockDTP.getLBlock() != null)
-               tombStoneBlockList.remove(tStoneBlockDTP.getLBlock().getLocation());
-           if (tStoneBlockDTP.getSign() != null)
-               tombStoneBlockList.remove(tStoneBlockDTP.getSign().getLocation());
+    public void removeTombStone(TombStoneBlockDTP tStoneBlockDTP, boolean removeList) {
+        if (tStoneBlockDTP == null) {
+            return;
+        }
+        log.debug("removeTombStone", tStoneBlockDTP);
+        log.debug("removeList", removeList);
+        tombStoneBlockList.remove(tStoneBlockDTP.getBlock().getLocation());
+        if (tStoneBlockDTP.getLBlock() != null) {
+            tombStoneBlockList.remove(tStoneBlockDTP.getLBlock().getLocation());
+        }
+        if (tStoneBlockDTP.getSign() != null) {
+            tombStoneBlockList.remove(tStoneBlockDTP.getSign().getLocation());
+        }
 
 // Remove just this tomb from tombStoneListDTP
-           ArrayList<TombStoneBlockDTP> tList = playerTombStoneList.get(tStoneBlockDTP.getOwner());
-           if (tList != null) {
-               tList.remove(tStoneBlockDTP);
-               if (tList.size() == 0) {
-                   playerTombStoneList.remove(tStoneBlockDTP.getOwner());
-               }
-           }
+        ArrayList<TombStoneBlockDTP> tList = playerTombStoneList.get(tStoneBlockDTP.getOwner());
+        if (tList != null) {
+            tList.remove(tStoneBlockDTP);
+            if (tList.size() == 0) {
+                playerTombStoneList.remove(tStoneBlockDTP.getOwner());
+            }
+        }
 
-           if (removeList)
-               tombStoneListDTP.remove(tStoneBlockDTP);
+        if (removeList) {
+            tombStoneListDTP.remove(tStoneBlockDTP);
+        }
 
-           if (tStoneBlockDTP.getBlock() != null)
-               saveTombStoneList(tStoneBlockDTP.getBlock().getWorld().getName());
-       }
+        if (tStoneBlockDTP.getBlock() != null) {
+            saveTombStoneList(tStoneBlockDTP.getBlock().getWorld().getName());
+        }
+    }
 
-        // Load TombStonelist
+    // Load TombStonelist
     public void loadTombStoneList(String world) {
-        if (!config.isSaveTombStoneList())
-        {
+        if (!config.isSaveTombStoneList()) {
             return;
         }
         try {
             File fh = new File(plugin.getDataFolder().getPath(), TOMB_STONE_LOCATION_LIST + "-"
                     + world + ".db");
-            if (!fh.exists())
+            if (!fh.exists()) {
                 return;
+            }
             Scanner scanner = new Scanner(fh);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
@@ -240,10 +253,12 @@ public class TombStoneHelperDTP {
                 offerTombStoneBlockList(tStoneBlockDTP);
                 // Used for quick tombStone lookup
                 putTombStoneBlockList(block.getLocation(), tStoneBlockDTP);
-                if (lBlock != null)
+                if (lBlock != null) {
                     putTombStoneBlockList(lBlock.getLocation(), tStoneBlockDTP);
-                if (sign != null)
+                }
+                if (sign != null) {
                     putTombStoneBlockList(sign.getLocation(), tStoneBlockDTP);
+                }
                 ArrayList<TombStoneBlockDTP> pList = getPlayerTombStoneList(owner);
                 if (pList == null) {
                     pList = new ArrayList<TombStoneBlockDTP>();
@@ -259,18 +274,19 @@ public class TombStoneHelperDTP {
     }
 
     public void saveTombStoneList(String world) {
-        if (!config.isSaveTombStoneList())
+        if (!config.isSaveTombStoneList()) {
             return;
+        }
         try {
             File fh = new File(plugin.getDataFolder().getPath(), TOMB_STONE_LOCATION_LIST + "-"
                     + world + ".db");
             BufferedWriter bw = new BufferedWriter(new FileWriter(fh));
-            for (Iterator<TombStoneBlockDTP> iter = getTombStoneListDTP().iterator(); iter.hasNext();) {
-                TombStoneBlockDTP tStoneBlockDTP = iter.next();
+            for (TombStoneBlockDTP tStoneBlockDTP : getTombStoneListDTP()) {
                 // Skip not this world
                 if (!tStoneBlockDTP.getBlock().getWorld().getName()
-                        .equalsIgnoreCase(world))
+                        .equalsIgnoreCase(world)) {
                     continue;
+                }
 
                 StringBuilder builder = new StringBuilder();
 
@@ -292,37 +308,42 @@ public class TombStoneHelperDTP {
             bw.close();
             log.info("Successfully saved TombStone list");
         } catch (IOException e) {
-            log.warning("Error saving TombStone list" , e);
+            log.warning("Error saving TombStone list", e);
         }
     }
 
 
-
     private Block readBlock(String b) {
-        if (b.length() == 0)
+        if (b.length() == 0) {
             return null;
+        }
         String[] split = b.split(",");
         // world,x,y,z
         World world = plugin.getServer().getWorld(split[0]);
-        if (world == null)
+        if (world == null) {
             return null;
+        }
         return world.getBlockAt(Integer.valueOf(split[1]),
                 Integer.valueOf(split[2]), Integer.valueOf(split[3]));
     }
 
 
     private String printBlock(Block b) {
-        if (b == null)
+        if (b == null) {
             return "";
+        }
         return b.getWorld().getName() + "," + b.getX() + "," + b.getY() + ","
                 + b.getZ();
     }
 
 
-
     /**
      * Gets the Yaw from one location to another in relation to North.
      *
+     * @param from
+     * @param to
+     *
+     * @return
      */
     public double getYawTo(Location from, Location to) {
         final int distX = to.getBlockX() - from.getBlockX();
@@ -337,6 +358,7 @@ public class TombStoneHelperDTP {
      * Original function from CommandBook plugin
      *
      * @param rot
+     *
      * @return
      */
     public static String getDirection(double rot) {
@@ -367,11 +389,14 @@ public class TombStoneHelperDTP {
      * Find a block near the base block to place the tombstone
      *
      * @param base
+     * @param CardinalSearch
+     *
      * @return
      */
     public Block findPlace(Block base, Boolean CardinalSearch) {
-        if (canReplace(base.getType()))
+        if (canReplace(base.getType())) {
             return base;
+        }
         int baseX = base.getX();
         int baseY = base.getY();
         int baseZ = base.getZ();
@@ -380,20 +405,25 @@ public class TombStoneHelperDTP {
         if (CardinalSearch) {
             Block b;
             b = w.getBlockAt(baseX - 1, baseY, baseZ);
-            if (canReplace(b.getType()))
+            if (canReplace(b.getType())) {
                 return b;
+            }
             b = w.getBlockAt(baseX + 1, baseY, baseZ);
-            if (canReplace(b.getType()))
+            if (canReplace(b.getType())) {
                 return b;
+            }
             b = w.getBlockAt(baseX, baseY, baseZ - 1);
-            if (canReplace(b.getType()))
+            if (canReplace(b.getType())) {
                 return b;
+            }
             b = w.getBlockAt(baseX, baseY, baseZ + 1);
-            if (canReplace(b.getType()))
+            if (canReplace(b.getType())) {
                 return b;
+            }
             b = w.getBlockAt(baseX, baseY, baseZ);
-            if (canReplace(b.getType()))
+            if (canReplace(b.getType())) {
                 return b;
+            }
 
             return null;
         }
@@ -401,8 +431,9 @@ public class TombStoneHelperDTP {
         for (int x = baseX - 1; x < baseX + 1; x++) {
             for (int z = baseZ - 1; z < baseZ + 1; z++) {
                 Block b = w.getBlockAt(x, baseY, z);
-                if (canReplace(b.getType()))
+                if (canReplace(b.getType())) {
                     return b;
+                }
             }
         }
 
@@ -439,18 +470,21 @@ public class TombStoneHelperDTP {
 
         deactivateLWC(tStoneBlockDTP, true);
 
-        if (tStoneBlockDTP.getSign() != null)
+        if (tStoneBlockDTP.getSign() != null) {
             tStoneBlockDTP.getSign().setType(Material.AIR);
+        }
         deactivateLockette(tStoneBlockDTP);
         tStoneBlockDTP.getBlock().setType(Material.AIR);
-        if (tStoneBlockDTP.getLBlock() != null)
+        if (tStoneBlockDTP.getLBlock() != null) {
             tStoneBlockDTP.getLBlock().setType(Material.AIR);
+        }
 
         removeTombStone(tStoneBlockDTP, true);
 
         Player p = plugin.getServer().getPlayer(tStoneBlockDTP.getOwner());
-        if (p != null)
+        if (p != null) {
             plugin.sendMessage(p, "Your tombstone has been destroyed!");
+        }
     }
 
 
@@ -461,8 +495,8 @@ public class TombStoneHelperDTP {
         return tombStoneListDTP;
     }
 
-    public void offerTombStoneList(TombStoneBlockDTP tombStoneBlock){
-         tombStoneListDTP.offer(tombStoneBlock);
+    public void offerTombStoneList(TombStoneBlockDTP tombStoneBlock) {
+        tombStoneListDTP.offer(tombStoneBlock);
     }
 
 
@@ -491,19 +525,19 @@ public class TombStoneHelperDTP {
         this.playerTombStoneList = playerTombStoneList;
     }
 
-    public void offerTombStoneBlockList(TombStoneBlockDTP tombStoneBlock){
-          tombStoneListDTP.offer(tombStoneBlock);
+    public void offerTombStoneBlockList(TombStoneBlockDTP tombStoneBlock) {
+        tombStoneListDTP.offer(tombStoneBlock);
     }
 
-    public void putTombStoneBlockList (Location location, TombStoneBlockDTP tombStoneBlock){
-       tombStoneBlockList.put(location, tombStoneBlock);
+    public void putTombStoneBlockList(Location location, TombStoneBlockDTP tombStoneBlock) {
+        tombStoneBlockList.put(location, tombStoneBlock);
     }
 
-    public ArrayList<TombStoneBlockDTP> getPlayerTombStoneList(String owner){
+    public ArrayList<TombStoneBlockDTP> getPlayerTombStoneList(String owner) {
         return playerTombStoneList.get(owner);
     }
 
-    public void putPlayerTombStoneList (String owner, ArrayList<TombStoneBlockDTP> pList){
+    public void putPlayerTombStoneList(String owner, ArrayList<TombStoneBlockDTP> pList) {
         playerTombStoneList.put(owner, pList);
     }
 }

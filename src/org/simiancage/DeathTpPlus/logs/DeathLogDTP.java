@@ -19,8 +19,7 @@ import java.util.List;
  * Time: 19:19
  */
 
-public class DeathLogDTP
-{
+public class DeathLogDTP {
     private static final String DEATH_LOG_FILE = "deathlog.txt";
     private static final String DEATH_LOG_TMP = "deathlog.tmp";
     private static final ConfigDTP config = ConfigDTP.getInstance();
@@ -29,23 +28,20 @@ public class DeathLogDTP
     private File deathLogFile;
     private DeathTpPlus plugin;
 
-    public DeathLogDTP(DeathTpPlus plugin)
-    {
+    public DeathLogDTP(DeathTpPlus plugin) {
         this.plugin = plugin;
         dataFolder = plugin.getDataFolder() + System.getProperty("file.separator");
         deathLogFile = new File(dataFolder, DEATH_LOG_FILE);
         if (!deathLogFile.exists()) {
             try {
                 deathLogFile.createNewFile();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 log.severe("Failed to create death log", e);
             }
         }
     }
 
-    public int getTotalByType(String playerName, DeathRecordType type)
-    {
+    public int getTotalByType(String playerName, DeathRecordType type) {
         List<DeathRecordDTP> records = getRecords(playerName);
         int totalDeaths = -1;
 
@@ -58,8 +54,7 @@ public class DeathLogDTP
         return totalDeaths;
     }
 
-    public DeathRecordDTP getRecordByType(String playerName, String eventName, DeathRecordType type)
-    {
+    public DeathRecordDTP getRecordByType(String playerName, String eventName, DeathRecordType type) {
         List<DeathRecordDTP> records = getRecords(playerName);
 
         for (DeathRecordDTP record : records) {
@@ -71,8 +66,7 @@ public class DeathLogDTP
         return null;
     }
 
-    public List<DeathRecordDTP> getRecords(String playerName)
-    {
+    List<DeathRecordDTP> getRecords(String playerName) {
         List<DeathRecordDTP> records = new ArrayList<DeathRecordDTP>();
 
         try {
@@ -86,37 +80,32 @@ public class DeathLogDTP
             }
 
             bufferedReader.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             log.severe("Failed to read death log", e);
         }
 
         return records;
     }
 
-    public void setRecord(DeathDetailDTP deathDetail)
-    {
+    public void setRecord(DeathDetailDTP deathDetail) {
         if (deathDetail.isPVPDeath()) {
             setRecord(deathDetail.getKiller().getName(), DeathRecordType.kill, deathDetail.getPlayer().getName());
             setRecord(deathDetail.getPlayer().getName(), DeathRecordType.death, deathDetail.getKiller().getName());
-        }
-        else {
+        } else {
             setRecord(deathDetail.getPlayer().getName(), DeathRecordType.death, deathDetail.getCauseOfDeath().toString());
         }
     }
 
     @Deprecated
-    public void setRecord(String playerName, DeathRecordType type, String eventName)
-    {
+    void setRecord(String playerName, DeathRecordType type, String eventName) {
         File tmpDeathLogFile = new File(dataFolder, DEATH_LOG_TMP);
         DeathRecordDTP playerRecord = null;
 
         if (!tmpDeathLogFile.exists()) {
             try {
                 tmpDeathLogFile.createNewFile();
-            }
-            catch (IOException e) {
-               log.severe("Failed to create tmp death log", e);
+            } catch (IOException e) {
+                log.severe("Failed to create tmp death log", e);
             }
         }
 
@@ -147,8 +136,7 @@ public class DeathLogDTP
 
             deathLogFile.delete();
             tmpDeathLogFile.renameTo(deathLogFile);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             log.severe("Failed to edit death log", e);
         }
     }

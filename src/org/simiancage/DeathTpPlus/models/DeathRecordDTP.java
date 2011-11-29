@@ -11,27 +11,24 @@ package org.simiancage.DeathTpPlus.models;
 public class DeathRecordDTP {
     public enum DeathRecordType {
         death, kill
-    };
+    }
 
     private String playerName;
     private DeathRecordType type;
     private String eventName;
     private int count;
 
-    public DeathRecordDTP()
-    {
+    public DeathRecordDTP() {
     }
 
-    public DeathRecordDTP(String playerName, DeathRecordType type, String eventName, int count)
-    {
+    public DeathRecordDTP(String playerName, DeathRecordType type, String eventName, int count) {
         this.playerName = playerName;
         this.type = type;
         this.eventName = eventName;
         this.count = count;
     }
 
-    public DeathRecordDTP(String record)
-    {
+    public DeathRecordDTP(String record) {
         if (record != null) {
             String[] parts = record.split(":");
 
@@ -44,49 +41,40 @@ public class DeathRecordDTP {
         }
     }
 
-    public String getPlayerName()
-    {
+    public String getPlayerName() {
         return playerName;
     }
 
-    public void setPlayerName(String playerName)
-    {
+    public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
 
-    public DeathRecordType getType()
-    {
+    public DeathRecordType getType() {
         return type;
     }
 
-    public void setType(DeathRecordType type)
-    {
+    public void setType(DeathRecordType type) {
         this.type = type;
     }
 
-    public String getEventName()
-    {
+    public String getEventName() {
         return eventName;
     }
 
-    public void setEventName(String eventName)
-    {
+    public void setEventName(String eventName) {
         this.eventName = eventName;
     }
 
-    public int getCount()
-    {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(int count)
-    {
+    public void setCount(int count) {
         this.count = count;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return String.format("%s:%s:%s:%d", playerName, type, eventName, count);
     }
 }

@@ -11,11 +11,11 @@ package org.simiancage.DeathTpPlus.workers;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.helpers.TombStoneHelperDTP;
 import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
-import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 import java.util.Iterator;
 
@@ -35,7 +35,7 @@ public class TombStoneWorkerDTP extends Thread {
     public void run() {
         long cTime = System.currentTimeMillis() / 1000;
         for (Iterator<TombStoneBlockDTP> iter = tombStoneHelper.getTombStoneListDTP().iterator(); iter
-                .hasNext();) {
+                .hasNext(); ) {
             TombStoneBlockDTP tStoneBlockDTP = iter.next();
 
 // "empty" option checks
@@ -48,24 +48,28 @@ public class TombStoneWorkerDTP extends Thread {
                             .getLBlock().getState() : null;
 
                     for (ItemStack item : sChest.getInventory().getContents()) {
-                        if (item != null)
+                        if (item != null) {
                             itemCount += item.getAmount();
+                        }
                     }
                     if (lChest != null && itemCount == 0) {
                         for (ItemStack item : lChest.getInventory()
                                 .getContents()) {
-                            if (item != null)
+                            if (item != null) {
                                 itemCount += item.getAmount();
+                            }
                         }
                     }
 
                     if (config.isKeepTombStoneUntilEmpty()) {
-                        if (itemCount > 0)
+                        if (itemCount > 0) {
                             continue;
+                        }
                     }
                     if (config.isRemoveTombStoneWhenEmpty()) {
-                        if (itemCount == 0)
+                        if (itemCount == 0) {
                             tombStoneHelper.destroyTombStone(tStoneBlockDTP);
+                        }
                         iter.remove(); // TODO bugcheck on this addition
                     }
                 }
@@ -79,16 +83,18 @@ public class TombStoneWorkerDTP extends Thread {
                     if (tStoneBlockDTP.getLwcEnabled() && plugin.getLwcPlugin() != null) {
                         tombStoneHelper.deactivateLWC(tStoneBlockDTP, false);
                         tStoneBlockDTP.setLwcEnabled(false);
-                        if (p != null)
+                        if (p != null) {
                             plugin.sendMessage(p,
                                     "LWC protection disabled on your tombstone!");
+                        }
                     }
                     if (tStoneBlockDTP.getLocketteSign() != null
                             && plugin.getLockettePlugin() != null) {
                         tombStoneHelper.deactivateLockette(tStoneBlockDTP);
-                        if (p != null)
+                        if (p != null) {
                             plugin.sendMessage(p,
                                     "Lockette protection disabled on your tombstone!");
+                        }
                     }
                 }
             }

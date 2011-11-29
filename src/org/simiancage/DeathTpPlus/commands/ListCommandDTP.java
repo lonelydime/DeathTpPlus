@@ -11,11 +11,11 @@ package org.simiancage.DeathTpPlus.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.helpers.TombStoneHelperDTP;
 import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
-import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 import java.util.ArrayList;
 
@@ -51,8 +51,9 @@ public class ListCommandDTP implements CommandExecutor {
         int i = 0;
         for (TombStoneBlockDTP tombStoneDTP : pList) {
             i++;
-            if (tombStoneDTP.getBlock() == null)
+            if (tombStoneDTP.getBlock() == null) {
                 continue;
+            }
             int X = tombStoneDTP.getBlock().getX();
             int Y = tombStoneDTP.getBlock().getY();
             int Z = tombStoneDTP.getBlock().getZ();

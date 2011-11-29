@@ -38,25 +38,19 @@ public class KillsCommandDTP implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         log.debug("dtpfind command executing");
         boolean canUseCommand = false;
-        String playername = "";
-        String username = "";
-        String line;
-        int totalnum = 0;
-        String[] splittext;
-        boolean foundrecord = false;
-
         if (sender instanceof Player) {
-            Player player = (Player)sender;
+            Player player = (Player) sender;
 
-            canUseCommand =  player.hasPermission("deathtpplus.kills");
+            canUseCommand = player.hasPermission("deathtpplus.kills");
         }
 
         if (canUseCommand) {
 
             int total;
 
-            if (args.length > 2)
+            if (args.length > 2) {
                 return false;
+            }
 
             switch (args.length) {
                 case 0:
@@ -64,8 +58,7 @@ public class KillsCommandDTP implements CommandExecutor {
                     total = deathLog.getTotalByType(player.getName(), DeathRecordType.kill);
                     if (total > -1) {
                         sender.sendMessage(String.format("You have %d kill(s)", total));
-                    }
-                    else {
+                    } else {
                         sender.sendMessage("No record found.");
                     }
                     break;
@@ -73,8 +66,7 @@ public class KillsCommandDTP implements CommandExecutor {
                     total = deathLog.getTotalByType(args[0], DeathRecordType.kill);
                     if (total > -1) {
                         sender.sendMessage(String.format("%s has %d kill(s)", args[0], total));
-                    }
-                    else {
+                    } else {
                         sender.sendMessage("No record found.");
                     }
                     break;

@@ -12,11 +12,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.helpers.TombStoneHelperDTP;
 import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
-import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 import java.util.ArrayList;
 
@@ -43,8 +43,9 @@ public class FindCommandDTP implements CommandExecutor {
             plugin.sendMessage(sender, "Permission Denied");
             return true;
         }
-        if (args.length != 1)
+        if (args.length != 1) {
             return false;
+        }
         ArrayList<TombStoneBlockDTP> pList = tombStoneHelper.getPlayerTombStoneList(sender.getName());
         if (pList == null) {
             plugin.sendMessage(sender, "You have no tombstones.");

@@ -15,15 +15,15 @@ import java.io.*;
 import java.util.HashMap;
 
 
-
 public class TombSaveSystemDTP {
-    String path;
+    private String path;
 
     public TombSaveSystemDTP(String path) {
         this.path = path;
         File dir = new File(path);
-        if (!dir.exists())
+        if (!dir.exists()) {
             dir.mkdir();
+        }
     }
 
     /**
@@ -33,15 +33,17 @@ public class TombSaveSystemDTP {
      */
     public void save(HashMap<String, TombDTP> toBeSaved) {
         File saveFile = new File(this.path + File.separator + "tombs.dat");
-        if (!saveFile.exists())
+        if (!saveFile.exists()) {
             try {
                 saveFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
         HashMap<String, TombLogDTP> toWrite = new HashMap<String, TombLogDTP>();
-        for (String name : toBeSaved.keySet())
+        for (String name : toBeSaved.keySet()) {
             toWrite.put(name, toBeSaved.get(name).save());
+        }
 
         try {
             FileOutputStream fos = new FileOutputStream(saveFile);
@@ -57,10 +59,11 @@ public class TombSaveSystemDTP {
     @SuppressWarnings("unchecked")
     public HashMap<String, TombDTP> load() {
         HashMap<String, TombDTP> result = new HashMap<String, TombDTP>();
-        HashMap<String, TombLogDTP> saved=null;
+        HashMap<String, TombLogDTP> saved = null;
         File saveFile = new File(this.path + File.separator + "tombs.dat");
-        if (!saveFile.exists())
+        if (!saveFile.exists()) {
             return new HashMap<String, TombDTP>();
+        }
 
         FileInputStream fis = null;
         ObjectInputStream in = null;
@@ -75,10 +78,12 @@ public class TombSaveSystemDTP {
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }
-        if(saved == null)
+        if (saved == null) {
             return new HashMap<String, TombDTP>();
-        for(String name : saved.keySet())
+        }
+        for (String name : saved.keySet()) {
             result.put(name, saved.get(name).load());
+        }
 
         return result;
 

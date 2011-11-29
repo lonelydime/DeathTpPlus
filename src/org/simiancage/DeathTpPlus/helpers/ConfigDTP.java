@@ -134,62 +134,106 @@ public class ConfigDTP {
 
 // Default Config Variables start here!
 
-    /** Flag for CraftIrc */
+    /**
+     * Flag for CraftIrc
+     */
     private String ircDeathTpTag = "all";
-    /** Date Format (For formatting, see http://download.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html) */
+    /**
+     * Date Format (For formatting, see http://download.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html)
+     */
     private String dateFormat = "MM/dd/yyyy";
-    /** Time Format (For formatting, see http://download.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html) */
+    /**
+     * Time Format (For formatting, see http://download.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html)
+     */
     private String timeFormat = "hh:mm a";
-    /** Enable Lockette Support*/
+    /**
+     * Enable Lockette Support
+     */
     private boolean enableLockette = true;
-    /** Enable LWC Support*/
+    /**
+     * Enable LWC Support
+     */
     private boolean enableLWC = false;
-    /** Set LWC Protection to public instead of removing it*/
+    /**
+     * Set LWC Protection to public instead of removing it
+     */
     private boolean lwcPublic = false;
-    /** Allow World Travel = yes, no, permissions*/
+    /**
+     * Allow World Travel = yes, no, permissions
+     */
     private String allowWorldTravel = "no";
 
 
 // DeathTp Features
 
-    /** Enable DeathTp Features*/
+    /**
+     * Enable DeathTp Features
+     */
     private boolean enableDeathtp = true;
-    /** Show the death messages on the server*/
+    /**
+     * Show the death messages on the server
+     */
     private boolean showDeathNotify = true;
-    /** Allow players to access the deathtp command (Override permissions)*/
+    /**
+     * Allow players to access the deathtp command (Override permissions)
+     */
     private boolean allowDeathtp = false;
-    /** Log the deaths to file*/
+    /**
+     * Log the deaths to file
+     */
     private boolean allowDeathLog = true;
-    /** Show kill, death streaks and multi kills */
+    /**
+     * Show kill, death streaks and multi kills
+     */
     private boolean showStreaks = true;
-    /** Window of time (in milliseconds) to count kills towards a multikill */
+    /**
+     * Window of time (in milliseconds) to count kills towards a multikill
+     */
     private String multiKillTimeWindow = "5000";
-    /** Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports */
-    private String chargeItem ="0";
-    /** Show Deathsign (aka Tombstone Signs) upon death*/
+    /**
+     * Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports
+     */
+    private String chargeItem = "0";
+    /**
+     * Show Deathsign (aka Tombstone Signs) upon death
+     */
     private boolean showDeathSign = true;
-    /** Economy costs for deathtp command, leave 0 if you don't want to charge*/
+    /**
+     * Economy costs for deathtp command, leave 0 if you don't want to charge
+     */
     private String deathtpCost = "10";
 
 
 // TombStone Features (General)
 
-    /** Enable TombStone Feature*/
+    /**
+     * Enable TombStone Feature
+     */
     private boolean enableTombStone = true;
-    /** Place a Sign on the TombStone*/
+    /**
+     * Place a Sign on the TombStone
+     */
     private boolean showTombStoneSign = true;
-    /**  Prevent non-Op players from destroying TombStones if true (destroyQuickLoot overrides)*/
+    /**
+     * Prevent non-Op players from destroying TombStones if true (destroyQuickLoot overrides)
+     */
     private boolean allowTombStoneDestroy = false;
-    /** Show status messages to the player*/
+    /**
+     * Show status messages to the player
+     */
     private boolean showTombStoneStatusMessage = true;
-    /** Save TombStone Listing between server reloads*/
+    /**
+     * Save TombStone Listing between server reloads
+     */
     private boolean saveTombStoneList = true;
-    /** Stop TombStone creation next to existing chests if true (IF set to true it could allow users to circumvent chest protection.)*/
+    /**
+     * Stop TombStone creation next to existing chests if true (IF set to true it could allow users to circumvent chest protection.)
+     */
     private boolean allowInterfere = false;
     /**
-     *  we normally checks to make sure we aren't trying to create a chest in the void.
-     *  If you handle or modify the void with another plugin, you can disable that check here.
-     *  This option should be true for most servers.
+     * we normally checks to make sure we aren't trying to create a chest in the void.
+     * If you handle or modify the void with another plugin, you can disable that check here.
+     * This option should be true for most servers.
      */
     private boolean voidCheck = true;
     /**
@@ -206,15 +250,21 @@ public class ConfigDTP {
      * {reason} for cause of death
      * REMEMBER: LINES ARE LIMITED TO 15 CHARACTERS, AND DON'T FORGET THE QUOTES!
      */
-    private String[] tombStoneSign = new String[] { "{name}", "RIP", "{date}","{time}" };
+    private String[] tombStoneSign = new String[]{"{name}", "RIP", "{date}", "{time}"};
 
 // TombStone features (Removal)
 
-    /** Destroy Tombstone on player quickloot*/
+    /**
+     * Destroy Tombstone on player quickloot
+     */
     private boolean destroyOnQuickLoot = true;
-    /** Remove TombStone after RemoveTime*/
+    /**
+     * Remove TombStone after RemoveTime
+     */
     private boolean removeTombStone = true;
-    /** Remove the Tombstone after x Seconds if removeTombStone is true*/
+    /**
+     * Remove the Tombstone after x Seconds if removeTombStone is true
+     */
     private String removeTombStoneTime = "3600";
     /**
      * Immediately remove TombStone once it is empty, overriding all other timeout options
@@ -229,29 +279,45 @@ public class ConfigDTP {
 
 // TombStone Features (Security)
 
-    /** Remove security after timeout*/
+    /**
+     * Remove security after timeout
+     */
     private boolean removeTombStoneSecurity = false;
-    /** Timeout for Security Removal in seconds*/
+    /**
+     * Timeout for Security Removal in seconds
+     */
     private String removeTombStoneSecurityTimeOut = "3600";
 
 // Tomb Features
 
-    /** Enable the TombDTP feature*/
-    private boolean enableTomb = true;
-    /** Price for createing a Tomb*/
-    private String tombCost = "10";
-    /** Amount of Tombs a player can have*/
-    private int maxTomb = 1;
-    /** Use the TombDTP as a respawn point*/
-    private boolean useTombAsRespawnPoint = false;
-    /** Keyword used to detect a Tomb*/
-    private String tombKeyWord= "[Tomb]";
     /**
-     *  Number of death before destruction of every tomb of the player
-     *  without resetting the counter. If set to 2, every 2 deaths, the tombs are destroyed. (Sign is dropped) 0 = Disabled
+     * Enable the TombDTP feature
+     */
+    private boolean enableTomb = true;
+    /**
+     * Price for createing a Tomb
+     */
+    private String tombCost = "10";
+    /**
+     * Amount of Tombs a player can have
+     */
+    private int maxTomb = 1;
+    /**
+     * Use the TombDTP as a respawn point
+     */
+    private boolean useTombAsRespawnPoint = false;
+    /**
+     * Keyword used to detect a Tomb
+     */
+    private String tombKeyWord = "[Tomb]";
+    /**
+     * Number of death before destruction of every tomb of the player
+     * without resetting the counter. If set to 2, every 2 deaths, the tombs are destroyed. (Sign is dropped) 0 = Disabled
      */
     private int maxDeaths = 0;
-    /** When a TombDTP is destroyed, the respawn point is reset.*/
+    /**
+     * When a TombDTP is destroyed, the respawn point is reset.
+     */
     private boolean resetTombRespawn = false;
 
 
@@ -283,13 +349,13 @@ afterwards parsable again from the configuration class of bukkit
     private void customDefaultConfig() {
 
 // Default DeathTpPlus Variables
-        log.debug("config",config );
+        log.debug("config", config);
         config.addDefault("ircDeathTpTag", ircDeathTpTag);
         config.addDefault("dateFormat", dateFormat);
         config.addDefault("timeFormat", timeFormat);
         config.addDefault("enableLockette", enableLockette);
         config.addDefault("enableLWC", enableLWC);
-        config.addDefault("allowWorldTravel",allowWorldTravel);
+        config.addDefault("allowWorldTravel", allowWorldTravel);
 // DeathTp Features Variables
         config.addDefault("enableDeathtp", enableDeathtp);
         config.addDefault("showDeathNotify", showDeathNotify);
@@ -300,10 +366,10 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("chargeItem", chargeItem);
         config.addDefault("showDeathSign", showDeathSign);
         config.addDefault("deathtpCost", deathtpCost);
-        config.addDefault("lwcPublic",lwcPublic);
+        config.addDefault("lwcPublic", lwcPublic);
 // TombStone Features (General)
         config.addDefault("enableTombStone", enableTombStone);
-        config.addDefault("showTombStoneSign",showTombStoneSign);
+        config.addDefault("showTombStoneSign", showTombStoneSign);
         config.addDefault("allowTombStoneDestroy", allowTombStoneDestroy);
         config.addDefault("showTombStoneStatusMessage", showTombStoneStatusMessage);
         config.addDefault("saveTombStoneList", saveTombStoneList);
@@ -321,7 +387,7 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("removeTombStoneSecurityTimeOut", removeTombStoneSecurityTimeOut);
 // TombDTP Features
         config.addDefault("enableTomb", enableTomb);
-        config.addDefault("tombCost",tombCost);
+        config.addDefault("tombCost", tombCost);
         config.addDefault("maxTomb", maxTomb);
         config.addDefault("useTombAsRespawnPoint", useTombAsRespawnPoint);
         config.addDefault("tombKeyWord", tombKeyWord);
@@ -346,10 +412,10 @@ afterwards parsable again from the configuration class of bukkit
         enableLockette = config.getBoolean("enableLockette");
         enableLWC = config.getBoolean("enableLWC");
         allowWorldTravel = config.getString("allowWorldTravel");
-        tombStoneSign[0] = config.getString("tombStoneSign.Line1",tombStoneSign[0]);
-        tombStoneSign[1] = config.getString("tombStoneSign.Line2",tombStoneSign[1]);
-        tombStoneSign[2] = config.getString("tombStoneSign.Line3",tombStoneSign[2]);
-        tombStoneSign[3] = config.getString("tombStoneSign.Line4",tombStoneSign[3]);
+        tombStoneSign[0] = config.getString("tombStoneSign.Line1", tombStoneSign[0]);
+        tombStoneSign[1] = config.getString("tombStoneSign.Line2", tombStoneSign[1]);
+        tombStoneSign[2] = config.getString("tombStoneSign.Line3", tombStoneSign[2]);
+        tombStoneSign[3] = config.getString("tombStoneSign.Line4", tombStoneSign[3]);
 // DeathTpPlus Features
         enableDeathtp = config.getBoolean("enableDeathtp");
         showDeathNotify = config.getBoolean("showDeathNotify");
@@ -391,66 +457,63 @@ afterwards parsable again from the configuration class of bukkit
 
 // Debugging
 
-        log.debug("ircDeathTpTag",ircDeathTpTag );
-        log.debug("dateFormat",dateFormat );
-        log.debug("timeFormat",timeFormat );
-        log.debug("enableLockette",enableLockette );
-        log.debug("enableLWC",enableLWC );
-        log.debug("tombStoneSign",tombStoneSign[0] );
-        log.debug("tombStoneSign",tombStoneSign[1] );
-        log.debug("tombStoneSign",tombStoneSign[2] );
-        log.debug("tombStoneSign",tombStoneSign[3] );
-        log.debug("allowWordTravel", allowWorldTravel );
-        log.debug("enableDeathtp",enableDeathtp );
-        log.debug("showDeathNotify",showDeathNotify );
-        log.debug("allowDeathtp",allowDeathtp);
-        log.debug("allowDeathLog",allowDeathLog);
-        log.debug("showStreaks",showStreaks);
-        log.debug("multiKillTimeWindow",multiKillTimeWindow );
-        log.debug("chargeItem",chargeItem );
-        log.debug("showDeathSign",showDeathSign );
-        log.debug("deathtpCost",deathtpCost );
-        log.debug("lwcPublic",lwcPublic );
+        log.debug("ircDeathTpTag", ircDeathTpTag);
+        log.debug("dateFormat", dateFormat);
+        log.debug("timeFormat", timeFormat);
+        log.debug("enableLockette", enableLockette);
+        log.debug("enableLWC", enableLWC);
+        log.debug("tombStoneSign", tombStoneSign[0]);
+        log.debug("tombStoneSign", tombStoneSign[1]);
+        log.debug("tombStoneSign", tombStoneSign[2]);
+        log.debug("tombStoneSign", tombStoneSign[3]);
+        log.debug("allowWordTravel", allowWorldTravel);
+        log.debug("enableDeathtp", enableDeathtp);
+        log.debug("showDeathNotify", showDeathNotify);
+        log.debug("allowDeathtp", allowDeathtp);
+        log.debug("allowDeathLog", allowDeathLog);
+        log.debug("showStreaks", showStreaks);
+        log.debug("multiKillTimeWindow", multiKillTimeWindow);
+        log.debug("chargeItem", chargeItem);
+        log.debug("showDeathSign", showDeathSign);
+        log.debug("deathtpCost", deathtpCost);
+        log.debug("lwcPublic", lwcPublic);
         log.debug("enableTombStone", enableTombStone);
-        log.debug("showTombStoneSign",showTombStoneSign );
-        log.debug("allowTombStoneDestroy",allowTombStoneDestroy);
-        log.debug("showTombStoneStatusMessage",showTombStoneStatusMessage);
-        log.debug("saveTombStoneList",saveTombStoneList);
-        log.debug("allowInterfere",allowInterfere);
-        log.debug("voidCheck",voidCheck);
-        log.debug("creeperProtection",creeperProtection );
-        log.debug("destroyOnQuickLoot",destroyOnQuickLoot);
-        log.debug("removeTombStone",removeTombStone);
+        log.debug("showTombStoneSign", showTombStoneSign);
+        log.debug("allowTombStoneDestroy", allowTombStoneDestroy);
+        log.debug("showTombStoneStatusMessage", showTombStoneStatusMessage);
+        log.debug("saveTombStoneList", saveTombStoneList);
+        log.debug("allowInterfere", allowInterfere);
+        log.debug("voidCheck", voidCheck);
+        log.debug("creeperProtection", creeperProtection);
+        log.debug("destroyOnQuickLoot", destroyOnQuickLoot);
+        log.debug("removeTombStone", removeTombStone);
         log.debug("removeTombStoneTime", removeTombStoneTime);
-        log.debug("removeTombStoneWhenEmpty",removeTombStoneWhenEmpty);
-        log.debug("keepTombStoneUntilEmpty",keepTombStoneUntilEmpty);
-        log.debug("removeTombStoneSecurity",removeTombStoneSecurity);
-        log.debug("removeTombStoneSecurityTimeOut",removeTombStoneSecurityTimeOut);
-        log.debug("enableTomb",enableTomb);
-        log.debug("tombCost",tombCost );
-        log.debug("maxTomb",maxTomb);
-        log.debug("useTombAsRespawnPoint",useTombAsRespawnPoint );
+        log.debug("removeTombStoneWhenEmpty", removeTombStoneWhenEmpty);
+        log.debug("keepTombStoneUntilEmpty", keepTombStoneUntilEmpty);
+        log.debug("removeTombStoneSecurity", removeTombStoneSecurity);
+        log.debug("removeTombStoneSecurityTimeOut", removeTombStoneSecurityTimeOut);
+        log.debug("enableTomb", enableTomb);
+        log.debug("tombCost", tombCost);
+        log.debug("maxTomb", maxTomb);
+        log.debug("useTombAsRespawnPoint", useTombAsRespawnPoint);
         log.debug("tombKeyWord", tombKeyWord);
-        log.debug("maxDeaths",maxDeaths );
-        log.debug("resetTombRespawn",resetTombRespawn );
+        log.debug("maxDeaths", maxDeaths);
+        log.debug("resetTombRespawn", resetTombRespawn);
 
 // and now some working...
 
 
-        if (isRemoveTombStoneWhenEmpty())
-        {
+        if (isRemoveTombStoneWhenEmpty()) {
             log.warning("RemoveWhenEmpty is enabled. This is processor intensive!");
         }
-        if (isKeepTombStoneUntilEmpty())
-        {
+        if (isKeepTombStoneUntilEmpty()) {
             log.warning("KeepUntilEmpty is enabled. This is processor intensive!");
         }
 
-        if (getAllowWorldTravel().equalsIgnoreCase("yes")||getAllowWorldTravel().equalsIgnoreCase("no")||getAllowWorldTravel().equalsIgnoreCase("permissions"))
-        {
-            log.info("allow-wordtravel is: "+ getAllowWorldTravel());
+        if (getAllowWorldTravel().equalsIgnoreCase("yes") || getAllowWorldTravel().equalsIgnoreCase("no") || getAllowWorldTravel().equalsIgnoreCase("permissions")) {
+            log.info("allow-wordtravel is: " + getAllowWorldTravel());
         } else {
-            log.warning("Wrong allow-worldtravel value of "+getAllowWorldTravel()+". Defaulting to NO!");
+            log.warning("Wrong allow-worldtravel value of " + getAllowWorldTravel() + ". Defaulting to NO!");
             allowWorldTravel = "no";
         }
 
@@ -471,7 +534,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("#--------- Default Config Variables start here!");
         stream.println();
         stream.println("# Flag for CraftIrc ");
-        stream.println("ircDeathTpTag: '" + ircDeathTpTag+ "'");
+        stream.println("ircDeathTpTag: '" + ircDeathTpTag + "'");
         stream.println();
         stream.println("# Date Format (For formatting, see http://download.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html) ");
         stream.println("dateFormat: '" + dateFormat + "'");
@@ -521,7 +584,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("showStreaks: " + showStreaks);
         stream.println();
         stream.println("# Window of time (in milliseconds) to count kills towards a multikill");
-        stream.println("multiKillTimeWindow: '" + multiKillTimeWindow +"'");
+        stream.println("multiKillTimeWindow: '" + multiKillTimeWindow + "'");
         stream.println();
         stream.println("# Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports ");
         stream.println("chargeItem: '" + chargeItem + "'");
@@ -587,7 +650,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("removeTombStoneSecurity: " + removeTombStoneSecurity);
         stream.println();
         stream.println("# Timeout for Security Removal in seconds");
-        stream.println("removeTombStoneSecurityTimeOut: '" +removeTombStoneSecurityTimeOut +"'");
+        stream.println("removeTombStoneSecurityTimeOut: '" + removeTombStoneSecurityTimeOut + "'");
         stream.println();
         stream.println("#--------- Tomb Features");
         stream.println();
@@ -790,7 +853,6 @@ afterwards parsable again from the configuration class of bukkit
     }
 
 
-
     /**
      * Method to get the Instance of the Class, if the class hasn't been initialized yet it will.
      *
@@ -809,6 +871,7 @@ afterwards parsable again from the configuration class of bukkit
      * hasn't been initialized yet it will.
      *
      * @param configuratonFile name of the config file
+     * @param plugin
      *
      * @return instance of class
      */
@@ -950,8 +1013,8 @@ afterwards parsable again from the configuration class of bukkit
      * If {@link #checkForUpdate} is true we check if there is a new version of the plugin {@link #versionCheck()}
      * and set {@link #configAvailable} to true
      *
-     * @param config references the config file
-     * @param plugin references the plugin for this configuration
+     * @param fileConfiguration
+     * @param plugin            references the plugin for this configuration
      *
      * @see #defaultConfig()
      * @see #loadConfig()
@@ -970,10 +1033,10 @@ afterwards parsable again from the configuration class of bukkit
             defaultConfig();
         }
         config = plugin.getConfig();
-        log.debug("config",config );
+        log.debug("config", config);
 // Loading the Defaults all the time do to issues with bukkit configuration class defaults
         setupCustomDefaultVariables();
-        log.debug("config",config );
+        log.debug("config", config);
         customDefaultConfig();
 // Loading the config from file
         loadConfig();
@@ -1085,7 +1148,7 @@ afterwards parsable again from the configuration class of bukkit
                 folder.mkdirs();
             }
             String pluginPath = plugin.getDataFolder() + System.getProperty("file.separator");
-            PluginDescriptionFile pdfFile = this.plugin.getDescription();
+            PluginDescriptionFile pdfFile = plugin.getDescription();
             pluginName = pdfFile.getName();
             pluginVersion = pdfFile.getVersion();
             stream = new PrintWriter(pluginPath + configFile);

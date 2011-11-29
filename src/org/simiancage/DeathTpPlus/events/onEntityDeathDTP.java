@@ -18,12 +18,15 @@ import org.simiancage.DeathTpPlus.logs.DeathLocationsLogDTP;
 import org.simiancage.DeathTpPlus.logs.DeathLogDTP;
 import org.simiancage.DeathTpPlus.logs.StreakLogDTP;
 import org.simiancage.DeathTpPlus.models.DeathDetailDTP;
-import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.objects.TombDTP;
+import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * PluginName: DeathTpPlus
@@ -39,15 +42,12 @@ public class onEntityDeathDTP {
     private ConfigDTP config;
     private DeathMessagesDTP deathMessages;
     private DeathTpPlus plugin;
-    private EntityListenerDTP entityListenerDTP;
     private TombWorkerDTP tombWorker = TombWorkerDTP.getInstance();
     private TombMessagesDTP tombMessages;
-    private String loghowdied;
     private DeathLocationsLogDTP deathLocationsLog;
     private StreakLogDTP streakLog;
     private DeathLogDTP deathLog;
     private TombStoneHelperDTP tombStoneHelper;
-
 
 
     public onEntityDeathDTP(DeathTpPlus plugin) {
@@ -63,60 +63,29 @@ public class onEntityDeathDTP {
         tombStoneHelper = TombStoneHelperDTP.getInstance();
     }
 
-    public void oEDeaDeathTp (DeathTpPlus plugin, EntityListenerDTP entityListenerDTP, EntityDeathEvent entityDeathEvent) {
+    public void oEDeaDeathTp(DeathTpPlus plugin, EntityListenerDTP entityListenerDTP, EntityDeathEvent entityDeathEvent) {
         log.debug("onEntityDeath DeathTP executing");
         DeathDetailDTP deathDetail = new DeathDetailDTP(entityDeathEvent);
-        log.debug("deathDetail", deathDetail );
+        log.debug("deathDetail", deathDetail);
         deathLocationsLog.setRecord(deathDetail);
 
     }
 
-    public void oEDeaGeneralDeath (DeathTpPlus plugin, EntityListenerDTP entityListenerDTP, EntityDeathEvent entityDeathEvent) {
+    public void oEDeaGeneralDeath(DeathTpPlus plugin, EntityListenerDTP entityListenerDTP, EntityDeathEvent entityDeathEvent) {
         log.debug("onEntityDeath GeneralDeath executing");
         DeathDetailDTP deathDetail = new DeathDetailDTP(entityDeathEvent);
-        /* String eventAnnounce = "";
- Player player = (Player) entityDeathEvent.getEntity();
- String[] howtheydied;
- PlayerDeathEvent playerDeathEvent = null;
- String damagetype = entityListenerDTP.getLastDamageType().get(entityListenerDTP.getLastDamagePlayer().indexOf(player.getName()));
- howtheydied = damagetype.split(":");
 
- // Todo use same approach for TombStone and Tomb than for the rest of the plugin (Mung3r's approach!)
-
- if ((howtheydied[0])==null){
-     howtheydied[0] = "UNKNOWN";
- }
-
- loghowdied = howtheydied[0];
-
- eventAnnounce = getEventMessage(howtheydied[0]).replace("%n", player.getDisplayName());
-
- if (howtheydied[0].matches("PVP")) {
-     if (howtheydied[2].equals("bare hands")) {
-         eventAnnounce = getEventMessage("FISTS".toString() ).replace("%n", player.getDisplayName());
-     }
-
-     loghowdied = howtheydied[2];
-     eventAnnounce = eventAnnounce.replace("%i", howtheydied[1]);
-     eventAnnounce = eventAnnounce.replace("%a", howtheydied[2]);*/
-        if (config.isShowStreaks()){
+        if (config.isShowStreaks()) {
             streakLog.setRecord(deathDetail);
         }
         //write kill to deathlog
         if (config.isAllowDeathLog()) {
             deathLog.setRecord(deathDetail);
         }
-        /*}
-        if (eventAnnounce.equals(""))
-        {
-            eventAnnounce = getEventMessage("UNKNOWN").replace("%n", player.getDisplayName());
-        }
-
-        eventAnnounce = plugin.convertSamloean(eventAnnounce);*/
 
         if (config.isShowDeathNotify()) {
             String deathMessage = DeathMessagesDTP.getDeathMessage(deathDetail);
-            log.debug("deathMessage", deathMessage );
+            log.debug("deathMessage", deathMessage);
             if (entityDeathEvent instanceof PlayerDeathEvent) {
                 ((PlayerDeathEvent) entityDeathEvent).setDeathMessage(deathMessage);
             }
@@ -136,21 +105,21 @@ public class onEntityDeathDTP {
             ShowDeathSign(deathDetail);
         }
 // Tomb part
-        if (config.isEnableTomb())
-        {
+        if (config.isEnableTomb()) {
             UpdateTomb(deathDetail);
         }
 
 // Tombstone part
-        if (config.isEnableTombStone()){
+        if (config.isEnableTombStone()) {
             CreateTombStone(deathDetail);
         }
     }
 
     private void CreateTombStone(DeathDetailDTP deathDetail) {
         Player player = deathDetail.getPlayer();
-        if (!plugin.hasPerm(player, "tombstone.use", false))
+        if (!plugin.hasPerm(player, "tombstone.use", false)) {
             return;
+        }
 
         log.debug(player.getName() + " died.");
         List<ItemStack> deathDrops = deathDetail.getEntityDeathEvent().getDrops();
@@ -194,12 +163,15 @@ public class onEntityDeathDTP {
         int pChestCount = 0;
         int pSignCount = 0;
         for (ItemStack item : deathDrops) {
-            if (item == null)
+            if (item == null) {
                 continue;
-            if (item.getType() == Material.CHEST)
+            }
+            if (item.getType() == Material.CHEST) {
                 pChestCount += item.getAmount();
-            if (item.getType() == Material.SIGN)
+            }
+            if (item.getType() == Material.SIGN) {
                 pSignCount += item.getAmount();
+            }
         }
 
         if (pChestCount == 0
@@ -268,8 +240,9 @@ public class onEntityDeathDTP {
         }
 
 // Don't remove any chests if they get a free one.
-        if (plugin.hasPerm(player, "tombstone.freechest", false))
+        if (plugin.hasPerm(player, "tombstone.freechest", false)) {
             removeChestCount = 0;
+        }
 
 // Check if we have signs enabled, if the player can use signs, and if
 // the player has a sign or gets a free sign
@@ -292,8 +265,9 @@ public class onEntityDeathDTP {
             }
         }
 // Don't remove a sign if they get a free one
-        if (plugin.hasPerm(player, "tombstone.freesign", false))
+        if (plugin.hasPerm(player, "tombstone.freesign", false)) {
             removeSign = 0;
+        }
 
 // Create a TombBlock for this tombstone
         TombStoneBlockDTP tStoneBlockDTP = new TombStoneBlockDTP(sChest.getBlock(),
@@ -303,15 +277,17 @@ public class onEntityDeathDTP {
 // Protect the chest/sign if LWC is installed.
         Boolean prot = false;
         Boolean protLWC = false;
-        if (plugin.hasPerm(player, "tombstone.lwc", false))
+        if (plugin.hasPerm(player, "tombstone.lwc", false)) {
             prot = tombStoneHelper.activateLWC(player, tStoneBlockDTP);
+        }
         tStoneBlockDTP.setLwcEnabled(prot);
-        if (prot)
+        if (prot) {
             protLWC = true;
+        }
 
 // Protect the chest with Lockette if installed, enabled, and
 // unprotected.
-        if (plugin.hasPerm(player, "tombstone.lockette", false)){
+        if (plugin.hasPerm(player, "tombstone.lockette", false)) {
             prot = tombStoneHelper.protectWithLockette(player, tStoneBlockDTP);
         }
 // Add tombstone to list
@@ -319,10 +295,12 @@ public class onEntityDeathDTP {
 
 // Add tombstone blocks to tombStoneBlockList
         tombStoneHelper.putTombStoneBlockList(tStoneBlockDTP.getBlock().getLocation(), tStoneBlockDTP);
-        if (tStoneBlockDTP.getLBlock() != null)
+        if (tStoneBlockDTP.getLBlock() != null) {
             tombStoneHelper.putTombStoneBlockList(tStoneBlockDTP.getLBlock().getLocation(), tStoneBlockDTP);
-        if (tStoneBlockDTP.getSign() != null)
+        }
+        if (tStoneBlockDTP.getSign() != null) {
             tombStoneHelper.putTombStoneBlockList(tStoneBlockDTP.getSign().getLocation(), tStoneBlockDTP);
+        }
 
 // Add tombstone to player lookup list
         ArrayList<TombStoneBlockDTP> pList = tombStoneHelper.getPlayerTombStoneList(player.getName());
@@ -336,10 +314,11 @@ public class onEntityDeathDTP {
 
 // Next get the players inventory using the getDrops() method.
         for (Iterator<ItemStack> iter = deathDrops.listIterator(); iter
-                .hasNext();) {
+                .hasNext(); ) {
             ItemStack item = iter.next();
-            if (item == null)
+            if (item == null) {
                 continue;
+            }
 // Take the chest(s)
             if (removeChestCount > 0 && item.getType() == Material.CHEST) {
                 if (item.getAmount() >= removeChestCount) {
@@ -368,8 +347,9 @@ public class onEntityDeathDTP {
 // Add items to chest if not full.
             if (slot < maxSlot) {
                 if (slot >= sChest.getInventory().getSize()) {
-                    if (lChest == null)
+                    if (lChest == null) {
                         continue;
+                    }
                     lChest.getInventory().setItem(
                             slot % sChest.getInventory().getSize(), item);
                 } else {
@@ -377,14 +357,16 @@ public class onEntityDeathDTP {
                 }
                 iter.remove();
                 slot++;
-            } else if (removeChestCount == 0)
+            } else if (removeChestCount == 0) {
                 break;
+            }
         }
 
 // Tell the player how many items went into chest.
         String msg = "Inventory stored in chest. ";
-        if (deathDrops.size() > 0)
+        if (deathDrops.size() > 0) {
             msg += deathDrops.size() + " items wouldn't fit in chest.";
+        }
         plugin.sendMessage(player, msg);
         log.debug(player.getName() + " " + msg);
         if (prot && protLWC) {
@@ -404,17 +386,19 @@ public class onEntityDeathDTP {
             log.debug(player.getName() + " Chest will break in "
                     + config.getRemoveTombStoneTime() + "s");
         }
-        if (config.isRemoveTombStoneWhenEmpty() && config.isKeepTombStoneUntilEmpty())
+        if (config.isRemoveTombStoneWhenEmpty() && config.isKeepTombStoneUntilEmpty()) {
             plugin.sendMessage(
                     player,
                     "Break override: Your tombstone will break when it is emptied, but will not break until then.");
-        else {
-            if (config.isRemoveTombStoneWhenEmpty())
+        } else {
+            if (config.isRemoveTombStoneWhenEmpty()) {
                 plugin.sendMessage(player,
                         "Break override: Your tombstone will break when it is emptied.");
-            if (config.isKeepTombStoneUntilEmpty())
+            }
+            if (config.isKeepTombStoneUntilEmpty()) {
                 plugin.sendMessage(player,
                         "Break override: Your tombstone will not break until it is empty.");
+            }
         }
     }
 
@@ -423,13 +407,12 @@ public class onEntityDeathDTP {
         if (tombWorker.hasTomb(player.getName())) {
             log.debug("UpdateTomb");
             TombDTP TombDTP = tombWorker.getTomb(player.getName());
-            log.debug("TombDTP",TombDTP );
+            log.debug("TombDTP", TombDTP);
             String signtext;
 
             if (deathDetail.isPVPDeath()) {
                 signtext = deathDetail.getKiller().getName();
-            }
-            else {
+            } else {
                 signtext = deathDetail.getCauseOfDeath().toString().substring(0, 1) + deathDetail.getCauseOfDeath().toString().substring(1).toLowerCase();
             }
 
@@ -457,15 +440,14 @@ public class onEntityDeathDTP {
         BlockState state = signBlock.getState();
 
         if (state instanceof Sign) {
-            Sign sign = (Sign)state;
+            Sign sign = (Sign) state;
             String date = new SimpleDateFormat(config.getDateFormat()).format(new Date());
             String time = new SimpleDateFormat(config.getTimeFormat()).format(new Date());
             String name = deathDetail.getPlayer().getName();
             String reason;
             if (deathDetail.isPVPDeath()) {
                 reason = deathDetail.getKiller().getName();
-            }
-            else {
+            } else {
                 reason = deathDetail.getCauseOfDeath().toString().substring(0, 1) + deathDetail.getCauseOfDeath().toString().substring(1).toLowerCase();
             }
 
@@ -476,44 +458,16 @@ public class onEntityDeathDTP {
                 line = line.replace("{date}", date);
                 line = line.replace("{time}", time);
                 line = line.replace("{reason}", reason);
-                if (line.length() > 15)
+                if (line.length() > 15) {
                     line = line.substring(0, 15);
+                }
                 sign.setLine(x, line);
             }
         }
     }
 
-    private void CraftIRCSendMessage(DeathTpPlus plugin, String eventAnnounce) {
-        String ircAnnounce;
-        ircAnnounce = eventAnnounce.replace("§0", "");
-        ircAnnounce = ircAnnounce.replace("§2", "");
-        ircAnnounce = ircAnnounce.replace("§3", "");
-        ircAnnounce = ircAnnounce.replace("§4", "");
-        ircAnnounce = ircAnnounce.replace("§5", "");
-        ircAnnounce = ircAnnounce.replace("§6", "");
-        ircAnnounce = ircAnnounce.replace("§7", "");
-        ircAnnounce = ircAnnounce.replace("§8", "");
-        ircAnnounce = ircAnnounce.replace("§9", "");
-        ircAnnounce = ircAnnounce.replace("§a", "");
-        ircAnnounce = ircAnnounce.replace("§b", "");
-        ircAnnounce = ircAnnounce.replace("§c", "");
-        ircAnnounce = ircAnnounce.replace("§d", "");
-        ircAnnounce = ircAnnounce.replace("§e", "");
-        ircAnnounce = ircAnnounce.replace("§f", "");
-        plugin.craftircHandle.sendMessageToTag(ircAnnounce, config.getIrcDeathTpTag());
-    }
-
-    private void ShowDeathNotify(EntityDeathEvent entityDeathEvent, String eventAnnounce) {
-        PlayerDeathEvent playerDeathEvent;//plugin.getServer().broadcastMessage(eventAnnounce);
-        if (entityDeathEvent instanceof PlayerDeathEvent) {
-            playerDeathEvent = (PlayerDeathEvent) entityDeathEvent;
-            playerDeathEvent.setDeathMessage(eventAnnounce);
-        }
-    }
-
 
 // Helper Methods
-
 
 
     private void createSign(Block signBlock, DeathDetailDTP deathDetail) {
@@ -523,8 +477,7 @@ public class onEntityDeathDTP {
         String reason;
         if (deathDetail.isPVPDeath()) {
             reason = deathDetail.getKiller().getName();
-        }
-        else {
+        } else {
             reason = deathDetail.getCauseOfDeath().toString().substring(0, 1) + deathDetail.getCauseOfDeath().toString().substring(1).toLowerCase();
         }
 
@@ -538,8 +491,9 @@ public class onEntityDeathDTP {
             line = line.replace("{time}", time);
             line = line.replace("{reason}", reason);
 
-            if (line.length() > 15)
+            if (line.length() > 15) {
                 line = line.substring(0, 15);
+            }
             sign.setLine(x, line);
         }
 
@@ -556,23 +510,27 @@ public class onEntityDeathDTP {
         exp = base.getWorld().getBlockAt(base.getX() - 1, base.getY(),
                 base.getZ());
         if (tombStoneHelper.canReplace(exp.getType())
-                && (config.isAllowInterfere() || !checkChest(exp)))
+                && (config.isAllowInterfere() || !checkChest(exp))) {
             return exp;
+        }
         exp = base.getWorld().getBlockAt(base.getX(), base.getY(),
                 base.getZ() - 1);
         if (tombStoneHelper.canReplace(exp.getType())
-                && (config.isAllowInterfere() || !checkChest(exp)))
+                && (config.isAllowInterfere() || !checkChest(exp))) {
             return exp;
+        }
         exp = base.getWorld().getBlockAt(base.getX() + 1, base.getY(),
                 base.getZ());
         if (tombStoneHelper.canReplace(exp.getType())
-                && (config.isAllowInterfere() || !checkChest(exp)))
+                && (config.isAllowInterfere() || !checkChest(exp))) {
             return exp;
+        }
         exp = base.getWorld().getBlockAt(base.getX(), base.getY(),
                 base.getZ() + 1);
         if (tombStoneHelper.canReplace(exp.getType())
-                && (config.isAllowInterfere() || !checkChest(exp)))
+                && (config.isAllowInterfere() || !checkChest(exp))) {
             return exp;
+        }
         return null;
     }
 
@@ -581,35 +539,28 @@ public class onEntityDeathDTP {
         Block exp;
         exp = base.getWorld().getBlockAt(base.getX() - 1, base.getY(),
                 base.getZ());
-        if (exp.getType() == Material.CHEST)
+        if (exp.getType() == Material.CHEST) {
             return true;
+        }
         exp = base.getWorld().getBlockAt(base.getX(), base.getY(),
                 base.getZ() - 1);
-        if (exp.getType() == Material.CHEST)
+        if (exp.getType() == Material.CHEST) {
             return true;
+        }
         exp = base.getWorld().getBlockAt(base.getX() + 1, base.getY(),
                 base.getZ());
-        if (exp.getType() == Material.CHEST)
+        if (exp.getType() == Material.CHEST) {
             return true;
+        }
         exp = base.getWorld().getBlockAt(base.getX(), base.getY(),
                 base.getZ() + 1);
-        if (exp.getType() == Material.CHEST)
+        if (exp.getType() == Material.CHEST) {
             return true;
+        }
         return false;
     }
 
 
-    String getEventMessage (String deathType){
-        int messageindex = 0;
-        log.debug("deathType",deathType );
-        DeathMessagesDTP.DeathEventType eventType = DeathMessagesDTP.DeathEventType.valueOf(deathType);
-        if (deathMessages.getDeathMessages().get(eventType).size() > 1)
-        {
-            Random rand = new Random();
-            messageindex = rand.nextInt(deathMessages.getDeathMessages().get(eventType).size());
-        }
-        return deathMessages.getDeathMessages().get(eventType).get(messageindex);
-    }
 }
 
 

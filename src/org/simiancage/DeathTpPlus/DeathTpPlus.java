@@ -52,7 +52,7 @@ import java.util.HashMap;
 //importing Lockette
 // importing LWC
 
-public class DeathTpPlus extends JavaPlugin{
+public class DeathTpPlus extends JavaPlugin {
     // listeners
 
     private EntityListenerDTP entityListener;
@@ -97,14 +97,13 @@ public class DeathTpPlus extends JavaPlugin{
     public static CraftIRC craftircHandle = null;
 
     public void onDisable() {
-        for (World w : getServer().getWorlds())
-        {
+        for (World w : getServer().getWorlds()) {
             tombStoneHelper.saveTombStoneList(w.getName());
         }
-        if (config.isEnableTomb()){
+        if (config.isEnableTomb()) {
             TombWorkerDTP.getInstance().save();
             server.getScheduler().cancelTasks(this);
-           }
+        }
         log.disableMsg();
     }
 
@@ -146,16 +145,14 @@ public class DeathTpPlus extends JavaPlugin{
             pm.registerEvent(Type.CUSTOM_EVENT, streakListener, Priority.Normal, this);
         }
         //register entityListener for Enable Tombstone or Tomb
-        if (config.isEnableTombStone() || config.isEnableTomb())
-        {
+        if (config.isEnableTombStone() || config.isEnableTomb()) {
             pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Highest, this);
             lwcPlugin = (LWCPlugin) checkPlugin("LWC");
             LockettePlugin = (Lockette) checkPlugin("Lockette");
         }
-         // register entityListener for Enable Tomb
-        if (config.isEnableTomb())
-        {
+        // register entityListener for Enable Tomb
+        if (config.isEnableTomb()) {
             pm.registerEvent(Event.Type.SIGN_CHANGE, blockListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.PLAYER_RESPAWN, playerListener, Priority.Highest, this);
@@ -179,22 +176,20 @@ public class DeathTpPlus extends JavaPlugin{
             try {
                 craftircHandle = (CraftIRC) checkCraftIRC;
                 log.info("CraftIRC Support Enabled.");
-            }
-            catch (ClassCastException ex) {
+            } catch (ClassCastException ex) {
+                log.warning("Problems with getting CraftIRC", ex);
             }
         }
 
         // reading in Tomblist
 
-        for (World w : getServer().getWorlds())
-        {
+        for (World w : getServer().getWorlds()) {
             tombStoneHelper.loadTombStoneList(w.getName());
         }
 
         // starting Removal Thread
 
-        if (config.isRemoveTombStoneSecurity() || config.isRemoveTombStone())
-        {
+        if (config.isRemoveTombStoneSecurity() || config.isRemoveTombStone()) {
             getServer().getScheduler().scheduleSyncRepeatingTask(this,
                     new TombStoneWorkerDTP(plugin), 0L, 100L);
         }
@@ -215,7 +210,7 @@ public class DeathTpPlus extends JavaPlugin{
         try {
             file.createNewFile();
         } catch (IOException e) {
-            log.warning("Cannot create file "+file.getPath()+"/"+file.getName());
+            log.warning("Cannot create file " + file.getPath() + "/" + file.getName());
         }
     }
 
@@ -232,12 +227,10 @@ public class DeathTpPlus extends JavaPlugin{
         if (plugin != null && plugin.isEnabled()) {
             log.info("Found " + plugin.getDescription().getName()
                     + " (v" + plugin.getDescription().getVersion() + ")");
-            if (config.isEnableLockette())
-            {
+            if (config.isEnableLockette()) {
                 log.info("configured to use Lockette");
             }
-            if (config.isEnableLWC())
-            {
+            if (config.isEnableLWC()) {
                 log.info("configured to use LWC");
             }
             return plugin;
@@ -269,7 +262,7 @@ public class DeathTpPlus extends JavaPlugin{
         return worldTravel;
     }
 
-    public static DeathTpPlus getPlugin(){
+    public static DeathTpPlus getPlugin() {
         return instance;
     }
 
@@ -334,7 +327,6 @@ public class DeathTpPlus extends JavaPlugin{
     }
 
 
-
     /*
     * Check whether the player has the given permissions.
     */
@@ -343,14 +335,16 @@ public class DeathTpPlus extends JavaPlugin{
         boolean perm = sender.hasPermission("deathtpplus." + label);
 
         if (this.console(sender)) {
-            if (consoleUse)
+            if (consoleUse) {
                 return true;
+            }
 
             log.warning("This command cannot be used in console.");
             return false;
         } else {
-            if (sender.isOp())
+            if (sender.isOp()) {
                 return true;
+            }
 
             return perm;
         }
@@ -361,18 +355,18 @@ public class DeathTpPlus extends JavaPlugin{
     }
 
     public void sendMessage(Player p, String msg) {
-        if (!config.isShowTombStoneStatusMessage())
+        if (!config.isShowTombStoneStatusMessage()) {
             return;
+        }
         p.sendMessage(msg);
     }
 
     public void sendMessage(CommandSender p, String msg) {
-        if (!config.isShowTombStoneStatusMessage())
+        if (!config.isShowTombStoneStatusMessage()) {
             return;
+        }
         p.sendMessage(msg);
     }
-
-
 
 
 }

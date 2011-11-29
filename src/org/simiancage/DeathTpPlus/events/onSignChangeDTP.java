@@ -30,19 +30,20 @@ public class onSignChangeDTP {
         this.tombWorkerDTP = TombWorkerDTP.getInstance();
     }
 
-    public void oSCTomb (DeathTpPlus plugin, SignChangeEvent event){
+    public void oSCTomb(SignChangeEvent event) {
         log.debug("onSignChange Tomb executing");
         String line0 = event.getLine(0);
         Player p = event.getPlayer();
         boolean admin = false;
         if (line0.indexOf(config.getTombKeyWord()) == 0) {
-            if (!event.getLine(1).isEmpty() && p.hasPermission("deathtpplus.admin.tomb"))
+            if (!event.getLine(1).isEmpty() && p.hasPermission("deathtpplus.admin.tomb")) {
                 admin = true;
+            }
 // Sign check
             TombDTP TombDTP = null;
             String deadName = event.getLine(1);
             if (admin) {
-                if ((TombDTP = tombWorkerDTP.getTomb(deadName)) == null)
+                if ((TombDTP = tombWorkerDTP.getTomb(deadName)) == null) {
                     try {
                         deadName = p.getServer().getPlayer(event.getLine(1)).getName();
                     } catch (Exception e2) {
@@ -50,20 +51,23 @@ public class onSignChangeDTP {
                                 + "was not found.(The player HAS to be CONNECTED)");
                         return;
                     }
-                else
+                } else {
                     deadName = TombDTP.getPlayer();
-            } else
+                }
+            } else {
                 deadName = event.getPlayer().getName();
-            log.debug("deadName",deadName );
-            if (TombDTP != null)
+            }
+            log.debug("deadName", deadName);
+            if (TombDTP != null) {
                 TombDTP.checkSigns();
-            else if (tombWorkerDTP.hasTomb(deadName)) {
+            } else if (tombWorkerDTP.hasTomb(deadName)) {
                 TombDTP = tombWorkerDTP.getTomb(deadName);
                 TombDTP.checkSigns();
             }
             int nbSign = 0;
-            if (TombDTP != null)
+            if (TombDTP != null) {
                 nbSign = TombDTP.getNbSign();
+            }
 // max check
             int maxTombs = config.getMaxTomb();
             if (!admin && maxTombs != 0 && (nbSign + 1) > maxTombs) {
@@ -91,11 +95,12 @@ public class onSignChangeDTP {
                 TombDTP.updateNewBlock();
                 if (config.isUseTombAsRespawnPoint()) {
                     TombDTP.setRespawn(p.getLocation());
-                    if (admin)
+                    if (admin) {
                         p.sendMessage(tombWorkerDTP.graveDigger + " When " + deadName
                                 + " die, he/she will respawn here.");
-                    else
+                    } else {
                         p.sendMessage(tombWorkerDTP.graveDigger + " When you die you'll respawn here.");
+                    }
                 }
             } catch (IllegalArgumentException e2) {
                 p.sendMessage(tombWorkerDTP.graveDigger

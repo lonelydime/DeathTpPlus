@@ -12,26 +12,26 @@ package org.simiancage.DeathTpPlus.workers;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.helpers.TombSaveSystemDTP;
 import org.simiancage.DeathTpPlus.objects.TombDTP;
-import org.simiancage.DeathTpPlus.DeathTpPlus;
 
 import java.util.HashMap;
 
 
 public class TombWorkerDTP {
     private static TombWorkerDTP instance;
-    protected HashMap<String, TombDTP> tombs = new HashMap<String, TombDTP>();
-    protected static DeathTpPlus pluginInstance;
-    protected TombSaveSystemDTP saveSys;
+    private HashMap<String, TombDTP> tombs = new HashMap<String, TombDTP>();
+    private static DeathTpPlus pluginInstance;
+    private TombSaveSystemDTP saveSys;
     public String graveDigger = "[" + ChatColor.GOLD + "Gravedigger" + ChatColor.WHITE + "] ";
     private static LoggerDTP log;
     private static ConfigDTP config;
 
     public static TombWorkerDTP getInstance() {
-        if (instance == null){
+        if (instance == null) {
             instance = new TombWorkerDTP();
             log = LoggerDTP.getLogger();
             config = ConfigDTP.getInstance();
@@ -44,12 +44,10 @@ public class TombWorkerDTP {
     }
 
     /**
-     * @param pluginInstance
-     * the pluginInstance to set
+     * @param pluginInstance the pluginInstance to set
      */
 
     //ToDo check how to use this together with log formatter
-
     public void setPluginInstance(DeathTpPlus pluginInstance) {
         this.pluginInstance = pluginInstance;
         String path = pluginInstance.getDataFolder().getPath();
@@ -87,13 +85,15 @@ public class TombWorkerDTP {
      * Return the number of tomb the player has.
      *
      * @param player
+     *
      * @return
      */
     public int getNbTomb(String player) {
-        if (hasTomb(player))
+        if (hasTomb(player)) {
             return tombs.get(player).getNbSign();
-        else
+        } else {
             return 0;
+        }
     }
 
     /**
@@ -101,21 +101,22 @@ public class TombWorkerDTP {
      *
      * @param player
      * @param action
+     *
      * @return
      */
     public boolean economyCheck(Player player, String action) {
-        double tombCost =  Double.parseDouble(config.getTombCost());
+        double tombCost = Double.parseDouble(config.getTombCost());
         if ((tombCost > 0) && !player.hasPermission("deathtpplus.tomb.free")) {
 
 
-            if (pluginInstance.isEconomyActive()){
-                if (pluginInstance.getEconomy().getBalance(player.getName())> tombCost) {
+            if (pluginInstance.isEconomyActive()) {
+                if (pluginInstance.getEconomy().getBalance(player.getName()) > tombCost) {
                     pluginInstance.getEconomy().withdrawPlayer(player.getName(), tombCost);
 
-                    player.sendMessage(graveDigger + tombCost + ChatColor.DARK_GRAY +" used to paying me.");
+                    player.sendMessage(graveDigger + tombCost + ChatColor.DARK_GRAY + " used to paying me.");
                     return true;
                 } else {
-                    player.sendMessage(graveDigger + ChatColor.RED + "You don't have  "+tombCost+" to pay me.");
+                    player.sendMessage(graveDigger + ChatColor.RED + "You don't have  " + tombCost + " to pay me.");
                     return false;
                 }
             }
@@ -131,6 +132,7 @@ public class TombWorkerDTP {
         return config;
     }
 */
+
     /**
      * @return the pluginInstance
      */
@@ -143,6 +145,7 @@ public class TombWorkerDTP {
      * Check if the player have already a tomb
      *
      * @param player
+     *
      * @return
      */
     public boolean hasTomb(String player) {
@@ -169,16 +172,16 @@ public class TombWorkerDTP {
     }
 
     /**
-     *
      * @param player
+     *
      * @return the tombs of the player
      */
     public TombDTP getTomb(final String player) {
         TombDTP t = null;
 
-        if ((t = tombs.get(player)) != null)
+        if ((t = tombs.get(player)) != null) {
             return t;
-        else {
+        } else {
             String found = null;
             String lowerName = player.toLowerCase();
             int delta = Integer.MAX_VALUE;
@@ -189,22 +192,25 @@ public class TombWorkerDTP {
                         found = p;
                         delta = curDelta;
                     }
-                    if (curDelta == 0)
+                    if (curDelta == 0) {
                         break;
+                    }
                 }
             }
-            if (found != null)
+            if (found != null) {
                 return tombs.get(found);
-            else
+            } else {
                 return null;
+            }
         }
     }
 
     public TombDTP getTomb(Block sign) {
         for (String name : tombs.keySet()) {
             TombDTP result;
-            if ((result = tombs.get(name)).hasSign(sign))
+            if ((result = tombs.get(name)).hasSign(sign)) {
                 return result;
+            }
         }
         return null;
     }
