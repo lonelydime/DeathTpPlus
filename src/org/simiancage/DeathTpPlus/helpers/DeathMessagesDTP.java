@@ -20,10 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 /**
@@ -948,6 +945,33 @@ afterwards parsable again from the configuration class of bukkit
 
 // than the getters
 
+    /**
+     * Parse the Authors Array into a readable String with ',' and 'and'.
+     * taken from MultiVerse-core https://github.com/Multiverse/Multiverse-Core
+     *
+     * @return
+     */
+    public String getAuthors() {
+        String authors = "";
+        ArrayList<String> auths = plugin.getDescription().getAuthors();
+        if (auths.size() == 0) {
+            return "";
+        }
+
+        if (auths.size() == 1) {
+            return auths.get(0);
+        }
+
+        for (int i = 0; i < auths.size(); i++) {
+            if (i == plugin.getDescription().getAuthors().size() - 1) {
+                authors += " and " + plugin.getDescription().getAuthors().get(i);
+            } else {
+                authors += ", " + plugin.getDescription().getAuthors().get(i);
+            }
+        }
+        return authors.substring(2);
+    }
+
 
     /**
      * Method to return the Config File Version
@@ -1104,10 +1128,11 @@ afterwards parsable again from the configuration class of bukkit
             }
             String pluginPath = plugin.getDataFolder() + System.getProperty("file.separator");
             PluginDescriptionFile pdfFile = this.plugin.getDescription();
+            String authors = getAuthors();
             pluginName = pdfFile.getName();
             stream = new PrintWriter(pluginPath + deathMessageFileName);
 //Let's write our deathMessageFileConfig ;)
-            stream.println("# " + pluginName + " " + pdfFile.getVersion() + " by " + pdfFile.getAuthors().toString());
+            stream.println("# " + pluginName + " " + pdfFile.getVersion() + " by " + authors);
             stream.println("#");
             stream.println("# Deathmessage File for " + pluginName + ".");
             stream.println("#");

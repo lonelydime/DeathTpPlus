@@ -16,6 +16,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 
 /**
@@ -1000,6 +1001,33 @@ afterwards parsable again from the configuration class of bukkit
         return differentPluginAvailable;
     }
 
+    /**
+     * Parse the Authors Array into a readable String with ',' and 'and'.
+     * taken from MultiVerse-core https://github.com/Multiverse/Multiverse-Core
+     *
+     * @return
+     */
+    public String getAuthors() {
+        String authors = "";
+        ArrayList<String> auths = plugin.getDescription().getAuthors();
+        if (auths.size() == 0) {
+            return "";
+        }
+
+        if (auths.size() == 1) {
+            return auths.get(0);
+        }
+
+        for (int i = 0; i < auths.size(); i++) {
+            if (i == plugin.getDescription().getAuthors().size() - 1) {
+                authors += " and " + plugin.getDescription().getAuthors().get(i);
+            } else {
+                authors += ", " + plugin.getDescription().getAuthors().get(i);
+            }
+        }
+        return authors.substring(2);
+    }
+
     // And the rest
 
 // Setting up the config
@@ -1149,11 +1177,12 @@ afterwards parsable again from the configuration class of bukkit
             }
             String pluginPath = plugin.getDataFolder() + System.getProperty("file.separator");
             PluginDescriptionFile pdfFile = plugin.getDescription();
+            String authors = getAuthors();
             pluginName = pdfFile.getName();
             pluginVersion = pdfFile.getVersion();
             stream = new PrintWriter(pluginPath + configFile);
 //Let's write our config ;)
-            stream.println("# " + pluginName + " " + pdfFile.getVersion() + " by " + pdfFile.getAuthors().toString());
+            stream.println("# " + pluginName + " " + pdfFile.getVersion() + " by " + authors);
             stream.println("#");
             stream.println("# Configuration File for " + pluginName + ".");
             stream.println("#");
