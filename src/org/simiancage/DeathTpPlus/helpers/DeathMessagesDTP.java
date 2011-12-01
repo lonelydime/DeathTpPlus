@@ -617,9 +617,9 @@ afterwards parsable again from the configuration class of bukkit
         defaultSilverfishMessages = new String[]{
                 "&5%n&7 was killed by a silverfish!",
                 "&5%n&7 found something hidden below a rock",
-                "&5%n&7 You can\'t stuff that many fish into your mouth!",
+                "&5%n&7 You can''t stuff that many fish into your mouth!",
                 "&5%n&7 activated a silverfish trap",
-                "&54%n's&7 last words: Oh god they're coming out of the walls!"
+                "&54%n''s&7 last words  ''Oh god they''re coming out of the walls!''"
         };
         deathMessages.put(DeathEventType.SILVERFISH, Arrays.asList(defaultSilverfishMessages));
         /** Creating the default PVP tamed messages*/
@@ -632,7 +632,7 @@ afterwards parsable again from the configuration class of bukkit
         defaultGiantMessages = new String[]{
                 "&5%n&7 was stomped by a giant!",
                 "&5%n&7 was flattened by a giant!",
-                "&5%n&7 shouldn't have climbed the bean stalk."
+                "&5%n&7 shouldn''t have climbed the bean stalk."
         };
         deathMessages.put(DeathEventType.GIANT, Arrays.asList(defaultGiantMessages));
 
@@ -679,6 +679,7 @@ afterwards parsable again from the configuration class of bukkit
         // Workaround for NPE as Monster isn't defined in the deathmessages
         deathMessages.put(DeathEventType.MONSTER, Arrays.asList(defaultUnknownMessages));
         // Normal Death Messages
+        //ToDo... this doesn't work!!!!!!
         deathMessages.put(DeathEventType.FALL, deathMessageFileConfig.getList("fall", Arrays.asList(defaultFallMessages)));
         deathMessages.put(DeathEventType.DROWNING, deathMessageFileConfig.getList("drowning", Arrays.asList(defaultDrowningMessages)));
         deathMessages.put(DeathEventType.FIRE, deathMessageFileConfig.getList("fire", Arrays.asList(defaultFireMessages)));
@@ -717,7 +718,7 @@ afterwards parsable again from the configuration class of bukkit
 
         log.debug("killStreakMessages", killStreakMessages);
         log.debug("deathStreakMessages", deathStreakMessages);
-        log.debug("mulitKillMessages", multiKillMessages);
+        log.debug("multiKillMessages", multiKillMessages);
         log.debug("deathMessages", deathMessages);
 
     }
@@ -1009,7 +1010,9 @@ afterwards parsable again from the configuration class of bukkit
     public void setupDeathMessages(Plugin plugin) {
 
         this.deathMessageFileConfig = new YamlConfiguration();
+        log.debug("deathMessageFileConfig", deathMessageFileConfig);
         this.plugin = plugin;
+        log.debug("deathMessageFileName", deathMessageFileName);
 // Checking if deathMessageFileConfig file exists, if not create it
         if (!(new File(plugin.getDataFolder(), deathMessageFileName)).exists()) {
             log.info("Creating default deathmessages file");
@@ -1017,17 +1020,15 @@ afterwards parsable again from the configuration class of bukkit
         }
 
         deathMessageFile = new File(plugin.getDataFolder(), deathMessageFileName);
+        log.debug("deathMessageFile", deathMessageFile);
         try {
             deathMessageFileConfig.load(deathMessageFile);
         } catch (IOException e) {
-            log.debug("Error loading deathmessages file", e);
+            log.warning("Error loading deathmessages file", e);
         } catch (InvalidConfigurationException e) {
-            log.debug("Error in the deathmessages configuration", e);
+            log.warning("Error in the deathmessages configuration", e);
         }
 
-        // Loading the Defaults all the time do to issues with bukkit configuration class defaults
-        setupCustomDefaultVariables();
-        customDefaultConfig();
 
 // Loading the deathMessageFileConfig from file
         loadDeathMessages();
@@ -1066,9 +1067,10 @@ afterwards parsable again from the configuration class of bukkit
         }
         deathMessageFile = new File(plugin.getDataFolder(), deathMessageFileName);
         log.debug("deathMessageFile", deathMessageFile);
-        log.debug("deathMessageFileConfig", deathMessageFileConfig);
+
         try {
             deathMessageFileConfig.load(deathMessageFile);
+            log.debug("deathMessageFileConfig", deathMessageFileConfig);
         } catch (IOException e) {
             log.debug("Error loading deathmessages file", e);
         } catch (InvalidConfigurationException e) {

@@ -59,11 +59,11 @@ permissions:
     deathtpplus.*:
         description: Gives access to all DeathTpPlus commands
         children:
-            deathtpplus.deathtp: true
-            deathtpplus.streak: true
-            deathtpplus.deaths: true
-            deathtpplus.kills: true
-            deathtpplus.worldtravel: true
+            deathtpplus.deathtp.deathtp: true
+            deathtpplus.deathtp.streak: true
+            deathtpplus.deathtp.deaths: true
+            deathtpplus.deathtp.kills: true
+            deathtpplus.deathtp.worldtravel: true
             deathtpplus.admin: true
             deathtpplus.admin.list: true
             deathtpplus.admin.find: true
@@ -85,6 +85,14 @@ permissions:
             deathtpplus.tombstone.time: true
             deathtpplus.tomb.create: true
             deathtpplus.tomb.free: true
+    deathtpplus.deathtp.*:
+        description: Gives access to default DeathTpPlus commands
+        children:
+            deathtpplus.deathtp.deathtp: true
+            deathtpplus.deathtp.streak: true
+            deathtpplus.deathtp.deaths: true
+            deathtpplus.deathtp.kills: true
+            deathtpplus.deathtp.worldtravel: true
     deathtpplus.admin.*:
         description: Gives access to all DeathTpPlus admin commands
         children:
@@ -94,7 +102,7 @@ permissions:
             deathtpplus.admin.remove: true
             deathtpplus.admin.time: true
             deathtpplus.admin.version: true
-            deathtpplus.admin.tombStoneDTP: true
+            deathtpplus.admin.tombStone: true
     deathtpplus.tombstone.*:
         description: Gives access to default DeathTpPlus tombstone commands
         children:
@@ -112,19 +120,19 @@ permissions:
             deathtpplus.tomb.create: true
             deathtpplus.tomb.free: true
 
-    deathtpplus.deathtp:
+    deathtpplus.deathtp.deathtp:
         description: Gives access to the deathtp command
         default: op
-    deathtpplus.streak:
+    deathtpplus.deathtp.streak:
         description: Gives access to the streak command
         default: true
-    deathtpplus.deaths:
+    deathtpplus.deathtp.deaths:
         description: Gives access to the deaths command
         default: true
-    deathtpplus.kills:
+    deathtpplus.deathtp.kills:
         description: Gives access to the kills command
         default: true
-    deathtpplus.worldtravel:
+    deathtpplus.deathtp.worldtravel:
         description: Allows teleporting / respawn to another worlds death location if allowWordTravel is "permissions"
         default: op
     deathtpplus.admin:

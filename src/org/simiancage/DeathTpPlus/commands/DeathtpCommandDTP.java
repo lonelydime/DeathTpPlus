@@ -45,7 +45,13 @@ public class DeathtpCommandDTP implements CommandExecutor {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            canUseCommand = (player.hasPermission("deathtpplus.deathtp") || config.isAllowDeathtp());
+            // ToDo remove permission compability in 3.2
+            canUseCommand = (player.hasPermission("deathtpplus.deathtp") || player.hasPermission("deathtpplus.deathtp.deathtp") || config.isAllowDeathtp());
+
+            if (player.hasPermission("deathtpplus.deathtp")) {
+                log.warning("old permission found: deathtpplus.deathtp for player " + player.getName());
+                log.warning("please use: deathtpplus.deathtp.deathtp");
+            }
 
             if (canUseCommand) {
                 log.debug("canUseCommand", canUseCommand);

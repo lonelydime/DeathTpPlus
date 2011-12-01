@@ -438,7 +438,7 @@ afterwards parsable again from the configuration class of bukkit
 
     private void loadCustomTombMessages() {
 
-
+        //ToDo... this doesn't work!!!!!!
         deathevents.put("FALL", tombMessages.getList("fall", Arrays.asList(defaultFallMessages)));
         deathevents.put("DROWNING", tombMessages.getList("drowning", Arrays.asList(defaultDrowningMessages)));
         deathevents.put("FIRE", tombMessages.getList("fire", Arrays.asList(defaultFireMessages)));
@@ -717,9 +717,9 @@ afterwards parsable again from the configuration class of bukkit
         try {
             tombMessages.load(tombMessageFile);
         } catch (IOException e) {
-            log.debug("Error loading tombmessages file", e);
+            log.warning("Error loading tombmessages file", e);
         } catch (InvalidConfigurationException e) {
-            log.debug("Error in the tombmessages configuration", e);
+            log.warning("Error in the tombmessages configuration", e);
         }
         tombMessages.addDefault("tombMessagesVer", tombMessagesVer);
         customDefaultConfig();

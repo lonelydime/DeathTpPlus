@@ -29,6 +29,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -197,6 +198,16 @@ public class DeathTpPlus extends JavaPlugin {
         // registering commands
 
         this.addCommands();
+
+        // ToDo remove permission compability in 3.2
+        Permission deathtp = new Permission("deathtp");
+        Permission kills = new Permission("kills");
+        Permission streak = new Permission("streak");
+        Permission deaths = new Permission("deaths");
+        this.getServer().getPluginManager().addPermission(deathtp);
+        this.getServer().getPluginManager().addPermission(kills);
+        this.getServer().getPluginManager().addPermission(streak);
+        this.getServer().getPluginManager().addPermission(deaths);
 
         // print success
         log.enableMsg();

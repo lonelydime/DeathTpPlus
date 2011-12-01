@@ -38,13 +38,17 @@ public class StreakCommandDTP implements CommandExecutor {
         log.debug("streak command executing");
         boolean canUseCommand = false;
         if (sender instanceof Player) {
-            Player player = (Player)sender;
-            canUseCommand =  player.hasPermission("deathtpplus.streak");
-
+            Player player = (Player) sender;
+            // ToDo remove permission compability in 3.2
+            canUseCommand = player.hasPermission("deathtpplus.streak") || player.hasPermission("deathtpplus.deathtp.streak");
+            if (player.hasPermission("deathtpplus.streak")) {
+                log.warning("old permission found: deathtpplus.streak for player " + player.getName());
+                log.warning("please use: deathtpplus.deathtp.streak");
+            }
         }
 
         if (canUseCommand) {
-            if (config.isShowStreaks() ) {
+            if (config.isShowStreaks()) {
 
                 StreakRecordDTP streak = plugin.getStreakLog().getRecord(args.length > 0 ? args[0] : ((Player) sender).getName());
 
@@ -52,21 +56,17 @@ public class StreakCommandDTP implements CommandExecutor {
                     if (streak.getCount() < 0) {
                         if (args.length > 0) {
                             sender.sendMessage(String.format("%s is on a %d death streak.", args[0], streak.getCount() * -1));
-                        }
-                        else {
+                        } else {
                             sender.sendMessage(String.format("You are on a %d death streak.", streak.getCount() * -1));
                         }
-                    }
-                    else {
+                    } else {
                         if (args.length > 0) {
                             sender.sendMessage(String.format("%s is on a %d kill streak.", args[0], streak.getCount()));
-                        }
-                        else {
+                        } else {
                             sender.sendMessage(String.format("You are on a %d kill streak.", streak.getCount()));
                         }
                     }
-                }
-                else {
+                } else {
                     sender.sendMessage("No record found.");
                 }
 
