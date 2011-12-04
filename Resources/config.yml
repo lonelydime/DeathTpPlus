@@ -7,7 +7,7 @@
 #------- Default Configuration
 
 # Configuration Version
-configVer: '2.99'
+configVer: '3.0'
 
 # Error Log Enabled
 # Enable logging to server console
