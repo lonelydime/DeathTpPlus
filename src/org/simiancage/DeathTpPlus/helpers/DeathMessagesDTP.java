@@ -555,20 +555,20 @@ afterwards parsable again from the configuration class of bukkit
         /** Creating the default Wolfs messages*/
         defaultWolfMessages = new String[]{
                 "&5%n&7 became a wolf''s lunch.",
-                "&5%n&7 couldn't howl with the wolfs."
+                "&5%n&7 couldn''t howl with the wolfs."
         };
         deathMessages.put(DeathEventType.WOLF, Arrays.asList(defaultWolfMessages));
         /** Creating the default lightning messages*/
         defaultLightningMessages = new String[]{
                 "&5%n&7 was struck down by Zeus'' bolt.",
                 "&5%n&7 was electrecuted.",
-                "&5%n&7 figured out that it wasn't a pig's nose in the wall."
+                "&5%n&7 figured out that it wasn''t a pig''s nose in the wall."
         };
         /** Creating the default lightning messages*/
         deathMessages.put(DeathEventType.LIGHTNING, Arrays.asList(defaultLightningMessages));
         defaultSuicideMessages = new String[]{
                 "&5%n&7 took matters into his own hands.",
-                "&5%n&7 isn't causing NPE's anymore."
+                "&5%n&7 isn''t causing NPE''s anymore."
         };
         /** Creating the default suicide messages*/
         deathMessages.put(DeathEventType.SUICIDE, Arrays.asList(defaultSuicideMessages));
@@ -756,6 +756,9 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# &e Yellow");
         stream.println("# &f White");
         stream.println("#");
+        stream.println("# Make sure you enclose the messages in ' and that you use double '' if you want");
+        stream.println("# to have a ' inside the message. Otherwise you will get errors!");
+        stream.println("#");
         stream.println();
         stream.println("#--------- Streaks");
         stream.println();
@@ -763,21 +766,21 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# format <#of kills>: <text to display> %n: = player getting the message (in this case, the one on a killStreakMessages).");
         stream.println("killstreak:");
         for (String msg : killStreakMessages) {
-            stream.println("    -'" + msg + "'");
+            stream.println("    - '" + msg + "'");
         }
         stream.println("#");
         stream.println("# Death Streak Messages");
         stream.println("# format <#of kills>: <text to display> %n: = player getting the message (in this case, the one on a deathStreakMessages)");
         stream.println("deathstreak:");
         for (String msg : deathStreakMessages) {
-            stream.println("    -'" + msg + "'");
+            stream.println("    - '" + msg + "'");
         }
         stream.println("#");
         stream.println("# Multi Killl Messages");
         stream.println("# format <#of kills>: <text to display> ");
         stream.println("multikill:");
         for (String msg : multiKillMessages) {
-            stream.println("    -'" + msg + "'");
+            stream.println("    - '" + msg + "'");
         }
         stream.println("#");
         stream.println("#--------- Deathmessages");
@@ -793,7 +796,7 @@ afterwards parsable again from the configuration class of bukkit
                 stream.println(mapTypeToNodeName(deathEventType) + ":");
 
                 for (String msg : deathMessages.get(deathEventType)) {
-                    stream.println("    -'" + msg + "'");
+                    stream.println("    - '" + msg + "'");
                 }
             }
         }

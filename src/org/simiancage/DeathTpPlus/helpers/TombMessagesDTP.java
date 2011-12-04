@@ -335,7 +335,7 @@ afterwards parsable again from the configuration class of bukkit
         /** Creating the default suffocation messages*/
         defaultSuffocationMessages = new String[]{
                 "Suffocated",
-                "Sand\'s breath",
+                "Sand''s breath",
                 "Sand worm"
         };
         deathevents.put("SUFFOCATION", Arrays.asList(defaultSuffocationMessages));
@@ -495,12 +495,15 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# don't exceed 18 characters and it must be UTF-8");
         stream.println("# %a name of player who attacked in pvp deaths");
         stream.println("#");
+        stream.println("# Make sure you enclose the messages in ' and that you use double '' if you want");
+        stream.println("# to have a ' inside the message. Otherwise you will get errors!");
+        stream.println("#");
 
         List<String> events = new ArrayList<String>(deathevents.keySet());
         for (String event : events) {
             stream.println(event.toLowerCase() + ":");
             for (String msg : deathevents.get(event)) {
-                stream.println("    -'" + msg + "'");
+                stream.println("    - '" + msg + "'");
             }
         }
 
