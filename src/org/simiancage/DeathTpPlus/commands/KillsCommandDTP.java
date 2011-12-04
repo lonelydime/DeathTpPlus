@@ -31,12 +31,12 @@ public class KillsCommandDTP implements CommandExecutor {
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
         deathLog = plugin.getDeathLog();
-        log.info("dtpfind command registered");
+        log.info("kills command registered");
 
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        log.debug("dtpfind command executing");
+        log.debug("kills command executing");
         boolean canUseCommand = false;
         if (sender instanceof Player) {
             Player player = (Player) sender;

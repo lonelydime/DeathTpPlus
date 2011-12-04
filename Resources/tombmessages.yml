@@ -1,4 +1,4 @@
-# DeathTpPlus 2.99 by [Don Redhorse]
+# DeathTpPlus 3.0 by Don Redhorse and mung3r
 #
 # Tombmessage File for DeathTpPlus.
 #
@@ -13,89 +13,95 @@ tombMessagesVer: '3.0'
 # don't exceed 18 characters and it must be UTF-8
 # %a name of player who attacked in pvp deaths
 #
+# Make sure you enclose the messages in ' and that you use double '' if you want
+# to have a ' inside the message. Otherwise you will get errors!
+#
 creeper:
-    -'Ksss BOUM'
-    -'CREEEEPPPPERRR'
-    -'Creeper Lover'
+    - 'Ksss BOUM'
+    - 'CREEEEPPPPERRR'
+    - 'Creeper Lover'
 pvp:
-    -'Killed by %a'
+    - 'Killed by %a'
 lava:
-    -'Swim in lava'
-    -'Now obsidian'
+    - 'Swim in lava'
+    - 'Now obsidian'
 suicide:
-    -'Bad Aim'
-    -'Killed Himself'
+    - 'Bad Aim'
+    - 'Killed Himself'
 skeleton:
-    -'Skeleton Bow'
-    -'Arrow in Head'
+    - 'Skeleton Bow'
+    - 'Arrow in Head'
 suffocation:
-    -'Suffocated'
-    -'Sand's breath'
-    -'Sand worm'
+    - 'Suffocated'
+    - 'Sand''s breath'
+    - 'Sand worm'
 block_explosion:
-    -'BOUM'
-    -'TNT'
-    -'Dynamite'
+    - 'BOUM'
+    - 'TNT'
+    - 'Dynamite'
 drowning:
-    -'Has drowned'
-    -'Love fishing'
-    -'Drunk the sea'
+    - 'Has drowned'
+    - 'Love fishing'
+    - 'Drunk the sea'
 cavespider:
-    -'Spider venom'
-    -'Arachnophobia'
+    - 'Spider venom'
+    - 'Arachnophobia'
 fire:
-    -'Toasted'
-    -'Burned'
-    -'Fire! Fire!'
+    - 'Toasted'
+    - 'Burned'
+    - 'Fire! Fire!'
 enderman:
-    -'Stolen'
-    -'EnderManed'
+    - 'Stolen'
+    - 'EnderManed'
 lightning:
-    -'By Zeus'
-    -'By Thor'
-    -'Lighting'
+    - 'By Zeus'
+    - 'By Thor'
+    - 'Lighting'
 unknown:
-    -'Unknown'
+    - 'Unknown'
 fire_tick:
-    -'Toasted'
-    -'Burned'
-    -'Fire! Fire!'
+    - 'Toasted'
+    - 'Burned'
+    - 'Fire! Fire!'
 ghast:
-    -'In Nether'
-    -'Ghast'
+    - 'In Nether'
+    - 'Ghast'
 entity_explosion:
-    -'BOUM'
-    -'TNT'
-    -'Dynamite'
+    - 'BOUM'
+    - 'TNT'
+    - 'Dynamite'
 contact:
-    -'Cactus'
-    -'Poked a Cactus'
-    -'Hug a Cactus'
+    - 'Cactus'
+    - 'Poked a Cactus'
+    - 'Hug a Cactus'
 spider:
-    -'Spider venom'
-    -'Arachnophobia'
+    - 'Spider venom'
+    - 'Arachnophobia'
 pigzombie:
-    -'Zombie-Pig'
+    - 'Zombie-Pig'
 wolf:
-    -'Eat by Wolf'
-    -'Wolf meal'
-    -'Wolf lunch'
+    - 'Eat by Wolf'
+    - 'Wolf meal'
+    - 'Wolf lunch'
 starvation:
-    -'Starved'
-    -'Forgot to eat'
+    - 'Starved'
+    - 'Forgot to eat'
 void:
-    -'Became Void'
-    -'End of World'
+    - 'Became Void'
+    - 'End of World'
 silverfish:
-    -'Fish Food'
+    - 'Fish Food'
 slime:
-    -'Splouched'
-    -'Slime won'
+    - 'Splouched'
+    - 'Slime won'
+giant:
+    - 'stomped'
+    - 'By a giant'
 fall:
-    -'Tried to fly'
-    -'Love the ground'
+    - 'Tried to fly'
+    - 'Love the ground'
 zombie:
-    -'L4D'
-    -'Braaaiiin'
-    -'Zombie rules'
+    - 'L4D'
+    - 'Braaaiiin'
+    - 'Zombie rules'
 
