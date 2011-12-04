@@ -34,7 +34,7 @@ public class DeathtpCommandDTP implements CommandExecutor {
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
         deathLocationLog = plugin.getDeathLocationLog();
-        log.info("deathtp command registered");
+        log.error("deathtp command registered");
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {

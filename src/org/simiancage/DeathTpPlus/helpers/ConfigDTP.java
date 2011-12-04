@@ -120,11 +120,11 @@ public class ConfigDTP {
     /**
      * This is the internal config version
      */
-    private final String configCurrent = "3.0";
+    private final String configCurrent = "3.1";
     /**
      * This is the DEFAULT for the config file version, should be the same as configCurrent. Will afterwards be changed
      */
-    private String configVer = "3.0";
+    private String configVer = "3.1";
 
 
 // and now the real stuff
@@ -204,6 +204,11 @@ public class ConfigDTP {
      */
     private String deathtpCost = "10";
 
+    /**
+     * Use Displaynames for Broadcast messages
+     * Note: Depending on the characters you are using in the names this can cause NPE's!!
+     */
+    private boolean useDisplayNameforBroadcasts = false;
 
 // TombStone Features (General)
 
@@ -357,6 +362,7 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("enableLockette", enableLockette);
         config.addDefault("enableLWC", enableLWC);
         config.addDefault("allowWorldTravel", allowWorldTravel);
+
 // DeathTp Features Variables
         config.addDefault("enableDeathtp", enableDeathtp);
         config.addDefault("showDeathNotify", showDeathNotify);
@@ -368,6 +374,7 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("showDeathSign", showDeathSign);
         config.addDefault("deathtpCost", deathtpCost);
         config.addDefault("lwcPublic", lwcPublic);
+        config.addDefault("useDisplayNamesForBroadcast", useDisplayNameforBroadcasts);
 // TombStone Features (General)
         config.addDefault("enableTombStone", enableTombStone);
         config.addDefault("showTombStoneSign", showTombStoneSign);
@@ -417,6 +424,7 @@ afterwards parsable again from the configuration class of bukkit
         tombStoneSign[1] = config.getString("tombStoneSign.Line2", tombStoneSign[1]);
         tombStoneSign[2] = config.getString("tombStoneSign.Line3", tombStoneSign[2]);
         tombStoneSign[3] = config.getString("tombStoneSign.Line4", tombStoneSign[3]);
+
 // DeathTpPlus Features
         enableDeathtp = config.getBoolean("enableDeathtp");
         showDeathNotify = config.getBoolean("showDeathNotify");
@@ -428,6 +436,7 @@ afterwards parsable again from the configuration class of bukkit
         showDeathSign = config.getBoolean("showDeathSign");
         deathtpCost = config.getString("deathtpCost");
         lwcPublic = config.getBoolean("lwcPublic");
+        useDisplayNameforBroadcasts = config.getBoolean("useDisplayNameforBroadcasts");
 // Tombstone Features (General)
         enableTombStone = config.getBoolean("enableTombStone");
         showTombStoneSign = config.getBoolean("showTombStoneSign");
@@ -478,6 +487,7 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("showDeathSign", showDeathSign);
         log.debug("deathtpCost", deathtpCost);
         log.debug("lwcPublic", lwcPublic);
+        log.debug("useDisplayNameforBroadcasts", useDisplayNameforBroadcasts);
         log.debug("enableTombStone", enableTombStone);
         log.debug("showTombStoneSign", showTombStoneSign);
         log.debug("allowTombStoneDestroy", allowTombStoneDestroy);
@@ -596,6 +606,10 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# Economy costs for deathtp command, leave 0 if you don't want to charge");
         stream.println("deathtpCost: '" + deathtpCost + "'");
         stream.println();
+        stream.println("# Use DisplayName for Broadcast Messages");
+        stream.println("# Note: Depending on the characters you are using in the names this can cause NPE's!");
+        stream.println("useDisplayNameforBroadcasts: " + useDisplayNameforBroadcasts);
+        stream.println();
         stream.println("#--------- TombStone Features (General)");
         stream.println();
         stream.println("# Enable TombStone Feature");
@@ -688,6 +702,10 @@ afterwards parsable again from the configuration class of bukkit
 
 // The plugin specific getters start here!
 
+
+    public boolean isUseDisplayNameforBroadcasts() {
+        return useDisplayNameforBroadcasts;
+    }
 
     public boolean isEnableTomb() {
         return enableTomb;

@@ -30,7 +30,7 @@ public class StreakCommandDTP implements CommandExecutor {
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
         streakLog = plugin.getStreakLog();
-        log.info("streak command registered");
+        log.error("streak command registered");
     }
 
     @Override

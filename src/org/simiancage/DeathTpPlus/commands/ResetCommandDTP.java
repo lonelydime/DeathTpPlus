@@ -26,7 +26,7 @@ public class ResetCommandDTP implements CommandExecutor {
         this.plugin = instance;
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
-        log.info("dtpreset command registered");
+        log.error("dtpreset command registered");
     }
 
     @Override

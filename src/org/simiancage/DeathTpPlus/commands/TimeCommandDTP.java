@@ -32,7 +32,7 @@ public class TimeCommandDTP implements CommandExecutor {
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
         tombStoneHelper = TombStoneHelperDTP.getInstance();
-        log.info("dtptime command registered");
+        log.error("dtptime command registered");
     }
 
     @Override
@@ -44,8 +44,9 @@ public class TimeCommandDTP implements CommandExecutor {
             return true;
         }
         Player p = (Player) sender;
-        if (args.length != 1)
+        if (args.length != 1) {
             return false;
+        }
         ArrayList<TombStoneBlockDTP> pList = tombStoneHelper.getPlayerTombStoneList(p.getName());
         if (pList == null) {
             plugin.sendMessage(p, "You have no Tombstones.");
@@ -68,25 +69,29 @@ public class TimeCommandDTP implements CommandExecutor {
         long secTimeLeft = (tStoneBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneSecurityTimeOut())) - cTime;
         long remTimeLeft = (tStoneBlockDTP.getTime() + Long.parseLong(config.getRemoveTombStoneTime())) - cTime;
 
-        if (config.isRemoveTombStoneSecurity() && secTimeLeft > 0)
+        if (config.isRemoveTombStoneSecurity() && secTimeLeft > 0) {
             plugin.sendMessage(p,
                     "Security will be removed from your Tombstone in "
                             + secTimeLeft + " seconds.");
+        }
 
-        if (config.isRemoveTombStone() & remTimeLeft > 0)
+        if (config.isRemoveTombStone() & remTimeLeft > 0) {
             plugin.sendMessage(p, "Your Tombstone will break in " + remTimeLeft
                     + " seconds");
-        if (config.isRemoveTombStoneWhenEmpty() && config.isKeepTombStoneUntilEmpty())
+        }
+        if (config.isRemoveTombStoneWhenEmpty() && config.isKeepTombStoneUntilEmpty()) {
             plugin.sendMessage(
                     p,
                     "Break override: Your Tombstone will break when it is emptied, but will not break until then.");
-        else {
-            if (config.isRemoveTombStoneWhenEmpty())
+        } else {
+            if (config.isRemoveTombStoneWhenEmpty()) {
                 plugin.sendMessage(p,
                         "Break override: Your Tombstone will break when it is emptied.");
-            if (config.isKeepTombStoneUntilEmpty())
+            }
+            if (config.isKeepTombStoneUntilEmpty()) {
                 plugin.sendMessage(p,
                         "Break override: Your Tombstone will not break until it is empty.");
+            }
         }
 
         return true;

@@ -183,7 +183,7 @@ public class LoggerDTP {
     public void debug(String msg, Object object) {
         if (config.isDebugLogEnabled()) {
             String objectMsg;
-            if (object == null){
+            if (object == null) {
                 objectMsg = "null";
             } else {
                 objectMsg = object.toString();
@@ -220,9 +220,7 @@ public class LoggerDTP {
      * @param msg message to output
      */
     public void info(String msg) {
-        if (config.isErrorLogEnabled()) {
-            this.logger.info(this.formatMessage(msg));
-        }
+        this.logger.info(this.formatMessage(msg));
     }
 
     /**
@@ -250,7 +248,7 @@ public class LoggerDTP {
      * @param exception exception to output
      */
     public void severe(String msg, Throwable exception) {
-        this.log(Level.SEVERE,this.formatMessage(msg), exception);
+        this.log(Level.SEVERE, this.formatMessage(msg), exception);
     }
 
     /**
@@ -299,5 +297,5 @@ public class LoggerDTP {
         }
     }
 
- }
+}
 

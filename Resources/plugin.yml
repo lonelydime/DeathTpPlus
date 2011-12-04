@@ -1,7 +1,7 @@
 name: DeathTpPlus
 main: org.simiancage.DeathTpPlus.DeathTpPlus
-version: 3.0
-website: https://github.com/dredhorse/DeathTpPlus
+version: 3.1
+website: http://dev.bukkit.org/server-mods/deathtpplus/
 authors: ['Don Redhorse', 'mung3r']
 description: Death teleport, tombstone and tombs
 softdepend: [Vault,CraftIRC]
