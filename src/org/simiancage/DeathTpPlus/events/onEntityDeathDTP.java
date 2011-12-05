@@ -18,8 +18,8 @@ import org.simiancage.DeathTpPlus.logs.DeathLocationsLogDTP;
 import org.simiancage.DeathTpPlus.logs.DeathLogDTP;
 import org.simiancage.DeathTpPlus.logs.StreakLogDTP;
 import org.simiancage.DeathTpPlus.models.DeathDetailDTP;
+import org.simiancage.DeathTpPlus.models.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.objects.TombDTP;
-import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
 import java.text.SimpleDateFormat;
@@ -123,7 +123,7 @@ public class onEntityDeathDTP {
 
         log.debug(player.getName() + " died.");
         List<ItemStack> deathDrops = deathDetail.getEntityDeathEvent().getDrops();
-        if (deathDrops.size() == 0) {
+        if ((deathDrops.size() == 0) && !(config.isKeepExperienceOnQuickLoot())) {
             plugin.sendMessage(player, "Inventory Empty.");
             log.debug(player.getName() + " inventory empty.");
             return;
@@ -268,11 +268,18 @@ public class onEntityDeathDTP {
         if (plugin.hasPerm(player, "tombstone.freesign", false)) {
             removeSign = 0;
         }
-
+        int droppedExperience;
+        if (config.isKeepExperienceOnQuickLoot()) {
+            droppedExperience = deathDetail.getEntityDeathEvent().getDroppedExp();
+            deathDetail.getEntityDeathEvent().setDroppedExp(0);
+        } else {
+            droppedExperience = 0;
+        }
+        log.debug("droppedExperience", droppedExperience);
 // Create a TombBlock for this tombstone
         TombStoneBlockDTP tStoneBlockDTP = new TombStoneBlockDTP(sChest.getBlock(),
                 (lChest != null) ? lChest.getBlock() : null, sBlock,
-                player.getName(), (System.currentTimeMillis() / 1000));
+                player.getName(), (System.currentTimeMillis() / 1000), droppedExperience);
 
 // Protect the chest/sign if LWC is installed.
         Boolean prot = false;

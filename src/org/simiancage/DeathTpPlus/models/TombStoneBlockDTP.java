@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.objects;
+package org.simiancage.DeathTpPlus.models;
 
 /**
  * PluginName: DeathTpPlus
@@ -19,24 +19,31 @@ public class TombStoneBlockDTP {
     private long time;
     private String owner;
     private boolean lwcEnabled = false;
+    private int droppedExperience;
 
     public TombStoneBlockDTP(Block block, Block lBlock, Block sign, String owner,
-                             long time) {
+                             long time, int droppedExperience) {
         this.block = block;
         this.lBlock = lBlock;
         this.sign = sign;
         this.owner = owner;
         this.time = time;
+        this.droppedExperience = droppedExperience;
     }
 
     public TombStoneBlockDTP(Block block, Block lBlock, Block sign, String owner, long time,
-                             boolean lwc) {
+                             boolean lwc, int droppedExperience) {
         this.block = block;
         this.lBlock = lBlock;
         this.sign = sign;
         this.owner = owner;
         this.time = time;
+        this.droppedExperience = droppedExperience;
         this.lwcEnabled = lwc;
+    }
+
+    public int getDroppedExperience() {
+        return droppedExperience;
     }
 
     public long getTime() {
@@ -67,6 +74,7 @@ public class TombStoneBlockDTP {
         return lwcEnabled;
     }
 
+
     public void setLwcEnabled(boolean val) {
         lwcEnabled = val;
     }
@@ -78,5 +86,6 @@ public class TombStoneBlockDTP {
     public void removeLocketteSign() {
         this.LocketteSign = null;
     }
+
 }
 

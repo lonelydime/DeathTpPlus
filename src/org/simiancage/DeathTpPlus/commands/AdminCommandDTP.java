@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.*;
-import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
+import org.simiancage.DeathTpPlus.models.TombStoneBlockDTP;
 
 import java.util.ArrayList;
 

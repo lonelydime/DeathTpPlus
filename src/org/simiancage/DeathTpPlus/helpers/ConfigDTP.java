@@ -258,6 +258,11 @@ public class ConfigDTP {
      */
     private String[] tombStoneSign = new String[]{"{name}", "RIP", "{date}", "{time}"};
 
+    /**
+     * Keep dropped experience when you die AND use quickloot.
+     */
+    private boolean keepExperienceOnQuickLoot = false;
+
 // TombStone features (Removal)
 
     /**
@@ -282,6 +287,7 @@ public class ConfigDTP {
      * WARNING: THIS IS A PROCESSOR-INTENSIVE OPTION
      */
     private boolean keepTombStoneUntilEmpty = false;
+
 
 // TombStone Features (Security)
 
@@ -384,12 +390,14 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("allowInterfere", allowInterfere);
         config.addDefault("voidCheck", voidCheck);
         config.addDefault("creeperProtection", creeperProtection);
+        config.addDefault("keepExperienceOnQuickLoot", keepExperienceOnQuickLoot);
 // TombStone Features (Removal)
         config.addDefault("destroyOnQuickLoot", destroyOnQuickLoot);
         config.addDefault("removeTombStone", removeTombStone);
         config.addDefault("removeTombStoneTime", removeTombStoneTime);
         config.addDefault("removeTombStoneWhenEmpty", removeTombStoneWhenEmpty);
         config.addDefault("keepTombStoneUntilEmpty", keepTombStoneUntilEmpty);
+
 // TombStone Features (Security)
         config.addDefault("removeTombStoneSecurity", removeTombStoneSecurity);
         config.addDefault("removeTombStoneSecurityTimeOut", removeTombStoneSecurityTimeOut);
@@ -446,12 +454,14 @@ afterwards parsable again from the configuration class of bukkit
         allowInterfere = config.getBoolean("allowInterfere");
         voidCheck = config.getBoolean("voidCheck");
         creeperProtection = config.getBoolean("creeperProtection");
+        keepExperienceOnQuickLoot = config.getBoolean("keepExperienceOnQuickLoot");
 // Tombstone Features (Removal)
         destroyOnQuickLoot = config.getBoolean("destroyOnQuickLoot");
         removeTombStone = config.getBoolean("removeTombStone");
         removeTombStoneTime = config.getString("removeTombStoneTime");
         removeTombStoneWhenEmpty = config.getBoolean("removeTombStoneWhenEmpty");
         keepTombStoneUntilEmpty = config.getBoolean("keepTombStoneUntilEmpty");
+
 // Tombstone Features (Security)
         removeTombStoneSecurity = config.getBoolean("removeTombStoneSecurity");
         removeTombStoneSecurityTimeOut = config.getString("removeTombStoneSecurityTimeOut");
@@ -496,11 +506,13 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("allowInterfere", allowInterfere);
         log.debug("voidCheck", voidCheck);
         log.debug("creeperProtection", creeperProtection);
+        log.debug("keepExperienceOnQuickLoot", keepExperienceOnQuickLoot);
         log.debug("destroyOnQuickLoot", destroyOnQuickLoot);
         log.debug("removeTombStone", removeTombStone);
         log.debug("removeTombStoneTime", removeTombStoneTime);
         log.debug("removeTombStoneWhenEmpty", removeTombStoneWhenEmpty);
         log.debug("keepTombStoneUntilEmpty", keepTombStoneUntilEmpty);
+
         log.debug("removeTombStoneSecurity", removeTombStoneSecurity);
         log.debug("removeTombStoneSecurityTimeOut", removeTombStoneSecurityTimeOut);
         log.debug("enableTomb", enableTomb);
@@ -528,6 +540,10 @@ afterwards parsable again from the configuration class of bukkit
             allowWorldTravel = "no";
         }
 
+        if (isKeepExperienceOnQuickLoot()) {
+            log.info("Keeping Experience on Quickloot is: " + isKeepExperienceOnQuickLoot());
+            log.info("Keep in mind it only works if people are quicklooting their TombStone!");
+        }
     }
 
 // And than we write it....
@@ -640,6 +656,9 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# after they are unlocked, enable this");
         stream.println("creeperProtection: " + creeperProtection);
         stream.println();
+        stream.println("# Keep dropped experience when quicklooting");
+        stream.println("keepExperienceOnQuickLoot: " + keepExperienceOnQuickLoot);
+        stream.println();
         stream.println("#--------- TombStone features (Removal");
         stream.println();
         stream.println("# Destroy Tombstone on player quickloot");
@@ -658,6 +677,10 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# Never remove a TombStone unless it is empty");
         stream.println("# WARNING: THIS IS A PROCESSOR-INTENSIVE OPTION");
         stream.println("keepTombStoneUntilEmpty: " + keepTombStoneUntilEmpty);
+        stream.println();
+        stream.println("# Keep Sign and Chest for people with FREE chest and sign permission on quicklooting?");
+        stream.println("# true = people can keep them, false = Sign and Chest are removed");
+
         stream.println();
         stream.println("#--------- TombStone Features (Security");
         stream.println();
@@ -701,6 +724,10 @@ afterwards parsable again from the configuration class of bukkit
 
 
 // The plugin specific getters start here!
+
+    public boolean isKeepExperienceOnQuickLoot() {
+        return keepExperienceOnQuickLoot;
+    }
 
 
     public boolean isUseDisplayNameforBroadcasts() {

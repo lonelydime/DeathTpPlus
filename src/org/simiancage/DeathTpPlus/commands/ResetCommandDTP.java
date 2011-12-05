@@ -39,6 +39,7 @@ public class ResetCommandDTP implements CommandExecutor {
         }
         Player p = (Player) sender;
         p.setCompassTarget(p.getWorld().getSpawnLocation());
+        plugin.sendMessage(sender, "Your compass has been reset to the spawn location!");
         return true;
     }
 

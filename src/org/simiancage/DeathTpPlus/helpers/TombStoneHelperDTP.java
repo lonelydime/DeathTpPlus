@@ -11,7 +11,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
+import org.simiancage.DeathTpPlus.models.TombStoneBlockDTP;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -233,23 +233,30 @@ public class TombStoneHelperDTP {
                 return;
             }
             Scanner scanner = new Scanner(fh);
+            int loadedTombStones = 0;
             while (scanner.hasNextLine()) {
+                int droppedExperience;
                 String line = scanner.nextLine().trim();
                 String[] split = line.split(":");
-                // block:lblock:sign:time:name:lwc
+                // block:lblock:sign:time:name:lwc:droppedExperience
                 Block block = readBlock(split[0]);
                 Block lBlock = readBlock(split[1]);
                 Block sign = readBlock(split[2]);
                 String owner = split[3];
                 long time = Long.valueOf(split[4]);
                 boolean lwc = Boolean.valueOf(split[5]);
+                if (split.length == 5) {
+                    droppedExperience = Integer.valueOf(split[6]);
+                } else {
+                    droppedExperience = 0;
+                }
                 if (block == null || owner == null) {
                     log.warning("Invalid entry in database "
                             + fh.getName());
                     continue;
                 }
                 TombStoneBlockDTP tStoneBlockDTP = new TombStoneBlockDTP(block, lBlock, sign, owner,
-                        time, lwc);
+                        time, lwc, droppedExperience);
                 offerTombStoneBlockList(tStoneBlockDTP);
                 // Used for quick tombStone lookup
                 putTombStoneBlockList(block.getLocation(), tStoneBlockDTP);
@@ -265,11 +272,12 @@ public class TombStoneHelperDTP {
                     putPlayerTombStoneList(owner, pList);
                 }
                 pList.add(tStoneBlockDTP);
+                loadedTombStones++;
             }
             scanner.close();
-            log.info("Successfully loaded TombStone list");
+            log.info("Successfully loaded " + loadedTombStones + " TombStones for world " + world);
         } catch (IOException e) {
-            log.warning("Error loading TombStone list", e);
+            log.warning("Error loading TombStone list of world" + world, e);
         }
     }
 
@@ -301,6 +309,8 @@ public class TombStoneHelperDTP {
                 bw.append(String.valueOf(tStoneBlockDTP.getTime()));
                 bw.append(":");
                 bw.append(String.valueOf(tStoneBlockDTP.getLwcEnabled()));
+                bw.append(":");
+                bw.append(String.valueOf(tStoneBlockDTP.getDroppedExperience()));
 
                 bw.append(builder.toString());
                 bw.newLine();

@@ -13,7 +13,7 @@ import org.simiancage.DeathTpPlus.events.onEntityDeathDTP;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.helpers.TombStoneHelperDTP;
-import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
+import org.simiancage.DeathTpPlus.models.TombStoneBlockDTP;
 
 import java.util.ArrayList;
 

@@ -24,7 +24,7 @@ import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.helpers.TombStoneHelperDTP;
-import org.simiancage.DeathTpPlus.objects.TombStoneBlockDTP;
+import org.simiancage.DeathTpPlus.models.TombStoneBlockDTP;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
 public class PlayerListenerDTP extends PlayerListener {
@@ -47,28 +47,38 @@ public class PlayerListenerDTP extends PlayerListener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         log.debug("onPlayerInteractDTP executing");
 
-        if (config.isEnableTombStone()){
-            if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+        if (config.isEnableTombStone()) {
+            if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
                 return;
+            }
             Block b = event.getClickedBlock();
 
-            if (b.getType() != Material.SIGN_POST && b.getType() != Material.CHEST)
+            if (b.getType() != Material.SIGN_POST && b.getType() != Material.CHEST) {
                 return;
+            }
 // We'll do quickloot on rightclick of chest if we're going to destroy
 // it anyways
 
             if (b.getType() == Material.CHEST
-                    && (!config.isDestroyOnQuickLoot() || config.isAllowTombStoneDestroy()))
+                    && (!config.isDestroyOnQuickLoot() || config.isAllowTombStoneDestroy())) {
                 return;
-            if (!plugin.hasPerm(event.getPlayer(), "tombstone.quickloot", false))
+            }
+            if (!plugin.hasPerm(event.getPlayer(), "tombstone.quickloot", false)) {
                 return;
+            }
 
             TombStoneBlockDTP tStoneBlockDTP = tombStoneHelper.getTombStoneBlockList(b.getLocation());
-            if (tStoneBlockDTP == null || !(tStoneBlockDTP.getBlock().getState() instanceof Chest))
+            if (tStoneBlockDTP == null || !(tStoneBlockDTP.getBlock().getState() instanceof Chest)) {
+                log.debug("Not a Tombstone!");
                 return;
+            }
 
-            if (!tStoneBlockDTP.getOwner().equals(event.getPlayer().getName()))
+
+            if (!tStoneBlockDTP.getOwner().equals(event.getPlayer().getName())) {
+                log.debug("Owner of tombstone", tStoneBlockDTP.getOwner());
                 return;
+            }
+
 
             Chest sChest = (Chest) tStoneBlockDTP.getBlock().getState();
             Chest lChest = (tStoneBlockDTP.getLBlock() != null) ? (Chest) tStoneBlockDTP
@@ -78,10 +88,12 @@ public class PlayerListenerDTP extends PlayerListener {
             boolean overflow = false;
             for (int cSlot = 0; cSlot < items.length; cSlot++) {
                 ItemStack item = items[cSlot];
-                if (item == null)
+                if (item == null) {
                     continue;
-                if (item.getType() == Material.AIR)
+                }
+                if (item.getType() == Material.AIR) {
                     continue;
+                }
                 int slot = event.getPlayer().getInventory().firstEmpty();
                 if (slot == -1) {
                     overflow = true;
@@ -94,10 +106,12 @@ public class PlayerListenerDTP extends PlayerListener {
                 items = lChest.getInventory().getContents();
                 for (int cSlot = 0; cSlot < items.length; cSlot++) {
                     ItemStack item = items[cSlot];
-                    if (item == null)
+                    if (item == null) {
                         continue;
-                    if (item.getType() == Material.AIR)
+                    }
+                    if (item.getType() == Material.AIR) {
                         continue;
+                    }
                     int slot = event.getPlayer().getInventory().firstEmpty();
                     if (slot == -1) {
                         overflow = true;
@@ -107,7 +121,13 @@ public class PlayerListenerDTP extends PlayerListener {
                     lChest.getInventory().clear(cSlot);
                 }
             }
-
+            Player player = event.getPlayer();
+            int storedDroppedExperience = tStoneBlockDTP.getDroppedExperience();
+            int playerTotalExperience = player.getTotalExperience();
+            log.debug("Player TotalExperience", playerTotalExperience);
+            log.debug("Stored droppedExperience", storedDroppedExperience);
+            player.setTotalExperience(storedDroppedExperience + playerTotalExperience);
+            log.debug("Player New TotalExperience", player.getTotalExperience());
             if (!overflow) {
 // We're quicklooting, so no need to resume this interaction
                 event.setUseInteractedBlock(Result.DENY);
@@ -127,9 +147,9 @@ public class PlayerListenerDTP extends PlayerListener {
             plugin.sendMessage(event.getPlayer(), "Tombstone quicklooted!");
             Location location = tStoneBlockDTP.getBlock().getLocation();
             String loc = location.getWorld().getName();
-            loc = loc +", x=" + location.getBlock().getX();
-            loc = loc +", y=" + location.getBlock().getY();
-            loc = loc +", z=" + location.getBlock().getZ();
+            loc = loc + ", x=" + location.getBlock().getX();
+            loc = loc + ", y=" + location.getBlock().getY();
+            loc = loc + ", z=" + location.getBlock().getZ();
             log.debug(event.getPlayer().getName() + " quicklooted tombstone at "
                     + loc);
         }
@@ -148,21 +168,21 @@ public class PlayerListenerDTP extends PlayerListener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player p = event.getPlayer();
 
-        log.debug("hasTomb",worker.hasTomb(p.getName()) );
+        log.debug("hasTomb", worker.hasTomb(p.getName()));
         if (config.isUseTombAsRespawnPoint() && worker.hasTomb(p.getName())) {
             String deathWorld = event.getPlayer().getWorld().getName();
             Location respawn = worker.getTomb(p.getName()).getRespawn();
-            log.debug("respawn",respawn );
-            if (respawn != null){
+            log.debug("respawn", respawn);
+            if (respawn != null) {
                 boolean worldTravel = false;
                 String spawnWorld = respawn.getWorld().getName();
                 boolean sameWorld = deathWorld.equalsIgnoreCase(spawnWorld);
-                if (config.getAllowWorldTravel().equalsIgnoreCase("yes") || (config.getAllowWorldTravel().equalsIgnoreCase("permissions") && p.hasPermission("deathtpplus.worldtravel"))){
+                if (config.getAllowWorldTravel().equalsIgnoreCase("yes") || (config.getAllowWorldTravel().equalsIgnoreCase("permissions") && p.hasPermission("deathtpplus.worldtravel"))) {
                     worldTravel = true;
                 }
-                log.debug("sameWorld",sameWorld );
-                log.debug("worldTravel",worldTravel );
-                if (sameWorld || worldTravel){
+                log.debug("sameWorld", sameWorld);
+                log.debug("worldTravel", worldTravel);
+                if (sameWorld || worldTravel) {
                     log.debug("Respawn location set to Tomb");
                     event.setRespawnLocation(respawn);
                     plugin.sendMessage(p, worker.graveDigger + "You have been resurrected at your Tomb!");
