@@ -87,7 +87,18 @@ public class onEntityDeathDTP {
             String deathMessage = DeathMessagesDTP.getDeathMessage(deathDetail);
             log.debug("deathMessage", deathMessage);
             if (entityDeathEvent instanceof PlayerDeathEvent) {
-                ((PlayerDeathEvent) entityDeathEvent).setDeathMessage(deathMessage);
+                if (config.isDisableDeathNotifyInSpecifiedWorlds()) {
+                    ((PlayerDeathEvent) entityDeathEvent).setDeathMessage("");
+                    Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
+                    for (Player player : onlinePlayers) {
+                        String world = player.getWorld().getName();
+                        if (!config.isDisabledDeathNotifyWorld(world)) {
+                            player.sendRawMessage(deathMessage);
+                        }
+                    }
+                } else {
+                    ((PlayerDeathEvent) entityDeathEvent).setDeathMessage(deathMessage);
+                }
             }
 
             // CraftIRC

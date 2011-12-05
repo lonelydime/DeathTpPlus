@@ -17,6 +17,8 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -175,6 +177,14 @@ public class ConfigDTP {
      * Show the death messages on the server
      */
     private boolean showDeathNotify = true;
+    /**
+     * Disable DeathNotify for certain worlds?
+     */
+    private boolean disableDeathNotifyInSpecifiedWorlds = false;
+    /**
+     * Configure Worlds which don't receive death notify broadcasts
+     */
+    private List<String> disabledDeathNotifyWorlds;
     /**
      * Allow players to access the deathtp command (Override permissions)
      */
@@ -350,6 +360,7 @@ afterwards parsable again from the configuration class of bukkit
 
     private void setupCustomDefaultVariables() {
 
+        disabledDeathNotifyWorlds = Arrays.asList(new String[]{"none"});
 
     }
 
@@ -372,6 +383,8 @@ afterwards parsable again from the configuration class of bukkit
 // DeathTp Features Variables
         config.addDefault("enableDeathtp", enableDeathtp);
         config.addDefault("showDeathNotify", showDeathNotify);
+        config.addDefault("disableDeathNotifyInSpecifiedWorlds", disableDeathNotifyInSpecifiedWorlds);
+        // disabledDeathNotifyWorlds is configured in load customconfig
         config.addDefault("allowDeathtp", allowDeathtp);
         config.addDefault("allowDeathLog", allowDeathLog);
         config.addDefault("showStreaks", showStreaks);
@@ -436,6 +449,8 @@ afterwards parsable again from the configuration class of bukkit
 // DeathTpPlus Features
         enableDeathtp = config.getBoolean("enableDeathtp");
         showDeathNotify = config.getBoolean("showDeathNotify");
+        disableDeathNotifyInSpecifiedWorlds = config.getBoolean("disableDeathNotifyInSpecifiedWorlds");
+        disabledDeathNotifyWorlds = config.getList("disabledDeathNotifyWorlds", disabledDeathNotifyWorlds);
         allowDeathtp = config.getBoolean("allowDeathtp");
         allowDeathLog = config.getBoolean("allowDeathLog");
         showStreaks = config.getBoolean("showStreaks");
@@ -489,6 +504,8 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("allowWordTravel", allowWorldTravel);
         log.debug("enableDeathtp", enableDeathtp);
         log.debug("showDeathNotify", showDeathNotify);
+        log.debug("disableDeathNotifyInSpecifiedWorlds", disableDeathNotifyInSpecifiedWorlds);
+        log.debug("disabledDeathNotifyWorlds", disabledDeathNotifyWorlds);
         log.debug("allowDeathtp", allowDeathtp);
         log.debug("allowDeathLog", allowDeathLog);
         log.debug("showStreaks", showStreaks);
@@ -600,6 +617,15 @@ afterwards parsable again from the configuration class of bukkit
         stream.println();
         stream.println("# Show the death messages on the server");
         stream.println("showDeathNotify: " + showDeathNotify);
+        stream.println();
+        stream.println("# Disable the death messages on specific worlds");
+        stream.println("disableDeathNotifyInSpecifiedWorlds: " + disableDeathNotifyInSpecifiedWorlds);
+        stream.println();
+        stream.println("# Worlds on which death messages are disabled");
+        stream.println("disabledDeathNotifyWorlds:");
+        for (String msg : disabledDeathNotifyWorlds) {
+            stream.println("    - '" + msg + "'");
+        }
         stream.println();
         stream.println("# Allow players to access the deathtp command (Override permissions)");
         stream.println("allowDeathtp: " + allowDeathtp);
@@ -724,6 +750,15 @@ afterwards parsable again from the configuration class of bukkit
 
 
 // The plugin specific getters start here!
+
+
+    public boolean isDisableDeathNotifyInSpecifiedWorlds() {
+        return disableDeathNotifyInSpecifiedWorlds;
+    }
+
+    public boolean isDisabledDeathNotifyWorld(String world) {
+        return disabledDeathNotifyWorlds.contains(world);
+    }
 
     public boolean isKeepExperienceOnQuickLoot() {
         return keepExperienceOnQuickLoot;
