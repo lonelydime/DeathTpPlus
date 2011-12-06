@@ -220,6 +220,14 @@ public class ConfigDTP {
      */
     private boolean useDisplayNameforBroadcasts = false;
 
+    /**
+     * Use the old teleport to highest block or the new save location feature.
+     * Note: Save location feature will display the location of the death if it doesn't find a save spot
+     * and not teleport the player in this case.
+     */
+    private boolean teleportToHighestBlock = true;
+
+
 // TombStone Features (General)
 
     /**
@@ -394,6 +402,7 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("deathtpCost", deathtpCost);
         config.addDefault("lwcPublic", lwcPublic);
         config.addDefault("useDisplayNamesForBroadcast", useDisplayNameforBroadcasts);
+        config.addDefault("teleportToHighestBlock", teleportToHighestBlock);
 // TombStone Features (General)
         config.addDefault("enableTombStone", enableTombStone);
         config.addDefault("showTombStoneSign", showTombStoneSign);
@@ -460,6 +469,7 @@ afterwards parsable again from the configuration class of bukkit
         deathtpCost = config.getString("deathtpCost");
         lwcPublic = config.getBoolean("lwcPublic");
         useDisplayNameforBroadcasts = config.getBoolean("useDisplayNameforBroadcasts");
+        teleportToHighestBlock = config.getBoolean("teleportToHighestBlock");
 // Tombstone Features (General)
         enableTombStone = config.getBoolean("enableTombStone");
         showTombStoneSign = config.getBoolean("showTombStoneSign");
@@ -515,6 +525,7 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("deathtpCost", deathtpCost);
         log.debug("lwcPublic", lwcPublic);
         log.debug("useDisplayNameforBroadcasts", useDisplayNameforBroadcasts);
+        log.debug("teleportToHighestBlock", teleportToHighestBlock);
         log.debug("enableTombStone", enableTombStone);
         log.debug("showTombStoneSign", showTombStoneSign);
         log.debug("allowTombStoneDestroy", allowTombStoneDestroy);
@@ -652,6 +663,13 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# Note: Depending on the characters you are using in the names this can cause NPE's!");
         stream.println("useDisplayNameforBroadcasts: " + useDisplayNameforBroadcasts);
         stream.println();
+        stream.println("# Use the old teleport to highest block or the new save location feature.");
+        stream.println("# Note: Save location feature will display the location of the death if it doesn't find a save spot");
+        stream.println("# and not teleport the player in this case.");
+        stream.println("teleportToHighestBlock: " + teleportToHighestBlock);
+        stream.println();
+
+
         stream.println("#--------- TombStone Features (General)");
         stream.println();
         stream.println("# Enable TombStone Feature");
@@ -751,6 +769,10 @@ afterwards parsable again from the configuration class of bukkit
 
 // The plugin specific getters start here!
 
+
+    public boolean isTeleportToHighestBlock() {
+        return teleportToHighestBlock;
+    }
 
     public boolean isDisableDeathNotifyInSpecifiedWorlds() {
         return disableDeathNotifyInSpecifiedWorlds;

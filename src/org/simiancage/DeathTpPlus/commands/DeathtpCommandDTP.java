@@ -3,6 +3,7 @@ package org.simiancage.DeathTpPlus.commands;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,6 +14,10 @@ import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.logs.DeathLocationsLogDTP;
 import org.simiancage.DeathTpPlus.models.DeathLocationRecordDTP;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * PluginName: DeathTpPlus
@@ -28,6 +33,12 @@ public class DeathtpCommandDTP implements CommandExecutor {
     private LoggerDTP log;
     private ConfigDTP config;
     private DeathLocationsLogDTP deathLocationLog;
+    /**
+     * List of blocks which are normally save to teleport into
+     */
+    private List<Integer> saveBlocks = new ArrayList<Integer>(Arrays.asList(new Integer[]{
+            0, 6, 8, 9, 10, 11, 37, 38, 39, 40, 50, 51, 55, 59, 69, 76
+    }));
 
     public DeathtpCommandDTP(DeathTpPlus instance) {
         this.plugin = instance;
@@ -68,9 +79,26 @@ public class DeathtpCommandDTP implements CommandExecutor {
                 DeathLocationRecordDTP locationRecord = deathLocationLog.getRecord(player.getName());
 
                 if (locationRecord != null) {
-
+                    log.debug("locationRecord", locationRecord);
+                    Location deathLocation;
                     World deathWorld = player.getServer().getWorld(locationRecord.getWorldName());
-                    Location deathLocation = deathWorld.getHighestBlockAt(locationRecord.getLocation().getBlockX(), locationRecord.getLocation().getBlockZ()).getLocation();
+                    if (config.isTeleportToHighestBlock()) {
+                        deathLocation = deathWorld.getHighestBlockAt(locationRecord.getLocation().getBlockX(), locationRecord.getLocation().getBlockZ()).getLocation();
+                    } else {
+                        deathLocation = saveDeathLocation(locationRecord, deathWorld);
+                        if (deathLocation == null) {
+                            player.sendRawMessage("There is no save place to teleport you at location:");
+                            player.sendRawMessage("x: " + locationRecord.getLocation().getX() + " y: " + locationRecord.getLocation().getY() + " z: " + locationRecord.getLocation().getZ() + " in world: " + locationRecord.getWorldName());
+                            player.sendRawMessage("Have fun walking... sorry about that..");
+                            return true;
+                        }
+                    }
+
+                    // Added chunkload when chunk not loaded, code from Tele++
+
+                    if (!deathWorld.isChunkLoaded(deathLocation.getBlockX() >> 4, deathLocation.getBlockZ() >> 4)) {
+                        deathWorld.loadChunk(deathLocation.getBlockX() >> 4, deathLocation.getBlockZ() >> 4);
+                    }
 
                     if (!thisWorld.equals(deathWorld.getName())) {
                         if (worldTravel) {
@@ -158,6 +186,58 @@ public class DeathtpCommandDTP implements CommandExecutor {
             }
         }
         return true;
+    }
+
+    // Code from Tele++
+    private Location saveDeathLocation(DeathLocationRecordDTP locationRecord, World world) {
+        log.debug("world", world);
+        double x = locationRecord.getLocation().getBlockX();
+        double y = locationRecord.getLocation().getBlockY();
+        double z = locationRecord.getLocation().getBlockZ();
+        log.debug("x,y,z:", x + "," + y + "," + z);
+
+        x = x + .5D;
+        z = z + .5D;
+
+        if (y < 1.0D) {
+            y = 1.0D;
+        }
+
+        while (blockIsAboveAir(world, x, y, z)) {
+            y -= 1.0D;
+
+            if (y < -512) {
+                return null;
+            }
+        }
+
+        while (!blockIsSafe(world, x, y, z)) {
+            y += 1.0D;
+
+            if (y > 512) {
+                return null;
+            }
+        }
+        Location saveDeathLocation = new Location(world, x, y, z);
+        log.debug("saveDeathLocation", saveDeathLocation);
+        return saveDeathLocation;
+    }
+
+    private boolean blockIsAboveAir(World world, double x, double y, double z) {
+        Material mat = world.getBlockAt((int) Math.floor(x), (int) Math.floor(y - 1.0D), (int) Math.floor(z)).getType();
+
+        return saveBlocks.contains(mat.getId());
+    }
+
+    public boolean blockIsSafe(Block block) {
+        return blockIsSafe(block.getWorld(), block.getX(), block.getY(), block.getZ());
+    }
+
+    public boolean blockIsSafe(World world, double x, double y, double z) {
+        Material mat1 = world.getBlockAt((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z)).getType();
+        Material mat2 = world.getBlockAt((int) Math.floor(x), (int) Math.floor(y + 1.0D), (int) Math.floor(z)).getType();
+
+        return (saveBlocks.contains(mat1.getId())) && (saveBlocks.contains(mat2.getId()));
     }
 
 }
