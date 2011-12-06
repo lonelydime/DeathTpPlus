@@ -2,6 +2,7 @@ package org.simiancage.DeathTpPlus.listeners;
 
 //import org.bukkit.event.Listener;
 
+import com.garbagemule.MobArena.MobArenaHandler;
 import com.griefcraft.lwc.LWCPlugin;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.event.server.PluginDisableEvent;
@@ -56,6 +57,13 @@ public class ServerListenerDTP extends ServerListener {
             log.info("Lockette plugin lost.");
             plugin.setLockettePlugin(null);
         }
+        Plugin checkMobArena = pm.getPlugin("MobArena");
+        if ((checkMobArena == null) && plugin.isMobArenaEnabled()) {
+            log.info("Disabled MobArena protection.");
+            log.info("as MobArena was unloaded / disabled.");
+            plugin.setMaHandler(null);
+            plugin.setMobArenaEnabled(false);
+        }
 
     }
 
@@ -64,6 +72,7 @@ public class ServerListenerDTP extends ServerListener {
         log.debug("onPluginEnable executing");
         PluginManager pm = plugin.getServer().getPluginManager();
         Plugin checkVault = pm.getPlugin("Vault");
+        Plugin checkMobArena = pm.getPlugin("MobArena");
         if (checkVault != null && !plugin.isUseVault()) {
             plugin.setUseVault(true);
             log.info("Vault detected");
@@ -102,6 +111,12 @@ public class ServerListenerDTP extends ServerListener {
                 plugin.setLockettePlugin((Lockette) plugin.checkPlugin(event
                         .getPlugin()));
             }
+        }
+
+        if (checkMobArena != null) {
+            log.info("Enabling MobArena protection");
+            plugin.setMaHandler(new MobArenaHandler());
+            plugin.setMobArenaEnabled(true);
         }
     }
 }

@@ -18,6 +18,7 @@ package org.simiancage.DeathTpPlus;
  */
 
 import com.ensifera.animosity.craftirc.CraftIRC;
+import com.garbagemule.MobArena.MobArenaHandler;
 import com.griefcraft.lwc.LWCPlugin;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Server;
@@ -89,6 +90,8 @@ public class DeathTpPlus extends JavaPlugin {
     protected HashMap<String, EntityDamageEvent> deathCause = new HashMap<String, EntityDamageEvent>();
     private boolean economyActive = false;
     private static Server server = null;
+    private boolean mobArenaEnabled = false;
+    private MobArenaHandler maHandler;
 
     // Vault
     private boolean useVault = false;
@@ -247,6 +250,22 @@ public class DeathTpPlus extends JavaPlugin {
             return plugin;
         }
         return null;
+    }
+
+    public MobArenaHandler getMaHandler() {
+        return maHandler;
+    }
+
+    public void setMaHandler(MobArenaHandler maHandler) {
+        this.maHandler = maHandler;
+    }
+
+    public boolean isMobArenaEnabled() {
+        return mobArenaEnabled;
+    }
+
+    public void setMobArenaEnabled(boolean mobArenaEnabled) {
+        this.mobArenaEnabled = mobArenaEnabled;
     }
 
     public Economy getEconomy() {
