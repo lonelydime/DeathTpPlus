@@ -77,11 +77,11 @@ public class TombMessagesDTP {
     /**
      * This is the internal tombMessages version
      */
-    private final String tombMessagesCurrent = "3.0";
+    private final String tombMessagesCurrent = "3.1";
     /**
      * This is the DEFAULT for the tombMessages file version, should be the same as tombMessagesCurrent. Will afterwards be changed
      */
-    private String tombMessagesVer = "3.0";
+    private String tombMessagesVer = "3.1";
 
 
 // and now the real stuff

@@ -122,11 +122,11 @@ public class ConfigDTP {
     /**
      * This is the internal config version
      */
-    private final String configCurrent = "3.0";
+    private final String configCurrent = "3.1";
     /**
      * This is the DEFAULT for the config file version, should be the same as configCurrent. Will afterwards be changed
      */
-    private String configVer = "3.0";
+    private String configVer = "3.1";
 
 
 // and now the real stuff

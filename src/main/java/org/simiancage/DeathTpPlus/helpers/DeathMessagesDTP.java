@@ -95,11 +95,11 @@ public class DeathMessagesDTP {
     /**
      * This is the internal deathMessageFileConfig version
      */
-    private final String deathMessagesCurrent = "3.0";
+    private final String deathMessagesCurrent = "3.1";
     /**
      * This is the DEFAULT for the deathMessageFileConfig file version, should be the same as deathMessagesCurrent. Will afterwards be changed
      */
-    private String deathMessagesVer = "3.0";
+    private String deathMessagesVer = "3.1";
 
 
 // and now the real stuff
@@ -679,7 +679,7 @@ afterwards parsable again from the configuration class of bukkit
         // Workaround for NPE as Monster isn't defined in the deathmessages
         deathMessages.put(DeathEventType.MONSTER, Arrays.asList(defaultUnknownMessages));
         // Normal Death Messages
-        //ToDo... this doesn't work!!!!!!
+
         deathMessages.put(DeathEventType.FALL, deathMessageFileConfig.getList("fall", Arrays.asList(defaultFallMessages)));
         deathMessages.put(DeathEventType.DROWNING, deathMessageFileConfig.getList("drowning", Arrays.asList(defaultDrowningMessages)));
         deathMessages.put(DeathEventType.FIRE, deathMessageFileConfig.getList("fire", Arrays.asList(defaultFireMessages)));
