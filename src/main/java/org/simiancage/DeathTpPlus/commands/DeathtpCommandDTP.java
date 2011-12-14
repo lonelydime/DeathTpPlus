@@ -80,10 +80,27 @@ public class DeathtpCommandDTP implements CommandExecutor {
 
                 if (locationRecord != null) {
                     log.debug("locationRecord", locationRecord);
-                    Location deathLocation;
+                    Location deathLocation = locationRecord.getLocation();
+                    log.debug("deathLocation", deathLocation);
                     World deathWorld = player.getServer().getWorld(locationRecord.getWorldName());
+                    // Added chunkload when chunk not loaded, code from Tele++
+
+                    if (!deathWorld.isChunkLoaded(deathLocation.getBlockX(), deathLocation.getBlockZ())) {
+                        log.debug("Chunk at x: " + deathLocation.getBlockX() + " z: " + deathLocation.getBlockZ() + " is not loaded");
+                        deathWorld.loadChunk(deathLocation.getBlockX(), deathLocation.getBlockZ());
+                        if (!deathWorld.isChunkLoaded(deathLocation.getBlockX(), deathLocation.getBlockZ())) {
+                            log.severe("Chunk at x: " + deathLocation.getBlockX() + " z: " + deathLocation.getBlockZ() + " is not loaded");
+                        }
+                    }
+
                     if (config.isTeleportToHighestBlock()) {
-                        deathLocation = deathWorld.getHighestBlockAt(locationRecord.getLocation().getBlockX(), locationRecord.getLocation().getBlockZ()).getLocation();
+                        Location yLocation = deathWorld.getHighestBlockAt(locationRecord.getLocation().getBlockX(), locationRecord.getLocation().getBlockZ()).getLocation();
+                        log.debug("yLocation", yLocation);
+                        int y = yLocation.getBlockY() + 2;
+                        int z = yLocation.getBlockZ();
+                        int x = yLocation.getBlockX();
+                        deathLocation = deathWorld.getBlockAt(x, y, z).getLocation();
+                        log.debug("deathLocation", deathLocation);
                     } else {
                         deathLocation = saveDeathLocation(locationRecord, deathWorld);
                         if (deathLocation == null) {
@@ -94,11 +111,6 @@ public class DeathtpCommandDTP implements CommandExecutor {
                         }
                     }
 
-                    // Added chunkload when chunk not loaded, code from Tele++
-
-                    if (!deathWorld.isChunkLoaded(deathLocation.getBlockX() >> 4, deathLocation.getBlockZ() >> 4)) {
-                        deathWorld.loadChunk(deathLocation.getBlockX() >> 4, deathLocation.getBlockZ() >> 4);
-                    }
 
                     if (!thisWorld.equals(deathWorld.getName())) {
                         if (worldTravel) {

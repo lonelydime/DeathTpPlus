@@ -117,9 +117,6 @@ public class LoggerDTP {
      * @return instance of the LoggerDTP, NOTE: This can be NULL
      */
     public static LoggerDTP getLogger() {
-        if (instance == null) {
-            System.out.print("LoggerDTP is not ready yet!");
-        }
         return instance;
     }
 

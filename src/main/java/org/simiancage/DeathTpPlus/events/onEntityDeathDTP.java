@@ -429,9 +429,9 @@ public class onEntityDeathDTP {
             String signtext;
 
             if (deathDetail.isPVPDeath()) {
-                signtext = deathDetail.getKiller().getName();
+                signtext = "By " + deathDetail.getKiller().getName();
             } else {
-                signtext = deathDetail.getCauseOfDeath().toString().substring(0, 1) + deathDetail.getCauseOfDeath().toString().substring(1).toLowerCase();
+                signtext = tombMessages.getMessage(deathDetail.getCauseOfDeath());
             }
 
             int deathLimit = config.getMaxDeaths();

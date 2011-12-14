@@ -1,0 +1,203 @@
+# DeathTpPlus 3.2 by Don Redhorse and mung3r
+#
+# Configuration File for DeathTpPlus.
+#
+# For detailed assistance please visit: http://dev.bukkit.org/server-mods/deathtpplus/
+
+#------- Default Configuration
+
+# Configuration Version
+configVer: '3.1'
+
+# Error Log Enabled
+# Enable logging to server console
+# Warning and Severe will still be logged.
+errorLogEnabled: true
+
+# Debug Log Enabled
+# Enable more logging.. could be messy!
+DebugLogEnabled: false
+
+# Check for Update
+# Will check if there is a new version of the plugin out.
+checkForUpdate: true
+
+# Auto Update Config
+# This will overwrite any changes outside the configuration parameters!
+autoUpdateConfig: false
+
+# Save Config
+# This will overwrite any changes outside the configuration parameters!
+# Only needed if you use ingame commands to change the configuration.
+saveConfig: false
+
+#-------- Plugin Configuration
+
+#--------- Default Config Variables start here!
+
+# Flag for CraftIrc 
+ircDeathTpTag: 'all'
+
+# Date Format (For formatting, see http://download.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html) 
+dateFormat: 'MM/dd/yyyy'
+
+# Time Format (For formatting, see http://download.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html) 
+timeFormat: 'hh:mm a'
+
+# Enable Lockette Support
+enableLockette: true
+
+# Enable LWC Support
+enableLWC: false
+
+# Set LWC Protection to public instead of removing it
+lwcPublic: false
+
+# Allow World Travel: yes, no, permissions
+allowWorldTravel: 'no'
+
+# Each line may be one of any custom text OR:
+# {name} for player name
+# {date} for day of death
+# {time} for time of death (server time)
+# {reason} for cause of death
+# REMEMBER: LINES ARE LIMITED TO 15 CHARACTERS, AND DON'T FORGET THE QUOTES!
+tombStoneSign:
+   Line1: '{name}'
+   Line2: 'RIP'
+   Line3: '{date}'
+   Line4: '{time}'
+
+#--------- DeathTp Features
+
+# Enable DeathTp Features
+enableDeathtp: true
+
+# Show the death messages on the server
+showDeathNotify: true
+
+# Disable the death messages on specific worlds
+disableDeathNotifyInSpecifiedWorlds: false
+
+# Worlds on which death messages are disabled
+disabledDeathNotifyWorlds:
+    - 'none'
+
+# Allow players to access the deathtp command (Override permissions)
+allowDeathtp: false
+
+# Log the deaths to file
+allowDeathLog: true
+
+# Show kill, death streaks and multi kill messages
+showStreaks: true
+
+# Window of time (in milliseconds) to count kills towards a multikill
+multiKillTimeWindow: '5000'
+
+# Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports 
+chargeItem: '0'
+
+# Show Deathsign (aka Tombstone Signs) upon death
+showDeathSign: true
+
+# Economy costs for deathtp command, leave 0 if you don't want to charge
+deathtpCost: '10'
+
+# Use DisplayName for Broadcast Messages
+# Note: Depending on the characters you are using in the names this can cause NPE's!
+useDisplayNameforBroadcasts: false
+
+# Use the old teleport to highest block or the new save location feature.
+# Note: Save location feature will display the location of the death if it doesn't find a save spot
+# and not teleport the player in this case.
+teleportToHighestBlock: true
+
+#--------- TombStone Features (General)
+
+# Enable TombStone Feature
+enableTombStone: true
+
+# Place a Sign on the TombStone
+showTombStoneSign: true
+
+#  Prevent non-Op players from destroying TombStones if true (destroyQuickLoot overrides)
+allowTombStoneDestroy: false
+
+# Show status messages to the player
+showTombStoneStatusMessage: true
+
+# Save TombStone Listing between server reloads
+saveTombStoneList: true
+
+# Stop TombStone creation next to existing chests if true (IF set to true it could allow users to circumvent chest protection.)
+allowInterfere: false
+
+# We normally checks to make sure we aren't trying to create a chest in the void.
+# If you handle or modify the void with another plugin, you can disable that check here.
+# This option should be true for most servers.
+voidCheck: true
+
+# If you are not locking your chests with Lockette or LWC but still want them to be
+# protected against Creeper explosions, or you want your chests to be protected even
+# after they are unlocked, enable this
+creeperProtection: false
+
+# Keep dropped experience when quicklooting
+keepExperienceOnQuickLoot: false
+
+#--------- TombStone features (Removal
+
+# Destroy Tombstone on player quickloot
+destroyOnQuickLoot: true
+
+# Remove TombStone after RemoveTime
+removeTombStone: true
+
+# Remove the Tombstone after x Seconds if removeTombStone is true
+removeTombStoneTime: '3600'
+
+# Immediately remove TombStone once it is empty, overriding all other timeout options
+# WARNING: THIS IS A PROCESSOR-INTENSIVE OPTION
+removeTombStoneWhenEmpty: false
+
+# Never remove a TombStone unless it is empty
+# WARNING: THIS IS A PROCESSOR-INTENSIVE OPTION
+keepTombStoneUntilEmpty: false
+
+# Keep Sign and Chest for people with FREE chest and sign permission on quicklooting?
+# true = people can keep them, false = Sign and Chest are removed
+
+#--------- TombStone Features (Security
+
+# Remove security after timeout
+removeTombStoneSecurity: false
+
+# Timeout for Security Removal in seconds
+removeTombStoneSecurityTimeOut: '3600'
+
+#--------- Tomb Features
+
+# Enable the Tomb feature
+enableTomb: true
+
+# Price for createing a Tomb
+tombCost: '10'
+
+# Amount of Tombs a player can have
+maxTomb: 1
+
+# Use the Tomb as a respawn point
+useTombAsRespawnPoint: false
+
+# Keyword used to detect a Tomb
+tombKeyWord: '[Tomb]'
+
+# Number of death before destruction of every tomb of the player
+# without resetting the counter. If set to 2, every 2 deaths, the tombs are destroyed. (Sign is dropped) 0: = Disabled
+maxDeaths: 0
+
+# When a Tomb is destroyed, the respawn point is reset.
+resetTombRespawn: false
+
+

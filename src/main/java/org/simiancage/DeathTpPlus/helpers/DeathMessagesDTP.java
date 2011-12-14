@@ -34,8 +34,10 @@ public class DeathMessagesDTP {
     /**
      * Bukkit Death Events
      */
+
+    // ToDo add new DeathMethods if they come up
     public static enum DeathEventType {
-        BLOCK_EXPLOSION, CAVE_SPIDER, CONTACT, CREEPER, DROWNING, ENDERMAN, FALL, FIRE, FIRE_TICK, GHAST, GIANT, LAVA, LIGHTNING, MONSTER, PIG_ZOMBIE, PVP, PVP_FISTS, PVP_TAMED, SILVERFISH, SKELETON, SLIME, SPIDER, STARVATION, SUFFOCATION, SUICIDE, UNKNOWN, VOID, WOLF, ZOMBIE
+        BLOCK_EXPLOSION, ENTITY_EXPLOSION, CAVE_SPIDER, CONTACT, CREEPER, DROWNING, ENDERMAN, FALL, FIRE, FIRE_TICK, GHAST, GIANT, LAVA, LIGHTNING, MONSTER, PIG_ZOMBIE, PVP, PVP_FISTS, PVP_TAMED, SILVERFISH, SKELETON, SLIME, SPIDER, STARVATION, SUFFOCATION, SUICIDE, UNKNOWN, VOID, WOLF, ZOMBIE, BLAZE, MAGMACUBE, ENDERDRAGON
     }
 
     /**
@@ -95,11 +97,11 @@ public class DeathMessagesDTP {
     /**
      * This is the internal deathMessageFileConfig version
      */
-    private final String deathMessagesCurrent = "3.1";
+    private final String deathMessagesCurrent = "3.2";
     /**
      * This is the DEFAULT for the deathMessageFileConfig file version, should be the same as deathMessagesCurrent. Will afterwards be changed
      */
-    private String deathMessagesVer = "3.1";
+    private String deathMessagesVer = "3.2";
 
 
 // and now the real stuff
@@ -237,6 +239,18 @@ public class DeathMessagesDTP {
      * Array which holds default Giant messages
      */
     private String[] defaultGiantMessages;
+    /**
+     * Array which holds default Blaze messages
+     */
+    private String[] defaultBlazeMessages;
+    /**
+     * Array which holds default Enderdragon messages
+     */
+    private String[] defaultEnderDragonMessages;
+    /**
+     * Array which holds default MagmaCube messages
+     */
+    private String[] defaultMagmaCubeMessages;
 
     // ToDo add new variables on top
 
@@ -504,6 +518,11 @@ afterwards parsable again from the configuration class of bukkit
                 "&5%n&7 stuck his head in a microwave!"
         };
         deathMessages.put(DeathEventType.BLOCK_EXPLOSION, Arrays.asList(defaultBlockExplosionMessages));
+        /** Creating the default entity_explosion messages*/
+        defaultEntityExplosionMessages = new String[]{
+                "Well... something exploded on &5%n&7!"
+        };
+        deathMessages.put(DeathEventType.ENTITY_EXPLOSION, Arrays.asList(defaultEntityExplosionMessages));
         /** Creating the default contact messages*/
         defaultContactMessages = new String[]{
                 "&5%n&7 got a little too close to a cactus!",
@@ -635,6 +654,30 @@ afterwards parsable again from the configuration class of bukkit
                 "&5%n&7 shouldn''t have climbed the bean stalk."
         };
         deathMessages.put(DeathEventType.GIANT, Arrays.asList(defaultGiantMessages));
+        /** Creating the default Blaze messages*/
+        defaultBlazeMessages = new String[]{
+                "&5%n&7 was set on fire at a blaze, well.. by a blaze!",
+                "&5%n&7 was airbombed!",
+                "&5%n&7, not everything on fire is a player!",
+                "&5%n&7 nope, that wasn''t a rocket."
+        };
+        deathMessages.put(DeathEventType.BLAZE, Arrays.asList(defaultBlazeMessages));
+        /** Creating the default Enderdragon messages*/
+        defaultEnderDragonMessages = new String[]{
+                "&5%n&7 died at the end... IN the end.",
+                "&5%n&7 looking up would have helped.",
+                "Well, Anne McCaffrey didn''t talk about that kind of Dragon, right &5%n&7?",
+                "No egg for you, &5%n&7."
+        };
+        deathMessages.put(DeathEventType.ENDERDRAGON, Arrays.asList(defaultEnderDragonMessages));
+        /** Creating the default MagmaCube messages*/
+        defaultMagmaCubeMessages = new String[]{
+                "&5%n&7 didn''t expect this kind of slinky!",
+                "&5%n&7 got eaten by a cube.",
+                "&5%n&7 got coombad by a cube."
+
+        };
+        deathMessages.put(DeathEventType.MAGMACUBE, Arrays.asList(defaultMagmaCubeMessages));
 
         // ToDo add new messages on top
     }
@@ -679,7 +722,7 @@ afterwards parsable again from the configuration class of bukkit
         // Workaround for NPE as Monster isn't defined in the deathmessages
         deathMessages.put(DeathEventType.MONSTER, Arrays.asList(defaultUnknownMessages));
         // Normal Death Messages
-
+        log.info("Loading death messages...");
         deathMessages.put(DeathEventType.FALL, deathMessageFileConfig.getList("fall", Arrays.asList(defaultFallMessages)));
         deathMessages.put(DeathEventType.DROWNING, deathMessageFileConfig.getList("drowning", Arrays.asList(defaultDrowningMessages)));
         deathMessages.put(DeathEventType.FIRE, deathMessageFileConfig.getList("fire", Arrays.asList(defaultFireMessages)));
@@ -708,6 +751,9 @@ afterwards parsable again from the configuration class of bukkit
         deathMessages.put(DeathEventType.SILVERFISH, deathMessageFileConfig.getList("silverfish", Arrays.asList(defaultSilverfishMessages)));
         deathMessages.put(DeathEventType.PVP_TAMED, deathMessageFileConfig.getList("pvp-tamed", Arrays.asList(defaultPVPTamedMessages)));
         deathMessages.put(DeathEventType.GIANT, deathMessageFileConfig.getList("giant", Arrays.asList(defaultGiantMessages)));
+        deathMessages.put(DeathEventType.BLAZE, deathMessageFileConfig.getList("blaze", Arrays.asList(defaultBlazeMessages)));
+        deathMessages.put(DeathEventType.ENDERDRAGON, deathMessageFileConfig.getList("enderdragon", Arrays.asList(defaultEnderDragonMessages)));
+        deathMessages.put(DeathEventType.MAGMACUBE, deathMessageFileConfig.getList("magmacube", Arrays.asList(defaultMagmaCubeMessages)));
 
         //ToDo add new deathMessages to the top
         for (DeathEventType deathEventType : DeathEventType.values()) {
@@ -827,7 +873,7 @@ afterwards parsable again from the configuration class of bukkit
 
 // Plugin Specific Helper Methods
 
-    private String mapTypeToNodeName(DeathEventType deathEventType) {
+    static String mapTypeToNodeName(DeathEventType deathEventType) {
         if (deathEventType == DeathEventType.CAVE_SPIDER) {
             return "cavespider";
         } else if (deathEventType == DeathEventType.PIG_ZOMBIE) {
