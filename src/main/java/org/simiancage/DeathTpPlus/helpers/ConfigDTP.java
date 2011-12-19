@@ -1401,14 +1401,17 @@ afterwards parsable again from the configuration class of bukkit
         int githubMajor;
         int githubMinor;
         int githubCB;
+        String plVersion;
+        String ghVersion;
         String cbVersion = plugin.getServer().getBukkitVersion();
         log.debug("bukkitVersion", cbVersion);
-
-        String[] thisVersion = plugin.getDescription().getVersion().split(".");
-        log.debug("thisVersion", thisVersion);
-        pluginMajor = Integer.getInteger(thisVersion[0]);
-        pluginMinor = Integer.getInteger(thisVersion[1]);
-        pluginCB = Integer.getInteger(thisVersion[2]);
+        String pluginVersion = plugin.getDescription().getVersion();
+        log.debug("pluginVersion", pluginVersion);
+        plVersion = pluginVersion.replace(".", ":");
+        String[] thisVersion = plVersion.split(":");
+        pluginMajor = Integer.parseInt(thisVersion[0].toString());
+        pluginMinor = Integer.parseInt(thisVersion[1].toString());
+        pluginCB = Integer.parseInt(thisVersion[2].toString());
         URL url;
         String newVersion = "";
         try {
@@ -1429,21 +1432,37 @@ afterwards parsable again from the configuration class of bukkit
             errorAccessingGithub = true;
         }
         if (!errorAccessingGithub) {
-            String[] githubVersion = newVersion.split(".");
-            githubMajor = Integer.getInteger(githubVersion[0]);
-            githubMinor = Integer.getInteger(githubVersion[1]);
-            githubCB = Integer.getInteger(githubVersion[2]);
+            ghVersion = newVersion.replace(".", ":");
+            String[] githubVersion = ghVersion.split(":");
+            githubMajor = Integer.parseInt(githubVersion[0]);
+            githubMinor = Integer.parseInt(githubVersion[1]);
+            if (githubVersion.length > 2) {
+                githubCB = Integer.parseInt(githubVersion[2]);
+            } else {
+                githubCB = 0;
+            }
 
             if (githubCB < pluginCB) {
-                log.info("tup");
+                log.info("You are running a testbuild for CB: " + pluginCB);
             }
-            if (githubVersion.equals(thisVersion)) {
-                log.info("is up to date at version "
-                        + thisVersion + ".");
+            if (githubCB > pluginCB) {
+                log.info("There is a new Version available for CB: " + githubCB);
+            }
 
-            } else {
+            if (newVersion.equals(pluginVersion)) {
+                log.info("is up to date at version "
+                        + pluginVersion + ".");
+
+            }
+
+            if ((githubMajor < pluginMajor) || githubMinor < pluginMinor) {
+                log.warning("You are running an dev-build. Be sure you know what you are doing!");
+                log.warning("Please report any bugs via issues or tickets!");
+            }
+            if ((githubMajor > pluginMajor) || githubMinor > pluginMinor) {
+
                 log.warning("is out of date!");
-                log.warning("This version: " + thisVersion + "; latest version: " + newVersion + ".");
+                log.warning("This version: " + pluginVersion + "; latest version: " + newVersion + ".");
                 differentPluginAvailable = true;
             }
         }
