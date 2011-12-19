@@ -34,7 +34,6 @@ public class ListCommandDTP implements CommandExecutor {
         log.error("dtplist command registered");
     }
 
-    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
         log.debug("dtplist command executing");

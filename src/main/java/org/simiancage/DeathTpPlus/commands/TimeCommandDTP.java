@@ -35,7 +35,6 @@ public class TimeCommandDTP implements CommandExecutor {
         log.error("dtptime command registered");
     }
 
-    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
         log.debug("dpttime command executing");

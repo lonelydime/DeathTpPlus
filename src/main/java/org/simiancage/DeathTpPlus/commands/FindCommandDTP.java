@@ -35,7 +35,6 @@ public class FindCommandDTP implements CommandExecutor {
         log.error("dtpfind command registered");
     }
 
-    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label,
                              String[] args) {
         log.debug("dtpfind command executing");

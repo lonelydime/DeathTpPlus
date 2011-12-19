@@ -33,7 +33,6 @@ public class StreakCommandDTP implements CommandExecutor {
         log.error("streak command registered");
     }
 
-    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         log.debug("streak command executing");
         boolean canUseCommand = false;
