@@ -70,7 +70,12 @@ public class DeathDetailDTP {
                 log.info("unknown enitity damager" + damager);
             }
         } else if (damageEvent != null) {
-            causeOfDeath = DeathEventType.valueOf(damageEvent.getCause().toString());
+            try {
+                causeOfDeath = DeathEventType.valueOf(damageEvent.getCause().toString());
+            }
+            catch (IllegalArgumentException e) {
+                causeOfDeath = DeathEventType.UNKNOWN;
+            }
         }
 
         if (causeOfDeath == null) {
