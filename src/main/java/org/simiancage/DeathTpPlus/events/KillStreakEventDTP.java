@@ -17,14 +17,16 @@ public class KillStreakEventDTP extends Event {
     private Player victim;
     private String message;
     private Integer kills;
+    private Boolean isMultiKill;
 
-    public KillStreakEventDTP(Player player, Player victim, String message, Integer kills) {
+    public KillStreakEventDTP(Player player, Player victim, String message, Integer kills, Boolean isMultiKill) {
         super("KillStreakEventDTP");
 
         this.player = player;
         this.victim = victim;
         this.message = message;
         this.kills = kills;
+        this.isMultiKill = isMultiKill;
     }
 
     public Player getPlayer() {
@@ -57,6 +59,16 @@ public class KillStreakEventDTP extends Event {
 
     public void setKills(Integer kills) {
         this.kills = kills;
+    }
+
+    public Boolean getIsMultiKill()
+    {
+        return isMultiKill;
+    }
+
+    public void setIsMultiKill(Boolean isMultiKill)
+    {
+        this.isMultiKill = isMultiKill;
     }
 
 }
