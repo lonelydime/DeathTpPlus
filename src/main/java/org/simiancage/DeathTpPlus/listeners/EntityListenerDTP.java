@@ -46,9 +46,12 @@ public class EntityListenerDTP extends EntityListener {
         if (event.getEntity() instanceof Player) {
 
             if (plugin.isMobArenaEnabled()) {
-                plugin.getMaHandler().inRegion(event.getEntity().getLocation());
-                log.debug("Player in MobArena Region");
-                return;
+                if (plugin.getMaHandler().inRegion(event.getEntity().getLocation())) {
+                    log.debug("Player in MobArena Region");
+                    return;
+                }
+                ;
+
             }
             if (config.isEnableDeathtp()) {
                 oedea = new onEntityDeathDTP(plugin);

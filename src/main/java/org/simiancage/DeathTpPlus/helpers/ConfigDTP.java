@@ -110,7 +110,7 @@ public class ConfigDTP {
      * Link to the location of the recent version number, the file should be a text with just the number
      */
     @SuppressWarnings({"FieldCanBeLocal"})
-    private final String versionURL = "https://raw.github.com/dredhorse/DeathTpPlus/master/Resources/deathtpplus.ver";
+    private final String versionURL = "https://raw.github.com/dredhorse/DeathTpPlus/master/Resources/deathtpplus_temp.ver";
     /**
      * Reference of the LoggerDTP class.
      *
@@ -1358,7 +1358,7 @@ afterwards parsable again from the configuration class of bukkit
     /**
      * Method to check if there is a newer version of the plugin available.
      */
-    private void versionCheck() {
+    private void tempversionCheck() {
         differentPluginAvailable = false;
         String thisVersion = plugin.getDescription().getVersion();
         URL url;
@@ -1386,6 +1386,70 @@ afterwards parsable again from the configuration class of bukkit
         } catch (IOException ex) {
             log.warning("Error checking for update.", ex);
         }
+    }
+
+    /**
+     * Method to figure out if we are out of date or running on an older / newer build of CB
+     */
+
+    private boolean versionCheck() {
+        differentPluginAvailable = false;
+        boolean errorAccessingGithub = false;
+        int pluginMajor;
+        int pluginMinor;
+        int pluginCB;
+        int githubMajor;
+        int githubMinor;
+        int githubCB;
+        String cbVersion = plugin.getServer().getBukkitVersion();
+        log.debug("bukkitVersion", cbVersion);
+
+        String[] thisVersion = plugin.getDescription().getVersion().split(".");
+        log.debug("thisVersion", thisVersion);
+        pluginMajor = Integer.getInteger(thisVersion[0]);
+        pluginMinor = Integer.getInteger(thisVersion[1]);
+        pluginCB = Integer.getInteger(thisVersion[2]);
+        URL url;
+        String newVersion = "";
+        try {
+            url = new URL(versionURL);
+            BufferedReader in;
+            in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            String line;
+            while ((line = in.readLine()) != null) {
+                newVersion += line;
+            }
+            in.close();
+        } catch (MalformedURLException ex) {
+            log.warning("Error accessing update URL.", ex);
+            errorAccessingGithub = true;
+        } catch (IOException ex) {
+            log.warning("Error checking for update.", ex);
+            errorAccessingGithub = true;
+        }
+        if (!errorAccessingGithub) {
+            String[] githubVersion = newVersion.split(".");
+            githubMajor = Integer.getInteger(githubVersion[0]);
+            githubMinor = Integer.getInteger(githubVersion[1]);
+            githubCB = Integer.getInteger(githubVersion[2]);
+
+            if (githubCB < pluginCB) {
+                log.info("tup");
+            }
+            if (githubVersion.equals(thisVersion)) {
+                log.info("is up to date at version "
+                        + thisVersion + ".");
+
+            } else {
+                log.warning("is out of date!");
+                log.warning("This version: " + thisVersion + "; latest version: " + newVersion + ".");
+                differentPluginAvailable = true;
+            }
+        }
+
+
+        return false;
     }
 
 // Updating the config
@@ -1442,5 +1506,6 @@ afterwards parsable again from the configuration class of bukkit
         }
         return saved;
     }
+
 
 }

@@ -113,7 +113,7 @@ public class ServerListenerDTP extends ServerListener {
             }
         }
 
-        if (checkMobArena != null) {
+        if (checkMobArena != null && !plugin.isMobArenaEnabled()) {
             log.info("Enabling MobArena protection");
             plugin.setMaHandler(new MobArenaHandler());
             plugin.setMobArenaEnabled(true);

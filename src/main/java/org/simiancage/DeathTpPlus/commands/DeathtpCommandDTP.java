@@ -84,12 +84,14 @@ public class DeathtpCommandDTP implements CommandExecutor {
                     log.debug("deathLocation", deathLocation);
                     World deathWorld = player.getServer().getWorld(locationRecord.getWorldName());
                     // Added chunkload when chunk not loaded, code from Tele++
+                    int cx = deathLocation.getBlockX() >> 4;
+                    int cz = deathLocation.getBlockZ() >> 4;
 
-                    if (!deathWorld.isChunkLoaded(deathLocation.getBlockX(), deathLocation.getBlockZ())) {
-                        log.debug("Chunk at x: " + deathLocation.getBlockX() + " z: " + deathLocation.getBlockZ() + " is not loaded");
-                        deathWorld.loadChunk(deathLocation.getBlockX(), deathLocation.getBlockZ());
-                        if (!deathWorld.isChunkLoaded(deathLocation.getBlockX(), deathLocation.getBlockZ())) {
-                            log.severe("Chunk at x: " + deathLocation.getBlockX() + " z: " + deathLocation.getBlockZ() + " is not loaded");
+                    if (!deathWorld.isChunkLoaded(cx, cz)) {
+                        log.debug("Chunk at x: " + cx + " z: " + cz + " is not loaded");
+                        deathWorld.loadChunk(cx, cz);
+                        if (!deathWorld.isChunkLoaded(cx, cz)) {
+                            log.severe("Chunk at x: " + cx + " z: " + cz + " is not loaded");
                         }
                     }
 
@@ -99,6 +101,9 @@ public class DeathtpCommandDTP implements CommandExecutor {
                         int y = yLocation.getBlockY() + 2;
                         int z = yLocation.getBlockZ();
                         int x = yLocation.getBlockX();
+                        if (y == 2) {
+                            y = 124;
+                        }
                         deathLocation = deathWorld.getBlockAt(x, y, z).getLocation();
                         log.debug("deathLocation", deathLocation);
                     } else {
