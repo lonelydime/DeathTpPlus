@@ -61,12 +61,12 @@ public class KillStreakEventDTP extends Event {
         this.kills = kills;
     }
 
-    public Boolean getIsMultiKill()
+    public Boolean isMultiKill()
     {
         return isMultiKill;
     }
 
-    public void setIsMultiKill(Boolean isMultiKill)
+    public void isMultiKill(Boolean isMultiKill)
     {
         this.isMultiKill = isMultiKill;
     }
