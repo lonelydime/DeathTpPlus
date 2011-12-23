@@ -32,7 +32,7 @@ public class FindCommandDTP implements CommandExecutor {
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
         tombStoneHelper = TombStoneHelperDTP.getInstance();
-        log.error("dtpfind command registered");
+        log.informational("dtpfind command registered");
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label,

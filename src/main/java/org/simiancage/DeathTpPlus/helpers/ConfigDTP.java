@@ -60,7 +60,7 @@ public class ConfigDTP {
     /**
      * Enables logging to server console. Warning and Severe will still be logged.
      */
-    private boolean errorLogEnabled = true;
+    private boolean informationLogEnabled = true;
     /**
      * Enable more logging.. could be messy!
      */
@@ -122,11 +122,11 @@ public class ConfigDTP {
     /**
      * This is the internal config version
      */
-    private final String configCurrent = "3.1";
+    private final String configCurrent = "3.2";
     /**
      * This is the DEFAULT for the config file version, should be the same as configCurrent. Will afterwards be changed
      */
-    private String configVer = "3.1";
+    private String configVer = "3.2";
 
 
 // and now the real stuff
@@ -690,7 +690,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# Stop TombStone creation next to existing chests if true (IF set to true it could allow users to circumvent chest protection.)");
         stream.println("allowInterfere: " + allowInterfere);
         stream.println();
-        stream.println("# We normally checks to make sure we aren't trying to create a chest in the void.");
+        stream.println("# We normally check to make sure we aren't trying to create a chest in the void.");
         stream.println("# If you handle or modify the void with another plugin, you can disable that check here.");
         stream.println("# This option should be true for most servers.");
         stream.println("voidCheck: " + voidCheck);
@@ -721,10 +721,6 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# Never remove a TombStone unless it is empty");
         stream.println("# WARNING: THIS IS A PROCESSOR-INTENSIVE OPTION");
         stream.println("keepTombStoneUntilEmpty: " + keepTombStoneUntilEmpty);
-        stream.println();
-        stream.println("# Keep Sign and Chest for people with FREE chest and sign permission on quicklooting?");
-        stream.println("# true = people can keep them, false = Sign and Chest are removed");
-
         stream.println();
         stream.println("#--------- TombStone Features (Security");
         stream.println();
@@ -1046,8 +1042,8 @@ afterwards parsable again from the configuration class of bukkit
      * @return errorLogEnabled
      */
 
-    public boolean isErrorLogEnabled() {
-        return errorLogEnabled;
+    public boolean isInformationLogEnabled() {
+        return informationLogEnabled;
     }
 
     /**
@@ -1209,7 +1205,7 @@ afterwards parsable again from the configuration class of bukkit
         }
         config = plugin.getConfig();
         config.addDefault("configVer", configVer);
-        config.addDefault("errorLogEnabled", errorLogEnabled);
+        config.addDefault("informationLogEnabled", informationLogEnabled);
         config.addDefault("DebugLogEnabled", debugLogEnabled);
         config.addDefault("checkForUpdate", checkForUpdate);
         config.addDefault("autoUpdateConfig", autoUpdateConfig);
@@ -1235,7 +1231,12 @@ afterwards parsable again from the configuration class of bukkit
 
         // Starting to update the standard configuration
         configVer = config.getString("configVer");
-        errorLogEnabled = config.getBoolean("errorLogEnabled");
+        // Workaround for old errorLogEnabled
+        if (config.contains("errorLogEnabled")) {
+            informationLogEnabled = config.getBoolean("errorLogEnabled");
+        } else {
+            informationLogEnabled = config.getBoolean("informationLogEnabled");
+        }
         debugLogEnabled = config.getBoolean("DebugLogEnabled");
         checkForUpdate = config.getBoolean("checkForUpdate");
         autoUpdateConfig = config.getBoolean("autoUpdateConfig");
@@ -1246,7 +1247,7 @@ afterwards parsable again from the configuration class of bukkit
         }
         log.debug("configCurrent", configCurrent);
         log.debug("configVer", configVer);
-        log.debug("errorLogEnabled", errorLogEnabled);
+        log.debug("informationLogEnabled", informationLogEnabled);
         log.debug("checkForUpdate", checkForUpdate);
         log.debug("autoUpdateConfig", autoUpdateConfig);
         log.debug("saveConfig", saveConfig);
@@ -1295,10 +1296,10 @@ afterwards parsable again from the configuration class of bukkit
             stream.println("# Configuration Version");
             stream.println("configVer: '" + configVer + "'");
             stream.println();
-            stream.println("# Error Log Enabled");
+            stream.println("# Informational Log Enabled");
             stream.println("# Enable logging to server console");
-            stream.println("# Warning and Severe will still be logged.");
-            stream.println("errorLogEnabled: " + errorLogEnabled);
+            stream.println("# Gives out some more informational messages.");
+            stream.println("informationLogEnabled: " + informationLogEnabled);
             stream.println();
             stream.println("# Debug Log Enabled");
             stream.println("# Enable more logging.. could be messy!");
@@ -1393,6 +1394,8 @@ afterwards parsable again from the configuration class of bukkit
      */
 
     private boolean versionCheck() {
+
+        // ToDo figure out how to support new versioning system
         differentPluginAvailable = false;
         boolean errorAccessingGithub = false;
         int pluginMajor;

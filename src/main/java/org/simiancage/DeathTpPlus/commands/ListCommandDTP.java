@@ -31,7 +31,7 @@ public class ListCommandDTP implements CommandExecutor {
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
         tombStoneHelper = TombStoneHelperDTP.getInstance();
-        log.error("dtplist command registered");
+        log.informational("dtplist command registered");
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label,

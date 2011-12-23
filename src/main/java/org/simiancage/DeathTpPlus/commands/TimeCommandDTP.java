@@ -32,7 +32,7 @@ public class TimeCommandDTP implements CommandExecutor {
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
         tombStoneHelper = TombStoneHelperDTP.getInstance();
-        log.error("dtptime command registered");
+        log.informational("dtptime command registered");
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label,

@@ -711,13 +711,13 @@ afterwards parsable again from the configuration class of bukkit
 
 // Kill Streak Messages
         killStreakMessages = deathMessageFileConfig.getList("killstreak", Arrays.asList(defaultKillStreaks));
-        log.info(killStreakMessages.size() + " messages loaded for killstreak");
+        log.informational(killStreakMessages.size() + " messages loaded for killstreak");
 // Death Streak Messages
         deathStreakMessages = deathMessageFileConfig.getList("deathstreak", Arrays.asList(defaultDeathStreaks));
-        log.info(deathStreakMessages.size() + " messages loaded for deathstreak");
+        log.informational(deathStreakMessages.size() + " messages loaded for deathstreak");
 // Multi Kill Messages
         multiKillMessages = deathMessageFileConfig.getList("mulitkill", Arrays.asList(defaultMultiKill));
-        log.info(multiKillMessages.size() + " messages loaded for multikill");
+        log.informational(multiKillMessages.size() + " messages loaded for multikill");
 // DeathTp Messages
         // Workaround for NPE as Monster isn't defined in the deathmessages
         deathMessages.put(DeathEventType.MONSTER, Arrays.asList(defaultUnknownMessages));
@@ -758,7 +758,7 @@ afterwards parsable again from the configuration class of bukkit
         //ToDo add new deathMessages to the top
         for (DeathEventType deathEventType : DeathEventType.values()) {
             log.debug("deathEventType", deathEventType);
-            log.info(deathMessages.get(deathEventType).size() + " messages loaded for " + deathEventType);
+            log.informational(deathMessages.get(deathEventType).size() + " messages loaded for " + deathEventType);
         }
 // Debugging
 
@@ -1216,7 +1216,7 @@ afterwards parsable again from the configuration class of bukkit
      */
     private void updateNecessary() {
         if (deathMessagesVer.equalsIgnoreCase(deathMessagesCurrent)) {
-            log.info("Deathmessages are up to date");
+            log.informational("Deathmessages are up to date");
         } else {
             log.warning("Deathmessages are not up to date!");
             log.warning("Deathmessages File Version: " + deathMessagesVer);

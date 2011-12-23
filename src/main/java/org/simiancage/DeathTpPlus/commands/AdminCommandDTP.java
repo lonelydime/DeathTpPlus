@@ -31,7 +31,7 @@ public class AdminCommandDTP implements CommandExecutor {
         deathMessages = DeathMessagesDTP.getInstance();
         tombMessages = TombMessagesDTP.getInstance();
         tombStoneHelper = TombStoneHelperDTP.getInstance();
-        log.error("dtpadmin command registered");
+        log.informational("dtpadmin command registered");
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label,

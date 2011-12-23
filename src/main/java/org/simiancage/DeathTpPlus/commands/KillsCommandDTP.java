@@ -31,7 +31,7 @@ public class KillsCommandDTP implements CommandExecutor {
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
         deathLog = plugin.getDeathLog();
-        log.error("kills command registered");
+        log.informational("kills command registered");
 
     }
 

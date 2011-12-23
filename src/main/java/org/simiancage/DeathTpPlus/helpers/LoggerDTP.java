@@ -22,9 +22,9 @@ import java.util.logging.Logger;
  * {@link #warning(String) warning} <p>
  * {@link #severe(String) severe} <p>
  * {@link #debug(String, Object) debug} <p>
- * {@link #error(String) error} <p>
+ * {@link #informational(String) informational} <p>
  * {@link #log(java.util.logging.Level, String, Throwable) log}<p>
- * and checks with the {@link ConfigDTP} if debug and error logging is
+ * and checks with the {@link ConfigDTP} if debug and informational logging is
  * enabled.<p>
  * It also supports a plugin {@link #enableMsg()} and {@link #disableMsg()}.<p>
  * Initialization of the LoggerDTP is being done by {@link #getInstance(String, String)}  getInstance} .<p>
@@ -212,7 +212,7 @@ public class LoggerDTP {
     }
 
     /**
-     * will output with INFO level to console if error logging is enabled
+     * will output with INFO level to console if informational logging is enabled
      *
      * @param msg message to output
      */
@@ -284,13 +284,13 @@ public class LoggerDTP {
     }
 
     /**
-     * will output with INFO level to console if error logging is enabled
+     * will output with INFO level to console if informational logging is enabled
      *
      * @param msg message to output
      */
-    public void error(String msg) {
-        if (config.isErrorLogEnabled()) {
-            this.logger.info(msg);
+    public void informational(String msg) {
+        if (config.isInformationLogEnabled()) {
+            this.logger.info(formatMessage(msg));
         }
     }
 

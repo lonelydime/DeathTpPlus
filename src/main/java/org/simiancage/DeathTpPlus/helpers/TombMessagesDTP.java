@@ -510,7 +510,7 @@ afterwards parsable again from the configuration class of bukkit
         for (DeathEventType deathEventType : DeathEventType.values()) {
             if ((deathEventType != DeathEventType.MONSTER) && (deathEventType != DeathEventType.PVP_FISTS) && (deathEventType != DeathEventType.PVP_TAMED)) {
                 log.debug("deathEventType", deathEventType);
-                log.info(deathevents.get(deathEventType).size() + " messages loaded for " + deathEventType);
+                log.informational(deathevents.get(deathEventType).size() + " messages loaded for " + deathEventType);
             }
         }
 
@@ -870,7 +870,7 @@ afterwards parsable again from the configuration class of bukkit
      */
     private void updateNecessary() {
         if (tombMessagesVer.equalsIgnoreCase(tombMessagesCurrent)) {
-            log.info("Tombmessages are up to date");
+            log.informational("Tombmessages are up to date");
         } else {
             log.warning("Tombmessages are not up to date!");
             log.warning("Tombmessages File Version: " + tombMessagesVer);

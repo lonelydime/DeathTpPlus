@@ -31,7 +31,7 @@ public class DeathsCommandDTP implements CommandExecutor {
         log = LoggerDTP.getLogger();
         config = ConfigDTP.getInstance();
         deathLog = plugin.getDeathLog();
-        log.error("deaths command registered");
+        log.informational("deaths command registered");
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
