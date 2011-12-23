@@ -86,6 +86,7 @@ public class DeathTpPlus extends JavaPlugin {
     private boolean worldTravel = false;
     private FileConfiguration configuration;
     private LWCPlugin lwcPlugin = null;
+    private String lwcPluginVersion;
     private Lockette LockettePlugin = null;
     protected HashMap<String, EntityDamageEvent> deathCause = new HashMap<String, EntityDamageEvent>();
     private boolean economyActive = false;
@@ -239,14 +240,27 @@ public class DeathTpPlus extends JavaPlugin {
 
     public Plugin checkPlugin(Plugin plugin) {
         if (plugin != null && plugin.isEnabled()) {
-            log.info("Found " + plugin.getDescription().getName()
-                    + " (v" + plugin.getDescription().getVersion() + ")");
-            if (config.isEnableLockette()) {
-                log.info("configured to use Lockette");
+            String pluginName = plugin.getDescription().getName();
+            String pluginVersion = plugin.getDescription().getVersion();
+            log.info("Found " + pluginName + " (v" + pluginVersion + ")");
+            if (pluginName.equalsIgnoreCase("LWC")) {
+                setLwcPlugin((LWCPlugin) plugin);
+                setLwcPluginVersion(pluginVersion);
+                log.debug("lwcVersion ", pluginVersion);
             }
-            if (config.isEnableLWC()) {
-                log.info("configured to use LWC");
+            if (pluginName.equalsIgnoreCase("Lockette")) {
+                setLockettePlugin((Lockette) plugin);
             }
+            if (config.isEnableLockette() && (getLockettePlugin() == null)) {
+                log.warning("is configured to use Lockette, but Lockette wasn't found yet!");
+                log.warning("Still waiting for Lockette to become active!");
+            }
+            if (config.isEnableLWC() && (getLwcPlugin() == null)) {
+                log.warning("is configured to use LWC, but LWC wasn't found yet!");
+                log.warning("Still waiting for LWC to become active!");
+            }
+
+
             return plugin;
         }
         return null;
@@ -398,5 +412,14 @@ public class DeathTpPlus extends JavaPlugin {
         p.sendMessage(msg);
     }
 
+    public void setLwcPluginVersion(String lwcPluginVersion) {
+        this.lwcPluginVersion = lwcPluginVersion;
+    }
 
+    public boolean isLWC4() {
+        if (lwcPluginVersion.startsWith("3")) {
+            return false;
+        }
+        return true;
+    }
 }

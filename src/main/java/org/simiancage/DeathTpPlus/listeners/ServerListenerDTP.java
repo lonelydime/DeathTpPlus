@@ -51,6 +51,7 @@ public class ServerListenerDTP extends ServerListener {
         if (event.getPlugin() == plugin.getLwcPlugin()) {
             log.info("LWC plugin lost.");
             plugin.setLwcPlugin(null);
+            plugin.setLwcPluginVersion("");
         }
 
         if (event.getPlugin() == plugin.getLockettePlugin()) {
@@ -98,10 +99,11 @@ public class ServerListenerDTP extends ServerListener {
         }
 
         if (plugin.getLwcPlugin() == null) {
-            if (event.getPlugin().getDescription().getName()
-                    .equalsIgnoreCase("LWC")) {
-                plugin.setLwcPlugin((LWCPlugin) plugin.checkPlugin(event
-                        .getPlugin()));
+            if (event.getPlugin().getDescription().getName().equalsIgnoreCase("LWC")) {
+                plugin.setLwcPlugin((LWCPlugin) plugin.checkPlugin(event.getPlugin()));
+                /*String lwcVersion = event.getPlugin().getDescription().getVersion();
+                plugin.setLwcPluginVersion(lwcVersion);
+                log.debug("lwcVersion ", lwcVersion);*/
             }
         }
 

@@ -2,6 +2,7 @@ package org.simiancage.DeathTpPlus.helpers;
 
 import com.griefcraft.lwc.LWC;
 import com.griefcraft.model.Protection;
+import com.griefcraft.model.Protection.Type;
 import com.griefcraft.model.ProtectionTypes;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -68,15 +69,10 @@ public class TombStoneHelperDTP {
 // Register the chest + sign as private
         Block block = tStoneBlockDTP.getBlock();
         Block sign = tStoneBlockDTP.getSign();
-        lwc.getPhysicalDatabase().registerProtection(block.getTypeId(),
-                ProtectionTypes.PRIVATE, block.getWorld().getName(),
-                player.getName(), "", block.getX(), block.getY(), block.getZ());
+        // Implemented API Change for LWC 4
+        registerLWCProtection(lwc, block, true, tStoneBlockDTP.getOwner());
         if (sign != null) {
-            lwc.getPhysicalDatabase()
-                    .registerProtection(sign.getTypeId(),
-                            ProtectionTypes.PRIVATE,
-                            block.getWorld().getName(), player.getName(), "",
-                            sign.getX(), sign.getY(), sign.getZ());
+            registerLWCProtection(lwc, sign, true, tStoneBlockDTP.getOwner());
         }
 
         tStoneBlockDTP.setLwcEnabled(true);
@@ -153,13 +149,17 @@ public class TombStoneHelperDTP {
         Block _block = tStoneBlockDTP.getBlock();
         Protection protection = lwc.findProtection(_block);
         if (protection != null) {
-            lwc.getPhysicalDatabase().unregisterProtection(protection.getId());
+            protection.remove();
+            /*// Implemented API Change for LWC 4
+            if (plugin.isLWC4()){
+                lwc.getPhysicalDatabase().removeProtection(protection.getId());
+            } else {
+                protection.remove();
+                //lwc.getPhysicalDatabase().unregisterProtection(protection.getId());
+            }*/
 // Set to public instead of removing completely
             if (config.isLwcPublic() && !force) {
-                lwc.getPhysicalDatabase().registerProtection(
-                        _block.getTypeId(), ProtectionTypes.PUBLIC,
-                        _block.getWorld().getName(), tStoneBlockDTP.getOwner(), "",
-                        _block.getX(), _block.getY(), _block.getZ());
+                registerLWCProtection(lwc, _block, false, tStoneBlockDTP.getOwner());
             }
         }
 
@@ -169,12 +169,11 @@ public class TombStoneHelperDTP {
             protection = lwc.findProtection(_block);
             if (protection != null) {
                 protection.remove();
+
 // Set to public instead of removing completely
+
                 if (config.isLwcPublic() && !force) {
-                    lwc.getPhysicalDatabase().registerProtection(
-                            _block.getTypeId(), ProtectionTypes.PUBLIC,
-                            _block.getWorld().getName(), tStoneBlockDTP.getOwner(), "",
-                            _block.getX(), _block.getY(), _block.getZ());
+                    registerLWCProtection(lwc, _block, false, tStoneBlockDTP.getOwner());
                 }
             }
         }
@@ -523,6 +522,31 @@ public class TombStoneHelperDTP {
         if (p != null) {
             plugin.sendMessage(p, "Your tombstone has been destroyed!");
         }
+    }
+
+    public void registerLWCProtection(LWC lwc, Block block, boolean privat, String owner) {
+        if (plugin.isLWC4()) {
+            Type type;
+            if (privat) {
+                type = Type.PRIVATE;
+            } else {
+                type = Type.PUBLIC;
+            }
+            lwc.getPhysicalDatabase().registerProtection(block.getTypeId(), type, block.getWorld().getName(), owner, "", block.getX(), block.getY(), block.getZ());
+
+        } else {
+            int protectionTypes;
+            if (privat) {
+                protectionTypes = ProtectionTypes.PRIVATE;
+            } else {
+                protectionTypes = ProtectionTypes.PUBLIC;
+
+            }
+            lwc.getPhysicalDatabase().registerProtection(block.getTypeId(), protectionTypes, block.getWorld().getName(), owner, "", block.getX(), block.getY(), block.getZ());
+
+        }
+
+        return;
     }
 
 
