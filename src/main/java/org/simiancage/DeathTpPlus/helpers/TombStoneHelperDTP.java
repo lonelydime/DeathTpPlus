@@ -372,7 +372,10 @@ public class TombStoneHelperDTP {
      * @return
      */
     public static String getDirection(double rot) {
-        if (0 <= rot && rot < 22.5) {
+
+        // Todo remove this when the changes work
+
+/*        if (0 <= rot && rot < 22.5) {
             return "North";
         } else if (22.5 <= rot && rot < 67.5) {
             return "Northeast";
@@ -392,7 +395,32 @@ public class TombStoneHelperDTP {
             return "North";
         } else {
             return null;
+        }*/
+
+        // Changed to new North Orientation
+
+        if (0 <= rot && rot < 22.5) {
+            return "West";
+        } else if (22.5 <= rot && rot < 67.5) {
+            return "NorthWest";
+        } else if (67.5 <= rot && rot < 112.5) {
+            return "North";
+        } else if (112.5 <= rot && rot < 157.5) {
+            return "Northeast";
+        } else if (157.5 <= rot && rot < 202.5) {
+            return "East";
+        } else if (202.5 <= rot && rot < 247.5) {
+            return "Southeast";
+        } else if (247.5 <= rot && rot < 292.5) {
+            return "South";
+        } else if (292.5 <= rot && rot < 337.5) {
+            return "Southwest";
+        } else if (337.5 <= rot && rot < 360.0) {
+            return "West";
+        } else {
+            return null;
         }
+
     }
 
     /**
