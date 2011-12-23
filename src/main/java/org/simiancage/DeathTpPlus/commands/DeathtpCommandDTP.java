@@ -162,8 +162,8 @@ public class DeathtpCommandDTP implements CommandExecutor {
         }
 
         if (hasFunds(player)) {
-            if (plugin.isEconomyActive()) {
-                double deathTpCost = Double.valueOf(config.getDeathtpCost().trim());
+            double deathTpCost = Double.valueOf(config.getDeathtpCost().trim());
+            if (plugin.isEconomyActive() && deathTpCost > 0.0) {
                 plugin.getEconomy().withdrawPlayer(player.getName(), deathTpCost);
                 player.sendMessage(String.format("You used %s to use /deathtp.", plugin.getEconomy().format(deathTpCost)));
             }
