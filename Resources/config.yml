@@ -9,10 +9,10 @@
 # Configuration Version
 configVer: '3.0'
 
-# Error Log Enabled
+# Informational Log Enabled
 # Enable logging to server console
-# Warning and Severe will still be logged.
-errorLogEnabled: true
+# Gives out some more informational messages.
+informationLogEnabled: true
 
 # Debug Log Enabled
 # Enable more logging.. could be messy!

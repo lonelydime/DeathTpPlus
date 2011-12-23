@@ -110,7 +110,7 @@ public class ConfigDTP {
      * Link to the location of the recent version number, the file should be a text with just the number
      */
     @SuppressWarnings({"FieldCanBeLocal"})
-    private final String versionURL = "https://raw.github.com/dredhorse/DeathTpPlus/master/Resources/deathtpplus_temp.ver";
+    private final String versionURL = "https://raw.github.com/dredhorse/DeathTpPlus/master/Resources/deathtpplus.ver";
     /**
      * Reference of the LoggerDTP class.
      *
