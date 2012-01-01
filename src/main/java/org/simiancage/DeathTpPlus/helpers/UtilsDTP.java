@@ -20,6 +20,9 @@ public class UtilsDTP {
     }
 
     public static CreatureType getCreatureType(Entity entity) {
+        if (entity instanceof Blaze) {
+            return CreatureType.BLAZE;
+        }
         if (entity instanceof CaveSpider) {
             return CreatureType.CAVE_SPIDER;
         }
@@ -32,6 +35,9 @@ public class UtilsDTP {
         if (entity instanceof Creeper) {
             return CreatureType.CREEPER;
         }
+        if (entity instanceof EnderDragon) {
+            return CreatureType.ENDER_DRAGON;
+        }
         if (entity instanceof Enderman) {
             return CreatureType.ENDERMAN;
         }
@@ -40,6 +46,12 @@ public class UtilsDTP {
         }
         if (entity instanceof Giant) {
             return CreatureType.GIANT;
+        }
+        if (entity instanceof MagmaCube) {
+            return CreatureType.MAGMA_CUBE;
+        }
+        if (entity instanceof MushroomCow) {
+            return CreatureType.MUSHROOM_COW;
         }
         if (entity instanceof Pig) {
             return CreatureType.PIG;
@@ -59,11 +71,17 @@ public class UtilsDTP {
         if (entity instanceof Silverfish) {
             return CreatureType.SILVERFISH;
         }
+        if (entity instanceof Snowman) {
+            return CreatureType.SNOWMAN;
+        }
         if (entity instanceof Spider) {
             return CreatureType.SPIDER;
         }
         if (entity instanceof Squid) {
             return CreatureType.SQUID;
+        }
+        if (entity instanceof Villager) {
+            return CreatureType.VILLAGER;
         }
         if (entity instanceof Zombie) {
             return CreatureType.ZOMBIE;
