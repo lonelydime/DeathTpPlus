@@ -17,7 +17,7 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.0.1-R2-SNAPSHOT</version>
+			<version>1.0.1-R1</version>
 		</dependency>
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
@@ -35,9 +35,9 @@
 			<version>1.4.4</version>
 		</dependency>
 		<dependency>
-			<groupId>com.griefcraft.lwc</groupId>
+			<groupId>com.griefcraft.lwc.LWCPlugin</groupId>
 			<artifactId>LWC</artifactId>
-			<version>3.53</version>
+			<version>4.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.garbagemule.MobArena</groupId>
