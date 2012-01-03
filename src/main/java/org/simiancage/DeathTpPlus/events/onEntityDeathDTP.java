@@ -1,8 +1,10 @@
 package org.simiancage.DeathTpPlus.events;
 
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -145,22 +147,8 @@ public class onEntityDeathDTP {
 
 // Get the current player location.
         Location loc = player.getLocation();
-        Block block = player.getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(),
-                loc.getBlockZ());
+        Block block = returnGoodPlace(player, loc);
 
-// If we run into something we don't want to destroy, go one up.
-        if (block.getType() == Material.STEP
-                || block.getType() == Material.TORCH
-                || block.getType() == Material.REDSTONE_WIRE
-                || block.getType() == Material.RAILS
-                || block.getType() == Material.STONE_PLATE
-                || block.getType() == Material.WOOD_PLATE
-                || block.getType() == Material.REDSTONE_TORCH_ON
-                || block.getType() == Material.REDSTONE_TORCH_OFF
-                || block.getType() == Material.CAKE_BLOCK) {
-            block = player.getWorld().getBlockAt(loc.getBlockX(),
-                    loc.getBlockY() + 1, loc.getBlockZ());
-        }
 
 // Don't create the chest if it or its sign would be in the void
         if (config.isVoidCheck()
@@ -424,6 +412,51 @@ public class onEntityDeathDTP {
         }
     }
 
+    private Block returnGoodPlace(Player player, Location loc) {
+        Block block = player.getWorld().getBlockAt(loc);
+        // If we run into something we don't want to destroy, go one up.
+        if (block.getType() == Material.STEP
+                || block.getType() == Material.SIGN
+                || block.getType() == Material.SIGN_POST
+                || block.getType() == Material.TORCH
+                || block.getType() == Material.REDSTONE_WIRE
+                || block.getType() == Material.RAILS
+                || block.getType() == Material.STONE_PLATE
+                || block.getType() == Material.WOOD_PLATE
+                || block.getType() == Material.REDSTONE_TORCH_ON
+                || block.getType() == Material.REDSTONE_TORCH_OFF
+                || block.getType() == Material.CAKE_BLOCK) {
+            block = player.getWorld().getBlockAt(loc.getBlockX(),
+                    loc.getBlockY() + 1, loc.getBlockZ());
+        }
+        if (config.isShouldOnlyUseAirToCreate()) {
+            if (isNotAir(block)) {
+                World world = player.getWorld();
+                int x = loc.getBlockX();
+                int y = loc.getBlockY();
+                int z = loc.getBlockZ();
+                Block otherBlock = world.getBlockAt(x + 1, y, z);
+                if (isNotAir(otherBlock)) {
+                    otherBlock = world.getBlockAt(x - 1, y, z);
+                }
+                if (isNotAir(otherBlock)) {
+                    otherBlock = world.getBlockAt(x, y, z - 1);
+                }
+                if (isNotAir(otherBlock)) {
+                    otherBlock = world.getBlockAt(x, y, z + 1);
+                }
+                if (!isNotAir(otherBlock)) {
+                    block = otherBlock;
+                }
+            }
+        }
+        return block;
+    }
+
+    private boolean isNotAir(Block block) {
+        return (block.getType() != Material.AIR);
+    }
+
     private void UpdateTomb(DeathDetailDTP deathDetail) {
         Player player = deathDetail.getPlayer();
         if (tombWorker.hasTomb(player.getName())) {
@@ -456,7 +489,14 @@ public class onEntityDeathDTP {
 
     private void ShowDeathSign(DeathDetailDTP deathDetail) {
         //place sign
-        Block signBlock = deathDetail.getPlayer().getWorld().getBlockAt(deathDetail.getPlayer().getLocation());
+        Block signBlock = returnGoodPlace(deathDetail.getPlayer(), deathDetail.getPlayer().getLocation());
+        signBlock = tombStoneHelper.findPlace(signBlock, false);
+
+        if (signBlock == null) {
+            deathDetail.getPlayer().sendMessage("We will remember you, even without a Deathsign!");
+            log.informational("Couldn't create a deathsign for player " + deathDetail.getPlayer().getName() + " at location " + deathDetail.getPlayer().getLocation().toString());
+            return;
+        }
         signBlock.setType(Material.SIGN_POST);
 
         BlockState state = signBlock.getState();

@@ -122,11 +122,11 @@ public class ConfigDTP {
     /**
      * This is the internal config version
      */
-    private final String configCurrent = "3.2";
+    private final String configCurrent = "3.3";
     /**
      * This is the DEFAULT for the config file version, should be the same as configCurrent. Will afterwards be changed
      */
-    private String configVer = "3.2";
+    private String configVer = "3.3";
 
 
 // and now the real stuff
@@ -165,6 +165,11 @@ public class ConfigDTP {
      * Allow World Travel = yes, no, permissions
      */
     private String allowWorldTravel = "no";
+
+    /**
+     * Only use AIR to create signs or chests
+     */
+    private boolean shouldOnlyUseAirToCreate = false;
 
 
 // DeathTp Features
@@ -387,6 +392,7 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("enableLockette", enableLockette);
         config.addDefault("enableLWC", enableLWC);
         config.addDefault("allowWorldTravel", allowWorldTravel);
+        config.addDefault("shouldOnlyUseAirToCreate", shouldOnlyUseAirToCreate);
 
 // DeathTp Features Variables
         config.addDefault("enableDeathtp", enableDeathtp);
@@ -454,6 +460,7 @@ afterwards parsable again from the configuration class of bukkit
         tombStoneSign[1] = config.getString("tombStoneSign.Line2", tombStoneSign[1]);
         tombStoneSign[2] = config.getString("tombStoneSign.Line3", tombStoneSign[2]);
         tombStoneSign[3] = config.getString("tombStoneSign.Line4", tombStoneSign[3]);
+        shouldOnlyUseAirToCreate = config.getBoolean("shouldOnlyUseAirToCreate");
 
 // DeathTpPlus Features
         enableDeathtp = config.getBoolean("enableDeathtp");
@@ -511,6 +518,7 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("tombStoneSign", tombStoneSign[1]);
         log.debug("tombStoneSign", tombStoneSign[2]);
         log.debug("tombStoneSign", tombStoneSign[3]);
+        log.debug("shouldOnlyUseAirToCreate", shouldOnlyUseAirToCreate);
         log.debug("allowWordTravel", allowWorldTravel);
         log.debug("enableDeathtp", enableDeathtp);
         log.debug("showDeathNotify", showDeathNotify);
@@ -553,6 +561,9 @@ afterwards parsable again from the configuration class of bukkit
 
 // and now some working...
 
+        if (shouldOnlyUseAirToCreate) {
+            log.warning("shouldOnlyUseAirToCreate is enabled. This can mean that there will be no Deathsigns or Tombstones being created!");
+        }
 
         if (isRemoveTombStoneWhenEmpty()) {
             log.warning("RemoveWhenEmpty is enabled. This is processor intensive!");
@@ -620,6 +631,11 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("   Line2: \"" + tombStoneSign[1] + "\"");
         stream.println("   Line3: \"" + tombStoneSign[2] + "\"");
         stream.println("   Line4: \"" + tombStoneSign[3] + "\"");
+        stream.println();
+        stream.println("# Should we only use air to create signs and chests.");
+        stream.println("# WARNING: This can mean that NO DeathSigns or TombStones are created.");
+        stream.println("#          Use at your own risk!");
+        stream.println("shouldOnlyUseAirToCreate: " + shouldOnlyUseAirToCreate);
         stream.println();
         stream.println("#--------- DeathTp Features");
         stream.println();
@@ -765,6 +781,10 @@ afterwards parsable again from the configuration class of bukkit
 
 // The plugin specific getters start here!
 
+
+    public boolean isShouldOnlyUseAirToCreate() {
+        return shouldOnlyUseAirToCreate;
+    }
 
     public boolean isTeleportToHighestBlock() {
         return teleportToHighestBlock;
