@@ -282,11 +282,12 @@ public class onEntityDeathDTP {
         int droppedExperience;
         if (config.isKeepExperienceOnQuickLoot()) {
             droppedExperience = deathDetail.getEntityDeathEvent().getDroppedExp();
+            log.debug("droppedExperience", droppedExperience);
             deathDetail.getEntityDeathEvent().setDroppedExp(0);
         } else {
             droppedExperience = 0;
         }
-        log.debug("droppedExperience", droppedExperience);
+
 // Create a TombBlock for this tombstone
         TombStoneBlockDTP tStoneBlockDTP = new TombStoneBlockDTP(sChest.getBlock(),
                 (lChest != null) ? lChest.getBlock() : null, sBlock,
