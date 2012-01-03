@@ -111,6 +111,15 @@ public class ConfigDTP {
      */
     @SuppressWarnings({"FieldCanBeLocal"})
     private final String versionURL = "https://raw.github.com/dredhorse/DeathTpPlus/master/Resources/deathtpplus.ver";
+
+    /**
+     * Link to bit.ly for tracking reloads..
+     * is hooked into UpdateChecking so can be disabled
+     */
+    private final String checkInUrl = ""
+
+    //ToDo create new link for every version
+
     /**
      * Reference of the LoggerDTP class.
      *
