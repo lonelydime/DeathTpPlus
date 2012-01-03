@@ -112,13 +112,15 @@ public class onEntityDeathDTP {
             deathLog.setRecord(deathDetail);
         }
 
-        if (config.isShowDeathSign()) {
-            ShowDeathSign(deathDetail);
-        }
-// Tomb part
+        // Tomb part
         if (config.isEnableTomb()) {
             UpdateTomb(deathDetail);
         }
+
+        if (config.isShowDeathSign()) {
+            ShowDeathSign(deathDetail);
+        }
+
 
 // Tombstone part
         if (config.isEnableTombStone()) {
