@@ -112,6 +112,11 @@ public class onEntityDeathDTP {
             deathLog.setRecord(deathDetail);
         }
 
+        // Tombstone part
+        if (config.isEnableTombStone()) {
+            CreateTombStone(deathDetail);
+        }
+
         // Tomb part
         if (config.isEnableTomb()) {
             UpdateTomb(deathDetail);
@@ -122,10 +127,6 @@ public class onEntityDeathDTP {
         }
 
 
-// Tombstone part
-        if (config.isEnableTombStone()) {
-            CreateTombStone(deathDetail);
-        }
     }
 
     private void CreateTombStone(DeathDetailDTP deathDetail) {
