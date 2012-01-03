@@ -126,11 +126,10 @@ public class PlayerListenerDTP extends PlayerListener {
             int playerTotalExperience = player.getTotalExperience();
             log.debug("Player TotalExperience", playerTotalExperience);
             log.debug("Stored droppedExperience", storedDroppedExperience);
-
-
-            //player.setTotalExperience(storedDroppedExperience + playerTotalExperience);
-            player.setExp(storedDroppedExperience + playerTotalExperience);
-            log.debug("Player New TotalExperience", player.getTotalExperience());
+            for (int i = 1; i < storedDroppedExperience; ++i) {
+                player.giveExp(1);
+                log.debug("Player New TotalExperience", player.getTotalExperience());
+            }
             if (!overflow) {
 // We're quicklooting, so no need to resume this interaction
                 event.setUseInteractedBlock(Result.DENY);
