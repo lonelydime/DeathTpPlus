@@ -465,9 +465,9 @@ public class onEntityDeathDTP {
             String name = deathDetail.getPlayer().getName();
             String reason;
             if (deathDetail.isPVPDeath()) {
-                reason = deathDetail.getKiller().getName();
+                reason = tombMessages.getPvpMessage(deathDetail.getKiller().getName());
             } else {
-                reason = deathDetail.getCauseOfDeath().toString().substring(0, 1) + deathDetail.getCauseOfDeath().toString().substring(1).toLowerCase();
+                reason = tombMessages.getMessage(deathDetail.getCauseOfDeath());
             }
 
             String[] signMessage = config.getTombStoneSign();
@@ -495,9 +495,9 @@ public class onEntityDeathDTP {
         String name = deathDetail.getPlayer().getName();
         String reason;
         if (deathDetail.isPVPDeath()) {
-            reason = deathDetail.getKiller().getName();
+            reason = tombMessages.getPvpMessage(deathDetail.getKiller().getName());
         } else {
-            reason = deathDetail.getCauseOfDeath().toString().substring(0, 1) + deathDetail.getCauseOfDeath().toString().substring(1).toLowerCase();
+            reason = tombMessages.getMessage(deathDetail.getCauseOfDeath());
         }
 
         signBlock.setType(Material.SIGN_POST);
