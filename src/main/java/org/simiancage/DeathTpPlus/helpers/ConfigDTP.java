@@ -616,10 +616,10 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# {reason} for cause of death");
         stream.println("# REMEMBER: LINES ARE LIMITED TO 15 CHARACTERS, AND DON'T FORGET THE QUOTES!");
         stream.println("tombStoneSign:");
-        stream.println("   Line1: '" + tombStoneSign[0] + "'");
-        stream.println("   Line2: '" + tombStoneSign[1] + "'");
-        stream.println("   Line3: '" + tombStoneSign[2] + "'");
-        stream.println("   Line4: '" + tombStoneSign[3] + "'");
+        stream.println("   Line1: \"" + tombStoneSign[0] + "\"");
+        stream.println("   Line2: \"" + tombStoneSign[1] + "\"");
+        stream.println("   Line3: \"" + tombStoneSign[2] + "\"");
+        stream.println("   Line4: \"" + tombStoneSign[3] + "\"");
         stream.println();
         stream.println("#--------- DeathTp Features");
         stream.println();
@@ -635,7 +635,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# Worlds on which death messages are disabled");
         stream.println("disabledDeathNotifyWorlds:");
         for (String msg : disabledDeathNotifyWorlds) {
-            stream.println("    - '" + msg + "'");
+            stream.println("    - \"" + msg + "\"");
         }
         stream.println();
         stream.println("# Allow players to access the deathtp command (Override permissions)");
@@ -648,16 +648,16 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("showStreaks: " + showStreaks);
         stream.println();
         stream.println("# Window of time (in milliseconds) to count kills towards a multikill");
-        stream.println("multiKillTimeWindow: '" + multiKillTimeWindow + "'");
+        stream.println("multiKillTimeWindow: \"" + multiKillTimeWindow + "\"");
         stream.println();
         stream.println("# Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports ");
-        stream.println("chargeItem: '" + chargeItem + "'");
+        stream.println("chargeItem: \"" + chargeItem + "\"");
         stream.println();
         stream.println("# Show Deathsign (aka Tombstone Signs) upon death");
         stream.println("showDeathSign: " + showDeathSign);
         stream.println();
         stream.println("# Economy costs for deathtp command, leave 0 if you don't want to charge");
-        stream.println("deathtpCost: '" + deathtpCost + "'");
+        stream.println("deathtpCost: \"" + deathtpCost + "\"");
         stream.println();
         stream.println("# Use DisplayName for Broadcast Messages");
         stream.println("# Note: Depending on the characters you are using in the names this can cause NPE's!");
@@ -712,7 +712,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("removeTombStone: " + removeTombStone);
         stream.println();
         stream.println("# Remove the Tombstone after x Seconds if removeTombStone is true");
-        stream.println("removeTombStoneTime: '" + removeTombStoneTime + "'");
+        stream.println("removeTombStoneTime: \"" + removeTombStoneTime + "\"");
         stream.println();
         stream.println("# Immediately remove TombStone once it is empty, overriding all other timeout options");
         stream.println("# WARNING: THIS IS A PROCESSOR-INTENSIVE OPTION");
@@ -728,7 +728,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("removeTombStoneSecurity: " + removeTombStoneSecurity);
         stream.println();
         stream.println("# Timeout for Security Removal in seconds");
-        stream.println("removeTombStoneSecurityTimeOut: '" + removeTombStoneSecurityTimeOut + "'");
+        stream.println("removeTombStoneSecurityTimeOut: \"" + removeTombStoneSecurityTimeOut + "\"");
         stream.println();
         stream.println("#--------- Tomb Features");
         stream.println();
@@ -736,7 +736,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("enableTomb: " + enableTomb);
         stream.println();
         stream.println("# Price for createing a Tomb");
-        stream.println("tombCost: '" + tombCost + "'");
+        stream.println("tombCost: \"" + tombCost + "\"");
         stream.println();
         stream.println("# Amount of Tombs a player can have");
         stream.println("maxTomb: " + maxTomb);
@@ -745,7 +745,7 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("useTombAsRespawnPoint: " + useTombAsRespawnPoint);
         stream.println();
         stream.println("# Keyword used to detect a Tomb");
-        stream.println("tombKeyWord: '" + tombKeyWord + "'");
+        stream.println("tombKeyWord: \"" + tombKeyWord + "\"");
         stream.println();
         stream.println("# Number of death before destruction of every tomb of the player");
         stream.println("# without resetting the counter. If set to 2, every 2 deaths, the tombs are destroyed. (Sign is dropped) 0: = Disabled");
@@ -1294,7 +1294,7 @@ afterwards parsable again from the configuration class of bukkit
             stream.println("#------- Default Configuration");
             stream.println();
             stream.println("# Configuration Version");
-            stream.println("configVer: '" + configVer + "'");
+            stream.println("configVer: \"" + configVer + "\"");
             stream.println();
             stream.println("# Informational Log Enabled");
             stream.println("# Enable logging to server console");

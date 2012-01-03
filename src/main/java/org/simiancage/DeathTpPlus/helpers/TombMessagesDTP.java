@@ -539,8 +539,8 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# don't exceed 18 characters and it must be UTF-8");
         stream.println("# %a name of player who attacked in pvp deaths");
         stream.println("#");
-        stream.println("# Make sure you enclose the messages in ' and that you use double '' if you want");
-        stream.println("# to have a ' inside the message. Otherwise you will get errors!");
+        stream.println("# Make sure you enclose the messages in \" ");
+
         stream.println("#");
 
         /*List<String> events = new ArrayList<String>(deathevents.keySet());
@@ -558,7 +558,7 @@ afterwards parsable again from the configuration class of bukkit
                 log.debug("DeathEventType", DeathMessagesDTP.mapTypeToNodeName(deathEventType));
                 for (String msg : deathevents.get(deathEventType)) {
                     log.debug("msg", msg);
-                    stream.println("    - '" + msg + "'");
+                    stream.println("    - \"" + msg + "\"");
                 }
             }
         }
@@ -842,7 +842,7 @@ afterwards parsable again from the configuration class of bukkit
             stream.println("# Tombmessage File for " + pluginName + ".");
             stream.println("#");
             stream.println("# TombMessages Version");
-            stream.println("tombMessagesVer: '" + tombMessagesVer + "'");
+            stream.println("tombMessagesVer: \"" + tombMessagesVer + "\"");
             stream.println();
 
 // Getting the custom tombMessages information from the top of the class
