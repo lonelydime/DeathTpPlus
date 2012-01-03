@@ -37,7 +37,7 @@ public class DeathMessagesDTP {
 
     // ToDo add new DeathMethods if they come up
     public static enum DeathEventType {
-        BLOCK_EXPLOSION, ENTITY_EXPLOSION, CAVE_SPIDER, CONTACT, CREEPER, DROWNING, ENDERMAN, FALL, FIRE, FIRE_TICK, GHAST, GIANT, LAVA, LIGHTNING, MONSTER, PIG_ZOMBIE, PVP, PVP_FISTS, PVP_TAMED, SILVERFISH, SKELETON, SLIME, SPIDER, STARVATION, SUFFOCATION, SUICIDE, UNKNOWN, VOID, WOLF, ZOMBIE, BLAZE, MAGMACUBE, ENDERDRAGON
+        BLOCK_EXPLOSION, ENTITY_EXPLOSION, CAVE_SPIDER, CONTACT, CREEPER, DROWNING, ENDERMAN, FALL, FIRE, FIRE_TICK, GHAST, GIANT, LAVA, LIGHTNING, MONSTER, PIG_ZOMBIE, PVP, PVP_FISTS, PVP_TAMED, SILVERFISH, SKELETON, SLIME, SPIDER, STARVATION, SUFFOCATION, SUICIDE, UNKNOWN, VOID, WOLF, ZOMBIE, BLAZE, MAGMACUBE, ENDERDRAGON, DISPENSER
     }
 
     /**
@@ -97,11 +97,11 @@ public class DeathMessagesDTP {
     /**
      * This is the internal deathMessageFileConfig version
      */
-    private final String deathMessagesCurrent = "3.2";
+    private final String deathMessagesCurrent = "3.3";
     /**
      * This is the DEFAULT for the deathMessageFileConfig file version, should be the same as deathMessagesCurrent. Will afterwards be changed
      */
-    private String deathMessagesVer = "3.2";
+    private String deathMessagesVer = "3.3";
 
 
 // and now the real stuff
@@ -251,6 +251,11 @@ public class DeathMessagesDTP {
      * Array which holds default MagmaCube messages
      */
     private String[] defaultMagmaCubeMessages;
+
+    /**
+     * Array which holds default Dispenser messages
+     */
+    private String[] defaultDispenserMessages;
 
     // ToDo add new variables on top
 
@@ -678,6 +683,15 @@ afterwards parsable again from the configuration class of bukkit
 
         };
         deathMessages.put(DeathEventType.MAGMACUBE, Arrays.asList(defaultMagmaCubeMessages));
+        /** Creating the default Dispenser Kill messages*/
+        defaultDispenserMessages = new String[]{
+                "&5%n&7 got shot in the back by a dispenser!",
+                "Again the wrong weight Indi? ähm. &5%n&7",
+                "&5%n&7 thinks he is Indiana Jones.",
+                "&5%n&7 felt for the booby trap."
+        };
+        deathMessages.put(DeathEventType.DISPENSER, Arrays.asList(defaultDispenserMessages));
+
 
         // ToDo add new messages on top
     }
@@ -754,6 +768,7 @@ afterwards parsable again from the configuration class of bukkit
         deathMessages.put(DeathEventType.BLAZE, deathMessageFileConfig.getList("blaze", Arrays.asList(defaultBlazeMessages)));
         deathMessages.put(DeathEventType.ENDERDRAGON, deathMessageFileConfig.getList("enderdragon", Arrays.asList(defaultEnderDragonMessages)));
         deathMessages.put(DeathEventType.MAGMACUBE, deathMessageFileConfig.getList("magmacube", Arrays.asList(defaultMagmaCubeMessages)));
+        deathMessages.put(DeathEventType.DISPENSER, deathMessageFileConfig.getList("dispenser", Arrays.asList(defaultDispenserMessages)));
 
         //ToDo add new deathMessages to the top
         for (DeathEventType deathEventType : DeathEventType.values()) {

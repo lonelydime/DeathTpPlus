@@ -1,9 +1,9 @@
-# DeathTpPlus 3.0 by Don Redhorse and mung3r
+# DeathTpPlus 3.4.1597 by Don Redhorse and mung3r
 #
 # Tombmessage File for DeathTpPlus.
 #
 # TombMessages Version
-tombMessagesVer: '3.0'
+tombMessagesVer: "3.3"
 
 #--------- Messages  for DeathTpPlus
 
@@ -13,95 +13,110 @@ tombMessagesVer: '3.0'
 # don't exceed 18 characters and it must be UTF-8
 # %a name of player who attacked in pvp deaths
 #
-# Make sure you enclose the messages in ' and that you use double '' if you want
-# to have a ' inside the message. Otherwise you will get errors!
+# Make sure you enclose the messages in " 
 #
-creeper:
-    - 'Ksss BOUM'
-    - 'CREEEEPPPPERRR'
-    - 'Creeper Lover'
-pvp:
-    - 'Killed by %a'
-lava:
-    - 'Swim in lava'
-    - 'Now obsidian'
-suicide:
-    - 'Bad Aim'
-    - 'Killed Himself'
-skeleton:
-    - 'Skeleton Bow'
-    - 'Arrow in Head'
-suffocation:
-    - 'Suffocated'
-    - 'Sand''s breath'
-    - 'Sand worm'
 block_explosion:
-    - 'BOUM'
-    - 'TNT'
-    - 'Dynamite'
-drowning:
-    - 'Has drowned'
-    - 'Love fishing'
-    - 'Drunk the sea'
+    - "BOUM"
+    - "TNT"
+    - "Dynamite"
+entity-explosion:
+    - "BOUM"
+    - "TNT"
+    - "Dynamite"
 cavespider:
-    - 'Spider venom'
-    - 'Arachnophobia'
-fire:
-    - 'Toasted'
-    - 'Burned'
-    - 'Fire! Fire!'
-enderman:
-    - 'Stolen'
-    - 'EnderManed'
-lightning:
-    - 'By Zeus'
-    - 'By Thor'
-    - 'Lighting'
-unknown:
-    - 'Unknown'
-fire_tick:
-    - 'Toasted'
-    - 'Burned'
-    - 'Fire! Fire!'
-ghast:
-    - 'In Nether'
-    - 'Ghast'
-entity_explosion:
-    - 'BOUM'
-    - 'TNT'
-    - 'Dynamite'
+    - "Spider venom"
+    - "Arachnophobia"
 contact:
-    - 'Cactus'
-    - 'Poked a Cactus'
-    - 'Hug a Cactus'
-spider:
-    - 'Spider venom'
-    - 'Arachnophobia'
-pigzombie:
-    - 'Zombie-Pig'
-wolf:
-    - 'Eat by Wolf'
-    - 'Wolf meal'
-    - 'Wolf lunch'
-starvation:
-    - 'Starved'
-    - 'Forgot to eat'
-void:
-    - 'Became Void'
-    - 'End of World'
-silverfish:
-    - 'Fish Food'
-slime:
-    - 'Splouched'
-    - 'Slime won'
-giant:
-    - 'stomped'
-    - 'By a giant'
+    - "Cactus"
+    - "Poked a Cactus"
+    - "Hug a Cactus"
+creeper:
+    - "Ksss BOUM"
+    - "CREEEEPPPPERRR"
+    - "Creeper Lover"
+drowning:
+    - "Has drowned"
+    - "Love fishing"
+    - "Drunk the sea"
+enderman:
+    - "Stolen"
+    - "EnderManed"
 fall:
-    - 'Tried to fly'
-    - 'Love the ground'
+    - "Tried to fly"
+    - "Love the ground"
+fire:
+    - "Toasted"
+    - "Burned"
+    - "Fire! Fire!"
+fire_tick:
+    - "Toasted"
+    - "Burned"
+    - "Fire! Fire!"
+ghast:
+    - "In Nether"
+    - "Ghast"
+giant:
+    - "stomped"
+    - "By a GIANT"
+lava:
+    - "Swim in lava"
+    - "Now obsidian"
+lightning:
+    - "By Zeus"
+    - "By Thor"
+    - "Lighting"
+pigzombie:
+    - "Zombie-Pig"
+pvp:
+    - "Killed by %a"
+silverfish:
+    - "Fish Food"
+skeleton:
+    - "Skeleton Bow"
+    - "Arrow in Head"
+slime:
+    - "Splouched"
+    - "Slime won"
+spider:
+    - "Spider venom"
+    - "Arachnophobia"
+starvation:
+    - "Starved"
+    - "Forgot to eat"
+suffocation:
+    - "Suffocated"
+    - "Sand''s breath"
+    - "Sand worm"
+suicide:
+    - "Bad Aim"
+    - "Killed Himself"
+unknown:
+    - "Unknown"
+void:
+    - "Became Void"
+    - "End of World"
+wolf:
+    - "Eat by Wolf"
+    - "Wolf meal"
+    - "Wolf lunch"
 zombie:
-    - 'L4D'
-    - 'Braaaiiin'
-    - 'Zombie rules'
+    - "L4D"
+    - "Braaaiiin"
+    - "Zombie rules"
+blaze:
+    - "airburned"
+    - "blazed"
+magmacube:
+    - "splink"
+    - "goombad"
+    - "cubed"
+    - "By a Cube"
+enderdragon:
+    - "perned"
+    - "wooshed"
+    - "By a dragon"
+dispenser:
+    - "dispensed"
+    - "By a trap"
+    - "By a dispenser"
 

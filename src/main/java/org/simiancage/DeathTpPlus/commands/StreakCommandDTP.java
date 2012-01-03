@@ -38,12 +38,14 @@ public class StreakCommandDTP implements CommandExecutor {
         boolean canUseCommand = false;
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            // ToDo remove permission compability in 3.2
-            canUseCommand = player.hasPermission("deathtpplus.streak") || player.hasPermission("deathtpplus.deathtp.streak");
+            // ToDo remove debug in 3.5
             if (player.hasPermission("deathtpplus.streak")) {
-                log.warning("old permission found: deathtpplus.streak for player " + player.getName());
-                log.warning("please use: deathtpplus.deathtp.streak");
+                log.debug("old permission found: deathtpplus.streak for player " + player.getName());
+                log.debug("please use: deathtpplus.deathtp.streak");
             }
+
+            canUseCommand = player.hasPermission("deathtpplus.deathtp.streak");
+
         }
 
         if (canUseCommand) {

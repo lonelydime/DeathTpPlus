@@ -35,9 +35,11 @@ public class DeathDetailDTP {
         entityDeathEvent = event;
 
         EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
+        log.debug("damageEvent", damageEvent.getType());
 
         if (damageEvent instanceof EntityDamageByEntityEvent) {
             Entity damager = ((EntityDamageByEntityEvent) damageEvent).getDamager();
+            log.debug("damager", damager.toString());
             if (damager instanceof Player) {
                 if (((Player) damager).getItemInHand().getType().equals(Material.AIR)) {
                     causeOfDeath = DeathEventType.PVP_FISTS;
@@ -57,6 +59,8 @@ public class DeathDetailDTP {
                     causeOfDeath = DeathEventType.valueOf(UtilsDTP.getCreatureType(damager).toString());
                 }
             } else if (damager instanceof Projectile) {
+                log.debug("this is a projectile");
+                log.debug("shooter", ((Projectile) damager).getShooter());
                 // TODO: find out why we never get damager instance of
                 // Projectile
                 if (((Projectile) damager).getShooter() instanceof Player) {
@@ -64,6 +68,12 @@ public class DeathDetailDTP {
                     murderWeapon = ((Projectile) damager).toString().replace("Craft", "");
                     killer = (Player) ((Projectile) damager).getShooter();
                 }
+                if (((Projectile) damager).getShooter() == null) {
+                    //let's assume that null will only be caused by a dispenser!
+                    causeOfDeath = DeathEventType.DISPENSER;
+                    murderWeapon = ((Projectile) damager).toString().replace("Craft", "");
+                }
+
             } else if (damager instanceof TNTPrimed) {
                 causeOfDeath = DeathEventType.BLOCK_EXPLOSION;
             } else {
@@ -72,8 +82,7 @@ public class DeathDetailDTP {
         } else if (damageEvent != null) {
             try {
                 causeOfDeath = DeathEventType.valueOf(damageEvent.getCause().toString());
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 causeOfDeath = DeathEventType.UNKNOWN;
             }
         }
@@ -82,6 +91,9 @@ public class DeathDetailDTP {
             causeOfDeath = DeathEventType.UNKNOWN;
             murderWeapon = "unknown";
         }
+        log.debug("causeOfDeath", causeOfDeath);
+        log.debug("murderWeapon", murderWeapon);
+        log.debug("killer", killer);
     }
 
     public Player getPlayer() {

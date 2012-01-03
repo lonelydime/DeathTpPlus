@@ -40,12 +40,14 @@ public class KillsCommandDTP implements CommandExecutor {
         boolean canUseCommand = false;
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            // ToDo remove permission compability in 3.2
-            canUseCommand = player.hasPermission("deathtpplus.kills") || player.hasPermission("deathtpplus.deathtp.kills");
+            // ToDo remove debug in 3.5
             if (player.hasPermission("deathtpplus.kills")) {
-                log.warning("old permission found: deathtpplus.kills for player " + player.getName());
-                log.warning("please use: deathtpplus.deathtp.kills");
+                log.debug("old permission found: deathtpplus.kills for player " + player.getName());
+                log.debug("please use: deathtpplus.deathtp.kills");
             }
+
+            canUseCommand = player.hasPermission("deathtpplus.deathtp.kills");
+
         }
 
         if (canUseCommand) {

@@ -1,4 +1,4 @@
-# DeathTpPlus 3.0 by Don Redhorse and mung3r
+# DeathTpPlus 3.4.1597 by Don Redhorse and mung3r
 #
 # Configuration File for DeathTpPlus.
 #
@@ -7,7 +7,7 @@
 #------- Default Configuration
 
 # Configuration Version
-configVer: '3.0'
+configVer: "3.3"
 
 # Informational Log Enabled
 # Enable logging to server console
@@ -63,10 +63,15 @@ allowWorldTravel: 'no'
 # {reason} for cause of death
 # REMEMBER: LINES ARE LIMITED TO 15 CHARACTERS, AND DON'T FORGET THE QUOTES!
 tombStoneSign:
-   Line1: '{name}'
-   Line2: 'RIP'
-   Line3: '{date}'
-   Line4: '{time}'
+   Line1: "{name}"
+   Line2: "RIP"
+   Line3: "{date}"
+   Line4: "{time}"
+
+# Should we only use air to create signs and chests.
+# WARNING: This can mean that NO DeathSigns or TombStones are created.
+#          Use at your own risk!
+shouldOnlyUseAirToCreate: false
 
 #--------- DeathTp Features
 
@@ -75,6 +80,13 @@ enableDeathtp: true
 
 # Show the death messages on the server
 showDeathNotify: true
+
+# Disable the death messages on specific worlds
+disableDeathNotifyInSpecifiedWorlds: false
+
+# Worlds on which death messages are disabled
+disabledDeathNotifyWorlds:
+    - "none"
 
 # Allow players to access the deathtp command (Override permissions)
 allowDeathtp: false
@@ -86,16 +98,25 @@ allowDeathLog: true
 showStreaks: true
 
 # Window of time (in milliseconds) to count kills towards a multikill
-multiKillTimeWindow: '5000'
+multiKillTimeWindow: "5000"
 
 # Item ID of the item you must have in your hand to teleport. Will remove 1 of these when the command is given. Leave 0 for free teleports 
-chargeItem: '0'
+chargeItem: "0"
 
 # Show Deathsign (aka Tombstone Signs) upon death
 showDeathSign: true
 
 # Economy costs for deathtp command, leave 0 if you don't want to charge
-deathtpCost: '10'
+deathtpCost: "10"
+
+# Use DisplayName for Broadcast Messages
+# Note: Depending on the characters you are using in the names this can cause NPE's!
+useDisplayNameforBroadcasts: false
+
+# Use the old teleport to highest block or the new save location feature.
+# Note: Save location feature will display the location of the death if it doesn't find a save spot
+# and not teleport the player in this case.
+teleportToHighestBlock: true
 
 #--------- TombStone Features (General)
 
@@ -117,7 +138,7 @@ saveTombStoneList: true
 # Stop TombStone creation next to existing chests if true (IF set to true it could allow users to circumvent chest protection.)
 allowInterfere: false
 
-# We normally checks to make sure we aren't trying to create a chest in the void.
+# We normally check to make sure we aren't trying to create a chest in the void.
 # If you handle or modify the void with another plugin, you can disable that check here.
 # This option should be true for most servers.
 voidCheck: true
@@ -126,6 +147,9 @@ voidCheck: true
 # protected against Creeper explosions, or you want your chests to be protected even
 # after they are unlocked, enable this
 creeperProtection: false
+
+# Keep dropped experience when quicklooting
+keepExperienceOnQuickLoot: false
 
 #--------- TombStone features (Removal
 
@@ -136,7 +160,7 @@ destroyOnQuickLoot: true
 removeTombStone: true
 
 # Remove the Tombstone after x Seconds if removeTombStone is true
-removeTombStoneTime: '3600'
+removeTombStoneTime: "3600"
 
 # Immediately remove TombStone once it is empty, overriding all other timeout options
 # WARNING: THIS IS A PROCESSOR-INTENSIVE OPTION
@@ -152,7 +176,7 @@ keepTombStoneUntilEmpty: false
 removeTombStoneSecurity: false
 
 # Timeout for Security Removal in seconds
-removeTombStoneSecurityTimeOut: '3600'
+removeTombStoneSecurityTimeOut: "3600"
 
 #--------- Tomb Features
 
@@ -160,7 +184,7 @@ removeTombStoneSecurityTimeOut: '3600'
 enableTomb: true
 
 # Price for createing a Tomb
-tombCost: '10'
+tombCost: "10"
 
 # Amount of Tombs a player can have
 maxTomb: 1
@@ -169,7 +193,7 @@ maxTomb: 1
 useTombAsRespawnPoint: false
 
 # Keyword used to detect a Tomb
-tombKeyWord: '[Tomb]'
+tombKeyWord: "[Tomb]"
 
 # Number of death before destruction of every tomb of the player
 # without resetting the counter. If set to 2, every 2 deaths, the tombs are destroyed. (Sign is dropped) 0: = Disabled

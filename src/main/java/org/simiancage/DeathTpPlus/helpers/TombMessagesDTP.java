@@ -78,11 +78,11 @@ public class TombMessagesDTP {
     /**
      * This is the internal tombMessages version
      */
-    private final String tombMessagesCurrent = "3.2";
+    private final String tombMessagesCurrent = "3.3";
     /**
      * This is the DEFAULT for the tombMessages file version, should be the same as tombMessagesCurrent. Will afterwards be changed
      */
-    private String tombMessagesVer = "3.2";
+    private String tombMessagesVer = "3.3";
 
 
 // and now the real stuff
@@ -215,6 +215,10 @@ public class TombMessagesDTP {
      * Array which holds default MagmaCube messages
      */
     private String[] defaultMagmaCubeMessages;
+    /**
+     * Array which hold default Dispenser messages
+     */
+    private String[] defaultDispenserMessages;
 
     // ToDo add new variables to the top
 
@@ -439,7 +443,13 @@ afterwards parsable again from the configuration class of bukkit
                 "By a Cube"
         };
         deathevents.put(DeathEventType.MAGMACUBE, Arrays.asList(defaultMagmaCubeMessages));
-
+        /** Creating the default Dispenser Messages*/
+        defaultDispenserMessages = new String[]{
+                "dispensed",
+                "By a trap",
+                "By a dispenser"
+        };
+        deathevents.put(DeathEventType.DISPENSER, Arrays.asList(defaultDispenserMessages));
 
         // ToDo add new tomb messages to the top
 
@@ -503,6 +513,7 @@ afterwards parsable again from the configuration class of bukkit
         deathevents.put(DeathEventType.BLAZE, tombMessages.getList("blaze", Arrays.asList(defaultBlazeMessages)));
         deathevents.put(DeathEventType.ENDERDRAGON, tombMessages.getList("enderdragon", Arrays.asList(defaultEnderDragonMessages)));
         deathevents.put(DeathEventType.MAGMACUBE, tombMessages.getList("magmacube", Arrays.asList(defaultMagmaCubeMessages)));
+        deathevents.put(DeathEventType.DISPENSER, tombMessages.getList("dispenser", Arrays.asList(defaultDispenserMessages)));
 
         // ToDo add new deathevents on top
 // Debugging
@@ -543,13 +554,6 @@ afterwards parsable again from the configuration class of bukkit
 
         stream.println("#");
 
-        /*List<String> events = new ArrayList<String>(deathevents.keySet());
-        for (String event : events) {
-            stream.println(event.toLowerCase() + ":");
-            for (String msg : deathevents.get(event)) {
-                stream.println("    - '" + msg + "'");
-            }
-        }*/
 
         for (DeathEventType deathEventType : DeathEventType.values()) {
             // Workaround for missing Monster, PVP Fists and PVP tamed  Death Messages
@@ -589,9 +593,6 @@ afterwards parsable again from the configuration class of bukkit
         if (deathevents.containsKey(death)) {
             List<String> deaths = deathevents.get(death);
             return deaths.get(rand.nextInt(deaths.size()));
-            /*} else if (deathevents.containsKey(DeathEventType.valueOf("UNKNOWN"))) {
-           List<String> unknowns = deathevents.get(DeathEventType.UNKNOWN);
-           return unknowns.get(rand.nextInt(unknowns.size()));*/
         } else {
             return "Unknown";
         }
