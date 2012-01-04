@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.*;
 import org.simiancage.DeathTpPlus.models.TombStoneBlockDTP;
+import org.simiancage.DeathTpPlus.objects.TombDTP;
+import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
 import java.util.ArrayList;
 
@@ -51,6 +53,8 @@ public class AdminCommandDTP implements CommandExecutor {
                     "Usage: /dtpadmin remove <playerCaseSensitive> <#>");
             plugin.sendMessage(p,
                     "Usage: /dtpadmin time <playerCaseSensitive> <#>");
+            plugin.sendMessage(p,
+                    "Usage: /dtpadmin untomb <playerCaseSensitive>");
             plugin.sendMessage(p, "Usage: /dtpadmin version");
             return true;
         }
@@ -220,6 +224,21 @@ public class AdminCommandDTP implements CommandExecutor {
             }
             TombStoneBlockDTP tStoneBlockDTP = pList.get(slot);
             tombStoneHelper.destroyTombStone(tStoneBlockDTP);
+
+        } else if (args[0].equalsIgnoreCase("untomb")) {
+            if (!plugin.hasPerm(sender, "admin.untomb", false)) {
+                plugin.sendMessage(p, PERM_DENIED);
+                return true;
+            }
+            TombWorkerDTP tombWorkerDTP = TombWorkerDTP.getInstance();
+            if (tombWorkerDTP.hasTomb(args[1])) {
+                TombDTP tomb = tombWorkerDTP.getTomb(args[1]);
+                tomb.resetTombBlocks();
+                p.sendMessage("Tomb from player " + args[1] + " was removed");
+            } else {
+                p.sendMessage("There is no tomb for player " + args[1]);
+            }
+
 
         } else {
             plugin.sendMessage(p, "Usage: /dtpadmin list");

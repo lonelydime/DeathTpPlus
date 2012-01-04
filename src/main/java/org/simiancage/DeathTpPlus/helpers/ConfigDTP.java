@@ -367,6 +367,10 @@ public class ConfigDTP {
      */
     private boolean resetTombRespawn = false;
 
+    /**
+     * Allow RightClick of Tomb to Teleport to Deathlocation
+     */
+    private boolean allowTombAsTeleport = false;
 
 // *******************************************************************************************************************
 
@@ -451,6 +455,7 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("tombKeyWord", tombKeyWord);
         config.addDefault("maxDeaths", maxDeaths);
         config.addDefault("resetTombRespawn", resetTombRespawn);
+        config.addDefault("allowTombAsTeleport", allowTombAsTeleport);
 
     }
 
@@ -521,6 +526,7 @@ afterwards parsable again from the configuration class of bukkit
         tombKeyWord = config.getString("tombKeyWord");
         maxDeaths = config.getInt("maxDeaths");
         resetTombRespawn = config.getBoolean("resetTombRespawn");
+        allowTombAsTeleport = config.getBoolean("allowTombAsTeleport");
 
 
 // Debugging
@@ -576,6 +582,7 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("tombKeyWord", tombKeyWord);
         log.debug("maxDeaths", maxDeaths);
         log.debug("resetTombRespawn", resetTombRespawn);
+        log.debug("allowTombAsTeleport", allowTombAsTeleport);
 
 // and now some working...
 
@@ -795,6 +802,10 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# When a Tomb is destroyed, the respawn point is reset.");
         stream.println("resetTombRespawn: " + resetTombRespawn);
         stream.println();
+        stream.println("# When a Tomb right clicked the player is teleported to his deathlocation.");
+        stream.println("# Please Note: This only works if DeathTP is also enabled.");
+        stream.println("allowTombAsTeleport: " + allowTombAsTeleport);
+        stream.println();
 
     }
 
@@ -806,6 +817,10 @@ afterwards parsable again from the configuration class of bukkit
 
 // The plugin specific getters start here!
 
+
+    public boolean isAllowTombAsTeleport() {
+        return allowTombAsTeleport;
+    }
 
     public boolean isShowDeathNotifyInDeathWorldOnly() {
         return showDeathNotifyInDeathWorldOnly;

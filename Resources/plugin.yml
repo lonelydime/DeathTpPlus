@@ -63,14 +63,14 @@ permissions:
             deathtpplus.deathtp.streak: true
             deathtpplus.deathtp.deaths: true
             deathtpplus.deathtp.kills: true
-            deathtpplus.deathtp.worldtravel: true
+            deathtpplus.worldtravel: true
             deathtpplus.admin: true
             deathtpplus.admin.list: true
             deathtpplus.admin.find: true
             deathtpplus.admin.remove: true
             deathtpplus.admin.time: true
             deathtpplus.admin.version: true
-            deathtpplus.admin.tombStoneDTP: true
+            deathtpplus.admin.untomb: true
             deathtpplus.tombstone.use: true
             deathtpplus.tombstone.freechest: true
             deathtpplus.tombstone.large: true
@@ -92,7 +92,6 @@ permissions:
             deathtpplus.deathtp.streak: true
             deathtpplus.deathtp.deaths: true
             deathtpplus.deathtp.kills: true
-            deathtpplus.deathtp.worldtravel: true
     deathtpplus.admin.*:
         description: Gives access to all DeathTpPlus admin commands
         children:
@@ -102,7 +101,7 @@ permissions:
             deathtpplus.admin.remove: true
             deathtpplus.admin.time: true
             deathtpplus.admin.version: true
-            deathtpplus.admin.tombStone: true
+            deathtpplus.admin.untomb: true
     deathtpplus.tombstone.*:
         description: Gives access to default DeathTpPlus tombstone commands
         children:
@@ -132,7 +131,7 @@ permissions:
     deathtpplus.deathtp.kills:
         description: Gives access to the kills command
         default: true
-    deathtpplus.deathtp.worldtravel:
+    deathtpplus.worldtravel:
         description: Allows teleporting / respawn to another worlds death location if allowWordTravel is "permissions"
         default: op
     deathtpplus.admin:
@@ -153,8 +152,8 @@ permissions:
     deathtpplus.admin.version:
         description: Allows you to check if the plugin is the newest version
         default: op
-    deathtpplus.admin.tombStone:
-        description: Manage Tomb Signs and Respawn points
+    deathtpplus.admin.untomb:
+        description: Allows to remove tombs from players
         default: op
     deathtpplus.tombstone.use:
         description: Allows you to use the tombstones
