@@ -68,7 +68,7 @@ public class DeathtpCommandDTP implements CommandExecutor {
             if (canUseCommand) {
                 log.debug("canUseCommand", canUseCommand);
                 String thisWorld = player.getWorld().getName();
-                if ((player.hasPermission("deathtpplus.worldtravel") && config.getAllowWorldTravel().equalsIgnoreCase("permissions")) || config.getAllowWorldTravel().equalsIgnoreCase("yes")) {
+                if ((player.hasPermission("deathtpplus.deathtp.worldtravel") && config.getAllowWorldTravel().equalsIgnoreCase("permissions")) || config.getAllowWorldTravel().equalsIgnoreCase("yes")) {
                     worldTravel = true;
                 }
                 if (!canTp(player)) {

@@ -110,7 +110,7 @@ public class ConfigDTP {
      * Link to the location of the recent version number, the file should be a text with just the number
      */
     @SuppressWarnings({"FieldCanBeLocal"})
-    private final String versionURL = "https://raw.github.com/dredhorse/DeathTpPlus/master/Resources/deathtpplus_temp.ver";
+    private final String versionURL = "https://raw.github.com/dredhorse/DeathTpPlus/master/Resources/deathtpplus.ver";
 
 
     //ToDo create new link for every version
@@ -1436,7 +1436,10 @@ afterwards parsable again from the configuration class of bukkit
         int githubCB;
         String plVersion;
         String ghVersion;
-        String cbVersion = plugin.getServer().getBukkitVersion();
+        //String cbVersion = plugin.getServer().getBukkitVersion();
+        String cbVersion = plugin.getServer().getVersion();
+        int versionPos = cbVersion.indexOf("-b") + 2;
+        cbVersion = cbVersion.substring(versionPos, versionPos + 4);
         log.debug("bukkitVersion", cbVersion);
         String pluginVersion = plugin.getDescription().getVersion();
         log.debug("pluginVersion", pluginVersion);
@@ -1476,7 +1479,7 @@ afterwards parsable again from the configuration class of bukkit
             }
 
             if (githubCB < pluginCB) {
-                log.info("You are running a testbuild for CB: " + pluginCB);
+                log.warning("You are running a testbuild for CB: " + pluginCB);
             }
             if (githubCB > pluginCB) {
                 log.info("There is a new Version available for CB: " + githubCB);
