@@ -102,6 +102,9 @@ public class onEntityDeathDTP {
                 } else {
                     ((PlayerDeathEvent) entityDeathEvent).setDeathMessage(deathMessage);
                 }
+                if (config.isShowDeathNotifyOnConsole()) {
+                    log.info(UtilsDTP.removeColorCodes(deathMessage));
+                }
             }
 
             // CraftIRC
