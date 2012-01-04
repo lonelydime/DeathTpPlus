@@ -1,6 +1,7 @@
 package org.simiancage.DeathTpPlus.models;
 
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -94,6 +95,10 @@ public class DeathDetailDTP {
         log.debug("causeOfDeath", causeOfDeath);
         log.debug("murderWeapon", murderWeapon);
         log.debug("killer", killer);
+    }
+
+    public World getWorld() {
+        return player.getWorld();
     }
 
     public Player getPlayer() {

@@ -126,11 +126,11 @@ public class ConfigDTP {
     /**
      * This is the internal config version
      */
-    private final String configCurrent = "3.3";
+    private final String configCurrent = "3.4";
     /**
      * This is the DEFAULT for the config file version, should be the same as configCurrent. Will afterwards be changed
      */
-    private String configVer = "3.3";
+    private String configVer = "3.4";
 
 
 // and now the real stuff
@@ -187,6 +187,10 @@ public class ConfigDTP {
      */
     private boolean showDeathNotify = true;
     /**
+     * Show the death messages on the server console
+     */
+    private boolean showDeathNotifyOnConsole = false;
+    /**
      * Disable DeathNotify for certain worlds?
      */
     private boolean disableDeathNotifyInSpecifiedWorlds = false;
@@ -194,6 +198,10 @@ public class ConfigDTP {
      * Configure Worlds which don't receive death notify broadcasts
      */
     private List<String> disabledDeathNotifyWorlds;
+    /**
+     * Show death messages only in the world they happened
+     */
+    private boolean showDeathNotifyInDeathWorldOnly = false;
     /**
      * Allow players to access the deathtp command (Override permissions)
      */
@@ -402,6 +410,8 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("enableDeathtp", enableDeathtp);
         config.addDefault("showDeathNotify", showDeathNotify);
         config.addDefault("disableDeathNotifyInSpecifiedWorlds", disableDeathNotifyInSpecifiedWorlds);
+        config.addDefault("showDeathNotifyInDeathWorldOnly", showDeathNotifyInDeathWorldOnly);
+        config.addDefault("showDeathNotifyOnConsole", showDeathNotifyOnConsole);
         // disabledDeathNotifyWorlds is configured in load customconfig
         config.addDefault("allowDeathtp", allowDeathtp);
         config.addDefault("allowDeathLog", allowDeathLog);
@@ -471,6 +481,8 @@ afterwards parsable again from the configuration class of bukkit
         showDeathNotify = config.getBoolean("showDeathNotify");
         disableDeathNotifyInSpecifiedWorlds = config.getBoolean("disableDeathNotifyInSpecifiedWorlds");
         disabledDeathNotifyWorlds = config.getList("disabledDeathNotifyWorlds", disabledDeathNotifyWorlds);
+        showDeathNotifyInDeathWorldOnly = config.getBoolean("showDeathNotifyInDeathWorldOnly");
+        showDeathNotifyOnConsole = config.getBoolean("showDeathNotifyOnConsole");
         allowDeathtp = config.getBoolean("allowDeathtp");
         allowDeathLog = config.getBoolean("allowDeathLog");
         showStreaks = config.getBoolean("showStreaks");
@@ -528,6 +540,8 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("showDeathNotify", showDeathNotify);
         log.debug("disableDeathNotifyInSpecifiedWorlds", disableDeathNotifyInSpecifiedWorlds);
         log.debug("disabledDeathNotifyWorlds", disabledDeathNotifyWorlds);
+        log.debug("showDeathNotifyInDeathWorldOnly", showDeathNotifyInDeathWorldOnly);
+        log.debug("showDeathNotifyOnConsole", showDeathNotifyOnConsole);
         log.debug("allowDeathtp", allowDeathtp);
         log.debug("allowDeathLog", allowDeathLog);
         log.debug("showStreaks", showStreaks);
@@ -658,6 +672,13 @@ afterwards parsable again from the configuration class of bukkit
             stream.println("    - \"" + msg + "\"");
         }
         stream.println();
+        stream.println("# Show DeathMessages on console");
+        stream.println("showDeathNotifyOnConsole: " + showDeathNotifyOnConsole);
+        stream.println();
+        stream.println("# Show DeathMessages only in Death World");
+        stream.println("showDeathNotifyInDeathWorldOnly: " + showDeathNotifyInDeathWorldOnly);
+
+        stream.println();
         stream.println("# Allow players to access the deathtp command (Override permissions)");
         stream.println("allowDeathtp: " + allowDeathtp);
         stream.println();
@@ -785,6 +806,14 @@ afterwards parsable again from the configuration class of bukkit
 
 // The plugin specific getters start here!
 
+
+    public boolean isShowDeathNotifyInDeathWorldOnly() {
+        return showDeathNotifyInDeathWorldOnly;
+    }
+
+    public boolean isShowDeathNotifyOnConsole() {
+        return showDeathNotifyOnConsole;
+    }
 
     public boolean isShouldOnlyUseAirToCreate() {
         return shouldOnlyUseAirToCreate;

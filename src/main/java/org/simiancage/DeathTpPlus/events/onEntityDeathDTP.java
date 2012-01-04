@@ -89,14 +89,15 @@ public class onEntityDeathDTP {
             String deathMessage = DeathMessagesDTP.getDeathMessage(deathDetail);
             log.debug("deathMessage", deathMessage);
             if (entityDeathEvent instanceof PlayerDeathEvent) {
-                if (config.isDisableDeathNotifyInSpecifiedWorlds()) {
+                if (config.isDisableDeathNotifyInSpecifiedWorlds() || config.isShowDeathNotifyInDeathWorldOnly()) {
                     ((PlayerDeathEvent) entityDeathEvent).setDeathMessage("");
                     Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
                     for (Player player : onlinePlayers) {
-                        String world = player.getWorld().getName();
-                        if (!config.isDisabledDeathNotifyWorld(world)) {
+                        World world = player.getWorld();
+                        if (!config.isDisabledDeathNotifyWorld(world.getName()) || (config.isShowDeathNotifyInDeathWorldOnly() && (world == deathDetail.getWorld()))) {
                             player.sendRawMessage(deathMessage);
                         }
+
                     }
                 } else {
                     ((PlayerDeathEvent) entityDeathEvent).setDeathMessage(deathMessage);
