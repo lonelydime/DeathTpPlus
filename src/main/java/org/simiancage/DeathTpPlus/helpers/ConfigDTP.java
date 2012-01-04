@@ -112,11 +112,6 @@ public class ConfigDTP {
     @SuppressWarnings({"FieldCanBeLocal"})
     private final String versionURL = "https://raw.github.com/dredhorse/DeathTpPlus/master/Resources/deathtpplus.ver";
 
-    /**
-     * Link to bit.ly for tracking reloads..
-     * is hooked into UpdateChecking so can be disabled
-     */
-    private final String checkInUrl = "http://bit.ly/zkAlHp";
 
     //ToDo create new link for every version
 
@@ -1339,8 +1334,8 @@ afterwards parsable again from the configuration class of bukkit
             stream.println();
             stream.println("# Check for Update");
             stream.println("# Will check if there is a new version of the plugin out.");
-            stream.println("# Please note: This will also track usage of reloads of this version of the plugin via");
-            stream.println("# " + checkInUrl);
+            stream.println("# Please note: This will also track usage of reloads, config creation and updates of this version of the plugin via");
+            stream.println("# " + PINGS.BUNDLE.getURL());
             stream.println("# Please disable this feature if you don't like this!");
             stream.println("checkForUpdate: " + checkForUpdate);
             stream.println();
@@ -1421,16 +1416,6 @@ afterwards parsable again from the configuration class of bukkit
             log.warning("Error accessing update URL.", ex);
         } catch (IOException ex) {
             log.warning("Error checking for update.", ex);
-        }
-        try {
-            url = new URL(checkInUrl);
-            BufferedReader in;
-            in = new BufferedReader(new InputStreamReader(url.openStream()));
-            String line = in.readLine();
-            in.close();
-            log.informational("did checkIn for version " + pluginVersion);
-        } catch (Exception ex) {
-            log.debug("Error accessing checkin URL.", ex);
         }
     }
 
@@ -1525,6 +1510,9 @@ afterwards parsable again from the configuration class of bukkit
      */
     private void updateConfig() {
         if (configRequiresUpdate) {
+            if (checkForUpdate) {
+                PingManager.update();
+            }
             configVer = configCurrent;
             if (writeConfig()) {
                 log.info("Configuration was updated with new default values.");

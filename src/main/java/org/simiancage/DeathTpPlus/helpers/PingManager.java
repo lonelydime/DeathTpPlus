@@ -39,8 +39,8 @@ public class PingManager {
         sendPing(PINGS.ON_CREATE.getURL());
     }
 
-    public static void delete() {
-        sendPing(PINGS.ON_DELETE.getURL());
+    public static void update() {
+        sendPing(PINGS.ON_UPDATE.getURL());
     }
 
 
