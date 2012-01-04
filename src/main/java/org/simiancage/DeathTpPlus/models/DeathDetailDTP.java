@@ -34,59 +34,69 @@ public class DeathDetailDTP {
     public DeathDetailDTP(EntityDeathEvent event) {
         player = (Player) event.getEntity();
         entityDeathEvent = event;
+        // Support for setHealth(0) which is used by essentials to do a suicide
+        try {
+            EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
+            log.debug("damageEvent", damageEvent.getType());
 
-        EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
-        log.debug("damageEvent", damageEvent.getType());
-
-        if (damageEvent instanceof EntityDamageByEntityEvent) {
-            Entity damager = ((EntityDamageByEntityEvent) damageEvent).getDamager();
-            log.debug("damager", damager.toString());
-            if (damager instanceof Player) {
-                if (((Player) damager).getItemInHand().getType().equals(Material.AIR)) {
-                    causeOfDeath = DeathEventType.PVP_FISTS;
-                } else {
-                    causeOfDeath = DeathEventType.PVP;
-                }
-                murderWeapon = ((Player) damager).getItemInHand().getType().toString();
-                killer = (Player) damager;
-            } else if (damager instanceof Creature) {
-                if (damager instanceof Tameable) {
-                    if (((Tameable) damager).isTamed()) {
-                        causeOfDeath = DeathEventType.PVP_TAMED;
-                        murderWeapon = UtilsDTP.getCreatureType(damager).toString();
-                        killer = (Player) ((Tameable) damager).getOwner();
+            if (damageEvent instanceof EntityDamageByEntityEvent) {
+                Entity damager = ((EntityDamageByEntityEvent) damageEvent).getDamager();
+                log.debug("damager", damager.toString());
+                if (damager instanceof Player) {
+                    if (((Player) damager).getItemInHand().getType().equals(Material.AIR)) {
+                        causeOfDeath = DeathEventType.PVP_FISTS;
+                    } else {
+                        causeOfDeath = DeathEventType.PVP;
                     }
-                } else {
-                    causeOfDeath = DeathEventType.valueOf(UtilsDTP.getCreatureType(damager).toString());
-                }
-            } else if (damager instanceof Projectile) {
-                log.debug("this is a projectile");
-                log.debug("shooter", ((Projectile) damager).getShooter());
-                // TODO: find out why we never get damager instance of
-                // Projectile
-                if (((Projectile) damager).getShooter() instanceof Player) {
-                    causeOfDeath = DeathEventType.PVP;
-                    murderWeapon = ((Projectile) damager).toString().replace("Craft", "");
-                    killer = (Player) ((Projectile) damager).getShooter();
-                }
-                if (((Projectile) damager).getShooter() == null) {
-                    //let's assume that null will only be caused by a dispenser!
-                    causeOfDeath = DeathEventType.DISPENSER;
-                    murderWeapon = ((Projectile) damager).toString().replace("Craft", "");
-                }
+                    murderWeapon = ((Player) damager).getItemInHand().getType().toString();
+                    killer = (Player) damager;
+                } else if (damager instanceof Creature) {
+                    if (damager instanceof Tameable) {
+                        if (((Tameable) damager).isTamed()) {
+                            causeOfDeath = DeathEventType.PVP_TAMED;
+                            murderWeapon = UtilsDTP.getCreatureType(damager).toString();
+                            killer = (Player) ((Tameable) damager).getOwner();
+                        }
+                    } else {
+                        causeOfDeath = DeathEventType.valueOf(UtilsDTP.getCreatureType(damager).toString());
+                    }
+                } else if (damager instanceof Projectile) {
+                    log.debug("this is a projectile");
+                    log.debug("shooter", ((Projectile) damager).getShooter());
+                    // TODO: find out why we never get damager instance of
+                    // Projectile
+                    if (((Projectile) damager).getShooter() instanceof Player) {
+                        causeOfDeath = DeathEventType.PVP;
+                        murderWeapon = ((Projectile) damager).toString().replace("Craft", "");
+                        killer = (Player) ((Projectile) damager).getShooter();
+                    }
+                    if (((Projectile) damager).getShooter() == null) {
+                        //let's assume that null will only be caused by a dispenser!
+                        causeOfDeath = DeathEventType.DISPENSER;
+                        murderWeapon = ((Projectile) damager).toString().replace("Craft", "");
+                    }
 
-            } else if (damager instanceof TNTPrimed) {
-                causeOfDeath = DeathEventType.BLOCK_EXPLOSION;
-            } else {
-                log.info("unknown enitity damager" + damager);
+                } else if (damager instanceof TNTPrimed) {
+                    causeOfDeath = DeathEventType.BLOCK_EXPLOSION;
+                } else {
+                    log.info("unknown enitity damager" + damager);
+                }
+            } else if (damageEvent != null) {
+                try {
+                    causeOfDeath = DeathEventType.valueOf(damageEvent.getCause().toString());
+                } catch (IllegalArgumentException e) {
+                    causeOfDeath = DeathEventType.UNKNOWN;
+                }
             }
-        } else if (damageEvent != null) {
-            try {
-                causeOfDeath = DeathEventType.valueOf(damageEvent.getCause().toString());
-            } catch (IllegalArgumentException e) {
-                causeOfDeath = DeathEventType.UNKNOWN;
-            }
+        } catch (NullPointerException npe) {
+            log.debug("normal detection of damageevent failed", npe);
+            log.debug("assuming you did use essentials or similar");
+            log.debug("which uses setHealth(0) to kill people");
+            log.info("Deathcause is being set to SUICIDE!");
+            causeOfDeath = DeathEventType.SUICIDE;
+            murderWeapon = "Essentials";
         }
+
 
         if (causeOfDeath == null) {
             causeOfDeath = DeathEventType.UNKNOWN;
