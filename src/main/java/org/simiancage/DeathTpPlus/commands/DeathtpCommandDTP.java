@@ -49,7 +49,7 @@ public class DeathtpCommandDTP implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             // ToDo remove debug in 3.5
-            if (player.hasPermission("deathtpplus.deathtp")) {
+            if (!player.hasPermission("deathtpplus.deathtp.deathtp") && player.hasPermission("deathtpplus.deathtp")) {
                 log.debug("old permission found: deathtpplus.deathtp for player " + player.getName());
                 log.debug("please use: deathtpplus.deathtp.deathtp");
             }

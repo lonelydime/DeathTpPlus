@@ -39,7 +39,7 @@ public class StreakCommandDTP implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             // ToDo remove debug in 3.5
-            if (player.hasPermission("deathtpplus.streak")) {
+            if (!player.hasPermission("deathtpplus.deathtp.streak") && player.hasPermission("deathtpplus.streak")) {
                 log.debug("old permission found: deathtpplus.streak for player " + player.getName());
                 log.debug("please use: deathtpplus.deathtp.streak");
             }

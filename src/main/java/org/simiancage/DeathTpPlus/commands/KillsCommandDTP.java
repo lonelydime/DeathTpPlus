@@ -41,7 +41,7 @@ public class KillsCommandDTP implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             // ToDo remove debug in 3.5
-            if (player.hasPermission("deathtpplus.kills")) {
+            if (!player.hasPermission("deathtpplus.deathtp.kills") && player.hasPermission("deathtpplus.kills")) {
                 log.debug("old permission found: deathtpplus.kills for player " + player.getName());
                 log.debug("please use: deathtpplus.deathtp.kills");
             }

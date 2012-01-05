@@ -8,6 +8,7 @@ import org.simiancage.DeathTpPlus.models.DeathLocationRecordDTP;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -63,14 +64,15 @@ public class DeathLocationsLogDTP {
         return deathLocation;
     }
 
-    public List<DeathLocationRecordDTP> getAllRecords() {
-        List<DeathLocationRecordDTP> deathLocationRecordList = null;
+    public HashMap<Integer, DeathLocationRecordDTP> getAllRecords() {
+        int index = 0;
+        HashMap<Integer, DeathLocationRecordDTP> deathLocationRecordList = new HashMap<Integer, DeathLocationRecordDTP>();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(deathLocationLogFile));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                deathLocationRecordList.add(new DeathLocationRecordDTP(line));
-
+                deathLocationRecordList.put(index, new DeathLocationRecordDTP(line));
+                index = index + 1;
             }
             bufferedReader.close();
         } catch (IOException e) {

@@ -1,6 +1,8 @@
 package org.simiancage.DeathTpPlus.helpers;
 
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -15,14 +17,18 @@ import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.logs.DeathLocationsLogDTP;
 import org.simiancage.DeathTpPlus.models.DeathLocationRecordDTP;
 import org.simiancage.DeathTpPlus.models.TombStoneBlockDTP;
+import org.simiancage.DeathTpPlus.objects.TombDTP;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * PluginName: DeathTpPlus
@@ -42,24 +48,25 @@ public class DynMapHelperDTP {
     Plugin dynmap;
     DynmapAPI api;
     MarkerAPI markerapi;
-    private double per = 5.0;
+    private double per = 15.0;
 
     private enum Layers {
-        TOMBSTONES("TombStones", "chest"),
-        TOMBS("Tombs", "skull"),
-        DEATHLOCATIONS("DeathSigns", "pirateflag");
+        TOMBSTONES("TombStones", "chest", "Treasures of %name%"),
+        TOMBS("Tombs", "skull", "Tomb of %name%"),
+        DEATHLOCATIONS("LastDeath", "pirateflag", "%name% died here");
 
         private String name;
         private boolean hideByDefault = false;
-        private int layerPrio = 5;
+        private int layerPrio = 0;
         private int minZoom = 0;
         private String defIcon;
         private String labelFmt = "%name%";
         private boolean isEnabled = true;
 
-        private Layers(String name, String defIcon) {
+        private Layers(String name, String defIcon, String labelFmt) {
             this.name = name;
             this.defIcon = defIcon;
+            this.labelFmt = labelFmt;
         }
 
         @Override
@@ -187,7 +194,7 @@ public class DynMapHelperDTP {
             Map<String, Location> marks = getMarkers();
             for (String name : marks.keySet()) {
                 Location loc = marks.get(name);
-
+                loggerDTP.debug("Location", loc);
                 String wname = loc.getWorld().getName();
 
                 /* Get location */
@@ -234,7 +241,14 @@ public class DynMapHelperDTP {
             for (Player player : plugin.getServer().getOnlinePlayers()) {
                 String playerName = player.getName();
                 if (tombs.hasTomb(playerName)) {
-                    map.put(playerName, tombs.getTomb(playerName).getDeathLoc());
+                    try {
+                        TombDTP tomb = tombs.getTomb(playerName);
+                        CopyOnWriteArrayList<Block> signBlocks = tomb.getSignBlocks();
+                        Block block = signBlocks.get(0);
+                        map.put(playerName, block.getLocation());
+                    } catch (NullPointerException e) {
+                        loggerDTP.debug("Caught an exception", e);
+                    }
                 }
             }
             return map;
@@ -254,15 +268,20 @@ public class DynMapHelperDTP {
         public Map<String, Location> getMarkers() {
             HashMap<String, Location> map = new HashMap<String, Location>();
             TombStoneHelperDTP tombStoneHelper = TombStoneHelperDTP.getInstance();
-            ConcurrentLinkedQueue<TombStoneBlockDTP> tombStoneBlockMap = tombStoneHelper.getTombStoneListDTP();
-            Iterator<TombStoneBlockDTP> iterator = tombStoneBlockMap.iterator();
-            String playerName;
-            Location location;
-            while (iterator.hasNext()) {
-                TombStoneBlockDTP tombStone = iterator.next();
-                playerName = tombStone.getOwner();
-                location = tombStone.getLBlock().getLocation();
-                map.put(playerName, location);
+            HashMap<Location, TombStoneBlockDTP> tombStoneBlockMap = tombStoneHelper.getTombStoneBlockList();
+            if (!tombStoneBlockMap.isEmpty()) {
+                Iterator<Location> iterator = tombStoneBlockMap.keySet().iterator();
+                TombStoneBlockDTP tombStoneBlockDTP;
+                String playerName;
+                Location location;
+                while (iterator.hasNext()) {
+
+                    location = iterator.next();
+                    tombStoneBlockDTP = tombStoneBlockMap.get(location);
+                    playerName = tombStoneBlockDTP.getOwner();
+                    map.put(playerName, location);
+
+                }
             }
             return map;
         }
@@ -280,13 +299,19 @@ public class DynMapHelperDTP {
         public Map<String, Location> getMarkers() {
             HashMap<String, Location> map = new HashMap<String, Location>();
             DeathLocationsLogDTP deathLocationsLogDTP = new DeathLocationsLogDTP(plugin);
-            List<DeathLocationRecordDTP> deathLocationsLog = deathLocationsLogDTP.getAllRecords();
+            HashMap<Integer, DeathLocationRecordDTP> deathLocationsLog = deathLocationsLogDTP.getAllRecords();
             if (!deathLocationsLog.isEmpty()) {
                 String player;
                 Location location;
                 for (int i = 0; i < deathLocationsLog.size(); i++) {
                     player = deathLocationsLog.get(i).getPlayerName();
                     location = deathLocationsLog.get(i).getLocation();
+                    double x = location.getX();
+                    double y = location.getY();
+                    double z = location.getZ();
+                    String worldName = deathLocationsLog.get(i).getWorldName();
+                    World world = plugin.getServer().getWorld(worldName);
+                    location = new Location(world, x, y, z);
                     map.put(player, location);
                 }
             }
@@ -321,12 +346,15 @@ public class DynMapHelperDTP {
     private void updateMarkers() {
         loggerDTP.debug("Updating Markers");
         if (Layers.TOMBSTONES.isEnabled()) {
+            loggerDTP.debug("updating tombstonelayer");
             tombstonelayer.updateMarkerSet();
         }
         if (Layers.TOMBS.isEnabled()) {
+            loggerDTP.debug("updating tomblayer");
             tomblayer.updateMarkerSet();
         }
         if (Layers.DEATHLOCATIONS.isEnabled()) {
+            loggerDTP.debug("updating deathlocations");
             deathlocationlayer.updateMarkerSet();
         }
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new MarkerUpdate(), updperiod);
@@ -394,12 +422,13 @@ public class DynMapHelperDTP {
                 Layers.TOMBS.setEnabled(false);
             }
         }
+        loggerDTP.debug("per", per);
         if (per < 2.0) {
             per = 2.0;
         }
         updperiod = (long) (per * 20.0);
         stop = false;
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new MarkerUpdate(), 5 * 20);
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new MarkerUpdate(), updperiod);
 
         loggerDTP.info("DynMap Integration is activated");
     }
@@ -439,7 +468,7 @@ public class DynMapHelperDTP {
             stream.println("#");
             stream.println("# For detailed assistance please visit: " + configDTP.getPluginSlug());
             stream.println();
-            stream.println("# Seconds between position updates");
+            stream.println("# Seconds between updates");
             stream.println("update:");
             stream.println("    period: " + per);
             stream.println();
@@ -455,8 +484,10 @@ public class DynMapHelperDTP {
                 stream.println("        minZoom: " + layer.getMinZoom());
                 stream.println("        # Default Icon for Marker");
                 stream.println("        defIcon: \"" + layer.getDefIcon() + "\"");
-                stream.println("        # Label format - substitute %nam% for players name");
+                stream.println("        # Label format - substitute %name% for players name");
                 stream.println("        labelFmt: \"" + layer.getLabelFmt() + "\"");
+                stream.println("        # LayerPriority ");
+                stream.println("        layerPrio: " + layer.getLayerPrio());
                 stream.println();
 
             }
@@ -485,6 +516,7 @@ public class DynMapHelperDTP {
             layer.setMinZoom(cfg.getInt(node + "minZoom"));
             layer.setDefIcon(cfg.getString(node + "defIcon"));
             layer.setLabelFmt(cfg.getString(node + "labelFmt"));
+            layer.setLayerPrio(cfg.getInt(node + "layerPrio"));
         }
     }
 }

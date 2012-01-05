@@ -40,7 +40,7 @@ public class DeathsCommandDTP implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             // ToDo remove debug  in 3.5.1597
-            if (player.hasPermission("deathtpplus.deaths")) {
+            if (player.hasPermission("deathtpplus.deathtp.deaths") && player.hasPermission("deathtpplus.deaths")) {
                 log.debug("old permission found: deathtpplus.deaths for player " + player.getName());
                 log.debug("please use: deathtpplus.deathtp.deaths");
             }
