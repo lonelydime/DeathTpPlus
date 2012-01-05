@@ -302,6 +302,11 @@ public class ConfigDTP {
      */
     private boolean keepExperienceOnQuickLoot = false;
 
+    /**
+     * Keep full experience?
+     */
+    private boolean keepFullExperience = false;
+
 // TombStone features (Removal)
 
     /**
@@ -442,6 +447,7 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("voidCheck", voidCheck);
         config.addDefault("creeperProtection", creeperProtection);
         config.addDefault("keepExperienceOnQuickLoot", keepExperienceOnQuickLoot);
+        config.addDefault("keepFullExperience", keepFullExperience);
 // TombStone Features (Removal)
         config.addDefault("destroyOnQuickLoot", destroyOnQuickLoot);
         config.addDefault("removeTombStone", removeTombStone);
@@ -514,6 +520,7 @@ afterwards parsable again from the configuration class of bukkit
         voidCheck = config.getBoolean("voidCheck");
         creeperProtection = config.getBoolean("creeperProtection");
         keepExperienceOnQuickLoot = config.getBoolean("keepExperienceOnQuickLoot");
+        keepFullExperience = config.getBoolean("keepFullExperience");
 // Tombstone Features (Removal)
         destroyOnQuickLoot = config.getBoolean("destroyOnQuickLoot");
         removeTombStone = config.getBoolean("removeTombStone");
@@ -574,6 +581,7 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("voidCheck", voidCheck);
         log.debug("creeperProtection", creeperProtection);
         log.debug("keepExperienceOnQuickLoot", keepExperienceOnQuickLoot);
+        log.debug("keepFullExperience", keepFullExperience);
         log.debug("destroyOnQuickLoot", destroyOnQuickLoot);
         log.debug("removeTombStone", removeTombStone);
         log.debug("removeTombStoneTime", removeTombStoneTime);
@@ -758,8 +766,11 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# after they are unlocked, enable this");
         stream.println("creeperProtection: " + creeperProtection);
         stream.println();
-        stream.println("# Keep dropped experience when quicklooting");
+        stream.println("# Keep experience when quicklooting (Default is dropped / partial experience, see below)");
         stream.println("keepExperienceOnQuickLoot: " + keepExperienceOnQuickLoot);
+        stream.println();
+        stream.println("# Keep FULL experience instead of dropped.");
+        stream.println("keepFullExperience: " + keepFullExperience);
         stream.println();
         stream.println("#--------- TombStone features (Removal");
         stream.println();
@@ -827,6 +838,10 @@ afterwards parsable again from the configuration class of bukkit
 
 // The plugin specific getters start here!
 
+
+    public boolean isKeepFullExperience() {
+        return keepFullExperience;
+    }
 
     public String getPluginSlug() {
         return pluginSlug;

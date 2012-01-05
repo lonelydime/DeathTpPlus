@@ -274,19 +274,23 @@ public class onEntityDeathDTP {
         if (plugin.hasPerm(player, "tombstone.freesign", false)) {
             removeSign = 0;
         }
-        int droppedExperience;
+        int experience;
         if (config.isKeepExperienceOnQuickLoot()) {
-            droppedExperience = deathDetail.getEntityDeathEvent().getDroppedExp();
-            log.debug("droppedExperience", droppedExperience);
+            if (config.isKeepFullExperience()) {
+                experience = deathDetail.getPlayer().getTotalExperience();
+            } else {
+                experience = deathDetail.getEntityDeathEvent().getDroppedExp();
+            }
+            log.debug("experience", experience);
             deathDetail.getEntityDeathEvent().setDroppedExp(0);
         } else {
-            droppedExperience = 0;
+            experience = 0;
         }
 
 // Create a TombBlock for this tombstone
         TombStoneBlockDTP tStoneBlockDTP = new TombStoneBlockDTP(sChest.getBlock(),
                 (lChest != null) ? lChest.getBlock() : null, sBlock,
-                player.getName(), (System.currentTimeMillis() / 1000), droppedExperience);
+                player.getName(), (System.currentTimeMillis() / 1000), experience);
 
 // Protect the chest/sign if LWC is installed.
         Boolean prot = false;

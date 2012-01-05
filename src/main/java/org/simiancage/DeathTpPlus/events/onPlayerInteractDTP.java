@@ -133,7 +133,7 @@ public class onPlayerInteractDTP {
         int playerTotalExperience = player.getTotalExperience();
         log.debug("Player TotalExperience", playerTotalExperience);
         log.debug("Stored droppedExperience", storedDroppedExperience);
-        for (int i = 1; i < storedDroppedExperience; ++i) {
+        for (int i = 0; i < storedDroppedExperience; ++i) {
             player.giveExp(1);
             log.debug("Player New TotalExperience", player.getTotalExperience());
         }
