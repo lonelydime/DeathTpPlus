@@ -63,6 +63,22 @@ public class DeathLocationsLogDTP {
         return deathLocation;
     }
 
+    public List<DeathLocationRecordDTP> getAllRecords() {
+        List<DeathLocationRecordDTP> deathLocationRecordList = null;
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(deathLocationLogFile));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                deathLocationRecordList.add(new DeathLocationRecordDTP(line));
+
+            }
+            bufferedReader.close();
+        } catch (IOException e) {
+            log.severe("Failed to read death location log", e);
+        }
+        return deathLocationRecordList;
+    }
+
     public void setRecord(DeathDetailDTP deathDetail) {
         List<DeathLocationRecordDTP> deathLocations = new ArrayList<DeathLocationRecordDTP>();
         DeathLocationRecordDTP playerRecord = null;

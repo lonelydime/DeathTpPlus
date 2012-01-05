@@ -11,8 +11,10 @@ import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.dynmap.DynmapAPI;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.DynMapHelperDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.yi.acru.bukkit.Lockette.Lockette;
 
@@ -22,6 +24,7 @@ public class ServerListenerDTP extends ServerListener {
     private LoggerDTP log;
     private ConfigDTP config;
     private boolean missingEconomyWarn = true;
+    private boolean dynMapNotReady = true;
 
 
     public ServerListenerDTP(DeathTpPlus plugin) {
@@ -45,6 +48,7 @@ public class ServerListenerDTP extends ServerListener {
                 plugin.setEconomyActive(false);
                 log.info("un-hooked from Vault.");
                 log.info("as Vault was unloaded / disabled.");
+                missingEconomyWarn = true;
             }
         }
 
@@ -65,6 +69,19 @@ public class ServerListenerDTP extends ServerListener {
             plugin.setMaHandler(null);
             plugin.setMobArenaEnabled(false);
         }
+        Plugin checkDynmap = pm.getPlugin("dynmap");
+        if ((checkDynmap == null) && plugin.isDynmapEnabled()) {
+            log.info("Disabled DnyMap integration.");
+            log.info("as DynMap was unloaded / disabled.");
+            plugin.setDynmapEnabled(false);
+            plugin.setDynMap(null);
+            plugin.getDynMapHelperDTP().onDisable();
+            plugin.setDynMapHelperDTP(null);
+            plugin.setDynmapAPI(null);
+            dynMapNotReady = true;
+
+        }
+
 
     }
 
@@ -74,6 +91,7 @@ public class ServerListenerDTP extends ServerListener {
         PluginManager pm = plugin.getServer().getPluginManager();
         Plugin checkVault = pm.getPlugin("Vault");
         Plugin checkMobArena = pm.getPlugin("MobArena");
+        Plugin checkDynMap = pm.getPlugin("dynmap");
         if (checkVault != null && !plugin.isUseVault()) {
             plugin.setUseVault(true);
             log.info("Vault detected");
@@ -119,6 +137,31 @@ public class ServerListenerDTP extends ServerListener {
             log.info("Enabling MobArena protection");
             plugin.setMaHandler(new MobArenaHandler());
             plugin.setMobArenaEnabled(true);
+        }
+
+        if (checkDynMap != null && !plugin.isDynmapEnabled() && config.isIntegrateIntoDynmap()) {
+            log.info("Enabling DynMap Integration");
+            plugin.setDynMap(checkDynMap);
+            plugin.setDynmapEnabled(true);
+        }
+        if (checkDynMap.isEnabled() && plugin.isDynmapEnabled() && !plugin.isDynmapActive()) {
+            DynmapAPI api = (DynmapAPI) checkDynMap; /* Get API */
+            log.debug("dynMapApi", api);
+            if (api == null) {
+                if (dynMapNotReady) {
+                    log.info("DynMap not ready yet.. waiting");
+                    dynMapNotReady = false;
+                }
+            } else {
+                log.info("DynMap ready!");
+                plugin.setDynmapAPI(api);
+                plugin.setDynmapActive(true);
+                DynMapHelperDTP dynMapHelperDTP = new DynMapHelperDTP(plugin);
+                plugin.setDynMapHelperDTP(dynMapHelperDTP);
+
+                dynMapHelperDTP.onEnable();
+
+            }
         }
     }
 }

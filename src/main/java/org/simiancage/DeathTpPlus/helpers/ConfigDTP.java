@@ -174,6 +174,10 @@ public class ConfigDTP {
      * Only use AIR to create signs or chests
      */
     private boolean shouldOnlyUseAirToCreate = false;
+    /**
+     * Integrate into Dynmap
+     */
+    private boolean integrateIntoDynmap = true;
 
 
 // DeathTp Features
@@ -409,6 +413,7 @@ afterwards parsable again from the configuration class of bukkit
         config.addDefault("enableLWC", enableLWC);
         config.addDefault("allowWorldTravel", allowWorldTravel);
         config.addDefault("shouldOnlyUseAirToCreate", shouldOnlyUseAirToCreate);
+        config.addDefault("integrateIntoDynmap", integrateIntoDynmap);
 
 // DeathTp Features Variables
         config.addDefault("enableDeathtp", enableDeathtp);
@@ -480,6 +485,7 @@ afterwards parsable again from the configuration class of bukkit
         tombStoneSign[2] = config.getString("tombStoneSign.Line3", tombStoneSign[2]);
         tombStoneSign[3] = config.getString("tombStoneSign.Line4", tombStoneSign[3]);
         shouldOnlyUseAirToCreate = config.getBoolean("shouldOnlyUseAirToCreate");
+        integrateIntoDynmap = config.getBoolean("integrateIntoDynmap");
 
 // DeathTpPlus Features
         enableDeathtp = config.getBoolean("enableDeathtp");
@@ -541,6 +547,7 @@ afterwards parsable again from the configuration class of bukkit
         log.debug("tombStoneSign", tombStoneSign[2]);
         log.debug("tombStoneSign", tombStoneSign[3]);
         log.debug("shouldOnlyUseAirToCreate", shouldOnlyUseAirToCreate);
+        log.debug("integrateIntoDynmap", integrateIntoDynmap);
         log.debug("allowWordTravel", allowWorldTravel);
         log.debug("enableDeathtp", enableDeathtp);
         log.debug("showDeathNotify", showDeathNotify);
@@ -661,6 +668,9 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# WARNING: This can mean that NO DeathSigns or TombStones are created.");
         stream.println("#          Use at your own risk!");
         stream.println("shouldOnlyUseAirToCreate: " + shouldOnlyUseAirToCreate);
+        stream.println();
+        stream.println("# Integrate into DynMap");
+        stream.println("integrateIntoDynmap: " + integrateIntoDynmap);
         stream.println();
         stream.println("#--------- DeathTp Features");
         stream.println();
@@ -817,6 +827,14 @@ afterwards parsable again from the configuration class of bukkit
 
 // The plugin specific getters start here!
 
+
+    public String getPluginSlug() {
+        return pluginSlug;
+    }
+
+    public boolean isIntegrateIntoDynmap() {
+        return integrateIntoDynmap;
+    }
 
     public boolean isAllowTombAsTeleport() {
         return allowTombAsTeleport;
@@ -1431,45 +1449,11 @@ afterwards parsable again from the configuration class of bukkit
 // Checking the Current Version via the Web
 
     /**
-     * Method to check if there is a newer version of the plugin available.
-     */
-    private void tempversionCheck() {
-        differentPluginAvailable = false;
-        String thisVersion = plugin.getDescription().getVersion();
-        URL url;
-        try {
-            url = new URL(versionURL);
-            BufferedReader in;
-            in = new BufferedReader(new InputStreamReader(url.openStream()));
-            String newVersion = "";
-            String line;
-            while ((line = in.readLine()) != null) {
-                newVersion += line;
-            }
-            in.close();
-            if (newVersion.equals(thisVersion)) {
-                log.info("is up to date at version "
-                        + thisVersion + ".");
-
-            } else {
-                log.warning("is out of date!");
-                log.warning("This version: " + thisVersion + "; latest version: " + newVersion + ".");
-                differentPluginAvailable = true;
-            }
-        } catch (MalformedURLException ex) {
-            log.warning("Error accessing update URL.", ex);
-        } catch (IOException ex) {
-            log.warning("Error checking for update.", ex);
-        }
-    }
-
-    /**
      * Method to figure out if we are out of date or running on an older / newer build of CB
      */
 
     private boolean versionCheck() {
 
-        // ToDo figure out how to support new versioning system
         differentPluginAvailable = false;
         boolean errorAccessingGithub = false;
         int pluginMajor;
@@ -1511,6 +1495,7 @@ afterwards parsable again from the configuration class of bukkit
             log.warning("Error checking for update.", ex);
             errorAccessingGithub = true;
         }
+        log.debug("newVersion", newVersion);
         if (!errorAccessingGithub) {
             ghVersion = newVersion.replace(".", ":");
             String[] githubVersion = ghVersion.split(":");
@@ -1543,6 +1528,7 @@ afterwards parsable again from the configuration class of bukkit
 
                 log.warning("is out of date!");
                 log.warning("This version: " + pluginVersion + "; latest version: " + newVersion + ".");
+                plugin.getServer().broadcast("A new Version of DeathTpPlus is available!", "deathtpplus.admin.version");
                 differentPluginAvailable = true;
             }
         }

@@ -30,10 +30,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.dynmap.DynmapAPI;
 import org.simiancage.DeathTpPlus.commands.*;
 import org.simiancage.DeathTpPlus.helpers.*;
 import org.simiancage.DeathTpPlus.listeners.*;
@@ -93,6 +93,7 @@ public class DeathTpPlus extends JavaPlugin {
     private static Server server = null;
     private boolean mobArenaEnabled = false;
     private MobArenaHandler maHandler;
+    private DynMapHelperDTP dynMapHelperDTP;
 
     // Vault
     private boolean useVault = false;
@@ -100,6 +101,12 @@ public class DeathTpPlus extends JavaPlugin {
 
     //craftirc
     public static CraftIRC craftircHandle = null;
+
+    //DynMap
+    private boolean dynmapEnabled = false;
+    private Plugin dynmap;
+    private DynmapAPI dynmapAPI;
+    private boolean dynmapActive = false;
 
     public void onDisable() {
         for (World w : getServer().getWorlds()) {
@@ -138,7 +145,7 @@ public class DeathTpPlus extends JavaPlugin {
 
 // register entityListener
         pm.registerEvent(Event.Type.ENTITY_DEATH, entityListener, Priority.Normal, this);
-
+        pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
         // register entityListener for Deathnotify
         if (config.isShowDeathNotify()) {
             pm.registerEvent(Event.Type.ENTITY_COMBUST, entityListener, Priority.Normal, this);
@@ -159,10 +166,8 @@ public class DeathTpPlus extends JavaPlugin {
         // register entityListener for Enable Tomb
         if (config.isEnableTomb()) {
             pm.registerEvent(Event.Type.SIGN_CHANGE, blockListener, Priority.Normal, this);
-            pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
             pm.registerEvent(Event.Type.PLAYER_RESPAWN, playerListener, Priority.Highest, this);
             pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, this);
-            pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
             //ToDo check if this is really needed
             //pm.registerEvent(Event.Type.WORLD_SAVE, worldSaveListener, Priority.Normal, this);
             server = getServer();
@@ -203,7 +208,7 @@ public class DeathTpPlus extends JavaPlugin {
 
         this.addCommands();
 
-        // ToDo remove permission compability in 3.2
+/*        // ToDo remove permission compability in 3.2
         Permission deathtp = new Permission("deathtp");
         Permission kills = new Permission("kills");
         Permission streak = new Permission("streak");
@@ -211,7 +216,7 @@ public class DeathTpPlus extends JavaPlugin {
         this.getServer().getPluginManager().addPermission(deathtp);
         this.getServer().getPluginManager().addPermission(kills);
         this.getServer().getPluginManager().addPermission(streak);
-        this.getServer().getPluginManager().addPermission(deaths);
+        this.getServer().getPluginManager().addPermission(deaths);*/
 
         // print success
         log.enableMsg();
@@ -264,6 +269,47 @@ public class DeathTpPlus extends JavaPlugin {
             return plugin;
         }
         return null;
+    }
+
+    public boolean isDynmapActive() {
+        return dynmapActive;
+    }
+
+    public void setDynmapActive(boolean dynmapActive) {
+        this.dynmapActive = dynmapActive;
+    }
+
+    public DynmapAPI getDynmapAPI() {
+        return dynmapAPI;
+    }
+
+    public void setDynmapAPI(DynmapAPI dynmapAPI) {
+        this.dynmapAPI = dynmapAPI;
+    }
+
+    public DynMapHelperDTP getDynMapHelperDTP() {
+        return dynMapHelperDTP;
+    }
+
+    public void setDynMapHelperDTP(DynMapHelperDTP dynMapHelperDTP) {
+        this.dynMapHelperDTP = dynMapHelperDTP;
+    }
+
+
+    public void setDynMap(Plugin dynMap) {
+        this.dynmap = dynMap;
+    }
+
+    public Plugin getDynmap() {
+        return dynmap;
+    }
+
+    public boolean isDynmapEnabled() {
+        return dynmapEnabled;
+    }
+
+    public void setDynmapEnabled(boolean dynmapEnabled) {
+        this.dynmapEnabled = dynmapEnabled;
     }
 
     public MobArenaHandler getMaHandler() {
