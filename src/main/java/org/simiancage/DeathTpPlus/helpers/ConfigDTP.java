@@ -110,7 +110,7 @@ public class ConfigDTP {
      * Link to the location of the recent version number, the file should be a text with just the number
      */
     @SuppressWarnings({"FieldCanBeLocal"})
-    private final String versionURL = "https://raw.github.com/dredhorse/DeathTpPlus/master/Resources/deathtpplus_new.ver";
+    private final String versionURL = "https://raw.github.com/dredhorse/DeathTpPlus/master/Resources/deathtpplus.ver";
 
 
     //ToDo create new link for every version
@@ -1477,7 +1477,7 @@ afterwards parsable again from the configuration class of bukkit
         int pluginCB;
         int githubMajor;
         int githubMinor;
-        int gihubDev;
+        int githubDev;
         int githubCB;
         String plVersion;
         String ghVersion;
@@ -1520,11 +1520,11 @@ afterwards parsable again from the configuration class of bukkit
             githubMajor = Integer.parseInt(githubVersion[0]);
             githubMinor = Integer.parseInt(githubVersion[1]);
             if (githubVersion.length > 3) {
-                gihubDev = Integer.parseInt(githubVersion[2]);
+                githubDev = Integer.parseInt(githubVersion[2]);
                 githubCB = Integer.parseInt(githubVersion[3]);
             } else {
-                gihubDev = 0;
-                githubCB = Integer.parseInt(githubVersion[3]);
+                githubDev = 0;
+                githubCB = Integer.parseInt(githubVersion[2]);
             }
 
             if (githubCB < pluginCB) {
@@ -1540,15 +1540,15 @@ afterwards parsable again from the configuration class of bukkit
 
             }
 
-            if ((githubMajor < pluginMajor) || githubMinor < pluginMinor) {
+            if ((githubMajor < pluginMajor) || githubMinor < pluginMinor || githubDev < pluginDev || pluginDev > 0) {
                 log.warning("You are running an dev-build. Be sure you know what you are doing!");
                 log.warning("Please report any bugs via issues or tickets!");
-                if (gihubDev > pluginDev) {
-                    log.info("There is a NEWER dev-build available!");
+                if (githubDev > pluginDev) {
+                    log.warning("There is a NEWER dev-build available!");
                 }
-                if (gihubDev < pluginDev) {
+                if (githubDev < pluginDev) {
                     log.severe("WOW! Where did you get THIS version from?");
-                    log.info("You like living on the edge, do you?");
+                    log.severe("You like living on the edge, do you?");
                 }
             }
             if ((githubMajor > pluginMajor) || githubMinor > pluginMinor) {
