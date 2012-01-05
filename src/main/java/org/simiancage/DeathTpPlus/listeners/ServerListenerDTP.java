@@ -144,23 +144,25 @@ public class ServerListenerDTP extends ServerListener {
             plugin.setDynMap(checkDynMap);
             plugin.setDynmapEnabled(true);
         }
-        if (checkDynMap.isEnabled() && plugin.isDynmapEnabled() && !plugin.isDynmapActive()) {
-            DynmapAPI api = (DynmapAPI) checkDynMap; /* Get API */
-            log.debug("dynMapApi", api);
-            if (api == null) {
-                if (dynMapNotReady) {
-                    log.info("DynMap not ready yet.. waiting");
-                    dynMapNotReady = false;
+        if (checkDynMap != null) {
+            if (checkDynMap.isEnabled() && plugin.isDynmapEnabled() && !plugin.isDynmapActive()) {
+                DynmapAPI api = (DynmapAPI) checkDynMap; /* Get API */
+                log.debug("dynMapApi", api);
+                if (api == null) {
+                    if (dynMapNotReady) {
+                        log.info("DynMap not ready yet.. waiting");
+                        dynMapNotReady = false;
+                    }
+                } else {
+                    log.info("DynMap ready!");
+                    plugin.setDynmapAPI(api);
+                    plugin.setDynmapActive(true);
+                    DynMapHelperDTP dynMapHelperDTP = new DynMapHelperDTP(plugin);
+                    plugin.setDynMapHelperDTP(dynMapHelperDTP);
+
+                    dynMapHelperDTP.onEnable();
+
                 }
-            } else {
-                log.info("DynMap ready!");
-                plugin.setDynmapAPI(api);
-                plugin.setDynmapActive(true);
-                DynMapHelperDTP dynMapHelperDTP = new DynMapHelperDTP(plugin);
-                plugin.setDynMapHelperDTP(dynMapHelperDTP);
-
-                dynMapHelperDTP.onEnable();
-
             }
         }
     }
