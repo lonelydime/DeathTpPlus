@@ -562,7 +562,8 @@ afterwards parsable again from the configuration class of bukkit
                 log.debug("DeathEventType", DeathMessagesDTP.mapTypeToNodeName(deathEventType));
                 for (String msg : deathevents.get(deathEventType)) {
                     log.debug("msg", msg);
-                    stream.println("    - \"" + msg + "\"");
+                    msg = msg.replace("''", "'");
+                    stream.println("    - \"" + msg.replace("\"", "'") + "\"");
                 }
             }
         }

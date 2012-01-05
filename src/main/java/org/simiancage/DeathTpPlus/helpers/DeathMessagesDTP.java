@@ -827,21 +827,24 @@ afterwards parsable again from the configuration class of bukkit
         stream.println("# format <#of kills>: <text to display> %n: = player getting the message (in this case, the one on a killStreakMessages).");
         stream.println("killstreak:");
         for (String msg : killStreakMessages) {
-            stream.println("    - \"" + msg + "\"");
+            msg = msg.replace("''", "'");
+            stream.println("    - \"" + msg.replace("\"", "'") + "\"");
         }
         stream.println("#");
         stream.println("# Death Streak Messages");
         stream.println("# format <#of kills>: <text to display> %n: = player getting the message (in this case, the one on a deathStreakMessages)");
         stream.println("deathstreak:");
         for (String msg : deathStreakMessages) {
-            stream.println("    - \"" + msg + "\"");
+            msg = msg.replace("''", "'");
+            stream.println("    - \"" + msg.replace("\"", "'") + "\"");
         }
         stream.println("#");
         stream.println("# Multi Killl Messages");
         stream.println("# format <#of kills>: <text to display> ");
         stream.println("multikill:");
         for (String msg : multiKillMessages) {
-            stream.println("    - \"" + msg + "\"");
+            msg = msg.replace("''", "'");
+            stream.println("    - \"" + msg.replace("\"", "'") + "\"");
         }
         stream.println("#");
         stream.println("#--------- Deathmessages");
@@ -857,7 +860,8 @@ afterwards parsable again from the configuration class of bukkit
                 stream.println(mapTypeToNodeName(deathEventType) + ":");
 
                 for (String msg : deathMessages.get(deathEventType)) {
-                    stream.println("    - \"" + msg + "\"");
+                    msg = msg.replace("''", "'");
+                    stream.println("    - \"" + msg.replace("\"", "'") + "\"");
                 }
             }
         }
