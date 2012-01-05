@@ -1473,9 +1473,11 @@ afterwards parsable again from the configuration class of bukkit
         boolean errorAccessingGithub = false;
         int pluginMajor;
         int pluginMinor;
+        int pluginDev;
         int pluginCB;
         int githubMajor;
         int githubMinor;
+        int gihubDev;
         int githubCB;
         String plVersion;
         String ghVersion;
@@ -1490,7 +1492,8 @@ afterwards parsable again from the configuration class of bukkit
         String[] thisVersion = plVersion.split(":");
         pluginMajor = Integer.parseInt(thisVersion[0].toString());
         pluginMinor = Integer.parseInt(thisVersion[1].toString());
-        pluginCB = Integer.parseInt(thisVersion[2].toString());
+        pluginDev = Integer.parseInt(thisVersion[2].toString());
+        pluginCB = Integer.parseInt(thisVersion[3].toString());
         URL url;
         String newVersion = "";
         try {
@@ -1516,10 +1519,12 @@ afterwards parsable again from the configuration class of bukkit
             String[] githubVersion = ghVersion.split(":");
             githubMajor = Integer.parseInt(githubVersion[0]);
             githubMinor = Integer.parseInt(githubVersion[1]);
-            if (githubVersion.length > 2) {
-                githubCB = Integer.parseInt(githubVersion[2]);
+            if (githubVersion.length > 3) {
+                gihubDev = Integer.parseInt(githubVersion[2]);
+                githubCB = Integer.parseInt(githubVersion[3]);
             } else {
-                githubCB = 0;
+                gihubDev = 0;
+                githubCB = Integer.parseInt(githubVersion[3]);
             }
 
             if (githubCB < pluginCB) {
@@ -1538,6 +1543,13 @@ afterwards parsable again from the configuration class of bukkit
             if ((githubMajor < pluginMajor) || githubMinor < pluginMinor) {
                 log.warning("You are running an dev-build. Be sure you know what you are doing!");
                 log.warning("Please report any bugs via issues or tickets!");
+                if (gihubDev > pluginDev) {
+                    log.info("There is a NEWER dev-build available!");
+                }
+                if (gihubDev < pluginDev) {
+                    log.severe("WOW! Where did you get THIS version from?");
+                    log.info("You like living on the edge, do you?");
+                }
             }
             if ((githubMajor > pluginMajor) || githubMinor > pluginMinor) {
 
