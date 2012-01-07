@@ -174,6 +174,9 @@ public class onPlayerInteractDTP {
             return;
         }
         TombDTP tomb = tombWorker.getTomb(b);
+        if (tomb == null) {
+            return;
+        }
         if (tomb.hasSign(b)) {
             TeleportHelperDTP teleportHelperDTP = new TeleportHelperDTP(plugin);
             String thisWorld = player.getWorld().getName();
