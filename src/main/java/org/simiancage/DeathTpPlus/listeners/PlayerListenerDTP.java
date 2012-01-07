@@ -72,7 +72,9 @@ public class PlayerListenerDTP extends PlayerListener {
             worker.getTomb(playerName).checkSigns();
         }
         if (event.getPlayer().hasPermission("deathtpplus.admin.version")) {
-            event.getPlayer().sendMessage("A new version of DeathTpPlus is available!");
+            if (config.isDifferentPluginAvailable()) {
+                event.getPlayer().sendMessage("A new version of DeathTpPlus is available!");
+            }
         }
     }
 
