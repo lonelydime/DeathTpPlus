@@ -1,6 +1,6 @@
 name: DeathTpPlus
 main: org.simiancage.DeathTpPlus.DeathTpPlus
-version: 3.6.2.1597
+version: 3.6.4.1597
 website: http://dev.bukkit.org/server-mods/deathtpplus/
 authors: ['Don Redhorse', 'mung3r']
 description: Death teleport, tombstone and tombs
@@ -54,7 +54,7 @@ commands:
         description: Reset compass to your spawnpoint
         usage: |
             /<command>
-            
+
 permissions:
     deathtpplus.*:
         description: Gives access to all DeathTpPlus commands
