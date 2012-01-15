@@ -6,6 +6,7 @@ import org.simiancage.DeathTpPlus.events.KillStreakEventDTP;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.DeathMessagesDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.helpers.DeathMessagesDTP.DeathEventType;
 import org.simiancage.DeathTpPlus.models.DeathDetailDTP;
 import org.simiancage.DeathTpPlus.models.StreakRecordDTP;
 
@@ -69,12 +70,16 @@ public class StreakLogDTP {
     }
 
     public void setRecord(DeathDetailDTP deathDetail) {
-        if (deathDetail.getKiller() == null) {
+        String killerName;
+        String victimName = deathDetail.getPlayer().getName();
+
+        if (deathDetail.getCauseOfDeath() == DeathEventType.SUICIDE) {
+            killerName = deathDetail.getCauseOfDeath().toString();
+        } else if (deathDetail.getKiller() != null) {
+            killerName = deathDetail.getKiller().getName();
+        } else {
             return;
         }
-
-        String killerName = deathDetail.getKiller().getName();
-        String victimName = deathDetail.getPlayer().getName();
 
         List<StreakRecordDTP> streakList = new ArrayList<StreakRecordDTP>();
 
@@ -116,7 +121,7 @@ public class StreakLogDTP {
         }
 
         // Check to see if we should announce a streak
-        if (config.isShowStreaks()) {
+        if (deathDetail.getCauseOfDeath() != DeathEventType.SUICIDE && config.isShowStreaks()) {
             // Deaths
             String deathStreakMessage = DeathMessagesDTP.getDeathStreakMessage(deathStreakRecord.getCount());
             if (deathStreakMessage != null) {
