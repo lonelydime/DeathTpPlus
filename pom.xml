@@ -1,23 +1,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.simiancage.deathtpplus</groupId>
 	<artifactId>DeathTpPlus</artifactId>
-	<version>3.1-SNAPSHOT</version>
+	<version>3.7-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<repositories>
 		<repository>
 			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/artifactory/repo</url>
+			<url>http://repo.bukkit.org/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>vault-repo</id>
+			<url>http://ci.milkbowl.net/plugin/repository/project/Vault/LastSuccessful/repository/</url>
 		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.0.1-R1</version>
+			<version>1.0.1-R2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
@@ -28,26 +32,36 @@
 			<groupId>com.ensifera.animosity.craftirc</groupId>
 			<artifactId>CraftIRC</artifactId>
 			<version>2.13</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/CraftIRC.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.yi.acru.bukkit.Lockette</groupId>
 			<artifactId>Lockette</artifactId>
 			<version>1.4.4</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/Lockette.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.griefcraft.lwc.LWCPlugin</groupId>
 			<artifactId>LWC</artifactId>
 			<version>4.0.2</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/LWC.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.garbagemule.MobArena</groupId>
 			<artifactId>MobArena</artifactId>
 			<version>0.94.3.24</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/MobArena.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.dynmap</groupId>
 			<artifactId>DynmapPlugin</artifactId>
 			<version>0.29.2-719</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/dynmap-api.jar</systemPath>
 		</dependency>
 	</dependencies>
 	<build>
