@@ -40,7 +40,6 @@ public class PlayerListenerDTP extends PlayerListener {
 
 	@Override
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		log.debug("onPlayerInteractDTP executing");
 
 		if (event.isCancelled()) {
 			return;

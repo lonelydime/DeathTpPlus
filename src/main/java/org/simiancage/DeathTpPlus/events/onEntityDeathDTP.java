@@ -124,8 +124,6 @@ public class onEntityDeathDTP {
 	 */
 	public void oEDeaDeathTp(DeathTpPlus plugin, EntityListenerDTP entityListenerDTP,
 	                         EntityDeathEvent entityDeathEvent) {
-		log.debug("onEntityDeath DeathTP executing");
-
 		DeathDetailDTP deathDetail = new DeathDetailDTP(entityDeathEvent);
 
 		log.debug("deathDetail", deathDetail);
@@ -141,8 +139,6 @@ public class onEntityDeathDTP {
 	 */
 	public void oEDeaGeneralDeath(DeathTpPlus plugin, EntityListenerDTP entityListenerDTP,
 	                              EntityDeathEvent entityDeathEvent) {
-		log.debug("onEntityDeath GeneralDeath executing");
-
 		DeathDetailDTP deathDetail = new DeathDetailDTP(entityDeathEvent);
 
 		if (config.isShowStreaks()) {
