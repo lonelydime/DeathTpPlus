@@ -1,9 +1,7 @@
 package org.simiancage.DeathTpPlus.events;
 
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
-import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.objects.TombDTP;
@@ -21,7 +19,6 @@ public class onSignChangeDTP {
 
 	private LoggerDTP log;
 	private ConfigDTP config;
-	private DeathTpPlus plugin;
 	private TombWorkerDTP tombWorkerDTP;
 
 	public onSignChangeDTP() {
@@ -80,18 +77,16 @@ public class onSignChangeDTP {
 				event.setCancelled(true);
 				return;
 			}
-			Block block = event.getBlock();
 			try {
 
-				if (TombDTP != null) {
+				if (TombDTP != null) 
 					TombDTP.setPlayer(deadName);
-					TombDTP.addSignBlock(block);
-				} else {
-					TombDTP = new TombDTP(block);
-					TombDTP.setPlayer(deadName);
+				 else {
+					TombDTP = new TombDTP();
+					TombDTP.setPlayer(deadName);					
 					tombWorkerDTP.setTomb(deadName, TombDTP);
 				}
-				TombDTP.updateNewBlock();
+				TombDTP.addSignBlock(event);
 				if (config.isUseTombAsRespawnPoint()) {
 					TombDTP.setRespawn(p.getLocation());
 					if (admin) {
