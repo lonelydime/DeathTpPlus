@@ -20,6 +20,10 @@ import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.logs.TombLogDTP;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -31,13 +35,9 @@ import java.util.concurrent.Semaphore;
  * Class description
  *
  * @author DonRedhorse
- * @version ToDo enter version here, 23.01.2012
+ * @version ToDo enter version here, 24.01.2012
  */
 public class TombDTP {
-	/**
-	 * Field description
-	 */
-	private static final String COULDN_T_ACQUIRE_SEMAPHORE = "Couldn't acquire semaphore";
 
 	//~--- fields -------------------------------------------------------------
 
@@ -84,12 +84,7 @@ public class TombDTP {
 	/**
 	 * Field description
 	 */
-	private Semaphore sema;
-
-	/**
-	 * Field description
-	 */
-	private CopyOnWriteArrayList<Block> signBlocks;
+	private List<Block> signBlocks;
 
 	/**
 	 * Field description
@@ -102,9 +97,8 @@ public class TombDTP {
 	 * Constructs ...
 	 */
 	public TombDTP() {
-		this.signBlocks = new CopyOnWriteArrayList<Block>();
+		this.signBlocks = Collections.synchronizedList(new ArrayList<Block>());
 		timeStamp = 0;
-		sema = new Semaphore(1, true);
 		log = LoggerDTP.getLogger();
 		config = ConfigDTP.getInstance();
 	}
@@ -163,30 +157,13 @@ public class TombDTP {
 		if (!signBlocks.isEmpty()) {
 			final String msg = cutMsg(message);
 
-/*	        DeathTpPlus.getBukkitServer ().getScheduler ().scheduleAsyncDelayedTask (
-			        TombWorkerDTP.getInstance ().getPlugin (), new Runnable ()
-	        {
-		        public void run () {
-			        try {
-				        sema.acquire ();
-			        } catch (InterruptedException e) {
-				        log.debug ( COULDN_T_ACQUIRE_SEMAPHORE, e );
-
-//                      e.printStackTrace();
-			        }*/
-
 			Sign sign;
 
 			for (Block block : signBlocks) {
 				if (isSign(block)) {
 					sign = (Sign) block.getState();
 					sign.setLine(line, msg);
-					sign.update(true);
-
-					try {
-						Thread.sleep(101);
-					} catch (InterruptedException e) {
-					}
+					sign.update();
 				} else {
 					signBlocks.remove(block);
 					log.info("[setLine]Tomb of " + playerName + " Block :(" + block.getWorld().getName()
@@ -194,11 +171,6 @@ public class TombDTP {
 							+ ") DESTROYED.");
 				}
 			}
-/*
-                    sema.release ();
-
-            } );
-        }*/
 		}
 	}
 
@@ -213,19 +185,6 @@ public class TombDTP {
 		if (!signBlocks.isEmpty()) {
 			final String deathNb = cutMsg(deaths + " Deaths");
 			final String deathReason = cutMsg(reason);
-
-/*            DeathTpPlus.getBukkitServer ().getScheduler ().scheduleAsyncDelayedTask (
-                TombWorkerDTP.getInstance ().getPlugin (), new Runnable ()
-             {
-                public void run () {
-                    try {
-                        sema.acquire ();
-                    } catch (InterruptedException e) {
-                        log.debug ( COULDN_T_ACQUIRE_SEMAPHORE, e );
-
-//                      e.printStackTrace();
-                    }*/
-
 			Sign sign;
 
 			log.info("[updateDeath] " + playerName + " died updating tomb(s).");
@@ -235,12 +194,7 @@ public class TombDTP {
 					sign = (Sign) block.getState();
 					sign.setLine(2, deathNb);
 					sign.setLine(3, deathReason);
-					sign.update(true);
-
-					try {
-						Thread.sleep(110);
-					} catch (InterruptedException e) {
-					}
+					sign.update();
 				} else {
 					signBlocks.remove(block);
 					block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.SIGN, 1));
@@ -250,10 +204,6 @@ public class TombDTP {
 							+ ", " + block.getZ() + ") DESTROYED.");
 				}
 			}
-/*
-                    sema.release ();
-                }
-            } );*/
 		}
 	}
 
@@ -272,18 +222,6 @@ public class TombDTP {
 	 * Check every block if they are always a sign.
 	 */
 	public void checkSigns() {
-/*        DeathTpPlus.getBukkitServer ().getScheduler ().scheduleAsyncDelayedTask (
-            TombWorkerDTP.getInstance ().getPlugin (), new Runnable ()
-         {
-            public void run () {
-                try {
-                    sema.acquire ();
-                } catch (InterruptedException e) {
-                    log.debug ( COULDN_T_ACQUIRE_SEMAPHORE, e );
-
-//                  e.printStackTrace();
-                }*/
-
 		for (Block block : signBlocks) {
 			if (!isSign(block)) {
 				signBlocks.remove(block);
@@ -294,10 +232,6 @@ public class TombDTP {
 						+ ") DESTROYED.");
 			}
 		}
-/*
-                sema.release ();
-            }
-        } );*/
 	}
 
 	/**
@@ -383,19 +317,10 @@ public class TombDTP {
 	 * Update the new block
 	 */
 	public void updateNewBlock() {
-/*        log.debug ( "Registering Scheduler for new block", lastBlock );
-        DeathTpPlus.getBukkitServer ().getScheduler ().scheduleAsyncDelayedTask (
-            TombWorkerDTP.getInstance ().getPlugin (), new Runnable ()
-         {
-            public void run () {*/
 		Sign sign;
 		Block block = lastBlock;
 
 		if (isSign(block)) {
-/*                    try {
-                        Thread.sleep ( 100 );
-                    } catch (InterruptedException e) {}*/
-
 			sign = (Sign) block.getState();
 			sign.setLine(1, cutMsg(playerName));
 			sign.setLine(2, cutMsg(deaths + " Deaths"));
@@ -406,8 +331,7 @@ public class TombDTP {
 
 			sign.update(true);
 		}
-/*            }
-        } );*/
+
 	}
 
 	//~--- get methods --------------------------------------------------------
@@ -460,18 +384,10 @@ public class TombDTP {
 	 */
 	public void addSignBlock(Block sign) {
 		if (isSign(sign)) {
-/*            try {
-                sema.acquire ();
-            } catch (InterruptedException e) {
-                log.debug ( COULDN_T_ACQUIRE_SEMAPHORE, e );
-
-            }*/
-
 			signBlocks.add(sign);
 			log.info("Tomb Block :(" + sign.getWorld().getName() + ", " + sign.getX() + ", " + sign.getY() + ", "
 					+ sign.getZ() + ") Added.");
 			lastBlock = sign;
-			//  sema.release ();
 		} else {
 			throw new IllegalArgumentException("The block must be a SIGN or WALL_SIGN or SIGN_POST");
 		}
@@ -481,16 +397,6 @@ public class TombDTP {
 	 * Clear the signBlock vector
 	 */
 	public void resetTombBlocks() {
-/*        DeathTpPlus.getBukkitServer ().getScheduler ().scheduleSyncDelayedTask (
-            TombWorkerDTP.getInstance ().getPlugin (), new Runnable ()
-         {
-            public void run () {
-                try {
-                    sema.acquire ();
-                } catch (InterruptedException e) {
-                    log.debug ( COULDN_T_ACQUIRE_SEMAPHORE, e );
-
-                }*/
 
 		for (Block block : signBlocks) {
 			if (isSign(block)) {
@@ -498,16 +404,10 @@ public class TombDTP {
 				block.setType(Material.AIR);
 			}
 
-/*                    try {
-                        Thread.sleep ( 110 );
-                    } catch (InterruptedException e) {}*/
 		}
 
 		signBlocks.clear();
 		log.info("[resetTombBlocks] Tomb of " + playerName + " reseted.");
-		/*              sema.release ();
-					}
-				} );*/
 	}
 
 	/**
@@ -517,23 +417,10 @@ public class TombDTP {
 	 */
 	public void removeSignBlock(final Block sign) {
 		if (hasSign(sign)) {
-/*            DeathTpPlus.getBukkitServer ().getScheduler ().scheduleSyncDelayedTask (
-                TombWorkerDTP.getInstance ().getPlugin (), new Runnable ()
-             {
-                public void run () {
-                    try {
-                        sema.acquire ();
-                    } catch (InterruptedException e) {
-
-//                      e.printStackTrace();
-                    }*/
 
 			signBlocks.remove(sign);
 			log.info("[removeSignBlock]Tomb of " + playerName + " Block :(" + sign.getWorld().getName()
 					+ ", " + sign.getX() + ", " + sign.getY() + ", " + sign.getZ() + ") REMOVED.");
-/*                    sema.release ();
-                }
-            } );*/
 		}
 	}
 
@@ -574,7 +461,7 @@ public class TombDTP {
 	/**
 	 * @return the signBlocks
 	 */
-	public CopyOnWriteArrayList<Block> getSignBlocks() {
+	public List<Block> getSignBlocks() {
 		return signBlocks;
 	}
 

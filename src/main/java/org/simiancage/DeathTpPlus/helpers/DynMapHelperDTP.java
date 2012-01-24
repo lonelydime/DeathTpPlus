@@ -26,10 +26,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 /**
  * PluginName: DeathTpPlus
  * Class: DynMapHelperDTP
@@ -243,7 +242,7 @@ public class DynMapHelperDTP {
                 if (tombs.hasTomb(playerName)) {
                     try {
                         TombDTP tomb = tombs.getTomb(playerName);
-                        CopyOnWriteArrayList<Block> signBlocks = tomb.getSignBlocks();
+                        List<Block> signBlocks = tomb.getSignBlocks();
                         Block block = signBlocks.get(0);
                         map.put(playerName, block.getLocation());
                     } catch (NullPointerException e) {
