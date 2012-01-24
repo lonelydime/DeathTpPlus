@@ -250,7 +250,6 @@ public class TombDTP {
 	 */
 	public void setPlayer(String player) {
 		this.playerName = player;
-		setLine(1, player);
 	}
 
 	/**
