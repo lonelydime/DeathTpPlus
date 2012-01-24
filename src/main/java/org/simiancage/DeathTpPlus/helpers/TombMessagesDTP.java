@@ -483,37 +483,37 @@ afterwards parsable again from the configuration class of bukkit
     private void loadCustomTombMessages() {
 
         log.info("Loading tomb messages..");
-        deathevents.put(DeathEventType.FALL, tombMessages.getList("fall", Arrays.asList(defaultFallMessages)));
-        deathevents.put(DeathEventType.DROWNING, tombMessages.getList("drowning", Arrays.asList(defaultDrowningMessages)));
-        deathevents.put(DeathEventType.FIRE, tombMessages.getList("fire", Arrays.asList(defaultFireMessages)));
-        deathevents.put(DeathEventType.FIRE_TICK, tombMessages.getList("fire_tick", Arrays.asList(defaultFireTickMessages)));
-        deathevents.put(DeathEventType.LAVA, tombMessages.getList("lava", Arrays.asList(defaultLavaMessages)));
-        deathevents.put(DeathEventType.CREEPER, tombMessages.getList("creeper", Arrays.asList(defaultCreeperMessages)));
-        deathevents.put(DeathEventType.SKELETON, tombMessages.getList("skeleton", Arrays.asList(defaultSkeletonMessages)));
-        deathevents.put(DeathEventType.SPIDER, tombMessages.getList("spider", Arrays.asList(defaultSpiderMessages)));
-        deathevents.put(DeathEventType.ZOMBIE, tombMessages.getList("zombie", Arrays.asList(defaultZombieMessages)));
-        deathevents.put(DeathEventType.PVP, tombMessages.getList("pvp", Arrays.asList(defaultPVPMessages)));
-        deathevents.put(DeathEventType.BLOCK_EXPLOSION, tombMessages.getList("block_explosion", Arrays.asList(defaultBlockExplosionMessages)));
-        deathevents.put(DeathEventType.ENTITY_EXPLOSION, tombMessages.getList("entity_explosion", Arrays.asList(defaultEntityExplosionMessages)));
-        deathevents.put(DeathEventType.CONTACT, tombMessages.getList("contact", Arrays.asList(defaultContactMessages)));
-        deathevents.put(DeathEventType.GHAST, tombMessages.getList("ghast", Arrays.asList(defaultGhastMessages)));
-        deathevents.put(DeathEventType.SLIME, tombMessages.getList("slime", Arrays.asList(defaultSlimeMessages)));
-        deathevents.put(DeathEventType.SUFFOCATION, tombMessages.getList("suffocation", Arrays.asList(defaultSuffocationMessages)));
-        deathevents.put(DeathEventType.PIG_ZOMBIE, tombMessages.getList("pigzombie", Arrays.asList(defaultPigzombieMessages)));
-        deathevents.put(DeathEventType.VOID, tombMessages.getList("void", Arrays.asList(defaultVoidMessages)));
-        deathevents.put(DeathEventType.WOLF, tombMessages.getList("wolf", Arrays.asList(defaultWolfMessages)));
-        deathevents.put(DeathEventType.LIGHTNING, tombMessages.getList("lightning", Arrays.asList(defaultLightningMessages)));
-        deathevents.put(DeathEventType.SUICIDE, tombMessages.getList("suicide", Arrays.asList(defaultSuicideMessages)));
-        deathevents.put(DeathEventType.UNKNOWN, tombMessages.getList("unknown", Arrays.asList(defaultUnknownMessages)));
-        deathevents.put(DeathEventType.STARVATION, tombMessages.getList("starvation", Arrays.asList(defaultStarvationMessages)));
-        deathevents.put(DeathEventType.ENDERMAN, tombMessages.getList("enderman", Arrays.asList(defaultEndermanMessages)));
-        deathevents.put(DeathEventType.CAVE_SPIDER, tombMessages.getList("cavespider", Arrays.asList(defaultCaveSpiderMessages)));
-        deathevents.put(DeathEventType.SILVERFISH, tombMessages.getList("silverfish", Arrays.asList(defaultSilverfishMessages)));
-        deathevents.put(DeathEventType.GIANT, tombMessages.getList("giant", Arrays.asList(defaultGiantMessages)));
-        deathevents.put(DeathEventType.BLAZE, tombMessages.getList("blaze", Arrays.asList(defaultBlazeMessages)));
-        deathevents.put(DeathEventType.ENDERDRAGON, tombMessages.getList("enderdragon", Arrays.asList(defaultEnderDragonMessages)));
-        deathevents.put(DeathEventType.MAGMACUBE, tombMessages.getList("magmacube", Arrays.asList(defaultMagmaCubeMessages)));
-        deathevents.put(DeathEventType.DISPENSER, tombMessages.getList("dispenser", Arrays.asList(defaultDispenserMessages)));
+        deathevents.put(DeathEventType.FALL, (List<String>) (List<?>) tombMessages.getList("fall", Arrays.asList(defaultFallMessages)));
+        deathevents.put(DeathEventType.DROWNING, (List<String>) (List<?>) tombMessages.getList("drowning", Arrays.asList(defaultDrowningMessages)));
+        deathevents.put(DeathEventType.FIRE, (List<String>) (List<?>) tombMessages.getList("fire", Arrays.asList(defaultFireMessages)));
+        deathevents.put(DeathEventType.FIRE_TICK, (List<String>) (List<?>) tombMessages.getList("fire_tick", Arrays.asList(defaultFireTickMessages)));
+        deathevents.put(DeathEventType.LAVA, (List<String>) (List<?>) tombMessages.getList("lava", Arrays.asList(defaultLavaMessages)));
+        deathevents.put(DeathEventType.CREEPER, (List<String>) (List<?>) tombMessages.getList("creeper", Arrays.asList(defaultCreeperMessages)));
+        deathevents.put(DeathEventType.SKELETON, (List<String>) (List<?>) tombMessages.getList("skeleton", Arrays.asList(defaultSkeletonMessages)));
+        deathevents.put(DeathEventType.SPIDER, (List<String>) (List<?>) tombMessages.getList("spider", Arrays.asList(defaultSpiderMessages)));
+        deathevents.put(DeathEventType.ZOMBIE, (List<String>) (List<?>) tombMessages.getList("zombie", Arrays.asList(defaultZombieMessages)));
+        deathevents.put(DeathEventType.PVP, (List<String>) (List<?>) tombMessages.getList("pvp", Arrays.asList(defaultPVPMessages)));
+        deathevents.put(DeathEventType.BLOCK_EXPLOSION, (List<String>) (List<?>) tombMessages.getList("block_explosion", Arrays.asList(defaultBlockExplosionMessages)));
+        deathevents.put(DeathEventType.ENTITY_EXPLOSION, (List<String>) (List<?>) tombMessages.getList("entity_explosion", Arrays.asList(defaultEntityExplosionMessages)));
+        deathevents.put(DeathEventType.CONTACT, (List<String>) (List<?>) tombMessages.getList("contact", Arrays.asList(defaultContactMessages)));
+        deathevents.put(DeathEventType.GHAST, (List<String>) (List<?>) tombMessages.getList("ghast", Arrays.asList(defaultGhastMessages)));
+        deathevents.put(DeathEventType.SLIME, (List<String>) (List<?>) tombMessages.getList("slime", Arrays.asList(defaultSlimeMessages)));
+        deathevents.put(DeathEventType.SUFFOCATION, (List<String>) (List<?>) tombMessages.getList("suffocation", Arrays.asList(defaultSuffocationMessages)));
+        deathevents.put(DeathEventType.PIG_ZOMBIE, (List<String>) (List<?>) tombMessages.getList("pigzombie", Arrays.asList(defaultPigzombieMessages)));
+        deathevents.put(DeathEventType.VOID, (List<String>) (List<?>) tombMessages.getList("void", Arrays.asList(defaultVoidMessages)));
+        deathevents.put(DeathEventType.WOLF, (List<String>) (List<?>) tombMessages.getList("wolf", Arrays.asList(defaultWolfMessages)));
+        deathevents.put(DeathEventType.LIGHTNING, (List<String>) (List<?>) tombMessages.getList("lightning", Arrays.asList(defaultLightningMessages)));
+        deathevents.put(DeathEventType.SUICIDE, (List<String>) (List<?>) tombMessages.getList("suicide", Arrays.asList(defaultSuicideMessages)));
+        deathevents.put(DeathEventType.UNKNOWN, (List<String>) (List<?>) tombMessages.getList("unknown", Arrays.asList(defaultUnknownMessages)));
+        deathevents.put(DeathEventType.STARVATION, (List<String>) (List<?>) tombMessages.getList("starvation", Arrays.asList(defaultStarvationMessages)));
+        deathevents.put(DeathEventType.ENDERMAN, (List<String>) (List<?>) tombMessages.getList("enderman", Arrays.asList(defaultEndermanMessages)));
+        deathevents.put(DeathEventType.CAVE_SPIDER, (List<String>) (List<?>) tombMessages.getList("cavespider", Arrays.asList(defaultCaveSpiderMessages)));
+        deathevents.put(DeathEventType.SILVERFISH, (List<String>) (List<?>) tombMessages.getList("silverfish", Arrays.asList(defaultSilverfishMessages)));
+        deathevents.put(DeathEventType.GIANT, (List<String>) (List<?>) tombMessages.getList("giant", Arrays.asList(defaultGiantMessages)));
+        deathevents.put(DeathEventType.BLAZE, (List<String>) (List<?>) tombMessages.getList("blaze", Arrays.asList(defaultBlazeMessages)));
+        deathevents.put(DeathEventType.ENDERDRAGON, (List<String>) (List<?>) tombMessages.getList("enderdragon", Arrays.asList(defaultEnderDragonMessages)));
+        deathevents.put(DeathEventType.MAGMACUBE, (List<String>) (List<?>) tombMessages.getList("magmacube", Arrays.asList(defaultMagmaCubeMessages)));
+        deathevents.put(DeathEventType.DISPENSER, (List<String>) (List<?>) tombMessages.getList("dispenser", Arrays.asList(defaultDispenserMessages)));
 
         // ToDo add new deathevents on top
 // Debugging

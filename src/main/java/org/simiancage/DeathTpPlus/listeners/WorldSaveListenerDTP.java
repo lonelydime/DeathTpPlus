@@ -8,13 +8,14 @@ package org.simiancage.DeathTpPlus.listeners;
  * Time: 20:47
  */
 
-import org.bukkit.event.world.WorldListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
 
-public class WorldSaveListenerDTP extends WorldListener {
-    @Override
+public class WorldSaveListenerDTP implements Listener {
+    @EventHandler
     public void onWorldSave(WorldSaveEvent event) {
         TombWorkerDTP.getInstance().save();
     }

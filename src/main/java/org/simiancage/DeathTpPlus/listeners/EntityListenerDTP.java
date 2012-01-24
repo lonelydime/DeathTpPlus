@@ -4,9 +4,10 @@ package org.simiancage.DeathTpPlus.listeners;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.events.onEntityDeathDTP;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 
 //bukkit imports
 
-public class EntityListenerDTP extends EntityListener {
+public class EntityListenerDTP implements Listener {
 	private DeathTpPlus plugin;
 	private ArrayList<String> lastDamageType = new ArrayList<String>();
 	private String beforedamage = "";
@@ -40,7 +41,7 @@ public class EntityListenerDTP extends EntityListener {
 		instance = this;
 	}
 
-
+	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
 
 		if (event.getEntity() instanceof Player) {
@@ -66,6 +67,7 @@ public class EntityListenerDTP extends EntityListener {
 
 	}
 
+	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
 		if (event.isCancelled()) {
 			return;

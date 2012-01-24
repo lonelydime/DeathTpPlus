@@ -497,7 +497,7 @@ afterwards parsable again from the configuration class of bukkit
         enableDeathtp = config.getBoolean("enableDeathtp");
         showDeathNotify = config.getBoolean("showDeathNotify");
         disableDeathNotifyInSpecifiedWorlds = config.getBoolean("disableDeathNotifyInSpecifiedWorlds");
-        disabledDeathNotifyWorlds = config.getList("disabledDeathNotifyWorlds", disabledDeathNotifyWorlds);
+        disabledDeathNotifyWorlds = (List<String>) (List<?>) config.getList("disabledDeathNotifyWorlds", disabledDeathNotifyWorlds);
         showDeathNotifyInDeathWorldOnly = config.getBoolean("showDeathNotifyInDeathWorldOnly");
         showDeathNotifyOnConsole = config.getBoolean("showDeathNotifyOnConsole");
         allowDeathtp = config.getBoolean("allowDeathtp");

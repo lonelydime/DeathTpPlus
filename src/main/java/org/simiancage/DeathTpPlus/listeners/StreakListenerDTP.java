@@ -1,6 +1,8 @@
 package org.simiancage.DeathTpPlus.listeners;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.events.DeathStreakEventDTP;
 import org.simiancage.DeathTpPlus.events.KillStreakEventDTP;
@@ -14,7 +16,7 @@ import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
  * Time: 19:57
  */
 
-public class StreakListenerDTP extends StreakEventsListenerDTP {
+public class StreakListenerDTP implements Listener {
     private DeathTpPlus plugin;
     private ConfigDTP config = ConfigDTP.getInstance();
 
@@ -22,13 +24,13 @@ public class StreakListenerDTP extends StreakEventsListenerDTP {
         this.plugin = plugin;
     }
 
-    @Override
+    @EventHandler
     public void onDeathStreakEvent(DeathStreakEventDTP event) {
         String playerName = getPlayerNameForBroadcast(event.getPlayer());
         plugin.getServer().broadcastMessage(event.getMessage().replace("%n", playerName));
     }
 
-    @Override
+    @EventHandler
     public void onKillStreakEvent(KillStreakEventDTP event) {
         String playerName = getPlayerNameForBroadcast(event.getPlayer());
         plugin.getServer().broadcastMessage(event.getMessage().replace("%n", playerName));

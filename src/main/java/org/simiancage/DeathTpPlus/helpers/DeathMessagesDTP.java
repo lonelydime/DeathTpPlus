@@ -724,51 +724,51 @@ afterwards parsable again from the configuration class of bukkit
     private void loadCustomConfig() {
 
 // Kill Streak Messages
-        killStreakMessages = deathMessageFileConfig.getList("killstreak", Arrays.asList(defaultKillStreaks));
+        killStreakMessages = (List<String>) (List<?>) deathMessageFileConfig.getList("killstreak", Arrays.asList(defaultKillStreaks));
         log.informational(killStreakMessages.size() + " messages loaded for killstreak");
 // Death Streak Messages
-        deathStreakMessages = deathMessageFileConfig.getList("deathstreak", Arrays.asList(defaultDeathStreaks));
+        deathStreakMessages = (List<String>) (List<?>) deathMessageFileConfig.getList("deathstreak", Arrays.asList(defaultDeathStreaks));
         log.informational(deathStreakMessages.size() + " messages loaded for deathstreak");
 // Multi Kill Messages
-        multiKillMessages = deathMessageFileConfig.getList("mulitkill", Arrays.asList(defaultMultiKill));
+        multiKillMessages = (List<String>) (List<?>) deathMessageFileConfig.getList("mulitkill", Arrays.asList(defaultMultiKill));
         log.informational(multiKillMessages.size() + " messages loaded for multikill");
 // DeathTp Messages
         // Workaround for NPE as Monster isn't defined in the deathmessages
         deathMessages.put(DeathEventType.MONSTER, Arrays.asList(defaultUnknownMessages));
         // Normal Death Messages
         log.info("Loading death messages...");
-        deathMessages.put(DeathEventType.FALL, deathMessageFileConfig.getList("fall", Arrays.asList(defaultFallMessages)));
-        deathMessages.put(DeathEventType.DROWNING, deathMessageFileConfig.getList("drowning", Arrays.asList(defaultDrowningMessages)));
-        deathMessages.put(DeathEventType.FIRE, deathMessageFileConfig.getList("fire", Arrays.asList(defaultFireMessages)));
-        deathMessages.put(DeathEventType.FIRE_TICK, deathMessageFileConfig.getList("fire_tick", Arrays.asList(defaultFireTickMessages)));
-        deathMessages.put(DeathEventType.LAVA, deathMessageFileConfig.getList("lava", Arrays.asList(defaultLavaMessages)));
-        deathMessages.put(DeathEventType.CREEPER, deathMessageFileConfig.getList("creeper", Arrays.asList(defaultCreeperMessages)));
-        deathMessages.put(DeathEventType.SKELETON, deathMessageFileConfig.getList("skeleton", Arrays.asList(defaultSkeletonMessages)));
-        deathMessages.put(DeathEventType.SPIDER, deathMessageFileConfig.getList("spider", Arrays.asList(defaultSpiderMessages)));
-        deathMessages.put(DeathEventType.ZOMBIE, deathMessageFileConfig.getList("zombie", Arrays.asList(defaultZombieMessages)));
-        deathMessages.put(DeathEventType.PVP, deathMessageFileConfig.getList("pvp", Arrays.asList(defaultPVPMessages)));
-        deathMessages.put(DeathEventType.PVP_FISTS, deathMessageFileConfig.getList("pvp-fists", Arrays.asList(defaultPVPFistMessages)));
-        deathMessages.put(DeathEventType.BLOCK_EXPLOSION, deathMessageFileConfig.getList("block_explosion", Arrays.asList(defaultBlockExplosionMessages)));
-        deathMessages.put(DeathEventType.CONTACT, deathMessageFileConfig.getList("contact", Arrays.asList(defaultContactMessages)));
-        deathMessages.put(DeathEventType.GHAST, deathMessageFileConfig.getList("ghast", Arrays.asList(defaultGhastMessages)));
-        deathMessages.put(DeathEventType.SLIME, deathMessageFileConfig.getList("slime", Arrays.asList(defaultSlimeMessages)));
-        deathMessages.put(DeathEventType.SUFFOCATION, deathMessageFileConfig.getList("suffocation", Arrays.asList(defaultSuffocationMessages)));
-        deathMessages.put(DeathEventType.PIG_ZOMBIE, deathMessageFileConfig.getList("pigzombie", Arrays.asList(defaultPigzombieMessages)));
-        deathMessages.put(DeathEventType.VOID, deathMessageFileConfig.getList("void", Arrays.asList(defaultVoidMessages)));
-        deathMessages.put(DeathEventType.WOLF, deathMessageFileConfig.getList("wolf", Arrays.asList(defaultWolfMessages)));
-        deathMessages.put(DeathEventType.LIGHTNING, deathMessageFileConfig.getList("lightning", Arrays.asList(defaultLightningMessages)));
-        deathMessages.put(DeathEventType.SUICIDE, deathMessageFileConfig.getList("suicide", Arrays.asList(defaultSuicideMessages)));
-        deathMessages.put(DeathEventType.UNKNOWN, deathMessageFileConfig.getList("unknown", Arrays.asList(defaultUnknownMessages)));
-        deathMessages.put(DeathEventType.STARVATION, deathMessageFileConfig.getList("starvation", Arrays.asList(defaultStarvationMessages)));
-        deathMessages.put(DeathEventType.ENDERMAN, deathMessageFileConfig.getList("enderman", Arrays.asList(defaultEndermanMessages)));
-        deathMessages.put(DeathEventType.CAVE_SPIDER, deathMessageFileConfig.getList("cavespider", Arrays.asList(defaultCaveSpiderMessages)));
-        deathMessages.put(DeathEventType.SILVERFISH, deathMessageFileConfig.getList("silverfish", Arrays.asList(defaultSilverfishMessages)));
-        deathMessages.put(DeathEventType.PVP_TAMED, deathMessageFileConfig.getList("pvp-tamed", Arrays.asList(defaultPVPTamedMessages)));
-        deathMessages.put(DeathEventType.GIANT, deathMessageFileConfig.getList("giant", Arrays.asList(defaultGiantMessages)));
-        deathMessages.put(DeathEventType.BLAZE, deathMessageFileConfig.getList("blaze", Arrays.asList(defaultBlazeMessages)));
-        deathMessages.put(DeathEventType.ENDERDRAGON, deathMessageFileConfig.getList("enderdragon", Arrays.asList(defaultEnderDragonMessages)));
-        deathMessages.put(DeathEventType.MAGMACUBE, deathMessageFileConfig.getList("magmacube", Arrays.asList(defaultMagmaCubeMessages)));
-        deathMessages.put(DeathEventType.DISPENSER, deathMessageFileConfig.getList("dispenser", Arrays.asList(defaultDispenserMessages)));
+        deathMessages.put(DeathEventType.FALL, (List<String>) (List<?>) deathMessageFileConfig.getList("fall", Arrays.asList(defaultFallMessages)));
+        deathMessages.put(DeathEventType.DROWNING, (List<String>) (List<?>) deathMessageFileConfig.getList("drowning", Arrays.asList(defaultDrowningMessages)));
+        deathMessages.put(DeathEventType.FIRE, (List<String>) (List<?>) deathMessageFileConfig.getList("fire", Arrays.asList(defaultFireMessages)));
+        deathMessages.put(DeathEventType.FIRE_TICK, (List<String>) (List<?>) deathMessageFileConfig.getList("fire_tick", Arrays.asList(defaultFireTickMessages)));
+        deathMessages.put(DeathEventType.LAVA, (List<String>) (List<?>) deathMessageFileConfig.getList("lava", Arrays.asList(defaultLavaMessages)));
+        deathMessages.put(DeathEventType.CREEPER, (List<String>) (List<?>) deathMessageFileConfig.getList("creeper", Arrays.asList(defaultCreeperMessages)));
+        deathMessages.put(DeathEventType.SKELETON, (List<String>) (List<?>) deathMessageFileConfig.getList("skeleton", Arrays.asList(defaultSkeletonMessages)));
+        deathMessages.put(DeathEventType.SPIDER, (List<String>) (List<?>) deathMessageFileConfig.getList("spider", Arrays.asList(defaultSpiderMessages)));
+        deathMessages.put(DeathEventType.ZOMBIE, (List<String>) (List<?>) deathMessageFileConfig.getList("zombie", Arrays.asList(defaultZombieMessages)));
+        deathMessages.put(DeathEventType.PVP, (List<String>) (List<?>) deathMessageFileConfig.getList("pvp", Arrays.asList(defaultPVPMessages)));
+        deathMessages.put(DeathEventType.PVP_FISTS, (List<String>) (List<?>) deathMessageFileConfig.getList("pvp-fists", Arrays.asList(defaultPVPFistMessages)));
+        deathMessages.put(DeathEventType.BLOCK_EXPLOSION, (List<String>) (List<?>) deathMessageFileConfig.getList("block_explosion", Arrays.asList(defaultBlockExplosionMessages)));
+        deathMessages.put(DeathEventType.CONTACT, (List<String>) (List<?>) deathMessageFileConfig.getList("contact", Arrays.asList(defaultContactMessages)));
+        deathMessages.put(DeathEventType.GHAST, (List<String>) (List<?>) deathMessageFileConfig.getList("ghast", Arrays.asList(defaultGhastMessages)));
+        deathMessages.put(DeathEventType.SLIME, (List<String>) (List<?>) deathMessageFileConfig.getList("slime", Arrays.asList(defaultSlimeMessages)));
+        deathMessages.put(DeathEventType.SUFFOCATION, (List<String>) (List<?>) deathMessageFileConfig.getList("suffocation", Arrays.asList(defaultSuffocationMessages)));
+        deathMessages.put(DeathEventType.PIG_ZOMBIE, (List<String>) (List<?>) deathMessageFileConfig.getList("pigzombie", Arrays.asList(defaultPigzombieMessages)));
+        deathMessages.put(DeathEventType.VOID, (List<String>) (List<?>) deathMessageFileConfig.getList("void", Arrays.asList(defaultVoidMessages)));
+        deathMessages.put(DeathEventType.WOLF, (List<String>) (List<?>) deathMessageFileConfig.getList("wolf", Arrays.asList(defaultWolfMessages)));
+        deathMessages.put(DeathEventType.LIGHTNING, (List<String>) (List<?>) deathMessageFileConfig.getList("lightning", Arrays.asList(defaultLightningMessages)));
+        deathMessages.put(DeathEventType.SUICIDE, (List<String>) (List<?>) deathMessageFileConfig.getList("suicide", Arrays.asList(defaultSuicideMessages)));
+        deathMessages.put(DeathEventType.UNKNOWN, (List<String>) (List<?>) deathMessageFileConfig.getList("unknown", Arrays.asList(defaultUnknownMessages)));
+        deathMessages.put(DeathEventType.STARVATION, (List<String>) (List<?>) deathMessageFileConfig.getList("starvation", Arrays.asList(defaultStarvationMessages)));
+        deathMessages.put(DeathEventType.ENDERMAN, (List<String>) (List<?>) deathMessageFileConfig.getList("enderman", Arrays.asList(defaultEndermanMessages)));
+        deathMessages.put(DeathEventType.CAVE_SPIDER, (List<String>) (List<?>) deathMessageFileConfig.getList("cavespider", Arrays.asList(defaultCaveSpiderMessages)));
+        deathMessages.put(DeathEventType.SILVERFISH, (List<String>) (List<?>) deathMessageFileConfig.getList("silverfish", Arrays.asList(defaultSilverfishMessages)));
+        deathMessages.put(DeathEventType.PVP_TAMED, (List<String>) (List<?>) deathMessageFileConfig.getList("pvp-tamed", Arrays.asList(defaultPVPTamedMessages)));
+        deathMessages.put(DeathEventType.GIANT, (List<String>) (List<?>) deathMessageFileConfig.getList("giant", Arrays.asList(defaultGiantMessages)));
+        deathMessages.put(DeathEventType.BLAZE, (List<String>) (List<?>) deathMessageFileConfig.getList("blaze", Arrays.asList(defaultBlazeMessages)));
+        deathMessages.put(DeathEventType.ENDERDRAGON, (List<String>) (List<?>) deathMessageFileConfig.getList("enderdragon", Arrays.asList(defaultEnderDragonMessages)));
+        deathMessages.put(DeathEventType.MAGMACUBE, (List<String>) (List<?>) deathMessageFileConfig.getList("magmacube", Arrays.asList(defaultMagmaCubeMessages)));
+        deathMessages.put(DeathEventType.DISPENSER, (List<String>) (List<?>) deathMessageFileConfig.getList("dispenser", Arrays.asList(defaultDispenserMessages)));
 
         //ToDo add new deathMessages to the top
         for (DeathEventType deathEventType : DeathEventType.values()) {

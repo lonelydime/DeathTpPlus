@@ -2,6 +2,7 @@ package org.simiancage.DeathTpPlus.events;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
  * PluginName: DeathTpPlus
@@ -13,6 +14,7 @@ import org.bukkit.event.Event;
 
 @SuppressWarnings("serial")
 public class KillStreakEventDTP extends Event {
+    private static final HandlerList handlers = new HandlerList();
     private Player player;
     private Player victim;
     private String message;
@@ -69,6 +71,14 @@ public class KillStreakEventDTP extends Event {
     public void isMultiKill(Boolean isMultiKill)
     {
         this.isMultiKill = isMultiKill;
+    }
+
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
 }

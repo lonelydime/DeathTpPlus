@@ -21,14 +21,13 @@ import com.ensifera.animosity.craftirc.CraftIRC;
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.griefcraft.lwc.LWCPlugin;
 import net.milkbowl.vault.economy.Economy;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -55,17 +54,6 @@ import java.util.HashMap;
 // importing LWC
 
 public class DeathTpPlus extends JavaPlugin {
-	// listeners
-
-	private EntityListenerDTP entityListener;
-
-	private BlockListenerDTP blockListener;
-
-	private ServerListenerDTP serverListener;
-
-	private PlayerListenerDTP playerListener;
-
-	private StreakEventsListenerDTP streakListener;
 
 	private static DeathTpPlus instance;
 
@@ -128,11 +116,6 @@ public class DeathTpPlus extends JavaPlugin {
 		deathMessages.setupDeathMessages(plugin);
 		tombMessages = TombMessagesDTP.getInstance();
 		tombMessages.setupTombMessages(plugin);
-		entityListener = new EntityListenerDTP(this);
-		blockListener = new BlockListenerDTP(this);
-		serverListener = new ServerListenerDTP(this);
-		playerListener = new PlayerListenerDTP(this);
-		streakListener = new StreakListenerDTP(this);
 		pluginPath = getDataFolder() + System.getProperty("file.separator");
 		deathLocationLog = new DeathLocationsLogDTP(this);
 		deathLog = new DeathLogDTP(this);
@@ -144,30 +127,19 @@ public class DeathTpPlus extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 
 // register entityListener
-		pm.registerEvent(Event.Type.ENTITY_DEATH, entityListener, Priority.Normal, this);
-		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
-		// register entityListener for Deathnotify
-		if (config.isShowDeathNotify()) {
-			pm.registerEvent(Event.Type.ENTITY_COMBUST, entityListener, Priority.Normal, this);
-			pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Normal, this);
-		}
-		// register entityListener for Deathnotify , Show Streaks  or Tomb
-		if (config.isShowDeathNotify() || config.isShowStreaks() || config.isEnableTomb()) {
-			pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.Normal, this);
-			pm.registerEvent(Type.CUSTOM_EVENT, streakListener, Priority.Normal, this);
-		}
+	    Bukkit.getPluginManager().registerEvents(new EntityListenerDTP(this), this);
+	    Bukkit.getPluginManager().registerEvents(new PlayerListenerDTP(this), this);
+	    Bukkit.getPluginManager().registerEvents(new BlockListenerDTP(this), this);
+	    Bukkit.getPluginManager().registerEvents(new StreakListenerDTP(this), this);
+
 		//register entityListener for Enable Tombstone or Tomb
 		if (config.isEnableTombStone() || config.isEnableTomb()) {
-			pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
-			pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Highest, this);
 			lwcPlugin = (LWCPlugin) checkPlugin("LWC");
 			LockettePlugin = (Lockette) checkPlugin("Lockette");
 		}
+
 		// register entityListener for Enable Tomb
 		if (config.isEnableTomb()) {
-			pm.registerEvent(Event.Type.SIGN_CHANGE, blockListener, Priority.Normal, this);
-			pm.registerEvent(Event.Type.PLAYER_RESPAWN, playerListener, Priority.Highest, this);
-			pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, this);
 			//ToDo check if this is really needed
 			//pm.registerEvent(Event.Type.WORLD_SAVE, worldSaveListener, Priority.Normal, this);
 			server = getServer();
@@ -176,8 +148,7 @@ public class DeathTpPlus extends JavaPlugin {
 		}
 
 		//Register Server Listener
-		getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, new ServerListenerDTP(this), Priority.Monitor, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_DISABLE, new ServerListenerDTP(this), Priority.Monitor, this);
+		Bukkit.getPluginManager().registerEvents(new ServerListenerDTP(this), this);
 
 
 		//craftirc

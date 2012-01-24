@@ -8,8 +8,9 @@ package org.simiancage.DeathTpPlus.listeners;
  * Time: 21:59
  */
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.events.onBlockBreakDTP;
@@ -17,7 +18,7 @@ import org.simiancage.DeathTpPlus.events.onSignChangeDTP;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 
-public class BlockListenerDTP extends BlockListener {
+public class BlockListenerDTP implements Listener {
 
     private DeathTpPlus plugin;
     private LoggerDTP log;
@@ -32,7 +33,7 @@ public class BlockListenerDTP extends BlockListener {
         log.debug("BlockListener active");
     }
 
-    @Override
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
 
         if (config.isEnableTombStone() && !event.isCancelled()) {
@@ -50,7 +51,7 @@ public class BlockListenerDTP extends BlockListener {
         }
     }
 
-
+    @EventHandler
     public void onSignChange(SignChangeEvent event) {
 
         if (config.isEnableTomb() && !event.isCancelled()) {

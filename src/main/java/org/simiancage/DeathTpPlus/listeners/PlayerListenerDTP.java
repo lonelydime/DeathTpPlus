@@ -10,10 +10,12 @@ package org.simiancage.DeathTpPlus.listeners;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.events.onPlayerInteractDTP;
@@ -22,7 +24,7 @@ import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.helpers.TombStoneHelperDTP;
 import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
-public class PlayerListenerDTP extends PlayerListener {
+public class PlayerListenerDTP implements Listener {
 	private DeathTpPlus plugin;
 	private ConfigDTP config;
 	private LoggerDTP log;
@@ -38,7 +40,7 @@ public class PlayerListenerDTP extends PlayerListener {
 		log.debug("PlayerListener active");
 	}
 
-	@Override
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 
 		if (event.isCancelled()) {
@@ -64,7 +66,7 @@ public class PlayerListenerDTP extends PlayerListener {
 	}
 
 
-	@Override
+	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		String playerName = event.getPlayer().getName();
 		if (worker.hasTomb(playerName)) {
@@ -78,7 +80,7 @@ public class PlayerListenerDTP extends PlayerListener {
 	}
 
 
-	@Override
+	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		Player p = event.getPlayer();
 

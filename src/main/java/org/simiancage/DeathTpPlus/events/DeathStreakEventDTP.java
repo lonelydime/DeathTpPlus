@@ -2,6 +2,7 @@ package org.simiancage.DeathTpPlus.events;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
  * PluginName: ${plugin}
@@ -13,6 +14,7 @@ import org.bukkit.event.Event;
 
 @SuppressWarnings("serial")
 public class DeathStreakEventDTP extends Event {
+    private static final HandlerList handlers = new HandlerList();
     private Player player;
     private Player killer;
     private String message;
@@ -57,6 +59,14 @@ public class DeathStreakEventDTP extends Event {
 
     public void setDeaths(Integer deaths) {
         this.deaths = deaths;
+    }
+
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
 }

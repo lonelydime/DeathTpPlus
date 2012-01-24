@@ -5,9 +5,12 @@ package org.simiancage.DeathTpPlus.listeners;
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.griefcraft.lwc.LWCPlugin;
 import net.milkbowl.vault.economy.Economy;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -18,7 +21,7 @@ import org.simiancage.DeathTpPlus.helpers.DynMapHelperDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.yi.acru.bukkit.Lockette.Lockette;
 
-public class ServerListenerDTP extends ServerListener {
+public class ServerListenerDTP implements Listener {
 	private static DeathTpPlus plugin;
 
 	private LoggerDTP log;
@@ -36,7 +39,7 @@ public class ServerListenerDTP extends ServerListener {
 	}
 
 
-	@Override
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPluginDisable(PluginDisableEvent event) {
 		PluginManager pm = plugin.getServer().getPluginManager();
 		Plugin checkVault = pm.getPlugin("Vault");
@@ -84,7 +87,7 @@ public class ServerListenerDTP extends ServerListener {
 
 	}
 
-	@Override
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPluginEnable(PluginEnableEvent event) {
 		PluginManager pm = plugin.getServer().getPluginManager();
 		Plugin checkVault = pm.getPlugin("Vault");
