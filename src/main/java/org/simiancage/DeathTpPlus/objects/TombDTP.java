@@ -360,7 +360,6 @@ public class TombDTP {
 			signBlocks.add(sign);
 			log.info("Tomb Block :(" + sign.getWorld().getName() + ", " + sign.getX() + ", " + sign.getY() + ", "
 					+ sign.getZ() + ") Added.");
-			lastBlock = sign;
 		} else {
 			throw new IllegalArgumentException("The block must be a SIGN or WALL_SIGN or SIGN_POST");
 		}

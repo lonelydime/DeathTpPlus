@@ -1,9 +1,7 @@
 package org.simiancage.DeathTpPlus.events;
 
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
-import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.objects.TombDTP;
@@ -21,7 +19,6 @@ public class onSignChangeDTP {
 
 	private LoggerDTP log;
 	private ConfigDTP config;
-	private DeathTpPlus plugin;
 	private TombWorkerDTP tombWorkerDTP;
 
 	public onSignChangeDTP() {
