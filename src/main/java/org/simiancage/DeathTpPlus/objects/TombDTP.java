@@ -10,6 +10,7 @@ package org.simiancage.DeathTpPlus.objects;
  * Time: 20:03
  */
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -19,13 +20,10 @@ import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.logs.TombLogDTP;
+import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Semaphore;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -97,7 +95,7 @@ public class TombDTP {
 	 * Constructs ...
 	 */
 	public TombDTP() {
-		this.signBlocks = Collections.synchronizedList(new ArrayList<Block>());
+		this.signBlocks = new CopyOnWriteArrayList<Block>();
 		timeStamp = 0;
 		log = LoggerDTP.getLogger();
 		config = ConfigDTP.getInstance();
@@ -158,12 +156,12 @@ public class TombDTP {
 			final String msg = cutMsg(message);
 
 			Sign sign;
-
+			int nbTickWaited = 2;
 			for (Block block : signBlocks) {
 				if (isSign(block)) {
 					sign = (Sign) block.getState();
 					sign.setLine(line, msg);
-					sign.update();
+					Bukkit.getScheduler().scheduleSyncDelayedTask(TombWorkerDTP.getInstance ().getPlugin (), new UpdateSignTask(sign), nbTickWaited++);
 				} else {
 					signBlocks.remove(block);
 					log.info("[setLine]Tomb of " + playerName + " Block :(" + block.getWorld().getName()
@@ -186,6 +184,7 @@ public class TombDTP {
 			final String deathNb = cutMsg(deaths + " Deaths");
 			final String deathReason = cutMsg(reason);
 			Sign sign;
+			int nbTickWaited = 2;
 
 			log.info("[updateDeath] " + playerName + " died updating tomb(s).");
 
@@ -194,7 +193,7 @@ public class TombDTP {
 					sign = (Sign) block.getState();
 					sign.setLine(2, deathNb);
 					sign.setLine(3, deathReason);
-					sign.update();
+					Bukkit.getScheduler().scheduleSyncDelayedTask(TombWorkerDTP.getInstance ().getPlugin (), new UpdateSignTask(sign), nbTickWaited++);
 				} else {
 					signBlocks.remove(block);
 					block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.SIGN, 1));
@@ -319,7 +318,6 @@ public class TombDTP {
 	public void updateNewBlock() {
 		Sign sign;
 		Block block = lastBlock;
-
 		if (isSign(block)) {
 			sign = (Sign) block.getState();
 			sign.setLine(1, cutMsg(playerName));
@@ -329,7 +327,7 @@ public class TombDTP {
 				sign.setLine(3, cutMsg(reason));
 			}
 
-			sign.update(true);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(TombWorkerDTP.getInstance ().getPlugin (), new UpdateSignTask(sign), 2);
 		}
 
 	}
@@ -481,5 +479,27 @@ public class TombDTP {
 	 */
 	public TombLogDTP save() {
 		return new TombLogDTP(this);
+	}
+	private class UpdateSignTask implements Runnable
+	{
+		private final Sign toUpdate;
+		
+
+		/**
+		 * @param toUpdate
+		 */
+		public UpdateSignTask(Sign toUpdate) {
+			super();
+			this.toUpdate = toUpdate;
+		}
+
+
+		/* (non-Javadoc)
+		 * @see java.lang.Runnable#run()
+		 */
+		public void run() {
+			toUpdate.update();			
+		}
+		
 	}
 }
