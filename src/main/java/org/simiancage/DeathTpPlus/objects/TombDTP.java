@@ -16,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
@@ -53,11 +54,6 @@ public class TombDTP {
 	 * Field description
 	 */
 	private Location deathLoc;
-
-	/**
-	 * Field description
-	 */
-	private Block lastBlock;
 
 	/**
 	 * Field description
@@ -312,26 +308,6 @@ public class TombDTP {
 		setLine(3, reason);
 	}
 
-	/**
-	 * Update the new block
-	 */
-	public void updateNewBlock() {
-		Sign sign;
-		Block block = lastBlock;
-		if (isSign(block)) {
-			sign = (Sign) block.getState();
-			sign.setLine(1, cutMsg(playerName));
-			sign.setLine(2, cutMsg(deaths + " Deaths"));
-
-			if ((reason != null) && !reason.isEmpty()) {
-				sign.setLine(3, cutMsg(reason));
-			}
-
-			Bukkit.getScheduler().scheduleSyncDelayedTask(TombWorkerDTP.getInstance ().getPlugin (), new UpdateSignTask(sign), 2);
-		}
-
-	}
-
 	//~--- get methods --------------------------------------------------------
 
 	/**
@@ -389,6 +365,20 @@ public class TombDTP {
 		} else {
 			throw new IllegalArgumentException("The block must be a SIGN or WALL_SIGN or SIGN_POST");
 		}
+	}
+	public void addSignBlock(SignChangeEvent event)
+	{
+		final Block sign = event.getBlock();
+		signBlocks.add(sign);
+		log.info("Tomb Block :(" + sign.getWorld().getName() + ", " + sign.getX() + ", " + sign.getY() + ", "
+				+ sign.getZ() + ") Added.");
+		event.setLine(1, cutMsg(playerName));
+		event.setLine(2, cutMsg(deaths + " Deaths"));
+
+		if ((reason != null) && !reason.isEmpty()) {
+			event.setLine(3, cutMsg(reason));
+		}
+		
 	}
 
 	/**
