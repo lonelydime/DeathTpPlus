@@ -78,11 +78,11 @@ public class TombMessagesDTP {
     /**
      * This is the internal tombMessages version
      */
-    private final String tombMessagesCurrent = "3.3";
+    private final String tombMessagesCurrent = "3.4";
     /**
      * This is the DEFAULT for the tombMessages file version, should be the same as tombMessagesCurrent. Will afterwards be changed
      */
-    private String tombMessagesVer = "3.3";
+    private String tombMessagesVer = tombMessagesCurrent;
 
 
 // and now the real stuff
@@ -93,7 +93,7 @@ public class TombMessagesDTP {
 // Helper Variables
 
     //Todo create stuff for:
-    // Blaze, Squid, FallingSand, EnderDragon
+    //  FallingSand
 
     /**
      * Array which holds default fall messages
@@ -219,6 +219,17 @@ public class TombMessagesDTP {
      * Array which hold default Dispenser messages
      */
     private String[] defaultDispenserMessages;
+
+    /**
+     * Array which hold default Poison messages
+     */
+    private String[] defaultPoisionMessages;
+
+    /**
+     * Array which hold default Magic messages
+     */
+    private String[] defaultMagicMessages;
+
 
     // ToDo add new variables to the top
 
@@ -451,6 +462,24 @@ afterwards parsable again from the configuration class of bukkit
         };
         deathevents.put(DeathEventType.DISPENSER, Arrays.asList(defaultDispenserMessages));
 
+        /** Creating the default Poison Messages*/
+        defaultPoisionMessages = new String[]{
+                "poisoned",
+                "Took arsenic",
+                "Old laced",
+                "lies in Panama"
+        };
+        deathevents.put(DeathEventType.POISON, Arrays.asList(defaultPoisionMessages));
+
+        /** Creating the default Magic Messages*/
+        defaultMagicMessages = new String[]{
+                "pottered",
+                "shizzled",
+                "It's magic",
+                "disked"
+        };
+        deathevents.put(DeathEventType.MAGIC, Arrays.asList(defaultMagicMessages));
+
         // ToDo add new tomb messages to the top
 
     }
@@ -514,6 +543,8 @@ afterwards parsable again from the configuration class of bukkit
         deathevents.put(DeathEventType.ENDERDRAGON, (List<String>) (List<?>) tombMessages.getList("enderdragon", Arrays.asList(defaultEnderDragonMessages)));
         deathevents.put(DeathEventType.MAGMACUBE, (List<String>) (List<?>) tombMessages.getList("magmacube", Arrays.asList(defaultMagmaCubeMessages)));
         deathevents.put(DeathEventType.DISPENSER, (List<String>) (List<?>) tombMessages.getList("dispenser", Arrays.asList(defaultDispenserMessages)));
+        deathevents.put(DeathEventType.POISON, (List<String>) (List<?>) tombMessages.getList("poison", Arrays.asList(defaultPoisionMessages)));
+        deathevents.put(DeathEventType.MAGIC, (List<String>) (List<?>) tombMessages.getList("magic", Arrays.asList(defaultMagicMessages)));
 
         // ToDo add new deathevents on top
 // Debugging

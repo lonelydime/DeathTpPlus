@@ -37,7 +37,7 @@ public class DeathMessagesDTP {
 
     // ToDo add new DeathMethods if they come up
     public static enum DeathEventType {
-        BLOCK_EXPLOSION, ENTITY_EXPLOSION, CAVE_SPIDER, CONTACT, CREEPER, DROWNING, ENDERMAN, FALL, FIRE, FIRE_TICK, GHAST, GIANT, LAVA, LIGHTNING, MONSTER, PIG_ZOMBIE, PVP, PVP_FISTS, PVP_TAMED, SILVERFISH, SKELETON, SLIME, SPIDER, STARVATION, SUFFOCATION, SUICIDE, UNKNOWN, VOID, WOLF, ZOMBIE, BLAZE, MAGMACUBE, ENDERDRAGON, DISPENSER
+        BLOCK_EXPLOSION, ENTITY_EXPLOSION, CAVE_SPIDER, CONTACT, CREEPER, DROWNING, ENDERMAN, FALL, FIRE, FIRE_TICK, GHAST, GIANT, LAVA, LIGHTNING, MONSTER, PIG_ZOMBIE, PVP, PVP_FISTS, PVP_TAMED, SILVERFISH, SKELETON, SLIME, SPIDER, STARVATION, SUFFOCATION, SUICIDE, UNKNOWN, VOID, WOLF, ZOMBIE, BLAZE, MAGMACUBE, ENDERDRAGON, DISPENSER, POISON, MAGIC
     }
 
     /**
@@ -97,11 +97,11 @@ public class DeathMessagesDTP {
     /**
      * This is the internal deathMessageFileConfig version
      */
-    private final String deathMessagesCurrent = "3.3";
+    private final String deathMessagesCurrent = "3.4";
     /**
      * This is the DEFAULT for the deathMessageFileConfig file version, should be the same as deathMessagesCurrent. Will afterwards be changed
      */
-    private String deathMessagesVer = "3.3";
+    private String deathMessagesVer = deathMessagesCurrent;
 
 
 // and now the real stuff
@@ -256,6 +256,16 @@ public class DeathMessagesDTP {
      * Array which holds default Dispenser messages
      */
     private String[] defaultDispenserMessages;
+
+    /**
+     * Array which holds default Posion messages
+     */
+    private String[] defaultPosionMessages;
+
+    /**
+     * Array which holds default Magic messages
+     */
+    private String[] defaultMagicMessages;
 
     // ToDo add new variables on top
 
@@ -692,6 +702,26 @@ afterwards parsable again from the configuration class of bukkit
         };
         deathMessages.put(DeathEventType.DISPENSER, Arrays.asList(defaultDispenserMessages));
 
+        /** Creating the default Posion Kill messages*/
+        defaultPosionMessages = new String[]{
+                "&5%n&7 swalloed the wrong stuff!",
+                "There was a reason the bottle had a skull on it, &5%n&7",
+                "&5%n&7 should have asked Flavia de Luce before taking that.",
+                "&5%n&7 shouldn't drink tea with the Brewsters.",
+                "&5%n&7 is now part of the locks of Panama.",
+                "&5%n&7 said: aarrgghhhh."
+        };
+        deathMessages.put(DeathEventType.POISON, Arrays.asList(defaultPosionMessages));
+
+        /** Creating the default Magic Kill messages*/
+        defaultMagicMessages = new String[]{
+                "&5%n&7 got killed by a Harry Potter lookalike!",
+                "It was: Klaatu barada nikto. &5%n&7",
+                "&5%n&7 felt the force.",
+                "&5%n&7 thinks that there should be more to magic than just shizzle",
+                "&5%n&7 should ask Rincewind the next time"
+        };
+        deathMessages.put(DeathEventType.MAGIC, Arrays.asList(defaultMagicMessages));
 
         // ToDo add new messages on top
     }
@@ -769,6 +799,8 @@ afterwards parsable again from the configuration class of bukkit
         deathMessages.put(DeathEventType.ENDERDRAGON, (List<String>) (List<?>) deathMessageFileConfig.getList("enderdragon", Arrays.asList(defaultEnderDragonMessages)));
         deathMessages.put(DeathEventType.MAGMACUBE, (List<String>) (List<?>) deathMessageFileConfig.getList("magmacube", Arrays.asList(defaultMagmaCubeMessages)));
         deathMessages.put(DeathEventType.DISPENSER, (List<String>) (List<?>) deathMessageFileConfig.getList("dispenser", Arrays.asList(defaultDispenserMessages)));
+        deathMessages.put(DeathEventType.POISON, (List<String>) (List<?>) deathMessageFileConfig.getList("poison", Arrays.asList(defaultPosionMessages)));
+        deathMessages.put(DeathEventType.MAGIC, (List<String>) (List<?>) deathMessageFileConfig.getList("magic", Arrays.asList(defaultMagicMessages)));
 
         //ToDo add new deathMessages to the top
         for (DeathEventType deathEventType : DeathEventType.values()) {
