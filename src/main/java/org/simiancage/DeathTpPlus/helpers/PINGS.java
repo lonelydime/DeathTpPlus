@@ -14,10 +14,10 @@ public enum PINGS {
 
 	// ToDo add new bit.ly links when new version comes out.
 
-	ON_ENABLE("http://bit.ly/zrRBYH"),
-	ON_CREATE("http://bit.ly/AEHzRP"),
-	ON_UPDATE("http://bit.ly/zyzkAp"),
-	BUNDLE("http://bit.ly/wPYX1y");
+	ON_ENABLE("http://bit.ly/xx0j7K"),
+	ON_CREATE("http://bit.ly/xd9QOr"),
+	ON_UPDATE("http://bit.ly/yTAvaZ"),
+	BUNDLE("https://bitly.com/wYP2Nj");
 
 	private String url;
 
