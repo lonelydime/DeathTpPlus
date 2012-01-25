@@ -157,7 +157,7 @@ public class TombDTP {
 				if (isSign(block)) {
 					sign = (Sign) block.getState();
 					sign.setLine(line, msg);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(TombWorkerDTP.getInstance ().getPlugin (), new UpdateSignTask(sign), nbTickWaited++);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(TombWorkerDTP.getInstance().getPlugin(), new UpdateSignTask(sign), nbTickWaited++);
 				} else {
 					signBlocks.remove(block);
 					log.info("[setLine]Tomb of " + playerName + " Block :(" + block.getWorld().getName()
@@ -182,14 +182,14 @@ public class TombDTP {
 			Sign sign;
 			int nbTickWaited = 2;
 
-			log.info("[updateDeath] " + playerName + " died updating tomb(s).");
+			log.info("[updateDeath] " + playerName + " died, updating tomb(s).");
 
 			for (Block block : signBlocks) {
 				if (isSign(block)) {
 					sign = (Sign) block.getState();
 					sign.setLine(2, deathNb);
 					sign.setLine(3, deathReason);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(TombWorkerDTP.getInstance ().getPlugin (), new UpdateSignTask(sign), nbTickWaited++);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(TombWorkerDTP.getInstance().getPlugin(), new UpdateSignTask(sign), nbTickWaited++);
 				} else {
 					signBlocks.remove(block);
 					block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.SIGN, 1));
@@ -332,6 +332,8 @@ public class TombDTP {
 
 					if (!world.isChunkLoaded(cx, cz)) {
 						log.severe("Chunk at x: " + cx + " z: " + cz + " is still not loaded");
+						log.debug("Final try of loading chunk!");
+						world.loadChunk(cx, cz);
 					}
 				}
 
@@ -364,8 +366,8 @@ public class TombDTP {
 			throw new IllegalArgumentException("The block must be a SIGN or WALL_SIGN or SIGN_POST");
 		}
 	}
-	public void addSignBlock(SignChangeEvent event)
-	{
+
+	public void addSignBlock(SignChangeEvent event) {
 		final Block sign = event.getBlock();
 		signBlocks.add(sign);
 		log.info("Tomb Block :(" + sign.getWorld().getName() + ", " + sign.getX() + ", " + sign.getY() + ", "
@@ -376,7 +378,7 @@ public class TombDTP {
 		if ((reason != null) && !reason.isEmpty()) {
 			event.setLine(3, cutMsg(reason));
 		}
-		
+
 	}
 
 	/**
@@ -468,10 +470,10 @@ public class TombDTP {
 	public TombLogDTP save() {
 		return new TombLogDTP(this);
 	}
-	private class UpdateSignTask implements Runnable
-	{
+
+	private class UpdateSignTask implements Runnable {
 		private final Sign toUpdate;
-		
+
 
 		/**
 		 * @param toUpdate
@@ -486,8 +488,8 @@ public class TombDTP {
 		 * @see java.lang.Runnable#run()
 		 */
 		public void run() {
-			toUpdate.update();			
+			toUpdate.update();
 		}
-		
+
 	}
 }
