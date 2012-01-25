@@ -385,7 +385,8 @@ afterwards parsable again from the configuration class of bukkit
                 "&5%n&7, gravity is calling your name!",
                 "&5%n&7 face planted into the ground!",
                 "&5%n&7 yells, 'Geronimo!'....*thud*",
-                "What goes up must come down, right &5%n&7?"
+                "What goes up must come down, right &5%n&7?",
+                "&5%n&7 must have had their shoelaces tied together."
         };
         deathMessages.put(DeathEventType.FALL, Arrays.asList(defaultFallMessages));
         /** Creating the default drowning messages*/
@@ -477,7 +478,8 @@ afterwards parsable again from the configuration class of bukkit
                 "&5%n&7 was bitten by a zombie!",
                 "&5%n&7 fell to the hunger of the horde!",
                 "&5%n&7 Hasn't played enough L4D2!",
-                "&5%n&7 couldn't run faster than the zombie!"
+                "&5%n&7 couldn't run faster than the zombie!",
+                "&5%n&7 should have invested in a shotgun."
         };
         deathMessages.put(DeathEventType.ZOMBIE, Arrays.asList(defaultZombieMessages));
         /** Creating the default pvp messages*/
@@ -563,7 +565,9 @@ afterwards parsable again from the configuration class of bukkit
         /** Creating the default slime messages*/
         defaultSlimeMessages = new String[]{
                 "A slime found &5%n&7. The slime won.",
-                "&5%n&7 wanted to play with slime. The slime wasn't happy."
+                "&5%n&7 wanted to play with slime. The slime wasn't happy.",
+                "&5%n&7 was killed for saying, \"Eeeeehhhh, he slimed me!\"",
+                "&5%n&7 crossed the streams."
         };
         deathMessages.put(DeathEventType.SLIME, Arrays.asList(defaultSlimeMessages));
         /** Creating the default suffocation messages*/
@@ -627,7 +631,8 @@ afterwards parsable again from the configuration class of bukkit
                 "&5%n&7 did forget to eat his lunch.",
                 "&5%n&7 didn't find the next Burger.",
                 "&5%n&7 became a skeleton.",
-                "&5%n&7 TALKS ALL CAPITALS NOW."
+                "&5%n&7 TALKS ALL CAPITALS NOW.",
+                "&5%n&7 should have packed a lunch."
         };
         /** Creating the default starvation messages*/
         deathMessages.put(DeathEventType.STARVATION, Arrays.asList(defaultStarvationMessages));
@@ -682,7 +687,10 @@ afterwards parsable again from the configuration class of bukkit
                 "&5%n&7 died at the end... IN the end.",
                 "&5%n&7 looking up would have helped.",
                 "Well, Anne McCaffrey didn't talk about that kind of Dragon, right &5%n&7?",
-                "No egg for you, &5%n&7."
+                "No egg for you, &5%n&7.",
+                "&5%n&7 took the easy way out of \"The End\".",
+                "&5%n&7 will never get to read that end poem!",
+                "&5%n&7 made a generous donation to the Ender Dragon's hoard."
         };
         deathMessages.put(DeathEventType.ENDERDRAGON, Arrays.asList(defaultEnderDragonMessages));
         /** Creating the default MagmaCube messages*/
@@ -690,6 +698,7 @@ afterwards parsable again from the configuration class of bukkit
                 "&5%n&7 didn't expect this kind of slinky!",
                 "&5%n&7 got eaten by a cube.",
                 "&5%n&7 got coombad by a cube."
+
 
         };
         deathMessages.put(DeathEventType.MAGMACUBE, Arrays.asList(defaultMagmaCubeMessages));
