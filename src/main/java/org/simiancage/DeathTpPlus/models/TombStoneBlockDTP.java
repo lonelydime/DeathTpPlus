@@ -87,5 +87,9 @@ public class TombStoneBlockDTP {
         this.LocketteSign = null;
     }
 
+    public void clearExperience() {
+        droppedExperience = 0;
+    }
+
 }
 

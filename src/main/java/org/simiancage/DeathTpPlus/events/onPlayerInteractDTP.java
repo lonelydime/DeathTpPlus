@@ -86,7 +86,7 @@ public class onPlayerInteractDTP {
             return;
         }
 
-
+        Player player = event.getPlayer();
         Chest sChest = (Chest) tStoneBlockDTP.getBlock().getState();
         Chest lChest = (tStoneBlockDTP.getLBlock() != null) ? (Chest) tStoneBlockDTP
                 .getLBlock().getState() : null;
@@ -101,12 +101,12 @@ public class onPlayerInteractDTP {
             if (item.getType() == Material.AIR) {
                 continue;
             }
-            int slot = event.getPlayer().getInventory().firstEmpty();
+            int slot = player.getInventory().firstEmpty();
             if (slot == -1) {
                 overflow = true;
                 break;
             }
-            event.getPlayer().getInventory().setItem(slot, item);
+            player.getInventory().setItem(slot, item);
             sChest.getInventory().clear(cSlot);
         }
         if (lChest != null) {
@@ -119,16 +119,16 @@ public class onPlayerInteractDTP {
                 if (item.getType() == Material.AIR) {
                     continue;
                 }
-                int slot = event.getPlayer().getInventory().firstEmpty();
+                int slot = player.getInventory().firstEmpty();
                 if (slot == -1) {
                     overflow = true;
                     break;
                 }
-                event.getPlayer().getInventory().setItem(slot, item);
+                player.getInventory().setItem(slot, item);
                 lChest.getInventory().clear(cSlot);
             }
         }
-        Player player = event.getPlayer();
+
         int storedDroppedExperience = tStoneBlockDTP.getDroppedExperience();
         int playerTotalExperience = player.getTotalExperience();
         log.debug("Player TotalExperience", playerTotalExperience);
@@ -137,6 +137,7 @@ public class onPlayerInteractDTP {
             player.giveExp(1);
             log.debug("Player New TotalExperience", player.getTotalExperience());
         }
+        tStoneBlockDTP.clearExperience();
         if (!overflow) {
 // We're quicklooting, so no need to resume this interaction
             event.setUseInteractedBlock(Result.DENY);

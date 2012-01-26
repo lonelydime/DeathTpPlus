@@ -833,7 +833,7 @@ afterwards parsable again from the configuration class of bukkit
 
 // *******************************************************************************************************
 
-// And now you need to create the getters and setters if needed for your config variables    
+// And now you need to create the getters and setters if needed for your config variables
 
 
 // The plugin specific getters start here!
@@ -1091,7 +1091,7 @@ afterwards parsable again from the configuration class of bukkit
 
 // NOTHING TO CHANGE NORMALLY BELOW!!!
 
-// ToDo.... NOTHING.. you are DONE!    
+// ToDo.... NOTHING.. you are DONE!
 
 
 // *******************************************************************************************************************
@@ -1486,6 +1486,7 @@ afterwards parsable again from the configuration class of bukkit
         int versionPos = cbVersion.indexOf("-b") + 2;
         cbVersion = cbVersion.substring(versionPos, versionPos + 4);
         log.debug("bukkitVersion", cbVersion);
+        int cbVer = Integer.parseInt(cbVersion);
         String pluginVersion = plugin.getDescription().getVersion();
         log.debug("pluginVersion", pluginVersion);
         plVersion = pluginVersion.replace(".", ":");
@@ -1527,17 +1528,31 @@ afterwards parsable again from the configuration class of bukkit
                 githubCB = Integer.parseInt(githubVersion[2]);
             }
 
-            if (githubCB < pluginCB) {
-                log.warning("You are running a testbuild for CB: " + pluginCB);
+            if (cbVer < pluginCB) {
+                log.warning("You are running on an older CB Version");
+                log.warning("There might be issues, just letting you know");
             }
-            if (githubCB > pluginCB) {
-                log.info("There is a new Version available for CB: " + githubCB);
+            if (cbVer > pluginCB) {
+                if (githubCB >= cbVer) {
+                    log.warning("There is a new version available for your CB Version");
+                    log.warning("You might want to update!");
+                } else {
+                    log.warning("You are running on an newer CB Version");
+                    log.warning("There might be issues, just letting you know");
+                }
             }
 
             if (newVersion.equals(pluginVersion)) {
                 log.info("is up to date at version "
                         + pluginVersion + ".");
+                return true;
+            }
 
+            if (githubCB < pluginCB) {
+                log.warning("You are running a testbuild for CB: " + pluginCB);
+            }
+            if (githubCB > pluginCB) {
+                log.info("There is a new Version available for CB: " + githubCB);
             }
 
             if ((githubMajor < pluginMajor) || githubMinor < pluginMinor || githubDev < pluginDev || pluginDev > 0) {
@@ -1558,6 +1573,8 @@ afterwards parsable again from the configuration class of bukkit
                 plugin.getServer().broadcast("A new Version of DeathTpPlus is available!", "deathtpplus.admin.version");
                 differentPluginAvailable = true;
             }
+        } else {
+            log.info("I have no idea if I'm uptodate, sorry!");
         }
         PingManager.enabled();
         return false;
