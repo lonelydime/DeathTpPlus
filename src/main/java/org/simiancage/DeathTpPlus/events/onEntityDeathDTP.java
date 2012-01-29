@@ -167,7 +167,7 @@ public class onEntityDeathDTP {
 						if (!config.isDisabledDeathNotifyWorld(world.getName())
 								|| (config.isShowDeathNotifyInDeathWorldOnly()
 								&& (world == deathDetail.getWorld()))) {
-							player.sendRawMessage(deathMessage);
+							player.sendMessage(deathMessage);
 						}
 					}
 				} else {

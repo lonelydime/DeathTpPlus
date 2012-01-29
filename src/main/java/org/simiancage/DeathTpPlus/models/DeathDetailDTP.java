@@ -66,8 +66,6 @@ public class DeathDetailDTP {
 				} else if (damager instanceof Projectile) {
 					log.debug("this is a projectile");
 					log.debug("shooter", ((Projectile) damager).getShooter());
-					// TODO: find out why we never get damager instance of
-					// Projectile
 					if (((Projectile) damager).getShooter() instanceof Player) {
 						causeOfDeath = DeathEventType.PVP;
 						murderWeapon = ((Projectile) damager).toString().replace("Craft", "");
@@ -76,6 +74,10 @@ public class DeathDetailDTP {
 					if (((Projectile) damager).getShooter() == null) {
 						//let's assume that null will only be caused by a dispenser!
 						causeOfDeath = DeathEventType.DISPENSER;
+						murderWeapon = ((Projectile) damager).toString().replace("Craft", "");
+					}
+					if (((Projectile) damager).getShooter().toString().equalsIgnoreCase("CraftSkeleton")) {
+						causeOfDeath = DeathEventType.SKELETON;
 						murderWeapon = ((Projectile) damager).toString().replace("Craft", "");
 					}
 
