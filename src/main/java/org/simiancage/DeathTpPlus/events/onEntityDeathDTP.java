@@ -234,6 +234,12 @@ public class onEntityDeathDTP {
 		Location loc = player.getLocation();
 		Block block = returnGoodPlace(player, loc);
 
+		if (!plugin.getWorldGuardPlugin().canBuild(player, block)) {
+			plugin.sendMessage(player, "You died in a protected region. Dropping inventory");
+			log.debug(player.getName() + " died in WorldGuard Region, dropping inventory");
+			return;
+		}
+
 //      Don't create the chest if it or its sign would be in the void
 		if (config.isVoidCheck()
 				&& ((config.isShowTombStoneSign() && (block.getY() > 126))
@@ -649,6 +655,11 @@ public class onEntityDeathDTP {
 		Block signBlock = returnGoodPlace(deathDetail.getPlayer(), deathDetail.getPlayer().getLocation());
 
 		signBlock = tombStoneHelper.findPlace(signBlock, false);
+
+		if (!plugin.getWorldGuardPlugin().canBuild(deathDetail.getPlayer(), signBlock)) {
+			log.debug(deathDetail.getPlayer().getName() + " died in WorldGuard Region, not creating DeathSign");
+			signBlock = null;
+		}
 
 		if (signBlock == null) {
 			deathDetail.getPlayer().sendMessage("We will remember you, even without a Deathsign!");

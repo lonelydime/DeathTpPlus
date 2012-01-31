@@ -4,8 +4,8 @@ package org.simiancage.DeathTpPlus.listeners;
 
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.griefcraft.lwc.LWCPlugin;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -83,6 +83,14 @@ public class ServerListenerDTP implements Listener {
 			dynMapNotReady = true;
 
 		}
+		Plugin checkWorldGuard = pm.getPlugin("WorldGuard");
+		if ((checkWorldGuard == null) && plugin.isWorldGuardEnabled()) {
+			log.info("Disabling WorldGuard integration.");
+			log.info("as WorldGuard was unloaded / disabled.");
+			plugin.setWorldGuardEnabled(false);
+			plugin.setWorldGuardPlugin(null);
+
+		}
 
 
 	}
@@ -93,6 +101,7 @@ public class ServerListenerDTP implements Listener {
 		Plugin checkVault = pm.getPlugin("Vault");
 		Plugin checkMobArena = pm.getPlugin("MobArena");
 		Plugin checkDynMap = pm.getPlugin("dynmap");
+		Plugin checkWorldGuard = pm.getPlugin("WorldGuard");
 		if (checkVault != null && !plugin.isUseVault()) {
 			plugin.setUseVault(true);
 			log.info("Vault detected");
@@ -166,5 +175,12 @@ public class ServerListenerDTP implements Listener {
 				}
 			}
 		}
+
+		if (checkWorldGuard != null && !plugin.isWorldGuardEnabled()) {
+			log.info("Enabling WorldGuard integration");
+			plugin.setWorldGuardPlugin((WorldGuardPlugin) checkWorldGuard);
+			plugin.setWorldGuardEnabled(true);
+		}
+
 	}
 }
