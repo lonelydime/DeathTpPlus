@@ -955,11 +955,19 @@ afterwards parsable again from the configuration class of bukkit
 		if (messages == null) {
 			message = DEFAULT_DEATH_MESSAGE;
 		} else {
-			message = messages.get(random.nextInt(messages.size())).replace("%n", deathDetail.getPlayer().getName());
+			if (config.isUseDisplayNameforBroadcasts()) {
+				message = messages.get(random.nextInt(messages.size())).replace("%n", deathDetail.getPlayer().getDisplayName());
+			} else {
+				message = messages.get(random.nextInt(messages.size())).replace("%n", deathDetail.getPlayer().getName());
+			}
 		}
 
 		if (deathDetail.isPVPDeath()) {
-			message = message.replace("%i", deathDetail.getMurderWeapon()).replace("%a", deathDetail.getKiller().getName());
+			if (config.isUseDisplayNameforBroadcasts()) {
+				message = message.replace("%i", deathDetail.getMurderWeapon()).replace("%a", deathDetail.getKiller().getDisplayName());
+			} else {
+				message = message.replace("%i", deathDetail.getMurderWeapon()).replace("%a", deathDetail.getKiller().getName());
+			}
 		}
 
 		return UtilsDTP.convertColorCodes(message);
