@@ -234,7 +234,7 @@ public class onEntityDeathDTP {
 		Location loc = player.getLocation();
 		Block block = returnGoodPlace(player, loc);
 
-		if (!plugin.getWorldGuardPlugin().canBuild(player, block)) {
+		if (!plugin.isWorldGuardEnabled() && !plugin.getWorldGuardPlugin().canBuild(player, block)) {
 			plugin.sendMessage(player, "You died in a protected region. Dropping inventory");
 			log.debug(player.getName() + " died in WorldGuard Region, dropping inventory");
 			return;
