@@ -206,19 +206,21 @@ public class TeleportHelperDTP {
 		if (config.isTeleportToHighestBlock()) {
 
 			Location yLocation = deathWorld.getHighestBlockAt(locationRecord.getLocation().getBlockX(), locationRecord.getLocation().getBlockZ()).getLocation();
-			if (deathWorld.getEnvironment().equals(Environment.NETHER)) {
-				player.sendRawMessage("There is no save place to teleport you at location:");
-				player.sendRawMessage("x: " + locationRecord.getLocation().getX() + " y: " + locationRecord.getLocation().getY() + " z: " + locationRecord.getLocation().getZ() + " in world: " + locationRecord.getWorldName());
-				player.sendRawMessage("Have fun walking... sorry about that..");
-				return null;
-			}
+
 			log.debug("yLocation", yLocation);
 			int y = yLocation.getBlockY() + 2;
 			int z = yLocation.getBlockZ();
 			int x = yLocation.getBlockX();
 			if (y < 2) {
-				y = 124;
+				y = deathWorld.getMaxHeight() - 2;
 			}
+			if (deathWorld.getEnvironment().equals(Environment.NETHER) || (y > deathWorld.getMaxHeight())) {
+				player.sendRawMessage("There is no save place to teleport you at location:");
+				player.sendRawMessage("x: " + locationRecord.getLocation().getX() + " y: " + locationRecord.getLocation().getY() + " z: " + locationRecord.getLocation().getZ() + " in world: " + locationRecord.getWorldName());
+				player.sendRawMessage("Have fun walking... sorry about that..");
+				return null;
+			}
+
 			deathLocation = deathWorld.getBlockAt(x, y, z).getLocation();
 			log.debug("deathLocation", deathLocation);
 		} else {
