@@ -79,16 +79,16 @@ public class onSignChangeDTP {
 			}
 			try {
 
-				if (TombDTP != null) 
+				if (TombDTP != null) {
 					TombDTP.setPlayer(deadName);
-				 else {
+				} else {
 					TombDTP = new TombDTP();
-					TombDTP.setPlayer(deadName);					
+					TombDTP.setPlayer(deadName);
 					tombWorkerDTP.setTomb(deadName, TombDTP);
 				}
 				TombDTP.addSignBlock(event);
 				if (config.isUseTombAsRespawnPoint()) {
-					TombDTP.setRespawn(p.getLocation());
+					TombDTP.setRespawn(p.getLocation(), p.getWorld().getName());
 					if (admin) {
 						p.sendMessage(tombWorkerDTP.graveDigger + " When " + deadName
 								+ " die, he/she will respawn here.");

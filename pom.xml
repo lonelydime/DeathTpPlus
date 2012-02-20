@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.simiancage.deathtpplus</groupId>
 	<artifactId>DeathTpPlus</artifactId>
@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.1-R3-SNAPSHOT</version>
+			<version>1.1-R5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
@@ -67,27 +67,27 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/dynmap-api.jar</systemPath>
 		</dependency>
-        <dependency>
-            <groupId>com.sk89q</groupId>
-            <artifactId>worldedit</artifactId>
-            <version>5.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sk89q</groupId>
-            <artifactId>worldguard</artifactId>
-            <version>5.5-SNAPSHOT</version>
-        </dependency>
+		<dependency>
+			<groupId>com.sk89q</groupId>
+			<artifactId>worldedit</artifactId>
+			<version>5.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sk89q</groupId>
+			<artifactId>worldguard</artifactId>
+			<version>5.5-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>
-		<resource>
-			<targetPath>.</targetPath>
-			<filtering>true</filtering>
-			<directory>${project.basedir}/Resources/</directory>
-			<includes>
-				<include>plugin.yml</include>
-			</includes>
-		</resource>
-	</resources>
+			<resource>
+				<targetPath>.</targetPath>
+				<filtering>true</filtering>
+				<directory>${project.basedir}/Resources/</directory>
+				<includes>
+					<include>plugin.yml</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 </project>

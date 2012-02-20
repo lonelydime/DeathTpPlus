@@ -37,8 +37,6 @@ public class DeathDetailDTP {
 		// Support for setHealth(0) which is used by essentials to do a suicide
 		try {
 			EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
-			log.debug("damageEvent", damageEvent.getType());
-
 			if (damageEvent instanceof EntityDamageByEntityEvent) {
 				Entity damager = ((EntityDamageByEntityEvent) damageEvent).getDamager();
 				log.debug("damager", damager.toString());

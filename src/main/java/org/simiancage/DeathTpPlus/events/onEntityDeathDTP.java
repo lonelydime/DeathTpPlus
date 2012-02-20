@@ -638,7 +638,7 @@ public class onEntityDeathDTP {
 						+ ") All your tombs are now destroyed.");
 			} else {
 				TombDTP.setReason(signtext);
-				TombDTP.setDeathLoc(player.getLocation());
+				TombDTP.setDeathLoc(player.getLocation(), player.getWorld().getName());
 				TombDTP.updateDeath();
 			}
 		}

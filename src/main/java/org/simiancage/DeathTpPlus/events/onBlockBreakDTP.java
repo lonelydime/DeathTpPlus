@@ -162,7 +162,7 @@ public class onBlockBreakDTP {
 						TombDTP.removeSignBlock(block);
 
 						if (config.isResetTombRespawn()) {
-							TombDTP.setRespawn(null);
+							TombDTP.setRespawn(null, null);
 							player.sendMessage(tombWorker.graveDigger + TombDTP.getPlayer()
 									+ "'s respawn point has been reset.");
 						}
@@ -179,7 +179,7 @@ public class onBlockBreakDTP {
 						TombDTP.removeSignBlock(block);
 
 						if (config.isResetTombRespawn()) {
-							TombDTP.setRespawn(null);
+							TombDTP.setRespawn(null, null);
 							player.sendMessage(tombWorker.graveDigger + TombDTP.getPlayer()
 									+ "'s respawn point has been reset.");
 						}

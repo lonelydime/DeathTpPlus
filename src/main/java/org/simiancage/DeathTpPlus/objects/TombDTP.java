@@ -55,6 +55,10 @@ public class TombDTP {
 	 */
 	private Location deathLoc;
 
+
+	private String deathWorld;
+
+
 	/**
 	 * Field description
 	 */
@@ -74,6 +78,10 @@ public class TombDTP {
 	 * Field description
 	 */
 	private Location respawn;
+
+
+	private String respawnWorld;
+
 
 	/**
 	 * Field description
@@ -255,14 +263,16 @@ public class TombDTP {
 	/**
 	 * @param deathLoc the deathLoc to set
 	 */
-	public void setDeathLoc(Location deathLoc) {
+	public void setDeathLoc(Location deathLoc, String deathWorld) {
+		this.deathWorld = deathWorld;
 		this.deathLoc = deathLoc;
 	}
 
 	/**
 	 * @param respawn the respawn to set
 	 */
-	public void setRespawn(Location respawn) {
+	public void setRespawn(Location respawn, String respawnWorld) {
+		this.respawnWorld = respawnWorld;
 		this.respawn = respawn;
 	}
 
@@ -287,6 +297,13 @@ public class TombDTP {
 	 */
 	public Location getDeathLoc() {
 		return deathLoc;
+	}
+
+	/**
+	 * @return the deathWorld
+	 */
+	public String getDeathWorld() {
+		return deathWorld;
 	}
 
 	/**
@@ -459,6 +476,14 @@ public class TombDTP {
 	public Location getRespawn() {
 		return respawn;
 	}
+
+	/**
+	 * @return the respawnWorld
+	 */
+	public String getRespawnWorld() {
+		return respawnWorld;
+	}
+
 
 	//~--- methods ------------------------------------------------------------
 
