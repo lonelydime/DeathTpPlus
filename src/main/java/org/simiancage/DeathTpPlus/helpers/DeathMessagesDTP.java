@@ -16,10 +16,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.simiancage.DeathTpPlus.models.DeathDetailDTP;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 
 
@@ -1249,7 +1246,8 @@ afterwards parsable again from the configuration class of bukkit
 			PluginDescriptionFile pdfFile = this.plugin.getDescription();
 			String authors = getAuthors();
 			pluginName = pdfFile.getName();
-			stream = new PrintWriter(pluginPath + deathMessageFileName);
+			OutputStream outputStream = new FileOutputStream(pluginPath + deathMessageFileName);
+			stream = new PrintWriter(new OutputStreamWriter(outputStream, "utf-8"));
 //Let's write our deathMessageFileConfig ;)
 			stream.println("# " + pluginName + " " + pdfFile.getVersion() + " by " + authors);
 			stream.println("#");
@@ -1269,6 +1267,8 @@ afterwards parsable again from the configuration class of bukkit
 			success = true;
 
 		} catch (FileNotFoundException e) {
+			log.warning("Error saving the " + deathMessageFileName + ".");
+		} catch (UnsupportedEncodingException e) {
 			log.warning("Error saving the " + deathMessageFileName + ".");
 		}
 		log.debug("Default DeathMessages written", success);

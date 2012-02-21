@@ -15,10 +15,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.simiancage.DeathTpPlus.helpers.DeathMessagesDTP.DeathEventType;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 
 
@@ -868,7 +865,8 @@ afterwards parsable again from the configuration class of bukkit
 			PluginDescriptionFile pdfFile = this.plugin.getDescription();
 			String authors = getAuthors();
 			pluginName = pdfFile.getName();
-			stream = new PrintWriter(pluginPath + tombMessageFileName);
+			OutputStream outputStream = new FileOutputStream(pluginPath + tombMessageFileName);
+			stream = new PrintWriter(new OutputStreamWriter(outputStream, "utf-8"));
 //Let's write our tombMessages ;)
 			stream.println("# " + pluginName + " " + pdfFile.getVersion() + " by " + authors);
 			stream.println("#");
@@ -888,7 +886,9 @@ afterwards parsable again from the configuration class of bukkit
 			success = true;
 
 		} catch (FileNotFoundException e) {
-			log.warning("Error saving the " + tombMessageFileName + ".");
+			log.warning("Error saving the " + tombMessageFileName + ".", e);
+		} catch (UnsupportedEncodingException e) {
+			log.warning("Error saving the " + tombMessageFileName + ".", e);
 		}
 		log.debug("Default TombMessages written", success);
 		return success;

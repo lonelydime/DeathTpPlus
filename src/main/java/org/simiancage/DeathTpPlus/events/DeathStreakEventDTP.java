@@ -14,59 +14,59 @@ import org.bukkit.event.HandlerList;
 
 @SuppressWarnings("serial")
 public class DeathStreakEventDTP extends Event {
-    private static final HandlerList handlers = new HandlerList();
-    private Player player;
-    private Player killer;
-    private String message;
-    private Integer deaths;
+	private static final HandlerList handlers = new HandlerList();
+	private Player player;
+	private Player killer;
+	private String message;
+	private Integer deaths;
 
-    public DeathStreakEventDTP(Player player, Player killer, String message, Integer deaths) {
-        super("DeathStreakEventDTP");
+	public DeathStreakEventDTP(Player player, Player killer, String message, Integer deaths) {
+		//super("DeathStreakEventDTP");
 
-        this.player = player;
-        this.killer = killer;
-        this.message = message;
-        this.deaths = deaths;
-    }
+		this.player = player;
+		this.killer = killer;
+		this.message = message;
+		this.deaths = deaths;
+	}
 
-    public Player getPlayer() {
-        return player;
-    }
+	public Player getPlayer() {
+		return player;
+	}
 
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 
-    public Player getKiller() {
-        return killer;
-    }
+	public Player getKiller() {
+		return killer;
+	}
 
-    public void setKiller(Player killer) {
-        this.killer = killer;
-    }
+	public void setKiller(Player killer) {
+		this.killer = killer;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
-    public Integer getDeaths() {
-        return deaths;
-    }
+	public Integer getDeaths() {
+		return deaths;
+	}
 
-    public void setDeaths(Integer deaths) {
-        this.deaths = deaths;
-    }
+	public void setDeaths(Integer deaths) {
+		this.deaths = deaths;
+	}
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
 }
