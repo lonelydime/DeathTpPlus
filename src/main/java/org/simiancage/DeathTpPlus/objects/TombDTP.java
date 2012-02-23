@@ -10,10 +10,7 @@ package org.simiancage.DeathTpPlus.objects;
  * Time: 20:03
  */
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.SignChangeEvent;
@@ -352,6 +349,13 @@ public class TombDTP {
 						log.debug("Final try of loading chunk!");
 						world.loadChunk(cx, cz);
 					}
+					Chunk chunk = world.getChunkAt(sign);
+					log.debug("Chunk Location X: " + chunk.getX() + " Z: " + chunk.getZ());
+					sign = sign.getLocation().getBlock();
+					if (sign.getType() == Material.AIR) {
+						log.debug("The location: " + sign.getLocation() + " is still air, one last try");
+						world.loadChunk(cx, cz, true);
+					}
 				}
 
 				log.debug("Ok, tried loading chunk, now let's check again it the tomb is still there.");
@@ -389,6 +393,7 @@ public class TombDTP {
 		signBlocks.add(sign);
 		log.info("Tomb Block :(" + sign.getWorld().getName() + ", " + sign.getX() + ", " + sign.getY() + ", "
 				+ sign.getZ() + ") Added.");
+		log.debug("This is chunk: Z" + (sign.getZ() >> 4) + " X" + (sign.getX() >> 4));
 		event.setLine(1, cutMsg(playerName));
 		event.setLine(2, cutMsg(deaths + " Deaths"));
 

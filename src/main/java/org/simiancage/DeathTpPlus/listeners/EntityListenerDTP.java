@@ -5,6 +5,7 @@ package org.simiancage.DeathTpPlus.listeners;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -41,7 +42,7 @@ public class EntityListenerDTP implements Listener {
 		instance = this;
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onEntityDeath(EntityDeathEvent event) {
 
 		if (event.getEntity() instanceof Player) {

@@ -14,9 +14,9 @@ public enum PINGS {
 
 	// ToDo add new bit.ly links when new version comes out.
 
-	ON_ENABLE("http://bit.ly/xx0j7K"),
-	ON_CREATE("http://bit.ly/xd9QOr"),
-	ON_UPDATE("http://bit.ly/yTAvaZ"),
+	ON_ENABLE("http://bit.ly/w04973"),
+	ON_CREATE("http://bit.ly/yXYz9u"),
+	ON_UPDATE("http://bit.ly/x5xrzN"),
 	BUNDLE("https://bitly.com/wYP2Nj");
 
 	private String url;
