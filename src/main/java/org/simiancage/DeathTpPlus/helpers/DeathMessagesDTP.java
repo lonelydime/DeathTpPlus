@@ -1068,7 +1068,7 @@ afterwards parsable again from the configuration class of bukkit
 	 */
 	public String getAuthors() {
 		String authors = "";
-		ArrayList<String> auths = plugin.getDescription().getAuthors();
+		List<String> auths = plugin.getDescription().getAuthors();
 		if (auths.size() == 0) {
 			return "";
 		}
