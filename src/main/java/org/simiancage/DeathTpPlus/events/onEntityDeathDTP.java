@@ -234,7 +234,7 @@ public class onEntityDeathDTP {
 		Location loc = player.getLocation();
 		Block block = returnGoodPlace(player, loc);
 
-		if (!plugin.isWorldGuardEnabled() && !plugin.getWorldGuardPlugin().canBuild(player, block)) {
+		if (plugin.isWorldGuardEnabled() && !plugin.getWorldGuardPlugin().canBuild(player, block)) {
 			plugin.sendMessage(player, "You died in a protected region. Dropping inventory");
 			log.debug(player.getName() + " died in WorldGuard Region, dropping inventory");
 			return;
@@ -656,7 +656,7 @@ public class onEntityDeathDTP {
 
 		signBlock = tombStoneHelper.findPlace(signBlock, false);
 
-		if (!plugin.getWorldGuardPlugin().canBuild(deathDetail.getPlayer(), signBlock)) {
+		if (plugin.isWorldGuardEnabled() && !plugin.getWorldGuardPlugin().canBuild(deathDetail.getPlayer(), signBlock)) {
 			log.debug(deathDetail.getPlayer().getName() + " died in WorldGuard Region, not creating DeathSign");
 			signBlock = null;
 		}
