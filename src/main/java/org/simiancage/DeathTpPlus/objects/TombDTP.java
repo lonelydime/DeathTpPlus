@@ -339,7 +339,7 @@ public class TombDTP {
 				int cx = sign.getX() >> 4;
 				int cz = sign.getZ() >> 4;
 				World world = sign.getWorld();
-
+				Location location = sign.getLocation();
 				if (!world.isChunkLoaded(cx, cz)) {
 					log.debug("Chunk at x: " + cx + " z: " + cz + " is not loaded, forcing load");
 					world.loadChunk(cx, cz);
@@ -351,12 +351,14 @@ public class TombDTP {
 					}
 					Chunk chunk = world.getChunkAt(sign);
 					log.debug("Chunk Location X: " + chunk.getX() + " Z: " + chunk.getZ());
-					sign = sign.getLocation().getBlock();
+					sign = location.getBlock();
 					if (sign.getType() == Material.AIR) {
 						log.debug("The location: " + sign.getLocation() + " is still air, one last try");
 						world.loadChunk(cx, cz, true);
+
 					}
 				}
+				sign = location.getBlock();
 
 				log.debug("Ok, tried loading chunk, now let's check again it the tomb is still there.");
 
@@ -393,7 +395,7 @@ public class TombDTP {
 		signBlocks.add(sign);
 		log.info("Tomb Block :(" + sign.getWorld().getName() + ", " + sign.getX() + ", " + sign.getY() + ", "
 				+ sign.getZ() + ") Added.");
-		log.debug("This is chunk: Z" + (sign.getZ() >> 4) + " X" + (sign.getX() >> 4));
+		log.debug("This is chunk: Z " + (sign.getZ() >> 4) + " X" + (sign.getX() >> 4));
 		event.setLine(1, cutMsg(playerName));
 		event.setLine(2, cutMsg(deaths + " Deaths"));
 
