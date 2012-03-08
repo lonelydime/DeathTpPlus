@@ -12,6 +12,7 @@ package org.simiancage.DeathTpPlus.objects;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -358,7 +359,16 @@ public class TombDTP {
 
 					}
 				}
+
+
 				sign = location.getBlock();
+				if (sign.getType() == Material.AIR) {
+					BlockState blockState = location.getBlock().getState();
+					if (blockState instanceof Sign) {
+						log.debug("Blockstate is instance of Sign");
+						return true;
+					}
+				}
 
 				log.debug("Ok, tried loading chunk, now let's check again it the tomb is still there.");
 
