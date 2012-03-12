@@ -16,7 +16,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -1491,16 +1490,22 @@ afterwards parsable again from the configuration class of bukkit
 			int versionPos = cbVersion.indexOf("-b") + 2;
 			cbVersion = cbVersion.substring(versionPos, versionPos + 4);
 			log.debug("bukkitVersion", cbVersion);
-			cbVer = Integer.parseInt(cbVersion);
+			try {
+				cbVer = Integer.parseInt(cbVersion);
+			} catch (NullPointerException e) {
+				log.info("Looks like are running a strange version, everything should be fine.");
+				log.info("Except Version checking.");
+				cbVer = 0;
+			}
 		}
 		String pluginVersion = plugin.getDescription().getVersion();
 		log.debug("pluginVersion", pluginVersion);
 		plVersion = pluginVersion.replace(".", ":");
 		String[] thisVersion = plVersion.split(":");
-		pluginMajor = Integer.parseInt(thisVersion[0].toString());
-		pluginMinor = Integer.parseInt(thisVersion[1].toString());
-		pluginDev = Integer.parseInt(thisVersion[2].toString());
-		pluginCB = Integer.parseInt(thisVersion[3].toString());
+		pluginMajor = Integer.parseInt(thisVersion[0]);
+		pluginMinor = Integer.parseInt(thisVersion[1]);
+		pluginDev = Integer.parseInt(thisVersion[2]);
+		pluginCB = Integer.parseInt(thisVersion[3]);
 		URL url;
 		String newVersion = "";
 		try {

@@ -674,7 +674,8 @@ public class onEntityDeathDTP {
 		BlockState state = signBlock.getState();
 
 		if (state instanceof Sign) {
-			Sign sign = (Sign) state;
+			log.debug("Creating DeathSign at: ", signBlock.getLocation());
+			final Sign sign = (Sign) state;
 			String date = new SimpleDateFormat(config.getDateFormat()).format(new Date());
 			String time = new SimpleDateFormat(config.getTimeFormat()).format(new Date());
 			String name = deathDetail.getPlayer().getName();
@@ -699,9 +700,14 @@ public class onEntityDeathDTP {
 				if (line.length() > 15) {
 					line = line.substring(0, 15);
 				}
-
+				log.debug("Writing line " + x + ": " + line);
 				sign.setLine(x, line);
 			}
+			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				public void run() {
+					sign.update();
+				}
+			});
 		}
 	}
 
