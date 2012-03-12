@@ -10,9 +10,10 @@ package org.simiancage.DeathTpPlus.objects;
  * Time: 20:03
  */
 
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -330,35 +331,44 @@ public class TombDTP {
 	 * @return if the block is a sign
 	 */
 	private boolean isSign(Block sign) {
+
+
+		sign.getChunk().load();
+		return ((sign.getType() == Material.WALL_SIGN || sign.getType() == Material.SIGN_POST) && sign.getState() instanceof Sign);
+	}
+/*
+		// Added chunkload when chunk not loaded, code from Tele++
+		int cx = sign.getX() >> 4;
+		int cz = sign.getZ() >> 4;
+		World world = sign.getWorld();
+		Location location = sign.getLocation();
+		if (!world.isChunkLoaded(cx, cz)) {
+			log.debug("Chunk at x: " + cx + " z: " + cz + " is not loaded, forcing load");
+			world.loadChunk(cx, cz);
+
+			if (!world.isChunkLoaded(cx, cz)) {
+				log.severe("Chunk at x: " + cx + " z: " + cz + " is still not loaded");
+				log.debug("Final try of loading chunk!");
+				world.loadChunk(cx, cz);
+			}
+			Chunk chunk = world.getChunkAt(sign);
+			log.debug("Chunk Location X: " + chunk.getX() + " Z: " + chunk.getZ());
+			sign = location.getBlock();
+			if (sign.getType() == Material.AIR) {
+				log.debug("The location: " + sign.getLocation() + " is still air, one last try");
+				world.loadChunk(cx, cz, true);
+
+			}
+		}
+
+
 		if ((sign.getType() == Material.WALL_SIGN) || (sign.getType() == Material.SIGN)
 				|| (sign.getType() == Material.SIGN_POST) || (sign.getState() instanceof Sign)) {
 			return true;
 		} else {
 			if (sign.getType() == Material.AIR) {
 
-				// Added chunkload when chunk not loaded, code from Tele++
-				int cx = sign.getX() >> 4;
-				int cz = sign.getZ() >> 4;
-				World world = sign.getWorld();
-				Location location = sign.getLocation();
-				if (!world.isChunkLoaded(cx, cz)) {
-					log.debug("Chunk at x: " + cx + " z: " + cz + " is not loaded, forcing load");
-					world.loadChunk(cx, cz);
 
-					if (!world.isChunkLoaded(cx, cz)) {
-						log.severe("Chunk at x: " + cx + " z: " + cz + " is still not loaded");
-						log.debug("Final try of loading chunk!");
-						world.loadChunk(cx, cz);
-					}
-					Chunk chunk = world.getChunkAt(sign);
-					log.debug("Chunk Location X: " + chunk.getX() + " Z: " + chunk.getZ());
-					sign = location.getBlock();
-					if (sign.getType() == Material.AIR) {
-						log.debug("The location: " + sign.getLocation() + " is still air, one last try");
-						world.loadChunk(cx, cz, true);
-
-					}
-				}
 
 
 				sign = location.getBlock();
@@ -383,7 +393,7 @@ public class TombDTP {
 
 			return false;
 		}
-	}
+	}*/
 
 	//~--- methods ------------------------------------------------------------
 
