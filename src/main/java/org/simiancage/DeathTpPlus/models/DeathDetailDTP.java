@@ -53,12 +53,12 @@ public class DeathDetailDTP {
 					log.debug("We have a creature or slime");
 					if (damager instanceof Tameable && ((Tameable) damager).isTamed()) {
 						causeOfDeath = DeathEventType.PVP_TAMED;
-						murderWeapon = UtilsDTP.getCreatureType(damager).toString();
+						murderWeapon = UtilsDTP.getEntityType(damager).toString();
 						killer = (Player) ((Tameable) damager).getOwner();
 
 					} else {
 
-						causeOfDeath = DeathEventType.valueOf(UtilsDTP.getCreatureType(damager).toString());
+						causeOfDeath = DeathEventType.valueOf(UtilsDTP.getEntityType(damager).toString());
 						log.debug("and it is: " + causeOfDeath);
 					}
 				} else if (damager instanceof Projectile) {
