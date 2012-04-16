@@ -58,7 +58,14 @@ public class DeathDetailDTP {
 
 					} else {
 
-						causeOfDeath = DeathEventType.valueOf(UtilsDTP.getEntityType(damager).toString());
+						try {
+
+							causeOfDeath = DeathEventType.valueOf(UtilsDTP.getEntityType(damager).toString());
+						} catch (IllegalArgumentException iae) {
+							log.severe("Please notify the developer of the following Error:");
+							log.severe("The following damager is not correctly implemented: " + UtilsDTP.getEntityType(damager));
+							causeOfDeath = DeathEventType.UNKNOWN;
+						}
 						log.debug("and it is: " + causeOfDeath);
 					}
 				} else if (damager instanceof Projectile) {

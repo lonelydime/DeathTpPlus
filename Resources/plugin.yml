@@ -1,10 +1,10 @@
 name: DeathTpPlus
 main: org.simiancage.DeathTpPlus.DeathTpPlus
-version: 3.9.3.2126
+version: 3.9.4.2149
 website: http://dev.bukkit.org/server-mods/deathtpplus/
 authors: ['Don Redhorse', 'mung3r']
 description: Death teleport, tombstone and tombs
-softdepend: [Vault,CraftIRC,LWC,Lockette,MobArena,dynmap]
+softdepend: [Vault,LWC,Lockette,MobArena,dynmap]
 
 commands:
     deathtp:
