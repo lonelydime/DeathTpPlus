@@ -97,7 +97,7 @@ public class DeathMessagesDTP {
 	/**
 	 * This is the internal deathMessageFileConfig version
 	 */
-	private final String deathMessagesCurrent = "3.4";
+	private final String deathMessagesCurrent = "3.5";
 	/**
 	 * This is the DEFAULT for the deathMessageFileConfig file version, should be the same as deathMessagesCurrent. Will afterwards be changed
 	 */
@@ -266,6 +266,12 @@ public class DeathMessagesDTP {
 	 * Array which holds default Magic messages
 	 */
 	private String[] defaultMagicMessages;
+
+	/**
+	 * Array which holds default IronGolem messages
+	 */
+	private String[] defaultIronGolemMessages;
+
 
 	// ToDo add new variables on top
 
@@ -705,7 +711,7 @@ afterwards parsable again from the configuration class of bukkit
 		/** Creating the default Dispenser Kill messages*/
 		defaultDispenserMessages = new String[]{
 				"&5%n&7 got shot in the back by a dispenser!",
-				"Again the wrong weight Indi? ähm. &5%n&7",
+				"Again the wrong weight Indi? well. &5%n&7",
 				"&5%n&7 thinks he is Indiana Jones.",
 				"&5%n&7 felt for the booby trap."
 		};
@@ -731,6 +737,15 @@ afterwards parsable again from the configuration class of bukkit
 				"&5%n&7 should ask Rincewind the next time"
 		};
 		deathMessages.put(DeathEventType.MAGIC, Arrays.asList(defaultMagicMessages));
+
+		/** Creating the default IronGolem Kill messages*/
+		defaultIronGolemMessages = new String[]{
+				"&5%n&7 got killed by an iron fist!",
+				"A thing born from a pumpkin killed &5%n&7",
+				"&5%n&7 thought hitting a villager was a good idea.",
+				"&5%n&7 shouldn't underestimate the local police force."
+		};
+		deathMessages.put(DeathEventType.IRON_GOLEM, Arrays.asList(defaultIronGolemMessages));
 
 		// ToDo add new messages on top
 	}
@@ -810,6 +825,7 @@ afterwards parsable again from the configuration class of bukkit
 		deathMessages.put(DeathEventType.DISPENSER, (List<String>) (List<?>) deathMessageFileConfig.getList("dispenser", Arrays.asList(defaultDispenserMessages)));
 		deathMessages.put(DeathEventType.POISON, (List<String>) (List<?>) deathMessageFileConfig.getList("poison", Arrays.asList(defaultPosionMessages)));
 		deathMessages.put(DeathEventType.MAGIC, (List<String>) (List<?>) deathMessageFileConfig.getList("magic", Arrays.asList(defaultMagicMessages)));
+		deathMessages.put(DeathEventType.IRON_GOLEM, (List<String>) (List<?>) deathMessageFileConfig.getList("irongolem", Arrays.asList(defaultIronGolemMessages)));
 
 		//ToDo add new deathMessages to the top
 		for (DeathEventType deathEventType : DeathEventType.values()) {
@@ -938,6 +954,8 @@ afterwards parsable again from the configuration class of bukkit
 			return "cavespider";
 		} else if (deathEventType == DeathEventType.PIG_ZOMBIE) {
 			return "pigzombie";
+		} else if (deathEventType == DeathEventType.IRON_GOLEM) {
+			return "irongolem";
 		}
 
 		String nodeName = deathEventType.toString().toLowerCase();

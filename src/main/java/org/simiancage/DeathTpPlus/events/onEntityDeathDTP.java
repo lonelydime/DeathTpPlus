@@ -655,6 +655,7 @@ public class onEntityDeathDTP {
 		Block signBlock = returnGoodPlace(deathDetail.getPlayer(), deathDetail.getPlayer().getLocation());
 
 		signBlock = tombStoneHelper.findPlace(signBlock, false);
+		log.debug("SignBlock at location: ", signBlock.getLocation());
 
 		if (plugin.isWorldGuardEnabled() && !plugin.getWorldGuardPlugin().canBuild(deathDetail.getPlayer(), signBlock)) {
 			log.debug(deathDetail.getPlayer().getName() + " died in WorldGuard Region, not creating DeathSign");
