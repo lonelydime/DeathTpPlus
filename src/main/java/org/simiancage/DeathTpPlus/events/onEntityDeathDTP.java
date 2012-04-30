@@ -375,7 +375,7 @@ public class onEntityDeathDTP {
 
 		if (config.isKeepExperienceOnQuickLoot()) {
 			if (config.isKeepFullExperience()) {
-				experience = deathDetail.getPlayer().getTotalExperience();
+				experience = (int) Math.ceil(deathDetail.getPlayer().getExp());
 			} else {
 				experience = deathDetail.getEntityDeathEvent().getDroppedExp();
 			}
@@ -655,7 +655,9 @@ public class onEntityDeathDTP {
 		Block signBlock = returnGoodPlace(deathDetail.getPlayer(), deathDetail.getPlayer().getLocation());
 
 		signBlock = tombStoneHelper.findPlace(signBlock, false);
-		log.debug("SignBlock at location: ", signBlock.getLocation());
+		if (signBlock != null) {
+			log.debug("SignBlock at location: ", signBlock.getLocation());
+		}
 
 		if (plugin.isWorldGuardEnabled() && !plugin.getWorldGuardPlugin().canBuild(deathDetail.getPlayer(), signBlock)) {
 			log.debug(deathDetail.getPlayer().getName() + " died in WorldGuard Region, not creating DeathSign");
