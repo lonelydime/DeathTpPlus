@@ -228,7 +228,6 @@ public class DeathTpPlus extends JavaPlugin {
 	 */
 	private TombStoneHelperDTP tombStoneHelper;
 
-
 	private WorldGuardPlugin worldGuardPlugin;
 
 	private boolean worldGuardEnabled = false;

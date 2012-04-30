@@ -140,7 +140,7 @@ public class TeleportHelperDTP {
 		while (!blockIsSafe(world, x, y, z)) {
 			y += 1.0D;
 
-			if (y > 512) {
+			if (y > world.getMaxHeight()) {
 				return null;
 			}
 		}

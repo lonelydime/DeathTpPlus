@@ -242,8 +242,8 @@ public class onEntityDeathDTP {
 
 //      Don't create the chest if it or its sign would be in the void
 		if (config.isVoidCheck()
-				&& ((config.isShowTombStoneSign() && (block.getY() > 126))
-				|| (!config.isShowTombStoneSign() && (block.getY() > 127))
+				&& ((config.isShowTombStoneSign() && (block.getY() > block.getWorld().getMaxHeight() - 1))
+				|| (!config.isShowTombStoneSign() && (block.getY() > block.getWorld().getMaxHeight()))
 				|| (player.getLocation().getY() < 1))) {
 			plugin.sendMessage(player, "Your tombstone would be in the Void. Inventory dropped");
 			log.debug(player.getName() + " died in the Void.");
