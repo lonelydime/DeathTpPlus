@@ -375,7 +375,8 @@ public class onEntityDeathDTP {
 
 		if (config.isKeepExperienceOnQuickLoot()) {
 			if (config.isKeepFullExperience()) {
-				experience = (int) Math.round(deathDetail.getPlayer().getExp());
+				// experience = (int) Math.round(deathDetail.getPlayer().getExp());
+				experience = deathDetail.getPlayer().getTotalExperience();
 				log.debug("Get Experience", deathDetail.getPlayer().getExp());
 				log.debug("GetTotal Experience", deathDetail.getPlayer().getTotalExperience());
 			} else {
