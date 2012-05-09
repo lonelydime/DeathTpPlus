@@ -1492,7 +1492,7 @@ afterwards parsable again from the configuration class of bukkit
 			log.debug("bukkitVersion", cbVersion);
 			try {
 				cbVer = Integer.parseInt(cbVersion);
-			} catch (NullPointerException e) {
+			} catch (Exception e) {
 				log.info("Looks like are running a strange version, everything should be fine.");
 				log.info("Except Version checking.");
 				cbVer = 0;
