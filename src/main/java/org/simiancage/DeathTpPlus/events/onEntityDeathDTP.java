@@ -157,17 +157,25 @@ public class onEntityDeathDTP {
 
 			if (entityDeathEvent instanceof PlayerDeathEvent) {
 				if (config.isDisableDeathNotifyInSpecifiedWorlds() || config.isShowDeathNotifyInDeathWorldOnly()) {
+					log.debug("Going for world specific announcements");
 					((PlayerDeathEvent) entityDeathEvent).setDeathMessage("");
 
 					Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
 
 					for (Player player : onlinePlayers) {
 						World world = player.getWorld();
-
-						if (!config.isDisabledDeathNotifyWorld(world.getName())
-								|| (config.isShowDeathNotifyInDeathWorldOnly()
-								&& (world == deathDetail.getWorld()))) {
+						log.debug("Player to send message to is in world: ", world);
+						if (config.isShowDeathNotifyInDeathWorldOnly() && (world == deathDetail.getWorld())) {
+							log.debug("We send a message into the Deathworld", deathDetail.getWorld());
 							player.sendMessage(deathMessage);
+						} else {
+							if (config.isDisableDeathNotifyInSpecifiedWorlds() && !config.isDisabledDeathNotifyWorld(world.getName())) {
+								log.debug("We send a message to this world: ", world);
+								player.sendMessage(deathMessage);
+							} else {
+								log.debug("We don't send a message to this world: ", world);
+							}
+
 						}
 					}
 				} else {
