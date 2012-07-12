@@ -145,11 +145,6 @@ public class onEntityDeathDTP {
 			streakLog.setRecord(deathDetail);
 		}
 
-		// write kill to deathlog
-		if (config.isAllowDeathLog()) {
-			deathLog.setRecord(deathDetail);
-		}
-
 		if (config.isShowDeathNotify()) {
 			String deathMessage = DeathMessagesDTP.getDeathMessage(deathDetail);
 
@@ -196,6 +191,7 @@ public class onEntityDeathDTP {
 						 */
 		}
 
+        // write kill to deathlog
 		if (config.isAllowDeathLog()) {
 			deathLog.setRecord(deathDetail);
 		}
