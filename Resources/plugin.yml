@@ -31,6 +31,18 @@ commands:
             Example: /<command> - Displays your total kill count.
             Example: /<command> dredhorse - Displays total kill count.
             Example: /<command> lonelydime dredhorse - prints times lonelydime killed dredhorse.
+    report:
+        description: Display your kill/death reports
+        usage: |
+            /<command> <kills|deaths> [page_number]
+            Example: /<command> kills - Displays your kill report
+            Example: /<command> deaths 1 - Displays page 1 of your death report
+    top:
+        description: Display global top kill/death reports
+        usage: |
+            /<command> top <kills|deaths> [page_number]
+            Example: /<command> top kills - Displays top kills report
+            Example: /<command> top deaths 1 - Displays page 1 of top deaths report
     dtpadmin:
         description: Lets you use the admin commands for tombstones.
         usage: |

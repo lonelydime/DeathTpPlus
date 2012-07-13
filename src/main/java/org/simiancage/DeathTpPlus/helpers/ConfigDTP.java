@@ -218,6 +218,10 @@ public class ConfigDTP {
 	 */
 	private boolean showStreaks = true;
 	/**
+	 * Play kill streaks and multi kills
+	 */
+	private boolean playSounds = true;
+	/**
 	 * Window of time (in milliseconds) to count kills towards a multikill
 	 */
 	private String multiKillTimeWindow = "5000";
@@ -429,6 +433,7 @@ afterwards parsable again from the configuration class of bukkit
 		config.addDefault("allowDeathtp", allowDeathtp);
 		config.addDefault("allowDeathLog", allowDeathLog);
 		config.addDefault("showStreaks", showStreaks);
+		config.addDefault("playSounds", playSounds);
 		config.addDefault("multiKillTimeWindow", multiKillTimeWindow);
 		config.addDefault("chargeItem", chargeItem);
 		config.addDefault("showDeathSign", showDeathSign);
@@ -502,6 +507,7 @@ afterwards parsable again from the configuration class of bukkit
 		allowDeathtp = config.getBoolean("allowDeathtp");
 		allowDeathLog = config.getBoolean("allowDeathLog");
 		showStreaks = config.getBoolean("showStreaks");
+		playSounds = config.getBoolean("playSounds");
 		multiKillTimeWindow = config.getString("multiKillTimeWindow");
 		chargeItem = config.getString("chargeItem");
 		showDeathSign = config.getBoolean("showDeathSign");
@@ -711,6 +717,9 @@ afterwards parsable again from the configuration class of bukkit
 		stream.println();
 		stream.println("# Show kill, death streaks and multi kill messages");
 		stream.println("showStreaks: " + showStreaks);
+		stream.println();
+		stream.println("# Play kill streak and multi kill sounds");
+		stream.println("playSounds: " + playSounds);
 		stream.println();
 		stream.println("# Window of time (in milliseconds) to count kills towards a multikill");
 		stream.println("multiKillTimeWindow: \"" + multiKillTimeWindow + "\"");
@@ -947,7 +956,11 @@ afterwards parsable again from the configuration class of bukkit
 		return showStreaks;
 	}
 
-	public String getChargeItem() {
+	public boolean isPlaySounds() {
+        return playSounds;
+    }
+
+    public String getChargeItem() {
 		return chargeItem;
 	}
 

@@ -35,6 +35,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
+import org.getspout.spout.Spout;
 import org.simiancage.DeathTpPlus.commands.*;
 import org.simiancage.DeathTpPlus.helpers.*;
 import org.simiancage.DeathTpPlus.listeners.*;
@@ -231,6 +232,11 @@ public class DeathTpPlus extends JavaPlugin {
 	private WorldGuardPlugin worldGuardPlugin;
 
 	private boolean worldGuardEnabled = false;
+
+	private Spout spout;
+
+	private boolean spoutEnabled = false;
+
 	//~--- methods ------------------------------------------------------------
 
 	/**
@@ -245,6 +251,10 @@ public class DeathTpPlus extends JavaPlugin {
 			TombWorkerDTP.getInstance().save();
 			server.getScheduler().cancelTasks(this);
 		}
+
+		deathLocationLog.save();
+		deathLog.save();
+		streakLog.save();
 
 		log.disableMsg();
 	}
@@ -415,6 +425,13 @@ public class DeathTpPlus extends JavaPlugin {
 		return worldGuardPlugin;
 	}
 
+	public boolean isSpoutEnabled() {
+	    return spoutEnabled;
+	}
+
+	public Spout getSpoutPlugin() {
+		return spout;
+	}
 
 	//~--- methods ------------------------------------------------------------
 
@@ -826,6 +843,8 @@ public class DeathTpPlus extends JavaPlugin {
 		getCommand("deaths").setExecutor(new DeathsCommandDTP(this));
 		getCommand("kills").setExecutor(new KillsCommandDTP(this));
 		getCommand("streak").setExecutor(new StreakCommandDTP(this));
+		getCommand("report").setExecutor(new ReportCommandDTP(this));
+		getCommand("top").setExecutor(new TopCommandDTP(this));
 	}
 
 	//~--- get methods --------------------------------------------------------
@@ -936,5 +955,13 @@ public class DeathTpPlus extends JavaPlugin {
 
 	public void setWorldGuardPlugin(WorldGuardPlugin worldGuardPlugin) {
 		this.worldGuardPlugin = worldGuardPlugin;
+	}
+	
+	public void setSpoutEnabled(boolean b) {
+	    spoutEnabled = b;
+	}
+	
+	public void setSpoutPlugin(Spout spout) {
+	    this.spout = spout;
 	}
 }

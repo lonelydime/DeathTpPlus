@@ -1,19 +1,27 @@
 package org.simiancage.DeathTpPlus.logs;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Map;
+
+import org.bukkit.Bukkit;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.events.DeathStreakEventDTP;
 import org.simiancage.DeathTpPlus.events.KillStreakEventDTP;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.DeathMessagesDTP;
-import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.helpers.DeathMessagesDTP.DeathEventType;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.models.DeathDetailDTP;
 import org.simiancage.DeathTpPlus.models.StreakRecordDTP;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * PluginName: DeathTpPlus
@@ -23,50 +31,71 @@ import java.util.List;
  * Time: 19:30
  */
 
-public class StreakLogDTP {
+public class StreakLogDTP implements Runnable {
     private static final String STREAK_LOG_FILE = "streak.txt";
     private static final ConfigDTP config = ConfigDTP.getInstance();
     private static final LoggerDTP log = LoggerDTP.getLogger();
     private String dataFolder;
 
-    private DeathTpPlus plugin;
+    private static final String CHARSET = "UTF-8";
+    private static final long SAVE_DELAY = 3 * (60 * 20); // 3 minutes
+    private static final long SAVE_PERIOD = 3 * (60 * 20); // 3 minutes
+
+    private Map<String, StreakRecordDTP> streaks;
     private File streakLogFile;
 
     public StreakLogDTP(DeathTpPlus plugin) {
-        this.plugin = plugin;
+        streaks = new Hashtable<String, StreakRecordDTP>();
         dataFolder = plugin.getDataFolder() + System.getProperty("file.separator");
         streakLogFile = new File(dataFolder, STREAK_LOG_FILE);
         if (!streakLogFile.exists()) {
             try {
                 streakLogFile.createNewFile();
-            } catch (IOException e) {
-                log.severe("Failed to create streak log", e);
             }
+            catch (IOException e) {
+                log.severe("Failed to create streak log: " + e.toString());
+            }
+        }
+        load();
+
+        Bukkit.getScheduler().scheduleAsyncRepeatingTask(plugin, this, SAVE_DELAY, SAVE_PERIOD);
+    }
+
+    private void load() {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(streakLogFile), CHARSET));
+            String line = null;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                StreakRecordDTP streak = new StreakRecordDTP(line);
+                streaks.put(streak.getPlayerName(), streak);
+            }
+
+            bufferedReader.close();
+        }
+        catch (IOException e) {
+            log.severe("Failed to read streak log: " + e.toString());
+        }
+    }
+
+    public synchronized void save() {
+        try {
+            BufferedWriter streakLogWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(streakLogFile), CHARSET));
+
+            for (StreakRecordDTP streak : streaks.values()) {
+                streakLogWriter.write(streak.toString());
+                streakLogWriter.newLine();
+            }
+
+            streakLogWriter.close();
+        }
+        catch (IOException e) {
+            log.severe("Failed to write streak log: " + e.toString());
         }
     }
 
     public StreakRecordDTP getRecord(String playerName) {
-        StreakRecordDTP streak = null;
-
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(streakLogFile));
-
-            String line = null;
-            while ((line = bufferedReader.readLine()) != null) {
-                streak = new StreakRecordDTP(line);
-                if (playerName.equalsIgnoreCase(streak.getPlayerName())) {
-                    return streak;
-                } else {
-                    streak = null;
-                }
-            }
-
-            bufferedReader.close();
-        } catch (IOException e) {
-            log.severe("Failed to read streak log", e);
-        }
-
-        return streak;
+        return streaks.get(playerName);
     }
 
     public void setRecord(DeathDetailDTP deathDetail) {
@@ -75,49 +104,33 @@ public class StreakLogDTP {
 
         if (deathDetail.getCauseOfDeath() == DeathEventType.SUICIDE) {
             killerName = deathDetail.getCauseOfDeath().toString();
-        } else if (deathDetail.getKiller() != null) {
+        }
+        else if (deathDetail.getKiller() != null) {
             killerName = deathDetail.getKiller().getName();
-        } else {
+        }
+        else {
             return;
         }
 
-        List<StreakRecordDTP> streakList = new ArrayList<StreakRecordDTP>();
-
-        StreakRecordDTP killStreakRecord = null;
-        StreakRecordDTP deathStreakRecord = null;
-
-        // read the file
-        try {
-            BufferedReader streakLogReader = new BufferedReader(new FileReader(streakLogFile));
-
-            String line = null;
-            while ((line = streakLogReader.readLine()) != null) {
-                StreakRecordDTP streak = new StreakRecordDTP(line);
-                if (victimName.equalsIgnoreCase(streak.getPlayerName())) {
-                    streak.setCount(streak.getCount() > 0 ? -1 : streak.getCount() - 1);
-                    deathStreakRecord = streak;
-                }
-                if (killerName.equalsIgnoreCase(streak.getPlayerName())) {
-                    streak.setCount(streak.getCount() < 0 ? 1 : streak.getCount() + 1);
-                    streak.updateMultiKillCount(Long.valueOf(config.getMultiKillTimeWindow()));
-                    killStreakRecord = streak;
-                }
-                streakList.add(streak);
-            }
-
-            streakLogReader.close();
-        } catch (IOException e) {
-            log.severe("Failed to read streak log", e);
+        StreakRecordDTP killStreakRecord;
+        if (streaks.containsKey(killerName)) {
+            killStreakRecord = streaks.get(killerName);
+            killStreakRecord.incrementKillCount();
+            killStreakRecord.updateMultiKillCount(Long.valueOf(config.getMultiKillTimeWindow()));
         }
-
-        if (killStreakRecord == null) {
+        else {
             killStreakRecord = new StreakRecordDTP(killerName, 1, new Date(), 1);
-            streakList.add(killStreakRecord);
+            streaks.put(killerName, killStreakRecord);
         }
 
-        if (deathStreakRecord == null) {
+        StreakRecordDTP deathStreakRecord;
+        if (streaks.containsKey(victimName)) {
+            deathStreakRecord = streaks.get(victimName);
+            deathStreakRecord.incrementDeathCount();
+        }
+        else {
             deathStreakRecord = new StreakRecordDTP(victimName, -1, new Date(0L), 0);
-            streakList.add(deathStreakRecord);
+            streaks.put(victimName, deathStreakRecord);
         }
 
         // Check to see if we should announce a streak
@@ -125,33 +138,23 @@ public class StreakLogDTP {
             // Deaths
             String deathStreakMessage = DeathMessagesDTP.getDeathStreakMessage(deathStreakRecord.getCount());
             if (deathStreakMessage != null) {
-                plugin.getServer().getPluginManager().callEvent(new DeathStreakEventDTP(deathDetail.getPlayer(), deathDetail.getKiller(), deathStreakMessage, deathStreakRecord.getCount()));
+                Bukkit.getPluginManager().callEvent(new DeathStreakEventDTP(deathDetail.getPlayer(), deathDetail.getKiller(), deathStreakMessage, deathStreakRecord.getCount()));
             }
-            // Kills
+            // Multi Kills
             String multiKillMessage = DeathMessagesDTP.getMultiKillMessage(killStreakRecord.getMultiKillCount());
             if (multiKillMessage != null && killStreakRecord.isWithinMutiKillTimeWindow(Long.valueOf(config.getMultiKillTimeWindow()))) {
-                plugin.getServer().getPluginManager().callEvent(new KillStreakEventDTP(deathDetail.getKiller(), deathDetail.getPlayer(), multiKillMessage, killStreakRecord.getMultiKillCount(), true));
-            } else {
-                String killStreakMessage = DeathMessagesDTP.getKillStreakMessage(killStreakRecord.getCount());
-                if (killStreakMessage != null) {
-                    plugin.getServer().getPluginManager().callEvent(new KillStreakEventDTP(deathDetail.getKiller(), deathDetail.getPlayer(), killStreakMessage, killStreakRecord.getCount(), false));
-                }
+                Bukkit.getPluginManager().callEvent(new KillStreakEventDTP(deathDetail.getKiller(), deathDetail.getPlayer(), multiKillMessage, killStreakRecord.getMultiKillCount(), true));
             }
-        }
-
-        // Write streaks to file
-        try {
-            BufferedWriter streakLogWriter = new BufferedWriter(new FileWriter(streakLogFile));
-
-            for (StreakRecordDTP streak : streakList) {
-                streakLogWriter.write(streak.toString());
-                streakLogWriter.newLine();
+            // Kill Streak
+            String killStreakMessage = DeathMessagesDTP.getKillStreakMessage(killStreakRecord.getCount());
+            if (killStreakMessage != null) {
+                Bukkit.getPluginManager().callEvent(new KillStreakEventDTP(deathDetail.getKiller(), deathDetail.getPlayer(), killStreakMessage, killStreakRecord.getCount(), false));
             }
-
-            streakLogWriter.close();
-        } catch (IOException e) {
-            log.severe("Failed to write streak log", e);
         }
     }
-}
 
+    @Override
+    public void run() {
+        save();
+    }
+}

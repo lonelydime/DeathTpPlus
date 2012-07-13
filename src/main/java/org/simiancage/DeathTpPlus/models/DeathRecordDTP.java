@@ -73,6 +73,14 @@ public class DeathRecordDTP {
         this.count = count;
     }
 
+    public void incrementCount() {
+        count++;
+    }
+
+    public String getKey() {
+        return String.format("%s:%s:%s", playerName, type, eventName);
+    }
+
     @Override
     public String toString() {
         return String.format("%s:%s:%s:%d", playerName, type, eventName, count);
