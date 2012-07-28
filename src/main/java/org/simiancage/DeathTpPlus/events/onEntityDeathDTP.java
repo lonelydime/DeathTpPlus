@@ -2,6 +2,7 @@ package org.simiancage.DeathTpPlus.events;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,8 +29,10 @@ import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -152,27 +155,27 @@ public class onEntityDeathDTP {
 
 			if (entityDeathEvent instanceof PlayerDeathEvent) {
 				if (config.isDisableDeathNotifyInSpecifiedWorlds() || config.isShowDeathNotifyInDeathWorldOnly()) {
-					log.debug("Going for world specific announcements");
-					((PlayerDeathEvent) entityDeathEvent).setDeathMessage("");
-
-					Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
-
-					for (Player player : onlinePlayers) {
-						World world = player.getWorld();
-						log.debug("Player to send message to is in world: ", world);
-						if (config.isShowDeathNotifyInDeathWorldOnly() && (world == deathDetail.getWorld())) {
-							log.debug("We send a message into the Deathworld", deathDetail.getWorld());
-							player.sendMessage(deathMessage);
-						} else {
-							if (config.isDisableDeathNotifyInSpecifiedWorlds() && !config.isDisabledDeathNotifyWorld(world.getName())) {
-								log.debug("We send a message to this world: ", world);
-								player.sendMessage(deathMessage);
-							} else {
-								log.debug("We don't send a message to this world: ", world);
-							}
-
-						}
-					}
+	                Set<World> notifyWorlds = new HashSet<World>();
+	                
+	                if (config.isShowDeathNotifyInDeathWorldOnly()) {
+	                    notifyWorlds.add(deathDetail.getWorld());
+	                } else {
+	                    notifyWorlds.addAll(Bukkit.getWorlds());
+	                }
+	                
+	                if (config.isDisableDeathNotifyInSpecifiedWorlds()) {
+	                    for (World world : notifyWorlds) {
+	                        if (config.isDisabledDeathNotifyWorld(world.getName())) {
+	                            notifyWorlds.remove(world);
+	                        }
+	                    }
+	                }
+	                
+	                for (Player player : plugin.getServer().getOnlinePlayers()) {
+	                    if (notifyWorlds.contains(player.getWorld())) {
+	                        player.sendMessage(deathMessage);
+	                    }
+	                }
 				} else {
 					((PlayerDeathEvent) entityDeathEvent).setDeathMessage(deathMessage);
 				}
