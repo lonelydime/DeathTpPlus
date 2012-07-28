@@ -35,7 +35,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
-import org.getspout.spout.Spout;
+import org.getspout.spoutapi.Spout;
 import org.simiancage.DeathTpPlus.commands.*;
 import org.simiancage.DeathTpPlus.helpers.*;
 import org.simiancage.DeathTpPlus.listeners.*;
