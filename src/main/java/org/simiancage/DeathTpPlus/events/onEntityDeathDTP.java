@@ -155,27 +155,27 @@ public class onEntityDeathDTP {
 
 			if (entityDeathEvent instanceof PlayerDeathEvent) {
 				if (config.isDisableDeathNotifyInSpecifiedWorlds() || config.isShowDeathNotifyInDeathWorldOnly()) {
-	                Set<World> notifyWorlds = new HashSet<World>();
-	                
-	                if (config.isShowDeathNotifyInDeathWorldOnly()) {
-	                    notifyWorlds.add(deathDetail.getWorld());
-	                } else {
-	                    notifyWorlds.addAll(Bukkit.getWorlds());
-	                }
-	                
-	                if (config.isDisableDeathNotifyInSpecifiedWorlds()) {
-	                    for (World world : notifyWorlds) {
-	                        if (config.isDisabledDeathNotifyWorld(world.getName())) {
-	                            notifyWorlds.remove(world);
-	                        }
-	                    }
-	                }
-	                
-	                for (Player player : plugin.getServer().getOnlinePlayers()) {
-	                    if (notifyWorlds.contains(player.getWorld())) {
-	                        player.sendMessage(deathMessage);
-	                    }
-	                }
+					Set<String> notifyWorlds = new HashSet<String>();
+
+					if (config.isShowDeathNotifyInDeathWorldOnly()) {
+						notifyWorlds.add(deathDetail.getWorld().getName());
+					} else {
+						notifyWorlds.addAll(UtilsDTP.getWorldNames());
+					}
+
+					if (config.isDisableDeathNotifyInSpecifiedWorlds()) {
+						for (String world : notifyWorlds) {
+							if (config.isDisabledDeathNotifyWorld(world)) {
+								notifyWorlds.remove(world);
+							}
+						}
+					}
+
+					for (Player player : plugin.getServer().getOnlinePlayers()) {
+						if (notifyWorlds.contains(player.getWorld().getName())) {
+							player.sendMessage(deathMessage);
+						}
+					}
 				} else {
 					((PlayerDeathEvent) entityDeathEvent).setDeathMessage(deathMessage);
 				}

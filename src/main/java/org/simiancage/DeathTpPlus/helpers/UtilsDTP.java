@@ -1,5 +1,10 @@
 package org.simiancage.DeathTpPlus.helpers;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.*;
 
 /**
@@ -96,6 +101,13 @@ public class UtilsDTP {
 		return null;
 	}
 
+	public static Set<String> getWorldNames() {
+		Set<String> worldNames = new HashSet<String>();
+		for (World world : Bukkit.getWorlds()) {
+			worldNames.add(world.getName());
+		}
+		return worldNames;
+	}
 
 }
 
