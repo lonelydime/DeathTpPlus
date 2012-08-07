@@ -1,31 +1,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.simiancage.deathtpplus</groupId>
 	<artifactId>DeathTpPlus</artifactId>
-	<version>3.7-SNAPSHOT</version>
+	<version>4.0.0-snapshot</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<spoutapi.version>dev-SNAPSHOT</spoutapi.version>
 	</properties>
 	<repositories>
 		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public/</url>
+			<id>spout-repo</id>
+			<url>http://repo.spout.org/</url>
 		</repository>
 		<repository>
-			<id>vault-repo</id>
-			<url>http://ci.milkbowl.net/plugin/repository/project/Vault/LastSuccessful/repository/</url>
-		</repository>
-		<repository>
-			<id>sk89q-mvn2</id>
-			<url>http://mvn2.sk89q.com/repo</url>
+			<id>codehaus-repo</id>
+			<url>http://repo1.maven.org/maven2/org/codehaus/mojo/</url>
 		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.2.5-R1.0</version>
+			<groupId>org.spout</groupId>
+			<artifactId>spoutapi</artifactId>
+			<version>${spoutapi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.yi.acru.bukkit.Lockette</groupId>
@@ -57,6 +54,27 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<finalName>${artifactId}-${version}-${buildNumber}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>true</doCheck>
+					<doUpdate>true</doUpdate>
+				</configuration>
+			</plugin>
+		</plugins>
+
 		<resources>
 			<resource>
 				<targetPath>.</targetPath>
