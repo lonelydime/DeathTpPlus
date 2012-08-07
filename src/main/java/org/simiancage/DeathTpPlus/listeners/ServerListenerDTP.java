@@ -15,6 +15,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.dynmap.DynmapAPI;
+import org.getspout.spoutapi.Spout;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 import org.simiancage.DeathTpPlus.helpers.DynMapHelperDTP;
@@ -102,6 +103,7 @@ public class ServerListenerDTP implements Listener {
 		Plugin checkMobArena = pm.getPlugin("MobArena");
 		Plugin checkDynMap = pm.getPlugin("dynmap");
 		Plugin checkWorldGuard = pm.getPlugin("WorldGuard");
+		Plugin checkSpout = pm.getPlugin("Spout");
 		if (checkVault != null && !plugin.isUseVault()) {
 			plugin.setUseVault(true);
 			log.info("Vault detected");
@@ -182,5 +184,10 @@ public class ServerListenerDTP implements Listener {
 			plugin.setWorldGuardEnabled(true);
 		}
 
+		if (checkSpout != null && !plugin.isSpoutEnabled()) {
+		    log.info("Enabling Spout integration");
+		    plugin.setSpoutPlugin((Spout) checkSpout);
+		    plugin.setSpoutEnabled(true);
+		}
 	}
 }

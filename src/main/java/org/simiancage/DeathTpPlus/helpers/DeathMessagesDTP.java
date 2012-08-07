@@ -124,6 +124,22 @@ public class DeathMessagesDTP {
 	 */
 	private String[] defaultMultiKill;
 	/**
+	 * Array which holds default Kill Streak sounds
+	 */
+	private String[] defaultKillStreakSounds;
+	/**
+	 * Array which holds default Multi Kill sounds
+	 */
+	private String[] defaultMultiKillSounds;
+	/**
+	 * String which holds default sound URL
+	 */
+	private String defaultSoundUrl;
+	/**
+	 * String which holds default sound format
+	 */
+	private String defaultSoundFormat;
+	/**
 	 * Array which holds default fall messages
 	 */
 	private String[] defaultFallMessages;
@@ -296,6 +312,12 @@ public class DeathMessagesDTP {
 	 */
 	private static List<String> multiKillMessages;
 
+// Sounds
+	private static List<String> killStreakSounds;
+	private static List<String> multiKillSounds;
+	private static String soundUrl;
+	private static String soundFormat;
+
 // Deathmessages
 	/**
 	 * Must contain at least 1 line. If there are more, it will appear randomly when a person dies.
@@ -374,6 +396,36 @@ afterwards parsable again from the configuration class of bukkit
 				"8:&cHoly S**t!"
 		};
 		multiKillMessages = Arrays.asList(defaultMultiKill);
+
+// Default Sounds
+		defaultKillStreakSounds = new String[]{
+				"5:killingspree",
+				"10:rampage",
+				"15:dominating",
+				"20:unstoppable",
+				"25:godlike",
+				"30:wickedsick"
+		};
+		killStreakSounds = Arrays.asList(defaultKillStreakSounds);
+
+		defaultMultiKillSounds = new String[]{
+				"2:doublekill",
+				"3:hattrick",
+				"4:multikill",
+				"5:combowhore",
+				"6:megakill",
+				"7:ultrakill",
+				"8:monsterkill",
+				"9:ludicrouskill",
+				"10:holyshit"
+		};
+		multiKillSounds = Arrays.asList(defaultMultiKillSounds);
+
+		defaultSoundUrl = "https://raw.github.com/dredhorse/DeathTpPlus/master/Resources/sounds/";
+		defaultSoundFormat = ".ogg";
+
+		soundUrl = defaultSoundUrl;
+		soundFormat = defaultSoundFormat;
 
 // Default Death Messages
 
@@ -786,6 +838,15 @@ afterwards parsable again from the configuration class of bukkit
 // Multi Kill Messages
 		multiKillMessages = (List<String>) (List<?>) deathMessageFileConfig.getList("mulitkill", Arrays.asList(defaultMultiKill));
 		log.informational(multiKillMessages.size() + " messages loaded for multikill");
+// Sound nodes
+		killStreakSounds = deathMessageFileConfig.getStringList("sounds.killstreaks");
+		log.informational(killStreakSounds.size() + " sounds loaded for killstreaks");
+		
+		multiKillSounds = deathMessageFileConfig.getStringList("sounds.multikills");
+		log.informational(multiKillSounds.size() + " sounds loaded for multikill");
+		
+		soundUrl = deathMessageFileConfig.getString("sounds.url", defaultSoundUrl);
+		soundFormat = deathMessageFileConfig.getString("sounds.format", defaultSoundUrl);
 // DeathTp Messages
 		// Workaround for NPE as Monster isn't defined in the deathmessages
 		deathMessages.put(DeathEventType.MONSTER, Arrays.asList(defaultUnknownMessages));
@@ -923,7 +984,22 @@ afterwards parsable again from the configuration class of bukkit
 			}
 		}
 
-
+		stream.println("#");
+		stream.println("#--------- Sounds");
+		stream.println("#");
+		stream.println("sounds:");
+		stream.println("    url: '" + soundUrl + "'");
+		stream.println("    format: '" + soundFormat + "'");
+		stream.println("    killstreaks:");
+		for (String msg : killStreakSounds) {
+			msg = msg.replace("''", "'");
+			stream.println("        - \"" + msg.replace("\"", "'") + "\"");
+		}
+		stream.println("    multikills:");
+		for (String msg : multiKillSounds) {
+			msg = msg.replace("''", "'");
+			stream.println("        - \"" + msg.replace("\"", "'") + "\"");
+		}
 	}
 
 
@@ -1024,6 +1100,41 @@ afterwards parsable again from the configuration class of bukkit
 		return null;
 	}
 
+	public static String getKillStreakSound(Integer killCount) {
+		if (killCount == null || killStreakSounds == null) {
+			return null;
+		}
+		for (String message : killStreakSounds) {
+			String parts[] = message.split(":");
+			if (Integer.parseInt(parts[0]) == killCount) {
+				return UtilsDTP.convertColorCodes(parts[1]);
+			}
+		}
+
+		return null;
+	}
+
+	public static String getMultiKillSound(Integer killCount) {
+		if (killCount == null || multiKillSounds == null) {
+			return null;
+		}
+		for (String message : multiKillSounds) {
+			String parts[] = message.split(":");
+			if (Integer.parseInt(parts[0]) == killCount) {
+				return UtilsDTP.convertColorCodes(parts[1]);
+			}
+		}
+
+		return null;
+	}
+
+	public static String getSoundUrl() {
+		return soundUrl;
+	}
+
+	public static String getSoundFormat() {
+		return soundFormat;
+	}
 
 // Last change coming up... choosing the right ClassName for the Logger..
 

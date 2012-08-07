@@ -1,12 +1,16 @@
 package org.simiancage.DeathTpPlus.listeners;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.getspout.spoutapi.SpoutManager;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.events.DeathStreakEventDTP;
 import org.simiancage.DeathTpPlus.events.KillStreakEventDTP;
 import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.DeathMessagesDTP;
 
 /**
  * PluginName: DeathTpPlus
@@ -18,6 +22,7 @@ import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
 
 public class StreakListenerDTP implements Listener {
 	private DeathTpPlus plugin;
+    private static final int SOUND_DISTANCE = 50;
 	private ConfigDTP config = ConfigDTP.getInstance();
 
 	public StreakListenerDTP(DeathTpPlus plugin) {
@@ -31,9 +36,23 @@ public class StreakListenerDTP implements Listener {
 	}
 
 	@EventHandler
-	public void onKillStreakEvent(KillStreakEventDTP event) {
+	public void onKillStreakEvent(final KillStreakEventDTP event) {
 		String playerName = getPlayerNameForBroadcast(event.getPlayer());
 		plugin.getServer().broadcastMessage(event.getMessage().replace("%n", playerName));
+        final Location location = event.getPlayer().getLocation();
+        if (config.isPlaySounds() && plugin.isSpoutEnabled()) {
+            if (event.isMultiKill()) {
+                // Play our multikill sound
+                playMultiKillSound(event);
+            } else {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                    @Override
+                    public void run() {
+                        playKillStreakSound(event.getKills(), location);
+                    }
+                }, 40);
+            }
+        }
 	}
 
 	private String getPlayerNameForBroadcast(Player player) {
@@ -49,5 +68,23 @@ public class StreakListenerDTP implements Listener {
 
 		return playerName;
 	}
+	
+    private void playMultiKillSound(KillStreakEventDTP event) {
+        String soundName = DeathMessagesDTP.getMultiKillSound(event.getKills());
+        if (soundName == null) {
+            return;
+        }
+        String url = DeathMessagesDTP.getSoundUrl() + soundName + DeathMessagesDTP.getSoundFormat();
+        SpoutManager.getSoundManager().playGlobalCustomSoundEffect(plugin, url, false, event.getPlayer().getLocation(), SOUND_DISTANCE);
+    }
+
+    private void playKillStreakSound(Integer kills, Location loc) {
+        String soundName = DeathMessagesDTP.getKillStreakSound(kills);
+        if (soundName == null) {
+            return;
+        }
+        String url = DeathMessagesDTP.getSoundUrl() + soundName + DeathMessagesDTP.getSoundFormat();
+        SpoutManager.getSoundManager().playGlobalCustomSoundEffect(plugin, url, false, loc, SOUND_DISTANCE);
+    }
 }
 
