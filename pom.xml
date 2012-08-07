@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.simiancage.deathtpplus</groupId>
 	<artifactId>DeathTpPlus</artifactId>
@@ -39,18 +39,14 @@
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
-			<version>1.2.16</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/vault.jar</systemPath>
+			<version>1.2.17-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
 			<artifactId>worldguard</artifactId>
-			<version>5.5.3</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/worldguard.jar</systemPath>
-		</dependency>
-		<dependency>
+			<version>5.4</version>
+	    </dependency>
+	    <dependency>
 			<groupId>com.ensifera.animosity.craftirc</groupId>
 			<artifactId>CraftIRC</artifactId>
 			<version>3.8</version>
@@ -106,7 +102,7 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-				</configuration>
+	            </configuration>
 			</plugin>
 		</plugins>
 	</build>
