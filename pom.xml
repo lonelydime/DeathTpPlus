@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.simiancage.deathtpplus</groupId>
 	<artifactId>DeathTpPlus</artifactId>
-	<version>4.0.0-SNAPSHOT</version>
+	<version>3.9.12.2262</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.3.1-R0.1-SNAPSHOT</version>
+			<version>1.2.5-R5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.getspout</groupId>
@@ -39,14 +39,18 @@
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
-			<version>1.2.17-SNAPSHOT</version>
+			<version>1.2.16</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/vault.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
 			<artifactId>worldguard</artifactId>
-			<version>5.4</version>
-	    </dependency>
-	    <dependency>
+			<version>5.5.3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/worldguard.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>com.ensifera.animosity.craftirc</groupId>
 			<artifactId>CraftIRC</artifactId>
 			<version>3.8</version>
@@ -102,7 +106,7 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-	            </configuration>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
