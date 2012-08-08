@@ -31,6 +31,14 @@ commands:
             Example: /<command> - Displays your total kill count.
             Example: /<command> dredhorse - Displays total kill count.
             Example: /<command> lonelydime dredhorse - prints times lonelydime killed dredhorse.
+    report:
+        description: Display your kill/death report
+        usage: |
+            /<command> <kills|deaths> [page#]
+    top:
+        description: Display global top kill/death report
+        usage: |
+            /<command> <kills|deaths> [page#]
     dtpadmin:
         description: Lets you use the admin commands for tombstones.
         usage: |
@@ -63,6 +71,8 @@ permissions:
             deathtpplus.deathtp.streak: true
             deathtpplus.deathtp.deaths: true
             deathtpplus.deathtp.kills: true
+            deathtpplus.deathtp.report: true
+            deathtpplus.deathtp.top: true
             deathtpplus.worldtravel: true
             deathtpplus.admin: true
             deathtpplus.admin.list: true
@@ -92,6 +102,8 @@ permissions:
             deathtpplus.deathtp.streak: true
             deathtpplus.deathtp.deaths: true
             deathtpplus.deathtp.kills: true
+            deathtpplus.deathtp.report: true
+            deathtpplus.deathtp.top: true            
     deathtpplus.admin.*:
         description: Gives access to all DeathTpPlus admin commands
         children:
@@ -131,6 +143,12 @@ permissions:
     deathtpplus.deathtp.kills:
         description: Gives access to the kills command
         default: true
+    deathtpplus.deathtp.report:
+        description: Gives access to the report command
+        default: true
+    deathtpplus.deathtp.top:
+        description: Gives access to the top command
+        deafault: true
     deathtpplus.worldtravel:
         description: Allows teleporting / respawn to another worlds death location if allowWordTravel is "permissions"
         default: op
