@@ -186,7 +186,7 @@ public class ServerListenerDTP implements Listener {
 
 		if (checkSpout != null && !plugin.isSpoutEnabled()) {
 		    log.info("Enabling Spout integration");
-		    plugin.setSpoutPlugin((Spout) checkSpout);
+		    plugin.setSpoutPlugin(checkSpout);
 		    plugin.setSpoutEnabled(true);
 		}
 	}
