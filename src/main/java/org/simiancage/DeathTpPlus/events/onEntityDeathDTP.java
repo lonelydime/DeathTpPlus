@@ -2,7 +2,30 @@ package org.simiancage.DeathTpPlus.events;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.bukkit.Bukkit;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.simiancage.DeathTpPlus.DeathTpPlus;
+import org.simiancage.DeathTpPlus.helpers.ConfigDTP;
+import org.simiancage.DeathTpPlus.helpers.DeathMessagesDTP;
+import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
+import org.simiancage.DeathTpPlus.helpers.TombMessagesDTP;
+import org.simiancage.DeathTpPlus.helpers.TombStoneHelperDTP;
+import org.simiancage.DeathTpPlus.helpers.UtilsDTP;
+import org.simiancage.DeathTpPlus.listeners.EntityListenerDTP;
+import org.simiancage.DeathTpPlus.logs.DeathLocationsLogDTP;
+import org.simiancage.DeathTpPlus.logs.DeathLogDTP;
+import org.simiancage.DeathTpPlus.logs.StreakLogDTP;
+import org.simiancage.DeathTpPlus.models.DeathDetailDTP;
+import org.simiancage.DeathTpPlus.models.TombStoneBlockDTP;
+import org.simiancage.DeathTpPlus.objects.TombDTP;
+import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,24 +38,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.helpers.*;
-import org.simiancage.DeathTpPlus.listeners.EntityListenerDTP;
-import org.simiancage.DeathTpPlus.logs.DeathLocationsLogDTP;
-import org.simiancage.DeathTpPlus.logs.DeathLogDTP;
-import org.simiancage.DeathTpPlus.logs.StreakLogDTP;
-import org.simiancage.DeathTpPlus.models.DeathDetailDTP;
-import org.simiancage.DeathTpPlus.models.TombStoneBlockDTP;
-import org.simiancage.DeathTpPlus.objects.TombDTP;
-import org.simiancage.DeathTpPlus.workers.TombWorkerDTP;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -50,47 +55,38 @@ public class onEntityDeathDTP {
 	 * Field description
 	 */
 	private TombWorkerDTP tombWorker = TombWorkerDTP.getInstance();
-
 	/**
 	 * Field description
 	 */
 	private ConfigDTP config;
-
 	/**
 	 * Field description
 	 */
 	private DeathLocationsLogDTP deathLocationsLog;
-
 	/**
 	 * Field description
 	 */
 	private DeathLogDTP deathLog;
-
 	/**
 	 * Field description
 	 */
 	private DeathMessagesDTP deathMessages;
-
 	/**
 	 * Field description
 	 */
 	private LoggerDTP log;
-
 	/**
 	 * Field description
 	 */
 	private DeathTpPlus plugin;
-
 	/**
 	 * Field description
 	 */
 	private StreakLogDTP streakLog;
-
 	/**
 	 * Field description
 	 */
 	private TombMessagesDTP tombMessages;
-
 	/**
 	 * Field description
 	 */
@@ -100,7 +96,6 @@ public class onEntityDeathDTP {
 
 	/**
 	 * Constructs ...
-	 *
 	 * @param plugin
 	 */
 	public onEntityDeathDTP(DeathTpPlus plugin) {
@@ -120,13 +115,12 @@ public class onEntityDeathDTP {
 
 	/**
 	 * Method description
-	 *
 	 * @param plugin
 	 * @param entityListenerDTP
 	 * @param entityDeathEvent
 	 */
 	public void oEDeaDeathTp(DeathTpPlus plugin, EntityListenerDTP entityListenerDTP,
-	                         EntityDeathEvent entityDeathEvent) {
+							 EntityDeathEvent entityDeathEvent) {
 		DeathDetailDTP deathDetail = new DeathDetailDTP(entityDeathEvent);
 
 		log.debug("deathDetail", deathDetail);
@@ -135,13 +129,12 @@ public class onEntityDeathDTP {
 
 	/**
 	 * Method description
-	 *
 	 * @param plugin
 	 * @param entityListenerDTP
 	 * @param entityDeathEvent
 	 */
 	public void oEDeaGeneralDeath(DeathTpPlus plugin, EntityListenerDTP entityListenerDTP,
-	                              EntityDeathEvent entityDeathEvent) {
+								  EntityDeathEvent entityDeathEvent) {
 		DeathDetailDTP deathDetail = new DeathDetailDTP(entityDeathEvent);
 
 		if (config.isShowStreaks()) {
@@ -162,9 +155,11 @@ public class onEntityDeathDTP {
 					} else {
 						notifyWorlds.addAll(UtilsDTP.getWorldNames());
 					}
-
+					log.debug("NotifyWorlds", notifyWorlds);
 					if (config.isDisableDeathNotifyInSpecifiedWorlds()) {
-						for (String world : notifyWorlds) {
+						Set<String> tempNotifyWorlds = new HashSet<String>(notifyWorlds);
+						for (String world : tempNotifyWorlds) {
+							log.debug("world", world);
 							if (config.isDisabledDeathNotifyWorld(world)) {
 								notifyWorlds.remove(world);
 							}
@@ -176,6 +171,7 @@ public class onEntityDeathDTP {
 							player.sendMessage(deathMessage);
 						}
 					}
+					((PlayerDeathEvent) entityDeathEvent).setDeathMessage("");
 				} else {
 					((PlayerDeathEvent) entityDeathEvent).setDeathMessage(deathMessage);
 				}
@@ -194,7 +190,7 @@ public class onEntityDeathDTP {
 						 */
 		}
 
-        // write kill to deathlog
+		// write kill to deathlog
 		if (config.isAllowDeathLog()) {
 			deathLog.setRecord(deathDetail);
 		}
@@ -216,7 +212,6 @@ public class onEntityDeathDTP {
 
 	/**
 	 * Method description
-	 *
 	 * @param deathDetail
 	 */
 	private void CreateTombStone(DeathDetailDTP deathDetail) {
@@ -237,7 +232,7 @@ public class onEntityDeathDTP {
 			return;
 		}
 
-//      Get the current player location.
+		//      Get the current player location.
 		Location loc = player.getLocation();
 		Block block = returnGoodPlace(player, loc);
 
@@ -247,7 +242,7 @@ public class onEntityDeathDTP {
 			return;
 		}
 
-//      Don't create the chest if it or its sign would be in the void
+		//      Don't create the chest if it or its sign would be in the void
 		if (config.isVoidCheck()
 				&& ((config.isShowTombStoneSign() && (block.getY() > block.getWorld().getMaxHeight() - 1))
 				|| (!config.isShowTombStoneSign() && (block.getY() > block.getWorld().getMaxHeight()))
@@ -258,7 +253,7 @@ public class onEntityDeathDTP {
 			return;
 		}
 
-//      Check if the player has a chest.
+		//      Check if the player has a chest.
 		int pChestCount = 0;
 		int pSignCount = 0;
 
@@ -283,7 +278,7 @@ public class onEntityDeathDTP {
 			return;
 		}
 
-//      Check if we can replace the block.
+		//      Check if we can replace the block.
 		block = tombStoneHelper.findPlace(block, false);
 
 		if (block == null) {
@@ -293,7 +288,7 @@ public class onEntityDeathDTP {
 			return;
 		}
 
-//      Check if there is a nearby chest
+		//      Check if there is a nearby chest
 		if (!config.isAllowInterfere() && checkChest(block)) {
 			plugin.sendMessage(player, "There is a chest interfering with your tombstone. Inventory dropped");
 			log.debug(player.getName() + " Chest interfered with tombstone creation.");
@@ -304,14 +299,14 @@ public class onEntityDeathDTP {
 		int removeChestCount = 1;
 		int removeSign = 0;
 
-//      Do the check for a large chest block here so we can check for
-//      interference
+		//      Do the check for a large chest block here so we can check for
+		//      interference
 		Block lBlock = findLarge(block);
 
-//      Set the current block to a chest, init some variables for later use.
+		//      Set the current block to a chest, init some variables for later use.
 		block.setType(Material.CHEST);
 
-//      We're running into issues with 1.3 where we can't cast to a Chest :(
+		//      We're running into issues with 1.3 where we can't cast to a Chest :(
 		BlockState state = block.getState();
 
 		if (!(state instanceof Chest)) {
@@ -326,15 +321,15 @@ public class onEntityDeathDTP {
 		int slot = 0;
 		int maxSlot = sChest.getInventory().getSize();
 
-//      Check if they need a large chest.
+		//      Check if they need a large chest.
 		if (deathDrops.size() > maxSlot) {
 
-//          If they are allowed spawn a large chest to catch their entire
-//          inventory.
+			//          If they are allowed spawn a large chest to catch their entire
+			//          inventory.
 			if ((lBlock != null) && plugin.hasPerm(player, "tombstone.large", false)) {
 				removeChestCount = 2;
 
-//              Check if the player has enough chests
+				//              Check if the player has enough chests
 				if ((pChestCount >= removeChestCount) || plugin.hasPerm(player, "tombstone.freechest", false)) {
 					lBlock.setType(Material.CHEST);
 					lChest = (Chest) lBlock.getState();
@@ -345,19 +340,19 @@ public class onEntityDeathDTP {
 			}
 		}
 
-//      Don't remove any chests if they get a free one.
+		//      Don't remove any chests if they get a free one.
 		if (plugin.hasPerm(player, "tombstone.freechest", false)) {
 			removeChestCount = 0;
 		}
 
-//      Check if we have signs enabled, if the player can use signs, and if
-//      the player has a sign or gets a free sign
+		//      Check if we have signs enabled, if the player can use signs, and if
+		//      the player has a sign or gets a free sign
 		Block sBlock = null;
 
 		if (config.isShowTombStoneSign() && plugin.hasPerm(player, "tombstone.sign", false)
 				&& ((pSignCount > 0) || plugin.hasPerm(player, "tombstone.freesign", false))) {
 
-//          Find a place to put the sign, then place the sign.
+			//          Find a place to put the sign, then place the sign.
 			sBlock = sChest.getWorld().getBlockAt(sChest.getX(), sChest.getY() + 1, sChest.getZ());
 
 			if (tombStoneHelper.canReplace(sBlock.getType())) {
@@ -373,7 +368,7 @@ public class onEntityDeathDTP {
 			}
 		}
 
-//      Don't remove a sign if they get a free one
+		//      Don't remove a sign if they get a free one
 		if (plugin.hasPerm(player, "tombstone.freesign", false)) {
 			removeSign = 0;
 		}
@@ -396,12 +391,12 @@ public class onEntityDeathDTP {
 			experience = 0;
 		}
 
-//      Create a TombBlock for this tombstone
+		//      Create a TombBlock for this tombstone
 		TombStoneBlockDTP tStoneBlockDTP = new TombStoneBlockDTP(sChest.getBlock(), (lChest != null)
 				? lChest.getBlock()
 				: null, sBlock, player.getName(), (System.currentTimeMillis() / 1000), experience);
 
-//      Protect the chest/sign if LWC is installed.
+		//      Protect the chest/sign if LWC is installed.
 		Boolean prot = false;
 		Boolean protLWC = false;
 
@@ -415,16 +410,16 @@ public class onEntityDeathDTP {
 			protLWC = true;
 		}
 
-//      Protect the chest with Lockette if installed, enabled, and
-//      unprotected.
+		//      Protect the chest with Lockette if installed, enabled, and
+		//      unprotected.
 		if (plugin.hasPerm(player, "tombstone.lockette", false)) {
 			prot = tombStoneHelper.protectWithLockette(player, tStoneBlockDTP);
 		}
 
-//      Add tombstone to list
+		//      Add tombstone to list
 		tombStoneHelper.offerTombStoneList(tStoneBlockDTP);
 
-//      Add tombstone blocks to tombStoneBlockList
+		//      Add tombstone blocks to tombStoneBlockList
 		tombStoneHelper.putTombStoneBlockList(tStoneBlockDTP.getBlock().getLocation(), tStoneBlockDTP);
 
 		if (tStoneBlockDTP.getLBlock() != null) {
@@ -435,7 +430,7 @@ public class onEntityDeathDTP {
 			tombStoneHelper.putTombStoneBlockList(tStoneBlockDTP.getSign().getLocation(), tStoneBlockDTP);
 		}
 
-//      Add tombstone to player lookup list
+		//      Add tombstone to player lookup list
 		ArrayList<TombStoneBlockDTP> pList = tombStoneHelper.getPlayerTombStoneList(player.getName());
 
 		if (pList == null) {
@@ -446,7 +441,7 @@ public class onEntityDeathDTP {
 		pList.add(tStoneBlockDTP);
 		tombStoneHelper.saveTombStoneList(player.getWorld().getName());
 
-//      Next get the players inventory using the getDrops() method.
+		//      Next get the players inventory using the getDrops() method.
 		for (Iterator<ItemStack> iter = deathDrops.listIterator(); iter.hasNext(); ) {
 			ItemStack item = iter.next();
 
@@ -454,7 +449,7 @@ public class onEntityDeathDTP {
 				continue;
 			}
 
-//          Take the chest(s)
+			//          Take the chest(s)
 			if ((removeChestCount > 0) && (item.getType() == Material.CHEST)) {
 				if (item.getAmount() >= removeChestCount) {
 					item.setAmount(item.getAmount() - removeChestCount);
@@ -471,7 +466,7 @@ public class onEntityDeathDTP {
 				}
 			}
 
-//          Take a sign
+			//          Take a sign
 			if ((removeSign > 0) && (item.getType() == Material.SIGN)) {
 				item.setAmount(item.getAmount() - 1);
 				removeSign = 0;
@@ -483,7 +478,7 @@ public class onEntityDeathDTP {
 				}
 			}
 
-//          Add items to chest if not full.
+			//          Add items to chest if not full.
 			if (slot < maxSlot) {
 				if (slot >= sChest.getInventory().getSize()) {
 					if (lChest == null) {
@@ -502,7 +497,7 @@ public class onEntityDeathDTP {
 			}
 		}
 
-//      Tell the player how many items went into chest.
+		//      Tell the player how many items went into chest.
 		String msg = "Inventory stored in chest. ";
 
 		if (deathDrops.size() > 0) {
@@ -551,10 +546,8 @@ public class onEntityDeathDTP {
 
 	/**
 	 * Method description
-	 *
 	 * @param player
 	 * @param loc
-	 *
 	 * @return
 	 */
 	private Block returnGoodPlace(Player player, Location loc) {
@@ -603,9 +596,7 @@ public class onEntityDeathDTP {
 
 	/**
 	 * Method description
-	 *
 	 * @param block
-	 *
 	 * @return
 	 */
 	private boolean isNotAir(Block block) {
@@ -616,7 +607,6 @@ public class onEntityDeathDTP {
 
 	/**
 	 * Method description
-	 *
 	 * @param deathDetail
 	 */
 	private void UpdateTomb(DeathDetailDTP deathDetail) {
@@ -656,7 +646,6 @@ public class onEntityDeathDTP {
 
 	/**
 	 * Method description
-	 *
 	 * @param deathDetail
 	 */
 	private void ShowDeathSign(DeathDetailDTP deathDetail) {
@@ -724,11 +713,10 @@ public class onEntityDeathDTP {
 		}
 	}
 
-//  Helper Methods
+	//  Helper Methods
 
 	/**
 	 * Method description
-	 *
 	 * @param signBlock
 	 * @param deathDetail
 	 */
@@ -773,14 +761,12 @@ public class onEntityDeathDTP {
 
 	/**
 	 * Method description
-	 *
 	 * @param base
-	 *
 	 * @return
 	 */
 	Block findLarge(Block base) {
 
-//      Check all 4 sides for air.
+		//      Check all 4 sides for air.
 		Block exp;
 
 		exp = base.getWorld().getBlockAt(base.getX() - 1, base.getY(), base.getZ());
@@ -812,14 +798,12 @@ public class onEntityDeathDTP {
 
 	/**
 	 * Method description
-	 *
 	 * @param base
-	 *
 	 * @return
 	 */
 	boolean checkChest(Block base) {
 
-//      Check all 4 sides for a chest.
+		//      Check all 4 sides for a chest.
 		Block exp;
 
 		exp = base.getWorld().getBlockAt(base.getX() - 1, base.getY(), base.getZ());

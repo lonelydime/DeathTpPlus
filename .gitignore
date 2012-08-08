@@ -25,3 +25,5 @@
 *.iws
 .idea/
 /out/
+
+atlassian-ide-plugin.xml
