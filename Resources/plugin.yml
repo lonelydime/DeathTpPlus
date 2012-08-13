@@ -1,6 +1,6 @@
 name: DeathTpPlus
 main: org.simiancage.DeathTpPlus.DeathTpPlus
-version: 3.9.15.2262
+version: 3.9.16.2262
 website: http://dev.bukkit.org/server-mods/deathtpplus/
 authors: ['Don Redhorse', 'mung3r']
 description: Death teleport, tombstone and tombs
@@ -31,12 +31,14 @@ commands:
             Example: /<command> - Displays your total kill count.
             Example: /<command> dredhorse - Displays total kill count.
             Example: /<command> lonelydime dredhorse - prints times lonelydime killed dredhorse.
-    report:
+    dtpreport:
         description: Display your kill/death report
+        aliases: report
         usage: |
             /<command> <kills|deaths> [page#]
-    top:
+    dtptop:
         description: Display global top kill/death report
+        aliases: top
         usage: |
             /<command> <kills|deaths> [page#]
     dtpadmin:
