@@ -6,28 +6,30 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
 import org.simiancage.DeathTpPlus.helpers.LoggerDTP;
 import org.simiancage.DeathTpPlus.logs.DeathLogDTP;
 import org.simiancage.DeathTpPlus.models.DeathRecordDTP.DeathRecordType;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+
 public class TopCommandDTP implements CommandExecutor {
 	private static final int CMDS_PER_PAGE = 8;
 	private DeathLogDTP deathLog;
 	private LoggerDTP log;
+	private DeathTpPlus plugin;
 
 	public TopCommandDTP(DeathTpPlus plugin) {
 		log = LoggerDTP.getLogger();
 		deathLog = DeathTpPlus.getDeathLog();
 		log.informational("top command registered");
+		this.plugin = plugin;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String identifier, String[] args) {
-		if (!((Player) sender).hasPermission("deathtpplus.deathtp.top") || args.length < 1) {
+		if (!plugin.hasPerm(sender, "deathtpplus.deathtp.top", true) || args.length < 1) {
 			return false;
 		}
 
@@ -35,23 +37,20 @@ public class TopCommandDTP implements CommandExecutor {
 		if (args.length > 1) {
 			try {
 				page = Integer.parseInt(args[1]) - 1;
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 			}
 		}
 
 		Map<String, Integer> totals = null;
 		if (args[0].equalsIgnoreCase("kills")) {
 			totals = deathLog.getTotalsByType(DeathRecordType.kill);
-		}
-		else if (args[0].equalsIgnoreCase("deaths")) {
+		} else if (args[0].equalsIgnoreCase("deaths")) {
 			totals = deathLog.getTotalsByType(DeathRecordType.death);
 		}
 
 		if (totals == null || totals.isEmpty()) {
 			sender.sendMessage("No records found.");
-		}
-		else {
+		} else {
 			ArrayList<Map.Entry<?, Integer>> sorted = new ArrayList<Map.Entry<?, Integer>>(totals.entrySet());
 			Collections.sort(sorted, Collections.reverseOrder(new Comparator<Map.Entry<?, Integer>>() {
 				public int compare(Map.Entry<?, Integer> record1, Map.Entry<?, Integer> record2) {
