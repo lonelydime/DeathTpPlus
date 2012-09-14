@@ -1,6 +1,6 @@
 name: DeathTpPlus
 main: org.simiancage.DeathTpPlus.DeathTpPlus
-version: 3.9.16.2320
+version: 4.0.0.${BUILD_NUMBER}
 website: http://dev.bukkit.org/server-mods/deathtpplus/
 authors: ['Don Redhorse', 'mung3r']
 description: Death teleport, tombstone and tombs
@@ -32,12 +32,14 @@ commands:
             Example: /<command> dredhorse - Displays total kill count.
             Example: /<command> lonelydime dredhorse - prints times lonelydime killed dredhorse.
     dtpreport:
-        description: Display your kill/death report
+        description: Display your kill/death reports
         aliases: report
         usage: |
-            /<command> <kills|deaths> [page#]
+            /<command> <kills|deaths> [page_number]
+            Example: /<command> kills - Displays your kill report
+            Example: /<command> deaths 1 - Displays page 1 of your death report
     dtptop:
-        description: Display global top kill/death report
+        description: Display global top kill/death reports
         aliases: top
         usage: |
             /<command> <kills|deaths> [page#]
@@ -150,7 +152,7 @@ permissions:
         default: true
     deathtpplus.deathtp.top:
         description: Gives access to the top command
-        deafault: true
+        default: true
     deathtpplus.worldtravel:
         description: Allows teleporting / respawn to another worlds death location if allowWordTravel is "permissions"
         default: op
