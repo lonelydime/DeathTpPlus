@@ -14,7 +14,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.common.DefaultLogger;
+import org.simiancage.DeathTpPlus.commons.DefaultLogger;
 import org.simiancage.DeathTpPlus.death.DeathDetail;
 
 /**

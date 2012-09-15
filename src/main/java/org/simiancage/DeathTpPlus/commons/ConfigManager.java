@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.common;
+package org.simiancage.DeathTpPlus.commons;
 /**
  *
  * PluginName: DeathTpPlus
@@ -12,8 +12,8 @@ package org.simiancage.DeathTpPlus.common;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.simiancage.DeathTpPlus.common.pings.PINGS;
-import org.simiancage.DeathTpPlus.common.pings.PingManager;
+import org.simiancage.DeathTpPlus.commons.pings.PINGS;
+import org.simiancage.DeathTpPlus.commons.pings.PingManager;
 
 import java.io.*;
 import java.net.MalformedURLException;

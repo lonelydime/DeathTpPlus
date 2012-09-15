@@ -12,7 +12,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.common.DefaultLogger;
+import org.simiancage.DeathTpPlus.commons.DefaultLogger;
 import org.simiancage.DeathTpPlus.tomb.TombStoneHelper;
 import org.simiancage.DeathTpPlus.tomb.models.TombStoneBlock;
 

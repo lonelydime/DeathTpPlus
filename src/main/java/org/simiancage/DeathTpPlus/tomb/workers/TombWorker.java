@@ -13,8 +13,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.common.ConfigManager;
-import org.simiancage.DeathTpPlus.common.DefaultLogger;
+import org.simiancage.DeathTpPlus.commons.ConfigManager;
+import org.simiancage.DeathTpPlus.commons.DefaultLogger;
 import org.simiancage.DeathTpPlus.tomb.models.Tomb;
 import org.simiancage.DeathTpPlus.tomb.persistence.TombSaveSystem;
 

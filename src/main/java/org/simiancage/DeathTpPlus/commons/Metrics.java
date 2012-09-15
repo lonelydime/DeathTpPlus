@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.common;
+package org.simiancage.DeathTpPlus.commons;
 
 /**
  * PluginName: DeathTpPlus

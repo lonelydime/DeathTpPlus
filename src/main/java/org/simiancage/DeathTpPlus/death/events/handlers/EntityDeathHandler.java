@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.death.listeners.handlers;
+package org.simiancage.DeathTpPlus.death.events.handlers;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -16,12 +16,12 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.common.ConfigManager;
-import org.simiancage.DeathTpPlus.common.DefaultLogger;
-import org.simiancage.DeathTpPlus.common.utils.MessageUtil;
+import org.simiancage.DeathTpPlus.commons.ConfigManager;
+import org.simiancage.DeathTpPlus.commons.DefaultLogger;
+import org.simiancage.DeathTpPlus.commons.utils.MessageUtil;
 import org.simiancage.DeathTpPlus.death.DeathDetail;
 import org.simiancage.DeathTpPlus.death.DeathMessages;
-import org.simiancage.DeathTpPlus.death.listeners.EntityListener;
+import org.simiancage.DeathTpPlus.death.events.listeners.EntityListener;
 import org.simiancage.DeathTpPlus.death.persistence.DeathRecordDao;
 import org.simiancage.DeathTpPlus.death.persistence.StreakRecordDao;
 import org.simiancage.DeathTpPlus.teleport.persistence.DeathLocationDao;

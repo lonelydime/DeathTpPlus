@@ -14,9 +14,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.simiancage.DeathTpPlus.common.ConfigManager;
-import org.simiancage.DeathTpPlus.common.DefaultLogger;
-import org.simiancage.DeathTpPlus.common.utils.MessageUtil;
+import org.simiancage.DeathTpPlus.commons.ConfigManager;
+import org.simiancage.DeathTpPlus.commons.DefaultLogger;
+import org.simiancage.DeathTpPlus.commons.utils.MessageUtil;
 
 import java.io.*;
 import java.util.Arrays;
@@ -1246,7 +1246,7 @@ afterwards parsable again from the configuration class of bukkit
 	 * If the configuration file doesn't exist it will be created by {@link #defaultDeathMessages()}
 	 * After that the configuration is loaded {@link #loadDeathMessages()}
 	 * We than check if an configuration update is necessary {@link #updateNecessary()}
-	 * and if {@link org.simiancage.DeathTpPlus.common.ConfigManager#isAutoUpdateConfig()} is true we update the configuration {@link #updateDeathMessages()}
+	 * and if {@link org.simiancage.DeathTpPlus.commons.ConfigManager#isAutoUpdateConfig()} is true we update the configuration {@link #updateDeathMessages()}
 	 * and finally set {@link #deathMessagesAvailable} to true
 	 *
 	 * @param plugin references the plugin for this configuration

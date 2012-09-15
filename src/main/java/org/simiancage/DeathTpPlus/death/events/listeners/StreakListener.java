@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.death.listeners;
+package org.simiancage.DeathTpPlus.death.events.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.getspout.spoutapi.SpoutManager;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.common.ConfigManager;
+import org.simiancage.DeathTpPlus.commons.ConfigManager;
 import org.simiancage.DeathTpPlus.death.DeathMessages;
 import org.simiancage.DeathTpPlus.death.events.DeathStreakEvent;
 import org.simiancage.DeathTpPlus.death.events.KillStreakEvent;

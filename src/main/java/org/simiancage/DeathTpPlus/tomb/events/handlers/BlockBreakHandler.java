@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.tomb.listeners.handlers;
+package org.simiancage.DeathTpPlus.tomb.events.handlers;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -9,8 +9,8 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.common.ConfigManager;
-import org.simiancage.DeathTpPlus.common.DefaultLogger;
+import org.simiancage.DeathTpPlus.commons.ConfigManager;
+import org.simiancage.DeathTpPlus.commons.DefaultLogger;
 import org.simiancage.DeathTpPlus.tomb.TombStoneHelper;
 import org.simiancage.DeathTpPlus.tomb.models.Tomb;
 import org.simiancage.DeathTpPlus.tomb.models.TombStoneBlock;

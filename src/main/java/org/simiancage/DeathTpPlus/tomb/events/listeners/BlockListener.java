@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.tomb.listeners;
+package org.simiancage.DeathTpPlus.tomb.events.listeners;
 
 /**
  * PluginName: DeathTpPlus
@@ -13,10 +13,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.common.ConfigManager;
-import org.simiancage.DeathTpPlus.common.DefaultLogger;
-import org.simiancage.DeathTpPlus.tomb.listeners.handlers.BlockBreakHandler;
-import org.simiancage.DeathTpPlus.tomb.listeners.handlers.SignChangeHandler;
+import org.simiancage.DeathTpPlus.commons.ConfigManager;
+import org.simiancage.DeathTpPlus.commons.DefaultLogger;
+import org.simiancage.DeathTpPlus.tomb.events.handlers.BlockBreakHandler;
+import org.simiancage.DeathTpPlus.tomb.events.handlers.SignChangeHandler;
 
 public class BlockListener implements Listener {
 

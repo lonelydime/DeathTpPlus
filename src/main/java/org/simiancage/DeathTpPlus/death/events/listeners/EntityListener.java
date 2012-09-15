@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.death.listeners;
+package org.simiancage.DeathTpPlus.death.events.listeners;
 
 //java imports
 
@@ -10,9 +10,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.common.ConfigManager;
-import org.simiancage.DeathTpPlus.common.DefaultLogger;
-import org.simiancage.DeathTpPlus.death.listeners.handlers.EntityDeathHandler;
+import org.simiancage.DeathTpPlus.commons.ConfigManager;
+import org.simiancage.DeathTpPlus.commons.DefaultLogger;
+import org.simiancage.DeathTpPlus.death.events.handlers.EntityDeathHandler;
 import org.simiancage.DeathTpPlus.tomb.TombStoneHelper;
 import org.simiancage.DeathTpPlus.tomb.models.TombStoneBlock;
 

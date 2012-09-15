@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.tomb.listeners.handlers;
+package org.simiancage.DeathTpPlus.tomb.events.handlers;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,8 +10,8 @@ import org.bukkit.event.Event.Result;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.common.ConfigManager;
-import org.simiancage.DeathTpPlus.common.DefaultLogger;
+import org.simiancage.DeathTpPlus.commons.ConfigManager;
+import org.simiancage.DeathTpPlus.commons.DefaultLogger;
 import org.simiancage.DeathTpPlus.teleport.TeleportHelper;
 import org.simiancage.DeathTpPlus.teleport.persistence.DeathLocationDao;
 import org.simiancage.DeathTpPlus.teleport.persistence.DeathLocation;

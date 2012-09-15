@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.common.utils;
+package org.simiancage.DeathTpPlus.commons.utils;
 
 
 /**

@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.common.listeners;
+package org.simiancage.DeathTpPlus.commons.listeners;
 
 //import org.bukkit.event.Listener;
 
@@ -16,9 +16,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.dynmap.DynmapAPI;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.common.ConfigManager;
-import org.simiancage.DeathTpPlus.common.DynMapHelper;
-import org.simiancage.DeathTpPlus.common.DefaultLogger;
+import org.simiancage.DeathTpPlus.commons.ConfigManager;
+import org.simiancage.DeathTpPlus.commons.DefaultLogger;
+import org.simiancage.DeathTpPlus.commons.DynMapHelper;
 import org.yi.acru.bukkit.Lockette.Lockette;
 
 public class ServerListener implements Listener {

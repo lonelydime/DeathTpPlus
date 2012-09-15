@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.tomb.listeners.handlers;
+package org.simiancage.DeathTpPlus.tomb.events.handlers;
 
 /**
  * PluginName: DeathTpPlus

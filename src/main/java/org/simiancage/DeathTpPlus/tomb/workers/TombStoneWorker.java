@@ -12,7 +12,7 @@ import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.common.ConfigManager;
+import org.simiancage.DeathTpPlus.commons.ConfigManager;
 import org.simiancage.DeathTpPlus.tomb.TombStoneHelper;
 import org.simiancage.DeathTpPlus.tomb.models.TombStoneBlock;
 

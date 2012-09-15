@@ -1,4 +1,4 @@
-package org.simiancage.DeathTpPlus.tomb.listeners;
+package org.simiancage.DeathTpPlus.tomb.events.listeners;
 
 /**
  * PluginName: DeathTpPlus
@@ -18,9 +18,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.simiancage.DeathTpPlus.DeathTpPlus;
-import org.simiancage.DeathTpPlus.common.ConfigManager;
-import org.simiancage.DeathTpPlus.common.DefaultLogger;
-import org.simiancage.DeathTpPlus.tomb.listeners.handlers.PlayerInteractHandler;
+import org.simiancage.DeathTpPlus.commons.ConfigManager;
+import org.simiancage.DeathTpPlus.commons.DefaultLogger;
+import org.simiancage.DeathTpPlus.tomb.events.handlers.PlayerInteractHandler;
 import org.simiancage.DeathTpPlus.tomb.workers.TombWorker;
 
 public class PlayerListener implements Listener {
