@@ -295,7 +295,11 @@ public class DeathTpPlus extends JavaPlugin {
 		if (checkCraftIRC instanceof CraftIRC) {
 			try {
 				craftIRCEndPoint = new CraftIRCEndPoint((CraftIRC) checkCraftIRC);
-				log.info("CraftIRC Support Enabled.");
+				if (craftIRCEndPoint.isRegistered()) {
+					log.info("CraftIRC Support Enabled.");
+				} else {
+					log.warning("CraftIRC support disabled - registration failed.");
+				}
 			} catch (ClassCastException ex) {
 				log.warning("Problems with getting CraftIRC", ex);
 			}

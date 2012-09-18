@@ -10,11 +10,12 @@ public class CraftIRCEndPoint implements EndPoint
 {
 
     private CraftIRC craftIRCPlugin;
+    private boolean registered;
 
     public CraftIRCEndPoint(CraftIRC plugin)
     {
         craftIRCPlugin = plugin;
-        craftIRCPlugin.registerEndPoint(ConfigManager.getInstance().getIrcDeathTpTag(), this);
+        registered = craftIRCPlugin.registerEndPoint(ConfigManager.getInstance().getIrcDeathTpTag(), this);
     }
 
     @Override
@@ -58,10 +59,17 @@ public class CraftIRCEndPoint implements EndPoint
         return false;
     }
 
+    public boolean isRegistered()
+    {
+    	return registered;
+    }
+
     public void sendMessage(String message)
     {
-        RelayedMessage rm = craftIRCPlugin.newMsg(this, null, "generic");
-        rm.setField("message", message);
-        rm.post();
+    	if (registered) {
+	        final RelayedMessage rm = craftIRCPlugin.newMsg(this, null, "generic");
+	        rm.setField("message", message);
+	        rm.post();
+    	}
     }
 }
