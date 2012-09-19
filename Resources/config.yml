@@ -36,7 +36,7 @@ saveConfig: false
 #--------- Default Config Variables start here!
 
 # Flag for CraftIrc 
-ircDeathTpTag: 'all'
+ircDeathTpTag: 'dtp'
 
 # Date Format (For formatting, see http://download.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html) 
 dateFormat: 'MM/dd/yyyy'
