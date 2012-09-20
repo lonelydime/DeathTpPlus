@@ -11,11 +11,11 @@ package org.simiancage.DeathTpPlus.commons.utils;
 
 public class MessageUtil {
 	public static String convertColorCodes(String msg) {
-		return msg.replaceAll("&([0-9a-fA-F])", "§$1");
+		return msg.replaceAll("(?i)&([a-fklmnor0-9])", "§$1");
 	}
 
 	public static String removeColorCodes(String msg) {
-		return msg.replaceAll("§[0-9a-fA-F]", "");
+		return msg.replaceAll("(?i)§[a-fklmnor0-9]", "");
 	}
 
 }
