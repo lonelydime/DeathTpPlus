@@ -1,0 +1,222 @@
+name: DeathTpPlus
+main: org.simiancage.DeathTpPlus.DeathTpPlus
+version: 4.0.0.${BUILD_NUMBER}
+website: http://dev.bukkit.org/server-mods/deathtpplus/
+authors: ['Don Redhorse', 'mung3r']
+description: Death teleport, tombstone and tombs
+softdepend: [Vault,LWC,Lockette,MobArena,dynmap,SpoutPlugin,WorldGuard,CraftIRC]
+
+commands:
+    deathtp:
+        description: Teleports you back to your last death location
+        usage: |
+            /<command>
+    streak:
+        description: Lets you view your or other's kill/death streak.
+        usage: |
+            /<command> [player]
+            Example: /<command> - Displays your streak.
+            Example: /<command> lonelydime's - checks lonelydime's streak.
+    deaths:
+        description: Lets you view your or other's total deaths.
+        usage: |
+            /<command> [username] [cause]
+            Example: /<command> - Displays your total death count.
+            Example: /<command> lonelydime - Displays total death count.
+            Example: /<command> lonelydime creeper - checks lonelydime's deaths by creeper.
+    kills:
+        description: Lets you view your or other's total pvp kills.
+        usage: |
+            /<command> [username] [playername]
+            Example: /<command> - Displays your total kill count.
+            Example: /<command> dredhorse - Displays total kill count.
+            Example: /<command> lonelydime dredhorse - prints times lonelydime killed dredhorse.
+    dtpreport:
+        description: Display your kill/death reports
+        aliases: report
+        usage: |
+            /<command> <kills|deaths> [page_number]
+            Example: /<command> kills - Displays your kill report
+            Example: /<command> deaths 1 - Displays page 1 of your death report
+    dtptop:
+        description: Display global top kill/death reports
+        aliases: top
+        usage: |
+            /<command> <kills|deaths> [page#]
+    dtpadmin:
+        description: Lets you use the admin commands for tombstones.
+        usage: |
+            /<command> [subcommand]
+            Example: /<command> list
+    dtpfind:
+        description: Allows you to find your tombstone via directions and your compass
+        usage: |
+            /<command> <index>
+            Example: /dtpfind 2
+    dtplist:
+        description: Allows you to list all your tombstones inkl. index
+        usage: |
+            /<command>
+    dtptime:
+        description: Tells you how much time is left before the specified tombstone has its protection remove or it breaks
+        usage: |
+            /<command> <index>
+            Example: /dtptime 2
+    dtpreset:
+        description: Reset compass to your spawnpoint
+        usage: |
+            /<command>
+
+permissions:
+    deathtpplus.*:
+        description: Gives access to all DeathTpPlus commands
+        children:
+            deathtpplus.deathtp.deathtp: true
+            deathtpplus.deathtp.streak: true
+            deathtpplus.deathtp.deaths: true
+            deathtpplus.deathtp.kills: true
+            deathtpplus.deathtp.report: true
+            deathtpplus.deathtp.top: true
+            deathtpplus.worldtravel: true
+            deathtpplus.admin: true
+            deathtpplus.admin.list: true
+            deathtpplus.admin.find: true
+            deathtpplus.admin.remove: true
+            deathtpplus.admin.time: true
+            deathtpplus.admin.version: true
+            deathtpplus.admin.untomb: true
+            deathtpplus.tombstone.use: true
+            deathtpplus.tombstone.freechest: true
+            deathtpplus.tombstone.large: true
+            deathtpplus.tombstone.lwc: true
+            deathtpplus.tombstone.lockette: true
+            deathtpplus.tombstone.sign: true
+            deathtpplus.tombstone.freesign: true
+            deathtpplus.tombstone.quickloot: true
+            deathtpplus.tombstone.find: true
+            deathtpplus.tombstone.list: true
+            deathtpplus.tombstone.reset: true
+            deathtpplus.tombstone.time: true
+            deathtpplus.tomb.create: true
+            deathtpplus.tomb.free: true
+    deathtpplus.deathtp.*:
+        description: Gives access to default DeathTpPlus commands
+        children:
+            deathtpplus.deathtp.deathtp: true
+            deathtpplus.deathtp.streak: true
+            deathtpplus.deathtp.deaths: true
+            deathtpplus.deathtp.kills: true
+            deathtpplus.deathtp.report: true
+            deathtpplus.deathtp.top: true
+    deathtpplus.admin.*:
+        description: Gives access to all DeathTpPlus admin commands
+        children:
+            deathtpplus.admin: true
+            deathtpplus.admin.list: true
+            deathtpplus.admin.find: true
+            deathtpplus.admin.remove: true
+            deathtpplus.admin.time: true
+            deathtpplus.admin.version: true
+            deathtpplus.admin.untomb: true
+    deathtpplus.tombstone.*:
+        description: Gives access to default DeathTpPlus tombstone commands
+        children:
+            deathtpplus.tombstone.use: true
+            deathtpplus.tombstone.find: true
+            deathtpplus.tombstone.list: true
+            deathtpplus.tombstone.reset: true
+            deathtpplus.tombstone.time: true
+            deathtpplus.tombstone.large: true
+            deathtpplus.tombstone.lwc: true
+            deathtpplus.tombstone.lockette: true
+    deathtpplus.tomb.*:
+        description: Gives access to all DeathTpPlus tomb commands / features
+        children:
+            deathtpplus.tomb.create: true
+            deathtpplus.tomb.free: true
+
+    deathtpplus.deathtp.deathtp:
+        description: Gives access to the deathtp command
+        default: op
+    deathtpplus.deathtp.streak:
+        description: Gives access to the streak command
+        default: true
+    deathtpplus.deathtp.deaths:
+        description: Gives access to the deaths command
+        default: true
+    deathtpplus.deathtp.kills:
+        description: Gives access to the kills command
+        default: true
+    deathtpplus.deathtp.report:
+        description: Gives access to the report command
+        default: true
+    deathtpplus.deathtp.top:
+        description: Gives access to the top command
+        default: true
+    deathtpplus.worldtravel:
+        description: Allows teleporting / respawn to another worlds death location if allowWordTravel is "permissions"
+        default: op
+    deathtpplus.admin:
+        description: Allows you to destroy tombstones, also prerequisite for other admin commands.
+        default: op
+    deathtpplus.admin.list:
+        description: Allows you to see a list of tombstones for a player / all
+        default: op
+    deathtpplus.admin.find:
+        description: Allows you to find a tombstones for a player / all
+        default: op
+    deathtpplus.admin.remove:
+        description: Allows you to remove a tombstone for a player
+        default: op
+    deathtpplus.admin.time:
+        description: Allows you to change the timeout values of a tombstone
+        default: op
+    deathtpplus.admin.version:
+        description: Allows you to check if the plugin is the newest version
+        default: op
+    deathtpplus.admin.untomb:
+        description: Allows to remove tombs from players
+        default: op
+    deathtpplus.tombstone.use:
+        description: Allows you to use the tombstones
+        default: true
+    deathtpplus.tombstone.freechest:
+        description: Allows the player to get a chest even if he doesn't has one
+        default: op
+    deathtpplus.tombstone.large:
+        description: Allow the player to spawn a large chest
+        default: op
+    deathtpplus.tombstone.lwc:
+        description: Allow LWC protection
+        default: true
+    deathtpplus.tombstone.lockette:
+        description: Allow Lockette protection
+        default: true
+    deathtpplus.tombstone.sign:
+        description: Allow player to get a sign on the tombstone
+        default: op
+    deathtpplus.tombstone.freesign:
+        description: Allow the player to get a sign even if he doesn't has one
+        default: op
+    deathtpplus.tombstone.quickloot:
+        description: Allow quicklooting the tombstone by rightclicking the sign
+        default: true
+    deathtpplus.tombstone.find:
+        description: Allows you to find your tombstone via the compass
+        default: op
+    deathtpplus.tombstone.list:
+        description: Allows you to get a list of your tombstones
+        default: op
+    deathtpplus.tombstone.reset:
+        description: Allows you to reset your compass
+        default: op
+    deathtpplus.tombstone.time:
+        description: Allows you to check the time configuration of your tombstone
+        default: op
+    deathtpplus.tomb.free:
+        description: Allows to get a free Tomb Sign
+        default: op
+    deathtpplus.tomb.create:
+        description: Allows player to create a tomb
+        default: true
+
